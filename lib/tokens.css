@@ -1,0 +1,46 @@
+/* SWAG Design Tokens - single source of truth */
+/* Generated from AGENT_CONTEXT.md + cursor.md/design.md */
+
+:root {
+  /* Colours */
+  --void-black: #0A0A0A;
+  --stone:      #575D61;
+  --clay:       #8C5E4A;
+  --sand:       #D6D1C4;
+
+  /* Section sequence backgrounds */
+  --s1-bg: var(--void-black);
+  --s2-bg: var(--void-black);
+  --s3-bg: var(--void-black);
+  --s4-bg: var(--sand);
+  --s5-bg: var(--stone);
+  --s6-bg: var(--clay);
+  --s7-bg: var(--stone); /* transitions to void-black - TBD */
+  --s8-bg: var(--void-black);
+  --s9-bg: var(--void-black);
+
+  /* Typography */
+  --font-display: 'Instrument Sans', sans-serif;
+  --font-body:    'Instrument Sans', sans-serif;
+
+  --tracking-display: -0.04em;
+  --tracking-label:    0.2em;
+  --tracking-body:     0;
+
+  --leading-display: 1.0;
+  --leading-body:    1.7;
+
+  /* Scale - fluid with clamp */
+  --text-display-xl: clamp(4rem, 12vw, 14rem);
+  --text-display-lg: clamp(2.5rem, 6vw, 8rem);
+  --text-display-md: clamp(1.5rem, 3vw, 4rem);
+  --text-label:      0.65rem;
+  --text-body:       1.05rem;
+
+  /* Ghost layer */
+  --ghost-opacity: 0.05;
+
+  /* Spacing */
+  --section-pad-x: clamp(1.5rem, 5vw, 6rem);
+  --section-pad-y: clamp(3rem, 8vh, 8rem);
+}
