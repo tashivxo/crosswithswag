@@ -32,7 +32,6 @@ export default function Home() {
       <SwagPosterSection section={densityWeight} />
       <ClosingSection section={closing} />
       <FooterSection section={footer} />
-      <div className="draft-badge">Draft 1 / Marcus review</div>
     </main>
   );
 }

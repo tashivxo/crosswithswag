@@ -1,4 +1,5 @@
 import { SectionConfig } from "@/lib/sections.config";
+import { close } from "@/lib/copy";
 import { SectionShell } from "@/components/sections/SectionShell";
 import { Reveal } from "@/components/motion/Reveal";
 
@@ -13,7 +14,11 @@ export function ClosingSection({ section }: { section: SectionConfig }) {
     >
       <div className="closing-layout">
         <Reveal>
-          <h2 className="display closing-statement">NOTHING OWING.</h2>
+          <h2 className="display closing-statement">
+            {close.line1}
+            <br />
+            {close.line2}
+          </h2>
         </Reveal>
       </div>
     </SectionShell>

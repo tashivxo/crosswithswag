@@ -1,55 +1,34 @@
 # Marcus Review Packet
-## swag. V1 pre-sign-off review
+## swag. V1 review
 
 ## Review links
 
-- Vercel deployment: https://crosswithswag-r32lqzxf2-ict-5428s-projects.vercel.app
+- Vercel deployment: https://crosswithswag.vercel.app
 - Vercel inspect: https://vercel.com/ict-5428s-projects/crosswithswag/HwkhLoYjvC6JbpWLFEZ2k2tT5qzm
 
-Note: this deployment built successfully, but anonymous access is currently gated by Vercel authentication/protection. Share from Vercel or disable deployment protection when Marcus needs to review outside the team.
+Note: this deployment built successfully, but anonymous access may be gated by Vercel authentication/protection. Share from Vercel or disable deployment protection when Marcus needs to review outside the team.
 
 ## What to review
 
-1. **Manifesto + tagline**
-   - Is `WEARABLE EDITIONS` locked?
-   - Is the Draft 1 manifesto locked?
-
-2. **Screen compositions**
-   - Hero: wordmark top-left, quiet entry, ghost `NOTH- / OWE / ING.`
-   - Manifesto: body-type pacing, not display-type shouting
-   - SWAG sections: bleed word + ghost `CROSS / WITH / SWAG`
-   - Section 6: `kloofstreetnights - Wearable Edition` framing
-   - Closing: `NOTHING OWING.`
-
-3. **Provisional copy choices**
-   - SWAG statement distribution across sections 3, 4, 5, and 7
-   - Bleed words: `EXPRESSION`, `AUTHORITY`, `PRESENCE`, `WEIGHT`
-   - Section 6 line: `A wearable edition carrying a point of view.`
-
-4. **Motion direction**
-   - Lenis smooth scroll is wired
-   - GSAP reveal stubs are wired
-   - Scroll-linked background infrastructure is wired
-   - Final timing, parallax depth, and transition style still need approval
+1. **Manifesto + tagline** — locked. Review layout and pacing only.
+2. **Screen compositions** — Hero, Manifesto, SWAG posters, Section 6, Closing.
+3. **Section 6** — kloofstreetnights story, campaign photography, CTA wording.
+4. **Motion direction** — scroll-linked background + slow ghost parallax (timing may still be tuned).
 
 ## Stitch handoff
 
 - Stitch semantic design system: `stitch/DESIGN.md`
-- Stitch screen prompts: `stitch/screen-prompts.md`
+- Stitch screen prompts: `stitch/SCREEN_PROMPTS.md`
 
 ## Verification
 
 - `npm run lint` passes
-- `npm run build` passes locally
+- `npm run build` passes
 - Vercel build completed successfully
 
-## Decisions needed before polish
+## Decisions still pending
 
-- Lock or revise Wearable Editions manifesto
-- Lock or replace Instrument Sans
-- Approve or revise SWAG statement distribution
-- Approve or revise bleed display words
-- Supply Section 6 imagery direction/assets
-- Choose final motion pacing
-- Choose analytics provider
-- Confirm domain/DNS plan
+- Stitch screen visual approval
+- Analytics provider
+- Domain/DNS plan
+- Public launch date

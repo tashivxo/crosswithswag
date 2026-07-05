@@ -1,4 +1,5 @@
 import { SectionConfig } from "@/lib/sections.config";
+import { hero } from "@/lib/copy";
 import { Wordmark } from "@/components/ui/Wordmark";
 import { SectionShell } from "@/components/sections/SectionShell";
 import { Reveal } from "@/components/motion/Reveal";
@@ -16,7 +17,7 @@ export function HeroSection({ section }: { section: SectionConfig }) {
           <Wordmark />
         </Reveal>
         <Reveal delay={0.12} className="label hero-label">
-          WEARABLE EDITIONS
+          {hero.edition}
         </Reveal>
       </div>
     </SectionShell>

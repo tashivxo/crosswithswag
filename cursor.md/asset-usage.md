@@ -16,14 +16,14 @@ Current implementation target:
 
 `SWAG_logo_clean.svg` is stroke-outline only and should not be treated as the production fill wordmark unless Marcus specifically chooses that outline treatment.
 
-## Section 6 Placeholder Strategy
+## Section 6 — kloofstreetnights
 
-Until Marcus provides campaign photography, the kloofstreetnights section uses:
+Marcus locked:
 
-- Deep Earth / Clay background `#8C5E4A`
-- Large edition title as the main visual weight
-- A framed placeholder area using low-opacity border and ghost text
-- One provisional line: `A wearable edition carrying a point of view.`
-- CTA: `@crosswithswag`
+- Narrative copy in `lib/copy.ts` → `edition.copyLines`
+- Sign-off: `-the.director`
+- Closing statement: `kloofstreetnights.`
+- CTA: `this lives at @crosswithswag.`
+- Imagery: void black colourway campaign photography in `public/assets/winter-drop/`
 
-Replace the placeholder with high-res portrait and landscape imagery once sourced.
+The edition section renders the first three campaign images from `edition.imagery.assets`.

@@ -5,13 +5,13 @@ These six prompts are ready to paste into Stitch MCP. Use with `stitch/DESIGN.md
 ## Screen 1 - Hero (desktop + mobile)
 
 ```text
-Editorial hero section. Background: #0A0A0A (Void Black). Wordmark "SWAG" top-left in Instrument Sans 700, Sand (#D6D1C4), ALL CAPS, tracking -0.04em. Below it: "WEARABLE EDITIONS" in Instrument Sans 400, Sand, ALL CAPS, tracking 0.15em, small (14px). Large ghost watermark behind: "SWAG" at ~40vw, opacity 0.05, Sand. No imagery, no CTA button. Label top-right: "Draft 1 - pending director lock" in Stone (#575D61), 10px. Minimal. Gallery density.
+Editorial hero section. Background: #0A0A0A (Void Black). Wordmark "SWAG" top-left in Instrument Sans 700, Sand (#D6D1C4), ALL CAPS, tracking -0.04em. Below it: "WEARABLE EDITIONS" in Instrument Sans 400, Sand, ALL CAPS, tracking 0.15em, small (14px). Large ghost watermark behind: "SWAG" at ~40vw, opacity 0.05, Sand. No imagery, no CTA button. Minimal. Gallery density.
 ```
 
 ## Screen 2 - Manifesto (desktop)
 
 ```text
-Full manifesto section. Background: #0A0A0A. Font: Instrument Sans. Generous whitespace. Large heading: "WEARABLE EDITIONS" ALL CAPS, Sand, ~5rem. Below: manifesto body copy in Sand, sentence case, 1.1rem, line-height 1.8, max-width 640px. Label top-left in Stone: "WHAT IS SWAG?" ALL CAPS, 0.65rem, tracking 0.2em. No images, no cards. Label bottom-right: "Draft 1 - pending director lock" in Stone, 10px.
+Full manifesto section. Background: #0A0A0A. Font: Instrument Sans. Generous whitespace. Large heading: "WEARABLE EDITIONS" ALL CAPS, Sand, ~5rem. Below: manifesto body copy in Sand, sentence case, 1.1rem, line-height 1.8, max-width 640px. Label top-left in Stone: "WHAT IS SWAG?" ALL CAPS, 0.65rem, tracking 0.2em. No images, no cards.
 ```
 
 ## Screen 3 - SWAG Poster on Black (desktop)
@@ -29,7 +29,7 @@ SWAG statement poster. Background: #D6D1C4 (Sand). Ghost bleed word: "AUTHORITY"
 ## Screen 5 - kloofstreetnights Edition (desktop)
 
 ```text
-Edition showcase section. Background: #8C5E4A (Clay). Top-left: "kloofstreetnights" in Instrument Sans 400, Sand, tracking -0.02em, ~3rem. Below: "Wearable Edition" in Instrument Sans 700, Sand, ALL CAPS, tracking -0.04em, ~6rem. Centre: neutral Clay-tone rectangular placeholder (16:9 or 3:4, Clay-toned, no image) with "[ imagery placeholder ]" label in Sand opacity 0.4. Bottom: "@crosswithswag" text link in Sand, underlined, Instrument Sans 400. Label: "Draft 1" in Sand opacity 0.4, bottom-right.
+Edition showcase section. Background: #8C5E4A (Clay). Top-left: "kloofstreetnights" in Instrument Sans 400, Sand, tracking -0.02em, ~3rem. Below: "Wearable Edition" in Instrument Sans 700, Sand, ALL CAPS, tracking -0.04em, ~6rem. Campaign photography: void black colourway product shots (hoodie, crewneck, tee) on white background with wordmark. Body copy in Sand, sentence case, ~1rem, max-width 640px — the kloof street nights dinner story. Sign-off: "-the.director". Closing statement: "kloofstreetnights." Bottom: "this lives at @crosswithswag." text link in Sand, underlined, Instrument Sans 400.
 ```
 
 ## Screen 6 - Closing (desktop)

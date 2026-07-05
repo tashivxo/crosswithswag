@@ -176,20 +176,6 @@ a {
   transform: scaleX(1);
 }
 
-.draft-badge {
-  position: fixed;
-  right: 20px;
-  bottom: 18px;
-  z-index: 20;
-  border: 1px solid color-mix(in srgb, var(--color-muted-sand) 30%, transparent);
-  padding: 8px 10px;
-  background: color-mix(in srgb, var(--color-void-black) 80%, transparent);
-  color: var(--color-muted-sand);
-  font-size: 11px;
-  letter-spacing: var(--tracking-open);
-  text-transform: uppercase;
-}
-
 .hero-layout {
   display: grid;
   align-content: start;
@@ -309,17 +295,33 @@ a {
   text-transform: lowercase;
 }
 
-.edition-placeholder {
+.edition-signoff {
+  margin: 0;
+  font-size: var(--type-label);
+  letter-spacing: var(--tracking-open);
+  text-transform: lowercase;
+}
+
+.edition-closing {
+  max-width: 12ch;
+  text-transform: lowercase;
+}
+
+.edition-gallery {
   display: grid;
-  min-height: min(68vh, 620px);
-  place-items: center;
-  border: 1px solid color-mix(in srgb, currentColor 22%, transparent);
-  background:
-    linear-gradient(
-      135deg,
-      color-mix(in srgb, currentColor 8%, transparent),
-      transparent 54%
-    );
+  gap: clamp(16px, 2vw, 24px);
+}
+
+.edition-image {
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+  background: color-mix(in srgb, currentColor 6%, transparent);
+}
+
+.edition-image img {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 .closing-layout {
@@ -406,10 +408,6 @@ a {
     right: 20px;
     bottom: 24px;
     width: 112px;
-  }
-
-  .edition-placeholder {
-    min-height: 360px;
   }
 
   .footer-links {

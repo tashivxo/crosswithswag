@@ -7,9 +7,9 @@
 
 ---
 
-## 1. Manifesto — Wearable Editions (Draft 1)
+## 1. Manifesto — Wearable Editions (Locked)
 
-**Status: Director-sent, not yet locked.**
+**Status: Locked per Marcus sign-off (Phase 0).**
 
 ```
 We stopped explaining ourselves a long time ago.
@@ -56,7 +56,7 @@ Refuses to negotiate what is essential to you
 Says come as you are
 ```
 
-These pair with the Wearable Editions manifesto (Draft 1) and "Simply is." line documented in `design.md` Section 1.
+These pair with the Wearable Editions manifesto and "Simply is." line documented in `design.md` Section 1.
 
 ---
 
@@ -94,13 +94,14 @@ This list **replaces** the draft scope in `swag_website_v1_prd.md` Section 4. Ke
 This supersedes the Open Questions list in `swag_website_v1_prd.md` Section 9.
 
 - ~~Final confirmed section list and order~~ → ✅ **Resolved.** See `design.md` Section 7.
-- ~~Typeface family~~ → ✅ **Directional.** Instrument Sans via Google Fonts. See `design.md` Section 5. Pending final lock.
+- ~~Typeface family~~ → ✅ **Locked.** Instrument Sans via Google Fonts. See `design.md` Section 5.
 - ~~Wordmark file~~ → ✅ **SVG delivered** in `/assets/` (Frame 2, 6–9). Strip baked-in background rects for production.
-- ~~Section 6 naming/positioning~~ → ✅ **Resolved.** Release showcase reframed as **"kloofstreetnights — Wearable Edition"** to align with manifesto language.
-- **Wearable Editions manifesto + tagline (Draft 1)** → **Pending lock.** Confirm with director before build.
-- **Section 6 copy and imagery brief** → Positioning locked. Copy should frame kloofstreetnights as a singular wearable edition object using manifesto language. Imagery sourcing can proceed once director briefs edition photography.
+- ~~Section 6 naming/positioning~~ → ✅ **Resolved.** Release showcase reframed as **"kloofstreetnights — Wearable Edition"**.
+- ~~Wearable Editions manifesto + tagline~~ → ✅ **Locked.**
+- ~~Section 6 copy and imagery~~ → ✅ **Locked.** kloofstreetnights story, void black campaign photography, CTA: "this lives at @crosswithswag."
 - **Analytics tool** (Vercel Analytics, Plausible, GA4, etc.) → **Still open.**
 - **Domain name / DNS setup** → **Still open.**
+- **Stitch screen compositions** → **Pending visual review.**
 
 ---
 

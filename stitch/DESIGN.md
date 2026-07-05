@@ -47,7 +47,7 @@ Do not use serif fonts. Do not use Inter. Do not use system-font defaults.
 
 ### 1. Hero / Landing
 
-Void Black background. Place the custom swag. wordmark top-left in Muted Sand. Under or near it: small uppercase label `WEARABLE EDITIONS` (Draft 1). Keep the composition minimal. Add very large low-opacity ghost text behind the foreground, using `NOTH- / OWE / ING.` or equivalent. Nothing should look like a sales hero.
+Void Black background. Place the custom swag. wordmark top-left in Muted Sand. Under or near it: small uppercase label `WEARABLE EDITIONS`. Keep the composition minimal. Add very large low-opacity ghost text behind the foreground, using `NOTH- / OWE / ING.` or equivalent. Nothing should look like a sales hero.
 
 ### 2. Manifesto
 
@@ -130,7 +130,7 @@ Never generate:
 
 ## 9. Copy Source
 
-Use Draft 1 copy until Marcus locks revisions.
+Use locked copy from `lib/copy.ts`.
 
 **Hero label:** `WEARABLE EDITIONS`
 

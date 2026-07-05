@@ -10,10 +10,10 @@
 
 **Brand name:** swag.  
 **Instagram / drop handle:** @crosswithswag  
-**Tagline:** Wearable Editions *(Draft 1 — supersedes "Quiet Luxury Streetwear")*  
+**Tagline:** Wearable Editions *(locked)*  
 **Creative director:** Marcus ("the director")
 
-### Manifesto — Wearable Editions (Draft 1)
+### Manifesto — Wearable Editions
 
 > We stopped explaining ourselves a long time ago.
 >
@@ -32,8 +32,6 @@
 > — the director.
 
 This manifesto is **the emotional brief for every UI decision**. If a component feels like it's trying to sell something, simplify it. If a section feels like it's explaining itself, cut it. The site should feel like a statement, not a pitch.
-
-> ⚠️ **Draft status:** Wearable Editions copy is Draft 1 — not yet locked. The identity deck still references "Quiet Luxury Streetwear" in layout comps; build against this draft unless the director supplies a revision.
 
 ### Note on Previous Manifesto
 
@@ -237,14 +235,14 @@ The swag. wordmark is a **custom lettering mark** — a fluid, round, almost bub
 
 > This structure replaces the "proposal" structure in the PRD (section 6 of `swag_website_v1_prd.md`). This is locked. Build against this table.
 >
-> **Manifesto update:** Director sent Wearable Editions manifesto (Draft 1). Section 6 confirmed as a release showcase reframed as **"kloofstreetnights — Wearable Edition"** — see design notes below.
+> **Manifesto update:** Director sent Wearable Editions manifesto. Section 6 confirmed as a release showcase reframed as **"kloofstreetnights — Wearable Edition"** — see design notes below.
 
 Single continuous-scroll layout. Each section functions as a **standalone typographic poster** with a defined background. Transitions between sections must be **scroll-driven** (smooth crossfade/interpolation) — never instant cuts.
 
 | # | Section | Background | Key content |
 |---|---|---|---|
 | 1 | Hero / Landing | Void Black `#0A0A0A` | swag. wordmark (Sand on Black), **"Wearable Editions"** tagline, minimal — nothing else |
-| 2 | Manifesto | Void Black `#0A0A0A` | Full Wearable Editions manifesto (Draft 1) as a large typographic moment. Generous whitespace. |
+| 2 | Manifesto | Void Black `#0A0A0A` | Full Wearable Editions manifesto as a large typographic moment. Generous whitespace. |
 | 3 | "What is SWAG?" — Authentic Expression | Void Black `#0A0A0A` | First identity poster module. Display type bleeds off edges. Ghost "CROSS WITH SWAG" watermark layer behind. |
 | 4 | "What is SWAG?" — Internal Authority | Muted Sand `#D6D1C4` | Second poster module. Black type on Sand. |
 | 5 | "What is SWAG?" — Presence | Stone Grey `#575D61` | Third poster module. Sand type on Stone. |
@@ -265,12 +263,12 @@ Director confirmed Section 6 remains a release showcase, but language and framin
 
 **1 — Hero**
 - swag. wordmark (SVG) top-left
-- "WEARABLE EDITIONS" — small caps label *(Draft 1)*
+- "WEARABLE EDITIONS" — small caps label
 - Giant ghost type "NOTH- / OWE / ING." in low-opacity Void Black tone behind wordmark
 - Minimal entry — let silence do the work
 
 **2 — Manifesto**
-- Full Wearable Editions manifesto (Draft 1) as large body type — NOT display size. Let the words breathe.
+- Full Wearable Editions manifesto as large body type — NOT display size. Let the words breathe.
 - Sign-off line "— the director." sits at the end, separated from the body — can appear as a distinct typographic lockup
 - Background: Void Black. Text: Muted Sand.
 

@@ -1,5 +1,5 @@
 import { colors } from "@/lib/design-tokens";
-import { provisionalSwagModules } from "@/lib/copy";
+import { bleedWords, swagModules } from "@/lib/copy";
 
 export type SectionTone = "dark" | "light";
 
@@ -42,9 +42,9 @@ export const sections = [
     foreground: colors.mutedSand,
     tone: "dark",
     label: "WHAT IS SWAG?",
-    bleedWord: "EXPRESSION",
+    bleedWord: bleedWords.s3,
     ghost: "CROSS\nWITH\nSWAG",
-    statements: provisionalSwagModules.authenticExpression,
+    statements: swagModules.authenticExpression,
   },
   {
     id: "internal-authority",
@@ -54,9 +54,9 @@ export const sections = [
     foreground: colors.voidBlack,
     tone: "light",
     label: "WHAT IS SWAG?",
-    bleedWord: "AUTHORITY",
+    bleedWord: bleedWords.s4,
     ghost: "CROSS\nWITH\nSWAG",
-    statements: provisionalSwagModules.internalAuthority,
+    statements: swagModules.internalAuthority,
   },
   {
     id: "presence",
@@ -66,14 +66,14 @@ export const sections = [
     foreground: colors.mutedSand,
     tone: "dark",
     label: "WHAT IS SWAG?",
-    bleedWord: "PRESENCE",
+    bleedWord: bleedWords.s5,
     ghost: "CROSS\nWITH\nSWAG",
-    statements: provisionalSwagModules.presence,
+    statements: swagModules.presence,
   },
   {
     id: "kloofstreetnights",
     index: 6,
-    title: "kloofstreetnights - Wearable Edition",
+    title: "kloofstreetnights — Wearable Edition",
     background: colors.deepEarth,
     foreground: colors.mutedSand,
     tone: "dark",
@@ -86,9 +86,9 @@ export const sections = [
     foreground: colors.mutedSand,
     tone: "dark",
     label: "WHAT IS SWAG?",
-    bleedWord: "WEIGHT",
+    bleedWord: bleedWords.s7,
     ghost: "CROSS\nWITH\nSWAG",
-    statements: provisionalSwagModules.densityWeight,
+    statements: swagModules.densityWeight,
   },
   {
     id: "closing",
