@@ -97,7 +97,25 @@ Confirmed colour sequence:
 - `stitch/SCREEN_PROMPTS.md` — six screen prompts ready for Stitch MCP.
 - `stitch/screen-prompts.md` — fuller prompt pack from initial implementation.
 
-There is no Stitch MCP server registered in this Cursor environment right now. Treat these files as the Stitch handoff until an MCP is configured.
+**Stitch MCP status:** Configured in user-level Cursor MCP settings (`~/.cursor/mcp.json`) pointing at `https://stitch.googleapis.com/mcp` with Google API key auth. Stitch tools may not be available yet — Marcus will generate screens manually from `stitch/SCREEN_PROMPTS.md` until tools connect.
+
+**V1 component MCP stack (user-level `~/.cursor/mcp.json`):**
+
+| Server | Purpose | Tools |
+|--------|---------|-------|
+| **21st** | 21st.dev component blocks | Connected (user confirmed) |
+| **uilora** | Uilora component library (`list_components`, `view_component`, `add_component`) | Requires `UILORA_API_KEY` in env or `mcp.json` |
+| **stitch** | Google Stitch screen generation | Configured; tools pending |
+
+**Project MCP (`/.cursor/mcp.json`):**
+
+| Server | Purpose |
+|--------|---------|
+| **shadcn** | React Bits registry via `components.json` (`@react-bits`) | Connected (user confirmed) |
+
+**Agent session note:** MCP servers may not appear in the project tool cache until Cursor reloads. Restart MCP in Cursor Settings if tools are missing.
+
+**Security note:** Do not commit `mcp.json` or API keys to the repo. Keep credentials in local Cursor config only.
 
 ## Skills To Keep In Mind
 
@@ -106,6 +124,7 @@ Future agents should consider these Cursor/user skills before working:
 - `create-agentsmd` — maintain `AGENTS.md` when project instructions change.
 - `frontend-design`, `design-taste-frontend`, `design-taste-frontend-v1` — preserve the high-taste, non-generic frontend direction.
 - `stitch-design-taste` — use when regenerating Stitch design guidance.
+- `transitions-dev` — micro-interaction patterns (card resize, dropdown, modal, panel reveal, etc.) for V1 polish; read `SKILL.md` before applying.
 - `gpt-taste` — use cautiously; do not randomize this fixed 9-poster system.
 - `deploy-to-vercel` / Vercel tools — use for preview deployment only until public launch.
 - `browser-preview` / Playwright — use for visual QA after UI changes.
@@ -136,7 +155,7 @@ The deployment built successfully, but anonymous access may be gated by Vercel a
 | Phase | Status | Notes |
 |-------|--------|-------|
 | **Phase 0** | ✅ COMPLETE | Marcus approved: manifesto, tagline, statement distribution, bleed words, motion direction, Section 6 copy/imagery/CTA. |
-| **Phase 1** | 🔲 READY | Stitch screens ready to generate (`stitch/DESIGN.md` + 6 screen prompts in `stitch/SCREEN_PROMPTS.md`). |
+| **Phase 1** | 🔲 READY | Stitch MCP configured in Cursor; generate screens from `stitch/DESIGN.md` + `stitch/SCREEN_PROMPTS.md`. |
 | **Phase 2–3** | ✅ COMPLETE | Tokens, copy, sections config, Next.js scaffold in place. |
 | **Phase 4–5** | ✅ COMPLETE | Section shells + motion infrastructure wired. Polish/tuning continues post-Stitch review. |
 
