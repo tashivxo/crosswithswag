@@ -94,10 +94,9 @@ Confirmed colour sequence:
 ## Stitch Context
 
 - `stitch/DESIGN.md` — Stitch-native design system.
-- `stitch/SCREEN_PROMPTS.md` — six screen prompts ready for Stitch MCP.
-- `stitch/screen-prompts.md` — fuller prompt pack from initial implementation.
+- `stitch/SCREEN_PROMPTS.md` — eight copy-verified screen prompts ready for Stitch (see `STITCH_PROMPTS_VERIFICATION_SUMMARY.md`).
 
-**Stitch MCP status:** Configured in user-level Cursor MCP settings (`~/.cursor/mcp.json`) pointing at `https://stitch.googleapis.com/mcp` with Google API key auth. Stitch tools may not be available yet — Marcus will generate screens manually from `stitch/SCREEN_PROMPTS.md` until tools connect.
+**Stitch MCP status:** Configured in user-level Cursor MCP settings (`~/.cursor/mcp.json`) pointing at `https://stitch.googleapis.com/mcp` with Google API key auth. **Never commit API keys or `mcp.json` to the repo.** Phase 1 screens generated in Stitch (6 July 2026); awaiting Marcus visual review via `STITCH_REVIEW_NOTES.md`. Do not implement layout changes until approved.
 
 **V1 component MCP stack (user-level `~/.cursor/mcp.json`):**
 
@@ -105,7 +104,7 @@ Confirmed colour sequence:
 |--------|---------|-------|
 | **21st** | 21st.dev component blocks | Connected (user confirmed) |
 | **uilora** | Uilora component library (`list_components`, `view_component`, `add_component`) | Requires `UILORA_API_KEY` in env or `mcp.json` |
-| **stitch** | Google Stitch screen generation | Configured; tools pending |
+| **stitch** | Google Stitch screen generation | Configured; screens imported to `swag-v1-stitch-compositions/` |
 
 **Project MCP (`/.cursor/mcp.json`):**
 
@@ -155,7 +154,7 @@ The deployment built successfully, but anonymous access may be gated by Vercel a
 | Phase | Status | Notes |
 |-------|--------|-------|
 | **Phase 0** | ✅ COMPLETE | Marcus approved: manifesto, tagline, statement distribution, bleed words, motion direction, Section 6 copy/imagery/CTA. |
-| **Phase 1** | 🔲 READY | Stitch MCP configured in Cursor; generate screens from `stitch/DESIGN.md` + `stitch/SCREEN_PROMPTS.md`. |
+| **Phase 1** | ⏸ PENDING REVIEW | Stitch screens imported to `swag-v1-stitch-compositions/`. Marcus review via `STITCH_REVIEW_NOTES.md`. No site implementation until approved. |
 | **Phase 2–3** | ✅ COMPLETE | Tokens, copy, sections config, Next.js scaffold in place. |
 | **Phase 4–5** | ✅ COMPLETE | Section shells + motion infrastructure wired. Polish/tuning continues post-Stitch review. |
 
@@ -177,9 +176,9 @@ The deployment built successfully, but anonymous access may be gated by Vercel a
 - Motion direction: scroll-linked interpolation + slow ghost parallax ✅
 - Close + footer structure ✅
 
-**Pending visual review (not a copy blocker):**
+**Pending visual review (blocking Phase 5 polish):**
 
-- Stitch screen compositions / layout fidelity approval.
+- Stitch screen compositions / layout fidelity approval — screens exist in Stitch; export to `swag-v1-stitch-compositions/screens/` and complete `STITCH_REVIEW_NOTES.md`.
 
 ## Marcus Sign-Off Gate
 

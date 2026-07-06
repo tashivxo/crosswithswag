@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary": "#c2c7cc",
+                    "tertiary-container": "#060b0e",
+                    "error-container": "#93000a",
+                    "surface-container-high": "#2a2a2a",
+                    "primary": "#c9c6c5",
+                    "outline": "#8e9192",
+                    "surface-container-low": "#1c1b1b",
+                    "primary-fixed": "#e5e2e1",
+                    "muted-sand": "#D6D1C4",
+                    "on-secondary-container": "#b9b5a8",
+                    "on-primary-fixed-variant": "#474646",
+                    "background": "#131313",
+                    "on-secondary-fixed-variant": "#49473d",
+                    "on-tertiary-container": "#747a7e",
+                    "stone-grey": "#575D61",
+                    "on-tertiary-fixed-variant": "#42484b",
+                    "void-black": "#0A0A0A",
+                    "surface-container-highest": "#353534",
+                    "on-secondary": "#323028",
+                    "on-secondary-fixed": "#1d1c14",
+                    "surface": "#131313",
+                    "surface-bright": "#3a3939",
+                    "secondary-container": "#49473d",
+                    "on-error": "#690005",
+                    "error": "#ffb4ab",
+                    "secondary": "#cbc6b9",
+                    "on-surface-variant": "#c4c7c7",
+                    "tertiary-fixed": "#dee3e8",
+                    "on-tertiary-fixed": "#161c20",
+                    "primary-fixed-dim": "#c9c6c5",
+                    "on-surface": "#e5e2e1",
+                    "surface-container-lowest": "#0e0e0e",
+                    "surface-container": "#201f1f",
+                    "secondary-fixed-dim": "#cbc6b9",
+                    "on-background": "#e5e2e1",
+                    "on-tertiary": "#2b3135",
+                    "surface-variant": "#353534",
+                    "on-primary": "#313030",
+                    "secondary-fixed": "#e7e2d5",
+                    "deep-earth-clay": "#8C5E4A",
+                    "tertiary-fixed-dim": "#c2c7cc",
+                    "inverse-primary": "#5f5e5e",
+                    "on-primary-container": "#7b7979",
+                    "on-error-container": "#ffdad6",
+                    "surface-dim": "#131313",
+                    "primary-container": "#0a0a0a",
+                    "outline-variant": "#444748",
+                    "on-primary-fixed": "#1c1b1b",
+                    "inverse-surface": "#e5e2e1",
+                    "inverse-on-surface": "#313030",
+                    "surface-tint": "#c9c6c5"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-safe": "clamp(2rem, 5vw, 6rem)",
+                    "poster-padding": "10dvh",
+                    "gutter": "1rem",
+                    "ghost-offset": "-2vw"
+            },
+            "fontFamily": {
+                    "label-mono": ["Instrument Sans"],
+                    "headline-poster": ["Instrument Sans"],
+                    "body-manifesto": ["Instrument Sans"],
+                    "statement": ["Instrument Sans"],
+                    "display-bleed": ["Instrument Sans"]
+            },
+            "fontSize": {
+                    "label-mono": ["clamp(11px, 1vw, 13px)", {"lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "400"}],
+                    "headline-poster": ["clamp(40px, 7vw, 96px)", {"lineHeight": "1.0", "letterSpacing": "-0.04em", "fontWeight": "700"}],
+                    "body-manifesto": ["clamp(16px, 1.5vw, 20px)", {"lineHeight": "1.6", "letterSpacing": "0em", "fontWeight": "400"}],
+                    "statement": ["clamp(24px, 4vw, 56px)", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "500"}],
+                    "display-bleed": ["clamp(80px, 16vw, 220px)", {"lineHeight": "0.9", "letterSpacing": "-0.06em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #575D61; /* Stone Grey */
+            color: #D6D1C4; /* Sand */
+            overflow-x: hidden;
+            margin: 0;
+            cursor: crosshair;
+        }
+        .text-sand { color: #D6D1C4; }
+        .bg-stone { background-color: #575D61; }
+        .ghost-bleed {
+            font-size: 18vw;
+            opacity: 0.05;
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .watermark-layer {
+            opacity: 0.02;
+            pointer-events: none;
+            line-height: 0.8;
+            z-index: -1;
+        }
+        .parallax-container {
+            perspective: 1000px;
+        }
+        .fade-in {
+            animation: fadeIn 2s cubic-bezier(0.2, 0, 0.2, 1) forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .reveal-delay-1 { animation-delay: 0.2s; }
+        .reveal-delay-2 { animation-delay: 0.4s; }
+        .reveal-delay-3 { animation-delay: 0.6s; }
+    </style>
+</head>
+<body class="font-body-manifesto selection:bg-muted-sand selection:text-stone-grey">
+<!-- Top AppBar Component -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-end px-margin-safe py-8 w-full bg-transparent no-border flat no shadows">
+<div class="font-display-bleed text-display-bleed lowercase tracking-tighter text-on-background dark:text-on-background cursor-pointer transition-all duration-700 ease-in-out">
+            swag.
+        </div>
+<nav class="flex gap-8">
+<a class="font-label-mono text-label-mono uppercase text-stone-grey hover:text-on-background transition-colors duration-500 cursor-pointer" href="#">
+                WEARABLE EDITIONS
+            </a>
+<a class="font-label-mono text-label-mono uppercase text-stone-grey hover:text-on-background transition-colors duration-500 cursor-pointer" href="#">
+                @crosswithswag
+            </a>
+</nav>
+</header>
+<!-- Side Navigation Trigger (Abstracted) -->
+<div class="fixed left-margin-safe bottom-8 z-50">
+<div class="flex flex-col space-y-2 opacity-40 hover:opacity-100 transition-opacity duration-500">
+<span class="font-label-mono text-[10px] tracking-widest uppercase">Navigation</span>
+<div class="w-8 h-[1px] bg-muted-sand"></div>
+</div>
+</div>
+<!-- Main Canvas -->
+<main class="relative min-h-screen w-full flex flex-col justify-center px-margin-safe overflow-hidden">
+<!-- Ghost Watermark Background Layer -->
+<div class="absolute inset-0 flex items-center justify-center watermark-layer select-none">
+<div class="font-display-bleed text-display-bleed flex flex-col items-center tracking-tighter leading-none">
+<span>CROSS</span>
+<span>WITH</span>
+<span>SWAG</span>
+</div>
+</div>
+<!-- Ghost Bleed Text -->
+<div class="absolute -bottom-10 right-[-5vw] ghost-bleed font-display-bleed select-none">
+            PRESENCE
+        </div>
+<!-- Foreground Content -->
+<div class="relative z-10 max-w-4xl space-y-24">
+<!-- Top-left label -->
+<div class="fade-in">
+<span class="text-[0.65rem] tracking-[0.2em] font-label-mono text-muted-sand opacity-60 uppercase block mb-12">
+                    WHAT IS SWAG?
+                </span>
+</div>
+<!-- Statement Modules -->
+<div class="space-y-16">
+<div class="fade-in reveal-delay-1">
+<h2 class="font-statement text-statement text-muted-sand uppercase max-w-2xl">
+                        EMANATES PRESENCE
+                    </h2>
+</div>
+<div class="fade-in reveal-delay-2">
+<h2 class="font-statement text-statement text-muted-sand uppercase max-w-2xl ml-[10vw]">
+                        DOES NOT BEG TO BE UNDERSTOOD
+                    </h2>
+</div>
+<div class="fade-in reveal-delay-3">
+<h2 class="font-statement text-statement text-muted-sand uppercase max-w-2xl ml-[5vw]">
+                        COMMANDS RESPECT WITHOUT RAISING A VOICE
+                    </h2>
+</div>
+</div>
+</div>
+<!-- Atmosphere Subtle Grid/Texture (CSS Only) -->
+<div class="absolute inset-0 pointer-events-none opacity-20" style="background-image: radial-gradient(#D6D1C4 0.5px, transparent 0.5px); background-size: 40px 40px;"></div>
+</main>
+<!-- Footer Component -->
+<footer class="w-full py-12 flex flex-col md:flex-row justify-between items-center px-margin-safe w-full gap-4 bg-transparent no-border">
+<div class="font-display-bleed text-display-bleed opacity-10 select-none">
+            swag.
+        </div>
+<div class="flex gap-8 font-label-mono text-label-mono text-stone-grey">
+<span class="text-stone-grey">© 2024 SWAG. EDITIONS</span>
+<a class="hover:text-on-background underline transition-all duration-300" href="#">TERMS</a>
+<a class="hover:text-on-background underline transition-all duration-300" href="#">PRIVACY</a>
+<a class="text-on-background transition-all duration-300" href="#">@crosswithswag</a>
+</div>
+</footer>
+<!-- Script for subtle parallax and micro-interactions -->
+<script>
+        document.addEventListener('mousemove', (e) => {
+            const x = (e.clientX / window.innerWidth) - 0.5;
+            const y = (e.clientY / window.innerHeight) - 0.5;
+            
+            const ghost = document.querySelector('.ghost-bleed');
+            const watermark = document.querySelector('.watermark-layer');
+            
+            if (ghost) {
+                ghost.style.transform = `translate(${x * 30}px, ${y * 30}px)`;
+            }
+            if (watermark) {
+                watermark.style.transform = `translate(${x * -15}px, ${y * -15}px)`;
+            }
+        });
+
+        // Interactive "Stone" weight - slow reveal on scroll
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.font-statement').forEach(el => observer.observe(el));
+    </script>
+</body></html>

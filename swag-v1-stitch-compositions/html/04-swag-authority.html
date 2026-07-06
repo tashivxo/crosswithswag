@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "stone-grey": "#575D61",
+                    "secondary-container": "#49473d",
+                    "on-secondary": "#323028",
+                    "secondary-fixed": "#e7e2d5",
+                    "error": "#ffb4ab",
+                    "on-primary-container": "#7b7979",
+                    "on-primary-fixed-variant": "#474646",
+                    "outline": "#8e9192",
+                    "tertiary-container": "#060b0e",
+                    "void-black": "#0A0A0A",
+                    "on-tertiary-fixed-variant": "#42484b",
+                    "surface-tint": "#c9c6c5",
+                    "on-error": "#690005",
+                    "primary-container": "#0a0a0a",
+                    "outline-variant": "#444748",
+                    "on-tertiary-fixed": "#161c20",
+                    "on-tertiary": "#2b3135",
+                    "surface-container-high": "#2a2a2a",
+                    "surface-dim": "#131313",
+                    "on-primary": "#313030",
+                    "surface-bright": "#3a3939",
+                    "surface": "#131313",
+                    "surface-container-highest": "#353534",
+                    "tertiary-fixed-dim": "#c2c7cc",
+                    "tertiary-fixed": "#dee3e8",
+                    "tertiary": "#c2c7cc",
+                    "primary": "#c9c6c5",
+                    "on-error-container": "#ffdad6",
+                    "on-surface": "#e5e2e1",
+                    "on-secondary-fixed-variant": "#49473d",
+                    "background": "#131313",
+                    "inverse-on-surface": "#313030",
+                    "primary-fixed": "#e5e2e1",
+                    "on-primary-fixed": "#1c1b1b",
+                    "inverse-surface": "#e5e2e1",
+                    "deep-earth-clay": "#8C5E4A",
+                    "on-tertiary-container": "#747a7e",
+                    "on-secondary-fixed": "#1d1c14",
+                    "secondary-fixed-dim": "#cbc6b9",
+                    "surface-variant": "#353534",
+                    "surface-container": "#201f1f",
+                    "surface-container-lowest": "#0e0e0e",
+                    "on-background": "#e5e2e1",
+                    "secondary": "#cbc6b9",
+                    "inverse-primary": "#5f5e5e",
+                    "primary-fixed-dim": "#c9c6c5",
+                    "on-secondary-container": "#b9b5a8",
+                    "surface-container-low": "#1c1b1b",
+                    "on-surface-variant": "#c4c7c7",
+                    "muted-sand": "#D6D1C4",
+                    "error-container": "#93000a"
+            },
+            "spacing": {
+                    "gutter": "1rem",
+                    "poster-padding": "10dvh",
+                    "margin-safe": "clamp(2rem, 5vw, 6rem)",
+                    "ghost-offset": "-2vw"
+            },
+            "fontFamily": {
+                    "headline-poster": ["Instrument Sans"],
+                    "label-mono": ["Instrument Sans"],
+                    "statement": ["Instrument Sans"],
+                    "display-bleed": ["Instrument Sans"],
+                    "body-manifesto": ["Instrument Sans"]
+            },
+            "fontSize": {
+                    "headline-poster": ["clamp(40px, 7vw, 96px)", {"lineHeight": "1.0", "letterSpacing": "-0.04em", "fontWeight": "700"}],
+                    "label-mono": ["clamp(11px, 1vw, 13px)", {"lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "400"}],
+                    "statement": ["clamp(24px, 4vw, 56px)", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "500"}],
+                    "display-bleed": ["clamp(80px, 16vw, 220px)", {"lineHeight": "0.9", "letterSpacing": "-0.06em", "fontWeight": "700"}],
+                    "body-manifesto": ["clamp(16px, 1.5vw, 20px)", {"lineHeight": "1.6", "letterSpacing": "0em", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #D6D1C4; /* Muted Sand */
+            color: #0A0A0A; /* Void Black */
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .ghost-bleed {
+            font-size: 18vw;
+            color: #0A0A0A;
+            opacity: 0.05;
+            line-height: 0.8;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        .watermark-layer {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 0;
+            opacity: 0.02;
+            pointer-events: none;
+            font-weight: 800;
+            line-height: 0.85;
+            text-align: center;
+            letter-spacing: -0.08em;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .parallax-container {
+            height: 100dvh;
+            perspective: 1px;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        .scroll-section {
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: var(--margin-safe);
+            position: relative;
+            z-index: 10;
+        }
+
+        .statement-link::after {
+            content: '';
+            display: block;
+            width: 0;
+            height: 1px;
+            background: currentColor;
+            transition: width 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        .statement-link:hover::after {
+            width: 100%;
+        }
+
+        /* Custom Casing Integrity */
+        .uppercase-literal {
+            text-transform: none; /* Already provided in caps in copy */
+        }
+    </style>
+</head>
+<body class="font-body-manifesto selection:bg-void-black selection:text-muted-sand">
+<!-- Top AppBar Component -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-end px-margin-safe py-8 bg-transparent">
+<div class="font-display-bleed text-[32px] lowercase tracking-tighter text-void-black">swag.</div>
+<nav class="hidden md:flex gap-8">
+<a class="font-label-mono text-label-mono uppercase text-void-black border-b border-void-black transition-colors duration-500" href="#">WEARABLE EDITIONS</a>
+</nav>
+<div class="font-label-mono text-label-mono uppercase text-void-black cursor-pointer transition-all duration-700 ease-in-out hover:text-stone-grey">@crosswithswag</div>
+</header>
+<!-- SideNavBar (Mobile Triggered or Always Visible Desktop Shell) -->
+<aside class="fixed inset-y-0 left-0 w-12 flex flex-col justify-center items-center z-40 border-r border-void-black/5 md:flex hidden">
+<div class="rotate-90 origin-center whitespace-nowrap font-label-mono text-label-mono text-stone-grey tracking-widest uppercase">
+            EST. 2024 — ARCHIVE COLLECTION
+        </div>
+</aside>
+<!-- Ghost Watermark Layer -->
+<div class="watermark-layer font-display-bleed text-[25vw]">
+<div>CROSS</div>
+<div>WITH</div>
+<div>SWAG</div>
+</div>
+<!-- Main Content Canvas -->
+<main class="relative z-10">
+<!-- Hero Section -->
+<section class="scroll-section">
+<!-- Label Top-Left -->
+<div class="absolute top-margin-safe left-margin-safe">
+<p class="font-label-mono text-[12px] tracking-[0.2em] text-stone-grey uppercase">WHAT IS SWAG?</p>
+</div>
+<!-- Ghost Bleed Word -->
+<div class="absolute -left-[5vw] top-1/2 -translate-y-1/2 ghost-bleed font-headline-poster">
+                AUTHORITY
+            </div>
+<!-- Statement Modules -->
+<div class="max-w-4xl space-y-24 mt-24">
+<div class="group">
+<h2 class="font-statement text-statement uppercase tracking-tight text-void-black">
+                        REPRESENTS YOUR INTERNAL AUTHORITY
+                    </h2>
+<div class="w-12 h-[1px] bg-void-black/20 mt-4 transition-all duration-700 group-hover:w-full"></div>
+</div>
+<div class="group">
+<h2 class="font-statement text-statement uppercase tracking-tight text-void-black">
+                        UPHOLDS TRUTH WITHOUT HESITATION
+                    </h2>
+<div class="w-12 h-[1px] bg-void-black/20 mt-4 transition-all duration-700 group-hover:w-full"></div>
+</div>
+<div class="group">
+<h2 class="font-statement text-statement uppercase tracking-tight text-void-black">
+                        REFUSES TO NEGOTIATE WHAT IS ESSENTIAL TO YOU
+                    </h2>
+<div class="w-12 h-[1px] bg-void-black/20 mt-4 transition-all duration-700 group-hover:w-full"></div>
+</div>
+</div>
+</section>
+<!-- Decorative Image Section (Asymmetric Gallery feel) -->
+<section class="min-h-[1228px] relative px-margin-safe py-32 flex flex-col md:flex-row items-end justify-between">
+<div class="w-full md:w-1/2 aspect-[4/5] relative overflow-hidden grayscale contrast-125 mb-12 md:mb-0">
+<img class="w-full h-full object-cover scale-110 hover:scale-100 transition-transform duration-[2000ms] ease-out" data-alt="A high-contrast cinematic photograph of a structural minimalist sculpture made of dark obsidian, set against a warm beige textured wall. The lighting is harsh and dramatic, casting long geometric shadows that create a brutalist, architectural feel. The overall mood is silent and authoritative, mirroring the luxury editorial aesthetic of a modern art gallery." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAnOrcEBxAgIDx55JdsLXWFQmpR347Pxa_w6eW64oK3eicRN3N8j5SpeceXxYUpFZW7DJ17KGXcXzLfqbEEX2gILtGzWvXyTRLKvEQ0EtNUsmZX7jR240nwP74jLqrlHEgqwcSMBwMYv0QtQJu2YrYvt_AxqVdJCOJHIsLFfpLMo4zMoVy4SuMlblCok2z6XsxVs22mwdH1whxHxuXDAFJL5lZzVqd7YQ-G-b0HUAUxy2SK-NBE5BqwBg"/>
+</div>
+<div class="w-full md:w-1/3 mb-poster-padding text-right">
+<div class="font-label-mono text-label-mono text-stone-grey mb-4">DEFINITION 001.A</div>
+<p class="font-body-manifesto text-void-black text-body-manifesto leading-relaxed italic">
+                    "Swag is not an accessory. It is the architectural integrity of the self. A silent presence that requires no validation from the collective."
+                </p>
+<div class="mt-8">
+<a class="font-label-mono text-label-mono uppercase text-void-black border-b border-void-black/30 hover:border-void-black transition-all" href="#">VIEW MANIFESTO</a>
+</div>
+</div>
+</section>
+<!-- Dynamic Visual Interaction (Shader Placeholder) -->
+<section class="h-[1024px] relative flex items-center justify-center overflow-hidden">
+
+<div class="relative z-10 text-center px-gutter">
+<span class="font-display-bleed text-void-black opacity-10 blur-sm absolute inset-0 -z-10 select-none">ESSENCE</span>
+<h3 class="font-headline-poster text-headline-poster text-void-black">NON-NEGOTIABLE</h3>
+</div>
+</section>
+</main>
+<!-- Footer Component -->
+<footer class="w-full py-12 flex flex-col md:flex-row justify-between items-center px-margin-safe gap-4 bg-transparent transition-all duration-300">
+<div class="font-display-bleed text-display-bleed opacity-10 select-none">swag.</div>
+<div class="flex flex-col md:flex-row gap-8 items-center">
+<div class="font-label-mono text-label-mono text-stone-grey">© 2024 SWAG. EDITIONS</div>
+<div class="flex gap-4">
+<a class="font-label-mono text-label-mono text-stone-grey hover:text-void-black underline transition-colors" href="#">@crosswithswag</a>
+<a class="font-label-mono text-label-mono text-stone-grey hover:text-void-black underline transition-colors" href="#">TERMS</a>
+<a class="font-label-mono text-label-mono text-stone-grey hover:text-void-black underline transition-colors" href="#">PRIVACY</a>
+</div>
+</div>
+</footer>
+<script>
+        // Micro-interaction for parallax effect on ghost text
+        document.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const ghost = document.querySelector('.ghost-bleed');
+            const watermark = document.querySelector('.watermark-layer');
+            
+            if (ghost) {
+                ghost.style.transform = `translateY(${-50 + (scrolled * 0.05)}%)`;
+            }
+            if (watermark) {
+                watermark.style.transform = `translateY(${scrolled * -0.1}px)`;
+            }
+        });
+
+        // Smooth appearance for module items
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('opacity-100');
+                    entry.target.classList.remove('opacity-0', 'translate-y-8');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.group').forEach(el => {
+            el.classList.add('transition-all', 'duration-1000', 'opacity-0', 'translate-y-8');
+            observer.observe(el);
+        });
+    </script>
+</body></html>

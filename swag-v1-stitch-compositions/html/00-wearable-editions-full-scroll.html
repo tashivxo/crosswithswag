@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>swag. | WEARABLE EDITIONS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-lowest": "#0e0e0e",
+                        "stone-grey": "#575D61",
+                        "on-primary-fixed": "#1c1b1b",
+                        "secondary-fixed-dim": "#cbc6b9",
+                        "on-error-container": "#ffdad6",
+                        "tertiary-container": "#060b0e",
+                        "tertiary-fixed-dim": "#c2c7cc",
+                        "on-primary-container": "#7b7979",
+                        "muted-sand": "#D6D1C4",
+                        "on-surface-variant": "#c4c7c7",
+                        "on-secondary-fixed": "#1d1c14",
+                        "primary-fixed": "#e5e2e1",
+                        "inverse-on-surface": "#313030",
+                        "surface-container-highest": "#353534",
+                        "secondary": "#cbc6b9",
+                        "on-tertiary-container": "#747a7e",
+                        "outline": "#8e9192",
+                        "surface-variant": "#353534",
+                        "surface": "#131313",
+                        "on-tertiary-fixed-variant": "#42484b",
+                        "surface-container-low": "#1c1b1b",
+                        "surface-bright": "#3a3939",
+                        "on-tertiary": "#2b3135",
+                        "outline-variant": "#444748",
+                        "deep-earth-clay": "#8C5E4A",
+                        "inverse-surface": "#e5e2e1",
+                        "surface-container-high": "#2a2a2a",
+                        "on-surface": "#e5e2e1",
+                        "primary-container": "#0a0a0a",
+                        "surface-container": "#201f1f",
+                        "secondary-fixed": "#e7e2d5",
+                        "on-secondary": "#323028",
+                        "on-primary": "#313030",
+                        "on-secondary-fixed-variant": "#49473d",
+                        "on-background": "#e5e2e1",
+                        "primary-fixed-dim": "#c9c6c5",
+                        "tertiary-fixed": "#dee3e8",
+                        "inverse-primary": "#5f5e5e",
+                        "primary": "#c9c6c5",
+                        "on-error": "#690005",
+                        "error": "#ffb4ab",
+                        "void-black": "#0A0A0A",
+                        "on-secondary-container": "#b9b5a8",
+                        "surface-dim": "#131313",
+                        "surface-tint": "#c9c6c5",
+                        "on-tertiary-fixed": "#161c20",
+                        "secondary-container": "#49473d",
+                        "background": "#131313",
+                        "error-container": "#93000a",
+                        "on-primary-fixed-variant": "#474646",
+                        "tertiary": "#c2c7cc"
+                    },
+                    "spacing": {
+                        "ghost-offset": "-2vw",
+                        "gutter": "1rem",
+                        "margin-safe": "clamp(2rem, 5vw, 6rem)",
+                        "poster-padding": "10dvh"
+                    },
+                    "fontFamily": {
+                        "body-manifesto": ["Instrument Sans"],
+                        "display-bleed": ["Instrument Sans"],
+                        "headline-poster": ["Instrument Sans"],
+                        "statement": ["Instrument Sans"],
+                        "label-mono": ["Instrument Sans"]
+                    },
+                    "fontSize": {
+                        "body-manifesto": ["clamp(16px, 1.5vw, 20px)", {"lineHeight": "1.6", "letterSpacing": "0em", "fontWeight": "400"}],
+                        "display-bleed": ["clamp(80px, 16vw, 220px)", {"lineHeight": "0.9", "letterSpacing": "-0.06em", "fontWeight": "700"}],
+                        "headline-poster": ["clamp(40px, 7vw, 96px)", {"lineHeight": "1.0", "letterSpacing": "-0.04em", "fontWeight": "700"}],
+                        "statement": ["clamp(24px, 4vw, 56px)", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "500"}],
+                        "label-mono": ["clamp(11px, 1vw, 13px)", {"lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: #131313;
+            color: #e5e2e1;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+        .ghost-text {
+            opacity: 0.05;
+            pointer-events: none;
+            user-select: none;
+        }
+        .reveal-on-scroll {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .bleed-right {
+            transform: translateX(10%);
+        }
+        .bleed-left {
+            transform: translateX(-10%);
+        }
+    </style>
+</head>
+<body class="bg-void-black font-body-manifesto text-body-manifesto antialiased selection:bg-muted-sand selection:text-void-black">
+<!-- TopAppBar -->
+<nav class="fixed top-0 w-full flex justify-between items-end px-margin-safe py-8 w-full z-50 bg-transparent no-border flat no shadows">
+<div class="font-display-bleed text-[40px] lowercase tracking-tighter text-on-background dark:text-on-background cursor-pointer transition-all duration-700 ease-in-out">swag.</div>
+<div class="flex items-center space-x-12">
+<a class="font-label-mono text-label-mono uppercase text-on-background border-b border-on-background hover:text-on-background transition-colors duration-500 cursor-pointer transition-all duration-700 ease-in-out" href="#">WEARABLE EDITIONS</a>
+<a class="font-label-mono text-label-mono uppercase text-stone-grey hover:text-on-background transition-colors duration-500 cursor-pointer transition-all duration-700 ease-in-out" href="#">@crosswithswag</a>
+</div>
+</nav>
+<!-- SideNavBar (Triggered via Hidden Menu) -->
+<div class="fixed inset-y-0 left-0 w-screen md:w-1/3 z-[60] bg-surface-container-lowest dark:bg-surface-container-lowest flex flex-col justify-center px-margin-safe h-full space-y-12 translate-x-[-100%] transition-transform duration-1000 ease-in-out" id="side-nav">
+<div class="space-y-2">
+<div class="font-display-bleed text-display-bleed text-on-surface">swag.</div>
+<div class="font-label-mono text-label-mono text-stone-grey tracking-[0.2em] uppercase">WEARABLE EDITIONS</div>
+</div>
+<div class="flex flex-col space-y-6">
+<a class="font-statement text-statement uppercase text-on-surface font-bold tracking-widest transition-opacity duration-1000" href="#">EDITIONS</a>
+<a class="font-statement text-statement uppercase text-stone-grey hover:text-on-surface underline decoration-1 underline-offset-8 transition-opacity duration-1000" href="#">ARCHIVE</a>
+<a class="font-statement text-statement uppercase text-stone-grey hover:text-on-surface underline decoration-1 underline-offset-8 transition-opacity duration-1000" href="#">MANIFESTO</a>
+<a class="font-statement text-statement uppercase text-stone-grey hover:text-on-surface underline decoration-1 underline-offset-8 transition-opacity duration-1000" href="#">CONNECT</a>
+</div>
+</div>
+<!-- 1. Hero Landing -->
+<section class="relative h-screen w-full flex flex-col justify-center items-start overflow-hidden bg-void-black">
+<div class="ghost-text absolute inset-0 flex items-center justify-center font-display-bleed text-display-bleed leading-[0.8] tracking-tighter whitespace-pre uppercase">
+            NOTH-<br/>OWE<br/>ING.
+        </div>
+<div class="relative z-10 px-margin-safe mt-32">
+<h2 class="font-label-mono text-label-mono text-muted-sand uppercase tracking-[0.4em] mb-4">WEARABLE EDITIONS</h2>
+<div class="font-display-bleed text-display-bleed text-muted-sand lowercase tracking-tighter bleed-left">swag.</div>
+</div>
+</section>
+<!-- 2. Manifesto -->
+<section class="min-h-screen w-full flex items-center justify-end px-margin-safe bg-void-black py-poster-padding">
+<div class="max-w-3xl text-right reveal-on-scroll">
+<p class="font-statement text-statement text-muted-sand mb-12">
+                We do not create for the spectator. We create for the carrier. Swag is not an accessory; it is the physical manifestation of an internal geometry that refuses to be corrected by external gaze.
+            </p>
+<p class="font-body-manifesto text-body-manifesto text-muted-sand/60 mb-24 max-w-xl ml-auto">
+                Every edition is a study in density. A commitment to the weight of presence over the lightness of trend. We are interested in the silence that follows a statement. The nothing owing.
+            </p>
+<span class="font-label-mono text-label-mono text-muted-sand uppercase tracking-widest">- the director.</span>
+</div>
+</section>
+<!-- 3. Authentic Expression -->
+<section class="relative h-screen w-full flex flex-col justify-center overflow-hidden bg-void-black">
+<div class="ghost-text absolute right-0 top-1/2 -translate-y-1/2 font-display-bleed text-display-bleed leading-[0.8] opacity-[0.03] uppercase">
+            CROSS<br/>WITH<br/>SWAG
+        </div>
+<div class="px-margin-safe">
+<h3 class="font-label-mono text-label-mono text-stone-grey uppercase tracking-[0.3em] mb-8">WHAT IS SWAG?</h3>
+<h2 class="font-display-bleed text-display-bleed text-muted-sand uppercase bleed-right">EXPRESSION</h2>
+</div>
+</section>
+<!-- 4. Internal Authority -->
+<section class="relative h-screen w-full flex items-center bg-muted-sand overflow-hidden">
+<div class="px-margin-safe w-full">
+<h2 class="font-display-bleed text-display-bleed text-void-black uppercase bleed-left mix-blend-multiply">AUTHORITY</h2>
+<div class="max-w-md mt-12 reveal-on-scroll">
+<p class="font-body-manifesto text-body-manifesto text-void-black">
+                    Authenticity is a closed loop. It requires no validation from the gallery. It is the internal authority that dictates the drape, the texture, and the gravity of the garment.
+                </p>
+</div>
+</div>
+</section>
+<!-- 5. Presence -->
+<section class="h-screen w-full flex items-end justify-center bg-stone-grey px-margin-safe py-poster-padding">
+<div class="w-full flex flex-col items-start reveal-on-scroll">
+<h2 class="font-display-bleed text-display-bleed text-muted-sand uppercase bleed-right mb-12">PRESENCE</h2>
+<div class="max-w-2xl">
+<p class="font-statement text-statement text-muted-sand">
+                    True respect is earned in the silence of one's own company. We design for the moments when you are the only one in the room, yet the room feels full.
+                </p>
+</div>
+</div>
+</section>
+<!-- 6. kloofstreetnights Edition -->
+<section class="relative min-h-screen w-full bg-deep-earth-clay flex flex-col md:flex-row items-center py-poster-padding px-margin-safe gap-20">
+<div class="w-full md:w-1/2 reveal-on-scroll">
+<div class="aspect-[3/4] w-full bg-void-black/20 overflow-hidden relative">
+<img class="w-full h-full object-cover grayscale brightness-75 hover:grayscale-0 transition-all duration-1000" data-alt="A cinematic, high-contrast fashion photograph of a person wearing a heavy, oversized black cotton shirt from the kloofstreetnights edition. The lighting is low-key with dramatic shadows, emphasizing the deep earth clay background. The mood is moody, urban, and extremely minimalist, capturing the texture of the fabric and a sense of quiet authority." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBG9syXqmZu96iu4bf4W0NZGAp7lEUUTpXEo0XGM1ahvn-3SWim-kSyvL5MpmklH8_nSSPsdTTw8tDNlS20kLXlhGYxEyvJgaV1CL2sVHabJfB8uNmlIDG0-FZvOfNqwkYCmBT6XOfHFSpDhLA91TKttTbSRmOlMc9tiSAFzNyTaIMNvesxGzDxsF7j2hyxrWGOQYIyj8Rq-PznSOH-OAhdEjWBHgCSksm9dTk-Jva6sjbcqoYTGjHF6A"/>
+</div>
+</div>
+<div class="w-full md:w-1/2 space-y-12 reveal-on-scroll">
+<h2 class="font-display-bleed text-display-bleed text-muted-sand lowercase tracking-tighter">kloofstreetnights.</h2>
+<p class="font-body-manifesto text-body-manifesto text-muted-sand/80 max-w-sm">
+                A nocturnal edition designed for the transition between the visible and the invisible. Heavyweight textures that anchor the wearer to the street.
+            </p>
+<a class="inline-block font-label-mono text-label-mono text-muted-sand uppercase tracking-[0.3em] border-b border-muted-sand pb-1 hover:text-void-black hover:border-void-black transition-colors duration-500" href="#">
+                @crosswithswag
+            </a>
+</div>
+</section>
+<!-- 7. Density/Weight -->
+<section class="h-screen w-full flex items-center justify-center bg-stone-grey overflow-hidden">
+<div class="relative w-full text-center">
+<h2 class="font-display-bleed text-display-bleed text-muted-sand uppercase bleed-left opacity-10 absolute inset-0 flex items-center justify-center">WEIGHT</h2>
+<div class="relative z-10 max-w-3xl mx-auto px-margin-safe reveal-on-scroll">
+<p class="font-statement text-statement text-muted-sand mb-8">
+                    Consistency is the foundation. Rupture is the evolution.
+                </p>
+<p class="font-body-manifesto text-body-manifesto text-muted-sand/70">
+                    We seek the density of thought that translates into the weight of the weave. Nothing light, nothing transient.
+                </p>
+</div>
+</div>
+</section>
+<!-- 8. Closing -->
+<section class="h-screen w-full flex flex-col items-center justify-center bg-void-black text-center px-margin-safe">
+<div class="reveal-on-scroll">
+<h2 class="font-display-bleed text-display-bleed text-muted-sand uppercase tracking-tighter leading-none mb-12">NOTHING OWING.</h2>
+<div class="w-24 h-[1px] bg-muted-sand/20 mx-auto mb-12"></div>
+<p class="font-label-mono text-label-mono text-stone-grey uppercase tracking-[0.5em]">END OF EDITION 01</p>
+</div>
+</section>
+<!-- Footer -->
+<footer class="w-full py-12 bg-transparent flex flex-col md:flex-row justify-between items-center px-margin-safe w-full gap-4">
+<div class="font-display-bleed text-display-bleed opacity-10 text-stone-grey pointer-events-none">swag.</div>
+<div class="flex flex-col items-center md:items-end space-y-4">
+<div class="flex space-x-8">
+<a class="font-label-mono text-label-mono text-stone-grey hover:text-on-background underline transition-all duration-300" href="#">@crosswithswag</a>
+<a class="font-label-mono text-label-mono text-stone-grey hover:text-on-background underline transition-all duration-300" href="#">TERMS</a>
+<a class="font-label-mono text-label-mono text-stone-grey hover:text-on-background underline transition-all duration-300" href="#">PRIVACY</a>
+</div>
+<div class="font-label-mono text-label-mono text-stone-grey">© 2024 SWAG. EDITIONS</div>
+</div>
+</footer>
+<script>
+        // Reveal elements on scroll
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal-on-scroll').forEach(el => observer.observe(el));
+
+        // Parallax effect for ghost text
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            document.querySelectorAll('.ghost-text').forEach(ghost => {
+                const speed = 0.2;
+                ghost.style.transform = `translateY(${scrolled * speed}px)`;
+            });
+        });
+
+        // Simple logo interaction
+        const logo = document.querySelector('nav .font-display-bleed');
+        const sideNav = document.getElementById('side-nav');
+        let menuOpen = false;
+
+        logo.addEventListener('click', () => {
+            menuOpen = !menuOpen;
+            if (menuOpen) {
+                sideNav.style.transform = 'translateX(0)';
+            } else {
+                sideNav.style.transform = 'translateX(-100%)';
+            }
+        });
+
+        // Close menu on link click
+        sideNav.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                sideNav.style.transform = 'translateX(-100%)';
+                menuOpen = false;
+            });
+        });
+    </script>
+</body></html>

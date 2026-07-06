@@ -1,0 +1,98 @@
+﻿{
+    "projectId":  "13963128826767633115",
+    "projectTitle":  "Swag Digital Gallery",
+    "importedAt":  "2026-07-06T10:18:27.2274496Z",
+    "source":  "Stitch MCP list_screens + download URLs",
+    "screens":  [
+                    {
+                        "title":  "swag. | Internal Authority (Desktop)",
+                        "screenId":  "284e12b3465548a4a99464df3e62e9fd",
+                        "width":  "2560",
+                        "height":  "7112",
+                        "deviceType":  "DESKTOP",
+                        "screenshot":  "04-swag-authority.png",
+                        "html":  "04-swag-authority.html"
+                    },
+                    {
+                        "title":  "swag. | Presence (Desktop)",
+                        "screenId":  "778d5f2ce45042b5857cd58ab21c84a5",
+                        "width":  "2560",
+                        "height":  "2608",
+                        "deviceType":  "DESKTOP",
+                        "screenshot":  "05-swag-presence.png",
+                        "html":  "05-swag-presence.html"
+                    },
+                    {
+                        "title":  "swag. | Wearable Editions",
+                        "screenId":  "6497d19d28ea44a7bfaa13cbb4f03844",
+                        "width":  "2560",
+                        "height":  "16944",
+                        "deviceType":  "DESKTOP",
+                        "screenshot":  "00-wearable-editions-full-scroll.png",
+                        "html":  "00-wearable-editions-full-scroll.html"
+                    },
+                    {
+                        "title":  "swag. | Density / Weight (Desktop)",
+                        "screenId":  "cadfe5b2969e445eb51e39605f0f2917",
+                        "width":  "2560",
+                        "height":  "8470",
+                        "deviceType":  "DESKTOP",
+                        "screenshot":  "07-swag-weight.png",
+                        "html":  "07-swag-weight.html"
+                    },
+                    {
+                        "title":  "swag. | Authentic Expression (Desktop)",
+                        "screenId":  "18707a5e72aa41f4a1c9467611b4d9a1",
+                        "width":  "2560",
+                        "height":  "2266",
+                        "deviceType":  "DESKTOP",
+                        "screenshot":  "03-swag-expression.png",
+                        "html":  "03-swag-expression.html"
+                    },
+                    {
+                        "title":  "swag. | Manifesto (Desktop) Refined",
+                        "screenId":  "6d6727f2987842c58ecc0c1a4a2cd07e",
+                        "width":  "2560",
+                        "height":  "2384",
+                        "deviceType":  "DESKTOP",
+                        "screenshot":  "02-manifesto.png",
+                        "html":  "02-manifesto.html"
+                    },
+                    {
+                        "title":  "swag. | Hero (Desktop)",
+                        "screenId":  "e201945df2cc4eabb96e7a9dcc0fadf6",
+                        "width":  "2560",
+                        "height":  "2608",
+                        "deviceType":  "DESKTOP",
+                        "screenshot":  "01-hero.png",
+                        "html":  "01-hero.html"
+                    },
+                    {
+                        "title":  "swag. | kloofstreetnights (Desktop)",
+                        "screenId":  "16abf81205574e56ac4cd2179fe5c9c0",
+                        "width":  "2560",
+                        "height":  "2610",
+                        "deviceType":  "DESKTOP",
+                        "screenshot":  "06-edition-kloofstreetnights.png",
+                        "html":  "06-edition-kloofstreetnights.html"
+                    },
+                    {
+                        "title":  "swag. | Hero (Mobile)",
+                        "screenId":  "a4b0b83c3906498bae2c304d9da71786",
+                        "width":  "780",
+                        "height":  "2228",
+                        "deviceType":  "MOBILE",
+                        "screenshot":  "01-hero-mobile.png",
+                        "html":  "01-hero-mobile.html"
+                    },
+                    {
+                        "title":  "swag. | Closing Statement (Desktop)",
+                        "screenId":  "c49cfbfaff4141359849a47de6ea36b8",
+                        "width":  "2560",
+                        "height":  "3072",
+                        "deviceType":  "DESKTOP",
+                        "screenshot":  "08-closing.png",
+                        "html":  "08-closing.html"
+                    }
+                ]
+}

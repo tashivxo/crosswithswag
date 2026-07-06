@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SWAG. | STATEMENT</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400;0,500;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-high": "#2a2a2a",
+                    "inverse-on-surface": "#313030",
+                    "stone-grey": "#575D61",
+                    "error-container": "#93000a",
+                    "primary": "#c9c6c5",
+                    "on-secondary-container": "#b9b5a8",
+                    "surface-container-lowest": "#0e0e0e",
+                    "on-secondary-fixed": "#1d1c14",
+                    "outline": "#8e9192",
+                    "surface-tint": "#c9c6c5",
+                    "tertiary-fixed-dim": "#c2c7cc",
+                    "tertiary": "#c2c7cc",
+                    "error": "#ffb4ab",
+                    "on-primary-container": "#7b7979",
+                    "surface": "#131313",
+                    "primary-fixed-dim": "#c9c6c5",
+                    "surface-container": "#201f1f",
+                    "secondary-container": "#49473d",
+                    "on-tertiary": "#2b3135",
+                    "deep-earth-clay": "#8C5E4A",
+                    "secondary": "#cbc6b9",
+                    "on-tertiary-fixed": "#161c20",
+                    "on-tertiary-fixed-variant": "#42484b",
+                    "inverse-primary": "#5f5e5e",
+                    "tertiary-fixed": "#dee3e8",
+                    "on-primary-fixed": "#1c1b1b",
+                    "primary-container": "#0a0a0a",
+                    "surface-bright": "#3a3939",
+                    "void-black": "#0A0A0A",
+                    "secondary-fixed": "#e7e2d5",
+                    "on-error-container": "#ffdad6",
+                    "on-primary": "#313030",
+                    "on-surface-variant": "#c4c7c7",
+                    "on-error": "#690005",
+                    "on-secondary": "#323028",
+                    "secondary-fixed-dim": "#cbc6b9",
+                    "background": "#131313",
+                    "tertiary-container": "#060b0e",
+                    "on-primary-fixed-variant": "#474646",
+                    "on-surface": "#e5e2e1",
+                    "surface-dim": "#131313",
+                    "surface-container-highest": "#353534",
+                    "primary-fixed": "#e5e2e1",
+                    "surface-container-low": "#1c1b1b",
+                    "muted-sand": "#D6D1C4",
+                    "inverse-surface": "#e5e2e1",
+                    "outline-variant": "#444748",
+                    "on-secondary-fixed-variant": "#49473d",
+                    "on-background": "#e5e2e1",
+                    "on-tertiary-container": "#747a7e",
+                    "surface-variant": "#353534"
+            },
+            "spacing": {
+                    "gutter": "1rem",
+                    "poster-padding": "10dvh",
+                    "margin-safe": "clamp(2rem, 5vw, 6rem)",
+                    "ghost-offset": "-2vw"
+            },
+            "fontFamily": {
+                    "headline-poster": ["Instrument Sans"],
+                    "display-bleed": ["Instrument Sans"],
+                    "body-manifesto": ["Instrument Sans"],
+                    "label-mono": ["Instrument Sans"],
+                    "statement": ["Instrument Sans"]
+            },
+            "fontSize": {
+                    "headline-poster": ["clamp(40px, 7vw, 96px)", {"lineHeight": "1.0", "letterSpacing": "-0.04em", "fontWeight": "700"}],
+                    "display-bleed": ["clamp(80px, 16vw, 220px)", {"lineHeight": "0.9", "letterSpacing": "-0.06em", "fontWeight": "700"}],
+                    "body-manifesto": ["clamp(16px, 1.5vw, 20px)", {"lineHeight": "1.6", "letterSpacing": "0em", "fontWeight": "400"}],
+                    "label-mono": ["clamp(11px, 1vw, 13px)", {"lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "400"}],
+                    "statement": ["clamp(24px, 4vw, 56px)", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #575D61;
+            color: #D6D1C4;
+            overflow-x: hidden;
+        }
+        .bleed-text {
+            color: #D6D1C4;
+            opacity: 0.05;
+            white-space: nowrap;
+        }
+        .watermark {
+            color: #D6D1C4;
+            opacity: 0.03;
+            pointer-events: none;
+            user-select: none;
+        }
+        .statement-module {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .statement-module.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="font-body-manifesto antialiased selection:bg-muted-sand selection:text-stone-grey">
+<!-- Top AppBar (from JSON Guidance) -->
+<header class="fixed top-0 w-full flex justify-between items-end px-margin-safe py-8 w-full z-50 bg-transparent no-border flat no shadows">
+<div class="font-display-bleed text-display-bleed lowercase tracking-tighter text-on-background dark:text-on-background !text-[2rem] leading-none">
+            swag.
+        </div>
+<nav class="flex gap-8">
+<a class="font-label-mono text-label-mono uppercase text-stone-grey hover:text-on-background transition-colors duration-500 border-b border-on-background" href="#">WEARABLE EDITIONS</a>
+</nav>
+<div class="font-label-mono text-label-mono uppercase text-on-background cursor-pointer transition-all duration-700 ease-in-out">
+            @crosswithswag
+        </div>
+</header>
+<!-- Main Poster Canvas -->
+<main class="relative min-h-[4096px] w-full">
+<!-- Ghost Bleed Layer -->
+<div class="fixed inset-0 flex items-center justify-end pointer-events-none z-0">
+<span class="bleed-text font-display-bleed text-[18vw] translate-x-[15%]">
+                WEIGHT
+            </span>
+</div>
+<!-- Vertical Watermark Layer -->
+<div class="fixed inset-0 flex flex-col justify-center px-margin-safe z-0">
+<div class="watermark font-display-bleed text-[12vw] leading-[0.85] flex flex-col uppercase">
+<span>CROSS</span>
+<span>WITH</span>
+<span>SWAG</span>
+</div>
+</div>
+<!-- Top Left Label -->
+<div class="fixed top-[153px] left-margin-safe z-40">
+<span class="font-label-mono text-label-mono tracking-[0.2em] uppercase text-muted-sand">
+                WHAT IS SWAG?
+            </span>
+</div>
+<!-- Statement Modules -->
+<section class="relative z-10 pt-[307px] pb-[204px] px-margin-safe flex flex-col space-y-[409px]">
+<!-- Module 1 -->
+<div class="statement-module max-w-[80%] md:max-w-[60%]">
+<h2 class="font-statement text-statement uppercase tracking-tight text-muted-sand">
+                    IS DAILY PRACTICE. IS CONSISTENCY.
+                </h2>
+</div>
+<!-- Module 2 -->
+<div class="statement-module max-w-[80%] md:max-w-[60%]">
+<h2 class="font-statement text-statement uppercase tracking-tight text-muted-sand">
+                    HAS DENSITY. DOES NOT FRAGMENT.
+                </h2>
+</div>
+<!-- Module 3 -->
+<div class="statement-module max-w-[80%] md:max-w-[65%]">
+<h2 class="font-statement text-statement uppercase tracking-tight text-muted-sand">
+                    ALCHEMISES PAIN. USES RUPTURES TO RECONSTRUCT.
+                </h2>
+</div>
+<!-- Module 4 -->
+<div class="statement-module max-w-[80%] md:max-w-[70%]">
+<h2 class="font-statement text-statement uppercase tracking-tight text-muted-sand">
+                    HAS WEIGHT. EMBODIES A NEW INTERNAL MOVEMENT.
+                </h2>
+</div>
+</section>
+<!-- Dynamic Visual Asset (Shaders/Atmosphere) -->
+<div class="fixed bottom-0 right-0 w-1/3 h-1/2 pointer-events-none opacity-20 z-0">
+<!-- Using a shader for atmospheric noise/depth -->
+
+</div>
+</main>
+<!-- Footer (from JSON Guidance) -->
+<footer class="relative z-50 w-full py-12 flex flex-col md:flex-row justify-between items-center px-margin-safe w-full gap-4 bg-transparent no-border flat no shadows">
+<div class="font-display-bleed text-display-bleed opacity-10 !text-[3rem]">
+            swag.
+        </div>
+<div class="flex gap-8 font-label-mono text-label-mono text-muted-sand">
+<a class="hover:text-on-background underline transition-all duration-300" href="#">@crosswithswag</a>
+<a class="text-stone-grey hover:text-on-background underline transition-all duration-300" href="#">TERMS</a>
+<a class="text-stone-grey hover:text-on-background underline transition-all duration-300" href="#">PRIVACY</a>
+</div>
+<div class="font-label-mono text-label-mono text-stone-grey">
+            © 2024 SWAG. EDITIONS
+        </div>
+</footer>
+<!-- Side Navigation Shell (Hidden by default, triggered by scroll/interaction if needed) -->
+<aside class="fixed inset-y-0 left-0 w-screen md:w-1/3 bg-surface-container-lowest dark:bg-surface-container-lowest opacity-0 pointer-events-none flex flex-col justify-center px-margin-safe h-full space-y-12 z-[60] transition-opacity duration-1000" id="side-nav">
+<div class="font-display-bleed text-display-bleed text-on-surface lowercase">swag.</div>
+<div class="font-label-mono text-label-mono uppercase text-on-surface">WEARABLE EDITIONS</div>
+<nav class="flex flex-col space-y-8">
+<a class="font-statement text-statement uppercase text-stone-grey hover:text-on-surface underline decoration-1 underline-offset-8 transition-all" href="#">EDITIONS</a>
+<a class="font-statement text-statement uppercase text-stone-grey hover:text-on-surface underline decoration-1 underline-offset-8 transition-all" href="#">ARCHIVE</a>
+<a class="font-statement text-statement uppercase text-stone-grey hover:text-on-surface underline decoration-1 underline-offset-8 transition-all" href="#">MANIFESTO</a>
+<a class="font-statement text-statement uppercase text-stone-grey hover:text-on-surface underline decoration-1 underline-offset-8 transition-all" href="#">CONNECT</a>
+</nav>
+</aside>
+<script>
+        // Simple Intersection Observer for scroll reveal
+        const observerOptions = {
+            threshold: 0.2
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.statement-module').forEach(module => {
+            observer.observe(module);
+        });
+
+        // Micro-interaction for logo / side-nav logic
+        const logo = document.querySelector('header .font-display-bleed');
+        const sideNav = document.getElementById('side-nav');
+        
+        logo.addEventListener('click', () => {
+            const isVisible = sideNav.classList.contains('opacity-100');
+            if (isVisible) {
+                sideNav.classList.remove('opacity-100', 'pointer-events-auto');
+                sideNav.classList.add('opacity-0', 'pointer-events-none');
+            } else {
+                sideNav.classList.add('opacity-100', 'pointer-events-auto');
+                sideNav.classList.remove('opacity-0', 'pointer-events-none');
+            }
+        });
+
+        // Parallax-ish Ghost Text
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const bleed = document.querySelector('.bleed-text');
+            const watermark = document.querySelector('.watermark');
+            
+            if (bleed) {
+                bleed.style.transform = `translateX(${15 - (scrolled * 0.02)}%)`;
+            }
+            if (watermark) {
+                watermark.style.transform = `translateY(${scrolled * 0.05}px)`;
+            }
+        });
+    </script>
+</body></html>

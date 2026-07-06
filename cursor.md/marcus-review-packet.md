@@ -10,15 +10,17 @@ Note: this deployment built successfully, but anonymous access may be gated by V
 
 ## What to review
 
-1. **Manifesto + tagline** — locked. Review layout and pacing only.
-2. **Screen compositions** — Hero, Manifesto, SWAG posters, Section 6, Closing.
+1. **Stitch screen compositions (primary)** — 8 desktop screens in Stitch. Checklist: `STITCH_REVIEW_NOTES.md`. Export folder: `swag-v1-stitch-compositions/screens/`.
+2. **Manifesto + tagline** — locked. Review layout and pacing only.
 3. **Section 6** — kloofstreetnights story, campaign photography, CTA wording.
-4. **Motion direction** — scroll-linked background + slow ghost parallax (timing may still be tuned).
+4. **Live site (secondary)** — current Vercel preview for scroll/motion feel only; layout polish waits on Stitch approval.
 
 ## Stitch handoff
 
 - Stitch semantic design system: `stitch/DESIGN.md`
-- Stitch screen prompts: `stitch/SCREEN_PROMPTS.md`
+- Copy-verified prompts used: `stitch/SCREEN_PROMPTS.md`
+- Prompt audit: `STITCH_PROMPTS_VERIFICATION_SUMMARY.md`
+- Marcus review checklist: `STITCH_REVIEW_NOTES.md`
 
 ## Verification
 

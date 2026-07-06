@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>swag. | Manifesto</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-container": "#060b0e",
+                    "on-error-container": "#ffdad6",
+                    "on-tertiary-fixed-variant": "#42484b",
+                    "surface-dim": "#131313",
+                    "on-secondary-fixed-variant": "#49473d",
+                    "secondary-fixed": "#e7e2d5",
+                    "on-primary-fixed-variant": "#474646",
+                    "on-secondary": "#323028",
+                    "outline": "#8e9192",
+                    "on-primary-container": "#7b7979",
+                    "on-secondary-fixed": "#1d1c14",
+                    "secondary-fixed-dim": "#cbc6b9",
+                    "secondary-container": "#49473d",
+                    "primary-fixed": "#e5e2e1",
+                    "on-tertiary": "#2b3135",
+                    "primary-fixed-dim": "#c9c6c5",
+                    "tertiary-fixed-dim": "#c2c7cc",
+                    "muted-sand": "#D6D1C4",
+                    "background": "#131313",
+                    "surface-container-highest": "#353534",
+                    "error-container": "#93000a",
+                    "tertiary-fixed": "#dee3e8",
+                    "surface-container": "#201f1f",
+                    "inverse-primary": "#5f5e5e",
+                    "secondary": "#cbc6b9",
+                    "on-surface": "#e5e2e1",
+                    "surface": "#131313",
+                    "primary": "#c9c6c5",
+                    "on-error": "#690005",
+                    "on-primary": "#313030",
+                    "error": "#ffb4ab",
+                    "primary-container": "#0a0a0a",
+                    "on-surface-variant": "#c4c7c7",
+                    "on-primary-fixed": "#1c1b1b",
+                    "tertiary": "#c2c7cc",
+                    "outline-variant": "#444748",
+                    "on-background": "#e5e2e1",
+                    "on-tertiary-fixed": "#161c20",
+                    "surface-container-lowest": "#0e0e0e",
+                    "surface-container-low": "#1c1b1b",
+                    "void-black": "#0A0A0A",
+                    "inverse-surface": "#e5e2e1",
+                    "surface-tint": "#c9c6c5",
+                    "stone-grey": "#575D61",
+                    "surface-variant": "#353534",
+                    "surface-container-high": "#2a2a2a",
+                    "on-tertiary-container": "#747a7e",
+                    "surface-bright": "#3a3939",
+                    "inverse-on-surface": "#313030",
+                    "deep-earth-clay": "#8C5E4A",
+                    "on-secondary-container": "#b9b5a8"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "1rem",
+                    "ghost-offset": "-2vw",
+                    "margin-safe": "clamp(2rem, 5vw, 6rem)",
+                    "poster-padding": "10dvh"
+            },
+            "fontFamily": {
+                    "body-manifesto": ["Instrument Sans"],
+                    "headline-poster": ["Instrument Sans"],
+                    "statement": ["Instrument Sans"],
+                    "label-mono": ["Instrument Sans"],
+                    "display-bleed": ["Instrument Sans"]
+            },
+            "fontSize": {
+                    "body-manifesto": ["clamp(16px, 1.5vw, 20px)", {"lineHeight": "1.8", "letterSpacing": "0em", "fontWeight": "400"}],
+                    "headline-poster": ["clamp(40px, 7vw, 96px)", {"lineHeight": "1.0", "letterSpacing": "-0.04em", "fontWeight": "700"}],
+                    "statement": ["clamp(24px, 4vw, 56px)", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "500"}],
+                    "label-mono": ["clamp(11px, 1vw, 14px)", {"lineHeight": "1.0", "letterSpacing": "0.15em", "fontWeight": "400"}],
+                    "display-bleed": ["clamp(80px, 16vw, 220px)", {"lineHeight": "0.9", "letterSpacing": "-0.06em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #0A0A0A;
+            color: #D6D1C4;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        .bleed-text {
+            pointer-events: none;
+            user-select: none;
+        }
+        .content-canvas {
+            min-height: 100dvh;
+        }
+        ::selection {
+            background: #D6D1C4;
+            color: #0A0A0A;
+        }
+    </style>
+</head>
+<body class="font-body-manifesto antialiased bg-void-black">
+<!-- Ghost Layer: Atmospheric Depth -->
+<div class="fixed inset-0 bleed-text flex items-center justify-center overflow-hidden z-0">
+<span class="font-display-bleed text-display-bleed opacity-[0.03] whitespace-nowrap rotate-[-5deg] scale-125 select-none">
+            MANIFESTO MANIFESTO MANIFESTO
+        </span>
+</div>
+<!-- Top Navigation (Anchored by Shared Components Logic) -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-end px-margin-safe py-8 bg-transparent">
+<div class="font-display-bleed text-[32px] lowercase tracking-tighter text-muted-sand select-none cursor-pointer">
+            swag.
+        </div>
+<nav class="hidden md:flex gap-12 items-center">
+<span class="font-label-mono text-label-mono uppercase cursor-pointer text-stone-grey hover:text-muted-sand transition-colors duration-500 border-b border-muted-sand">MANIFESTO</span>
+<span class="font-label-mono text-label-mono uppercase cursor-pointer text-stone-grey hover:text-muted-sand transition-colors duration-500">WEARABLE EDITIONS</span>
+<span class="font-label-mono text-label-mono uppercase cursor-pointer text-stone-grey hover:text-muted-sand transition-colors duration-500">@crosswithswag</span>
+</nav>
+<div class="md:hidden">
+<span class="material-symbols-outlined text-muted-sand cursor-pointer">menu</span>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="relative z-10 content-canvas flex flex-col justify-center px-margin-safe py-poster-padding">
+<!-- Top Label -->
+<div class="mb-24 md:mb-32">
+<h2 class="font-label-mono text-label-mono uppercase text-muted-sand tracking-widest">
+                WEARABLE EDITIONS
+            </h2>
+</div>
+<!-- Manifesto Content Area -->
+<div class="max-w-[640px] flex flex-col gap-8 md:gap-12">
+<!-- Body Copy -->
+<div class="space-y-6 md:space-y-8"><p class="font-body-manifesto text-body-manifesto text-muted-sand">We stopped explaining ourselves a long time ago.</p><p class="font-body-manifesto text-body-manifesto text-muted-sand">swag. is not a collection. It is not a drop. It is not content.</p><p class="font-body-manifesto text-body-manifesto text-muted-sand">Each piece exists once — conceived, made, and released into the world as a singular object. The garment. The image. The frame on your wall. All the same thoughts, held in different forms.</p><p class="font-body-manifesto text-body-manifesto text-muted-sand">We call them wearable editions because that is what they are. Not a product. Not merch. Objects that carry a point of view — made for the people who already know who they are.</p><p class="font-body-manifesto text-body-manifesto text-muted-sand">We owe nothing to anyone. We occupy the space of those who have already accepted themselves.</p><p class="font-body-manifesto text-body-manifesto text-muted-sand">This is not for everyone.</p><p class="font-body-manifesto text-body-manifesto text-muted-sand">It was never meant to be.</p></div>
+<!-- Sign-off -->
+<div class="mt-8 md:mt-12">
+<p class="font-body-manifesto text-body-manifesto text-muted-sand italic opacity-80">— the director.</p>
+</div>
+</div>
+</main>
+<!-- Footer (Anchored by Shared Components Logic) -->
+<footer class="w-full py-12 flex flex-col md:flex-row justify-between items-center px-margin-safe gap-4 bg-transparent relative z-10">
+<div class="font-label-mono text-label-mono text-stone-grey uppercase tracking-widest">
+            © 2024 SWAG. EDITIONS
+        </div>
+<div class="flex gap-8">
+<a class="font-label-mono text-label-mono text-stone-grey hover:text-muted-sand underline transition-all duration-300 uppercase" href="#">TERMS</a>
+<a class="font-label-mono text-label-mono text-stone-grey hover:text-muted-sand underline transition-all duration-300 uppercase" href="#">PRIVACY</a>
+<a class="font-label-mono text-label-mono text-stone-grey hover:text-muted-sand underline transition-all duration-300 uppercase" href="#">@crosswithswag</a>
+</div>
+</footer>
+<!-- Subtle Grain Effect overlay -->
+<div class="fixed inset-0 pointer-events-none z-[100] opacity-[0.03]" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBFEJjkOUrKAkdNSrzsdkeqAqabYHTb-Yb4BFr-XlPNj77w4PfUcveRxDpNVQkfOHT1T1yIuTUaEeLzRc5yE_HepxOFDKuY4_MtdjpOHZcjpP0by0mtvBbjx21OkfgDFkd01AxAQg0zkUxkAH8L1JPTI2ofMvrk-imbYq31UjjWeX6gCZPSTpND9umpYzatTShgG2FmQJbOUc24vYBGlwsEXX7mG1zTjDhrbiE7JP_U2zm_ZUmWezA6Xg');"></div>
+<script>
+        // Micro-interaction for scroll depth
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const ghost = document.querySelector('.bleed-text span');
+            if (ghost) {
+                ghost.style.transform = `rotate(-5deg) translateY(${scrolled * 0.15}px) scale(1.25)`;
+            }
+        });
+
+        // Simple entrance animation
+        document.addEventListener('DOMContentLoaded', () => {
+            const paragraphs = document.querySelectorAll('p');
+            paragraphs.forEach((p, index) => {
+                p.style.opacity = '0';
+                p.style.transform = 'translateY(10px)';
+                p.style.transition = 'opacity 1s ease-out, transform 1s ease-out';
+                setTimeout(() => {
+                    p.style.opacity = '1';
+                    p.style.transform = 'translateY(0)';
+                }, 200 * index);
+            });
+        });
+    </script>
+</body></html>

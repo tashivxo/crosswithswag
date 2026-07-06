@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "muted-sand": "#D6D1C4",
+                        "error-container": "#93000a",
+                        "on-secondary-container": "#b9b5a8",
+                        "on-surface-variant": "#c4c7c7",
+                        "surface-container-low": "#1c1b1b",
+                        "on-background": "#e5e2e1",
+                        "primary-fixed-dim": "#c9c6c5",
+                        "secondary": "#cbc6b9",
+                        "inverse-primary": "#5f5e5e",
+                        "surface-variant": "#353534",
+                        "surface-container": "#201f1f",
+                        "surface-container-lowest": "#0e0e0e",
+                        "secondary-fixed-dim": "#cbc6b9",
+                        "inverse-surface": "#e5e2e1",
+                        "deep-earth-clay": "#8C5E4A",
+                        "on-tertiary-container": "#747a7e",
+                        "on-secondary-fixed": "#1d1c14",
+                        "background": "#131313",
+                        "inverse-on-surface": "#313030",
+                        "primary-fixed": "#e5e2e1",
+                        "on-primary-fixed": "#1c1b1b",
+                        "tertiary": "#c2c7cc",
+                        "primary": "#c9c6c5",
+                        "on-surface": "#e5e2e1",
+                        "on-secondary-fixed-variant": "#49473d",
+                        "on-error-container": "#ffdad6",
+                        "tertiary-fixed-dim": "#c2c7cc",
+                        "tertiary-fixed": "#dee3e8",
+                        "surface-container-highest": "#353534",
+                        "surface": "#131313",
+                        "surface-dim": "#131313",
+                        "surface-bright": "#3a3939",
+                        "on-primary": "#313030",
+                        "surface-container-high": "#2a2a2a",
+                        "outline-variant": "#444748",
+                        "primary-container": "#0a0a0a",
+                        "on-tertiary-fixed": "#161c20",
+                        "on-tertiary": "#2b3135",
+                        "tertiary-container": "#060b0e",
+                        "void-black": "#0A0A0A",
+                        "on-tertiary-fixed-variant": "#42484b",
+                        "surface-tint": "#c9c6c5",
+                        "on-error": "#690005",
+                        "on-primary-container": "#7b7979",
+                        "outline": "#8e9192",
+                        "on-primary-fixed-variant": "#474646",
+                        "stone-grey": "#575D61",
+                        "secondary-container": "#49473d",
+                        "on-secondary": "#323028",
+                        "error": "#ffb4ab",
+                        "secondary-fixed": "#e7e2d5"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "1rem",
+                        "poster-padding": "10dvh",
+                        "margin-safe": "clamp(2rem, 5vw, 6rem)",
+                        "ghost-offset": "-2vw"
+                    },
+                    "fontFamily": {
+                        "body-manifesto": ["Instrument Sans"],
+                        "display-bleed": ["Instrument Sans"],
+                        "statement": ["Instrument Sans"],
+                        "label-mono": ["Instrument Sans"],
+                        "headline-poster": ["Instrument Sans"]
+                    },
+                    "fontSize": {
+                        "body-manifesto": ["clamp(16px, 1.5vw, 20px)", {"lineHeight": "1.6", "letterSpacing": "0em", "fontWeight": "400"}],
+                        "display-bleed": ["clamp(80px, 16vw, 220px)", {"lineHeight": "0.9", "letterSpacing": "-0.06em", "fontWeight": "700"}],
+                        "statement": ["clamp(24px, 4vw, 56px)", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "500"}],
+                        "label-mono": ["clamp(11px, 1vw, 13px)", {"lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "400"}],
+                        "headline-poster": ["clamp(40px, 7vw, 96px)", {"lineHeight": "1.0", "letterSpacing": "-0.04em", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { background-color: #131313; color: #e5e2e1; overflow-x: hidden; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .bleed-text { opacity: 0.05; pointer-events: none; }
+        .parallax-target { transition: transform 0.1s ease-out; }
+        .image-float { transition: transform 1.2s cubic-bezier(0.2, 0, 0.2, 1); }
+        .image-container:hover .image-float { transform: scale(1.05) translateY(-10px); }
+    </style>
+</head>
+<body class="font-body-manifesto">
+<!-- Top Navigation Anchor -->
+<nav class="fixed top-0 w-full z-50 flex justify-between items-end px-margin-safe py-8 bg-transparent">
+<div class="font-display-bleed text-display-bleed lowercase tracking-tighter text-on-background leading-none">swag.</div>
+<div class="flex gap-8 items-center">
+<span class="font-label-mono text-label-mono uppercase tracking-widest text-on-background border-b border-on-background cursor-pointer transition-all duration-700 ease-in-out">WEARABLE EDITIONS</span>
+<span class="font-label-mono text-label-mono uppercase text-stone-grey hover:text-on-background transition-colors duration-500 cursor-pointer">@crosswithswag</span>
+</div>
+</nav>
+<!-- Main Edition Canvas -->
+<main class="min-h-screen w-full bg-deep-earth-clay relative flex flex-col md:flex-row overflow-hidden">
+<!-- Ghost Atmosphere Layer -->
+<div class="absolute inset-0 z-0 overflow-hidden select-none pointer-events-none">
+<div class="font-display-bleed text-display-bleed text-muted-sand opacity-10 absolute -top-10 -left-20 whitespace-nowrap">kloofstreet</div>
+<div class="font-display-bleed text-display-bleed text-muted-sand opacity-5 absolute bottom-0 right-[-10vw] whitespace-nowrap">nights.</div>
+</div>
+<!-- Left Column: Editorial Copy -->
+<section class="relative z-10 w-full md:w-1/2 flex flex-col justify-center px-margin-safe py-poster-padding pt-32 md:pt-poster-padding space-y-12">
+<div class="space-y-4">
+<span class="font-label-mono text-label-mono text-muted-sand uppercase tracking-[0.3em] block">WEARABLE EDITION</span>
+<h1 class="font-statement text-statement text-muted-sand tracking-[-0.02em]">kloofstreetnights</h1>
+</div>
+<div class="space-y-8">
+<p class="font-body-manifesto text-body-manifesto text-muted-sand max-w-[640px] leading-relaxed opacity-90">
+                    kloof street nights started with a dinner. a first date night with **** — good food, good wine, better company. that's it. that's the whole story. this account, these designs — they exist for me and my people. no greater explanation is owed beyond that.
+                </p>
+<div class="space-y-1">
+<span class="font-label-mono text-label-mono text-muted-sand block">-the.director</span>
+</div>
+</div>
+<div class="pt-8">
+<h2 class="font-statement text-statement text-muted-sand mb-8">kloofstreetnights.</h2>
+<a class="font-body-manifesto text-body-manifesto text-muted-sand underline decoration-1 underline-offset-8 transition-all duration-300 hover:opacity-70 inline-block" href="#">
+                    this lives at @crosswithswag.
+                </a>
+</div>
+</section>
+<!-- Right Column: Asymmetric Photography Gallery -->
+<section class="relative z-10 w-full md:w-1/2 min-h-screen flex items-center justify-center p-8 md:p-16">
+<div class="relative w-full h-[819px] flex flex-col md:block">
+<!-- Hoodie Shot: The Anchor -->
+<div class="image-container md:absolute md:top-0 md:right-0 w-full md:w-[70%] z-20 aspect-[4/5] bg-white overflow-hidden shadow-2xl">
+<img class="image-float w-full h-full object-cover grayscale contrast-125" data-alt="A professional studio photograph of a premium Void Black hoodie hanging against a stark, clinical white background. The fabric is heavy-weight cotton with a structured hood. A subtle, minimalist 'kloofstreetnights' wordmark is visible on the chest. The lighting is bright and even, highlighting the deep texture of the black textile in a gallery-ready editorial style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCHm_8b5TVEBbaZoJ0gDR-fnItQRtkQ2c-30m1R4tg24s-TSJ2mA4ctGVlUu3KDYGDBsIcsj9LIhjpxNlxP32VQEx4XL6-3SYJhPcfUcaravlsSmc7zt4a8tLlv5ereu5aUNBqdr--LIyJBVyRUdkktvW14d5gpZ_brnw20by5bK2hYgoYgKX7SUJr8d191WFo9a4z-X43GYD5TVor6FYpDo3bgocC6RlICKbC2iCCDtwMPXNpvC5O0Cw"/>
+</div>
+<!-- Crewneck Shot: The Offset -->
+<div class="image-container md:absolute md:bottom-20 md:left-0 w-full md:w-[60%] z-30 aspect-square bg-white overflow-hidden shadow-2xl mt-8 md:mt-0">
+<img class="image-float w-full h-full object-cover grayscale contrast-110" data-alt="An editorial product shot of a Void Black crewneck sweatshirt laid flat on a pure white surface. The composition is slightly rotated for an asymmetric feel. The garment features high-contrast white typography near the hem. The mood is minimalist and silent, prioritizing the form and void-like quality of the black colorway against the bright environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA1ERjYUqtRjttZAavMlDKjZZ8tdzMHQ41X77WawAGXOa8hnhtnxbwJ4s7gHAItmagkRmTFReQg_v5rG-a7akH1-z_P7vODUINI8SSV4lVNad49DpRLRDK5sOW-F2WwawZPO66wv9nZ7v00-3kqOE3ncCO5TLhUtfk2pUA47J9HJ--3yCyxMNQiowl4eu4ERhGXmwOT7acy_X4UTBzE_cmGQVqiOsDWqh2j2flN2ofXMCGygP2TV-nynw"/>
+</div>
+<!-- Tee Shot: The Accent -->
+<div class="image-container md:absolute md:top-[40%] md:-left-12 w-[50%] md:w-[40%] z-40 aspect-[3/4] bg-white overflow-hidden shadow-xl hidden md:block">
+<img class="image-float w-full h-full object-cover grayscale contrast-115" data-alt="A detailed close-up shot of a Void Black t-shirt showcasing the neckline and a small, perfectly rendered typographic detail. The background is a clean white, emphasizing the brutalist simplicity of the design. The lighting creates sharp shadows that define the high-quality ribbing of the collar, maintaining a cohesive high-fashion gallery aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBBL9BM1W40IYFfhzaEBk_2R0IiM2sVcxHGGdYM4YAQveAxlALQ0ukXOBcP32DnwMAO125TX91Frf84y0LC6RQ2_0C1s-yfI2dERgh2Rc3uQtImKQTdeG3HQatV8VzXhFzLS6dABC6wNqMLZGl-rZYhQcXi5al6y_SwBVipBo2Sm-p8YZaEYXvmBZ_g3SSkpWKw-fr7igA6d08fsmv3vyfPTFB6TU-SFxjYzBTNZM7AtN1gnSnyrftZVA"/>
+</div>
+<!-- Floating Label -->
+<div class="hidden md:block absolute -right-8 bottom-[15%] rotate-90 origin-right">
+<span class="font-label-mono text-label-mono text-muted-sand opacity-30 tracking-[0.5em] whitespace-nowrap">WINTER DROP — 001</span>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer Component -->
+<footer class="w-full py-12 bg-transparent flex flex-col md:flex-row justify-between items-center px-margin-safe gap-4 border-t border-muted-sand/10">
+<div class="font-display-bleed text-display-bleed text-on-surface opacity-10">swag.</div>
+<div class="flex flex-col md:flex-row items-center gap-8">
+<span class="font-label-mono text-label-mono text-stone-grey uppercase">© 2024 SWAG. EDITIONS</span>
+<div class="flex gap-6">
+<a class="font-label-mono text-label-mono text-stone-grey hover:text-on-background underline transition-all duration-300" href="#">@crosswithswag</a>
+<a class="font-label-mono text-label-mono text-stone-grey hover:text-on-background underline transition-all duration-300" href="#">TERMS</a>
+<a class="font-label-mono text-label-mono text-stone-grey hover:text-on-background underline transition-all duration-300" href="#">PRIVACY</a>
+</div>
+</div>
+</footer>
+<script>
+        // Simple parallax and hover interaction script
+        document.addEventListener('mousemove', (e) => {
+            const amount = 20;
+            const x = (e.clientX / window.innerWidth - 0.5) * amount;
+            const y = (e.clientY / window.innerHeight - 0.5) * amount;
+            
+            const targets = document.querySelectorAll('.image-float');
+            targets.forEach((target, index) => {
+                const factor = (index + 1) * 0.5;
+                target.style.transform = `translate(${x * factor}px, ${y * factor}px) scale(1.05)`;
+            });
+        });
+
+        // Background color transition on scroll
+        window.addEventListener('scroll', () => {
+            const scrolled = window.scrollY;
+            const windowHeight = window.innerHeight;
+            const opacity = Math.min(scrolled / windowHeight, 1);
+            // Dynamic behavior could go here
+        });
+    </script>
+</body></html>
