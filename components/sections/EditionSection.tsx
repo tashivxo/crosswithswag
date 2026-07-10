@@ -1,9 +1,11 @@
 import Image from "next/image";
+import Link from "next/link";
 import { SectionConfig } from "@/lib/sections.config";
 import { edition } from "@/lib/copy";
 import { SectionShell } from "@/components/sections/SectionShell";
 import { CtaLink } from "@/components/ui/CtaLink";
 import { Reveal } from "@/components/motion/Reveal";
+import { EditionMarquee } from "@/components/motion/EditionMarquee";
 
 export function EditionSection({ section }: { section: SectionConfig }) {
   return (
@@ -13,6 +15,7 @@ export function EditionSection({ section }: { section: SectionConfig }) {
       foreground={section.foreground}
       className="edition-section"
     >
+      <EditionMarquee text={edition.name} />
       <div className="edition-layout">
         <div className="edition-copy">
           <Reveal className="label">{edition.subtitle.toUpperCase()}</Reveal>
@@ -37,13 +40,15 @@ export function EditionSection({ section }: { section: SectionConfig }) {
         <div className="edition-gallery">
           {edition.imagery.assets.map((src, index) => (
             <Reveal key={src} delay={0.12 + index * 0.08} className="edition-image">
-              <Image
-                src={src}
-                alt={`${edition.name} void black colourway campaign photography ${index + 1}`}
-                width={1200}
-                height={1500}
-                sizes="(max-width: 767px) 100vw, 40vw"
-              />
+              <Link href={edition.showcaseAnchor} className="edition-image-link">
+                <Image
+                  src={src}
+                  alt={`${edition.name} void black colourway campaign photography ${index + 1}`}
+                  width={1200}
+                  height={1500}
+                  sizes="(max-width: 767px) 100vw, 40vw"
+                />
+              </Link>
             </Reveal>
           ))}
         </div>

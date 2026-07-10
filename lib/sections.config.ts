@@ -12,8 +12,10 @@ export type SectionConfig = {
   tone: SectionTone;
   label?: string;
   bleedWord?: string;
+  displayHeadline?: string;
   ghost?: string;
   statements?: readonly string[];
+  interactive?: boolean;
 };
 
 export const sections = [
@@ -42,9 +44,10 @@ export const sections = [
     foreground: colors.mutedSand,
     tone: "dark",
     label: "WHAT IS SWAG?",
-    bleedWord: bleedWords.s3,
+    displayHeadline: bleedWords.s3,
     ghost: "CROSS\nWITH\nSWAG",
     statements: swagModules.authenticExpression,
+    interactive: true,
   },
   {
     id: "internal-authority",
@@ -57,42 +60,27 @@ export const sections = [
     bleedWord: bleedWords.s4,
     ghost: "CROSS\nWITH\nSWAG",
     statements: swagModules.internalAuthority,
-  },
-  {
-    id: "presence",
-    index: 5,
-    title: "Presence",
-    background: colors.stoneGrey,
-    foreground: colors.mutedSand,
-    tone: "dark",
-    label: "WHAT IS SWAG?",
-    bleedWord: bleedWords.s5,
-    ghost: "CROSS\nWITH\nSWAG",
-    statements: swagModules.presence,
+    interactive: true,
   },
   {
     id: "kloofstreetnights",
-    index: 6,
+    index: 5,
     title: "kloofstreetnights — Wearable Edition",
-    background: colors.deepEarth,
+    background: colors.voidBlack,
     foreground: colors.mutedSand,
     tone: "dark",
   },
   {
-    id: "density-weight",
-    index: 7,
-    title: "Density / Weight",
+    id: "showcase",
+    index: 6,
+    title: "Clothes Showcase / Community",
     background: colors.stoneGrey,
     foreground: colors.mutedSand,
     tone: "dark",
-    label: "WHAT IS SWAG?",
-    bleedWord: bleedWords.s7,
-    ghost: "CROSS\nWITH\nSWAG",
-    statements: swagModules.densityWeight,
   },
   {
     id: "closing",
-    index: 8,
+    index: 7,
     title: "Closing Statement",
     background: colors.voidBlack,
     foreground: colors.mutedSand,
@@ -101,7 +89,7 @@ export const sections = [
   },
   {
     id: "footer",
-    index: 9,
+    index: 8,
     title: "Footer",
     background: colors.voidBlack,
     foreground: colors.mutedSand,

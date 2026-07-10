@@ -20,6 +20,7 @@
   --section-pad-x: clamp(24px, 5vw, 80px);
   --section-pad-y: clamp(48px, 8vh, 120px);
   --page-bg: var(--color-void-black);
+  --wordmark-color: var(--color-muted-sand);
 }
 
 * {
@@ -121,6 +122,38 @@ a {
   -webkit-mask: url("/assets/Frame_6_clean.svg") center / contain no-repeat;
 }
 
+.hero-section {
+  position: relative;
+}
+
+.hero-wordmark-layer {
+  position: absolute;
+  z-index: 3;
+  color: var(--color-muted-sand);
+  pointer-events: none;
+}
+
+.hero-wordmark {
+  width: clamp(160px, 22vw, 320px);
+}
+
+.fixed-wordmark-shell {
+  position: fixed;
+  top: clamp(36px, 6vh, 72px);
+  left: var(--section-pad-x);
+  z-index: 40;
+  color: var(--wordmark-color);
+  transition: color 420ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.fixed-wordmark-interactive {
+  cursor: default;
+}
+
+.fixed-wordmark {
+  width: clamp(120px, 16vw, 240px);
+}
+
 .ghost-layer {
   position: absolute;
   z-index: 0;
@@ -178,9 +211,10 @@ a {
 
 .hero-layout {
   display: grid;
-  align-content: start;
+  align-content: end;
   gap: 16px;
   min-height: inherit;
+  padding-bottom: clamp(48px, 10vh, 120px);
 }
 
 .hero-label {
@@ -223,7 +257,48 @@ a {
   display: grid;
   min-height: inherit;
   grid-template-columns: 1fr;
-  grid-template-rows: auto 1fr auto;
+  grid-template-rows: auto auto 1fr auto;
+}
+
+.poster-display-headline {
+  max-width: 14ch;
+  padding-top: clamp(24px, 4vh, 48px);
+}
+
+.poster-interactive {
+  min-height: inherit;
+}
+
+.cursor-contrast-root {
+  position: relative;
+  min-height: inherit;
+  overflow: hidden;
+}
+
+.cursor-contrast-base,
+.cursor-contrast-lens {
+  min-height: inherit;
+}
+
+.cursor-contrast-lens {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  opacity: 0;
+  pointer-events: none;
+  clip-path: circle(0px at 0 0);
+  color: var(--color-muted-sand);
+  background: var(--color-void-black);
+  transition: opacity 220ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#internal-authority .cursor-contrast-lens {
+  color: var(--color-void-black);
+  background: var(--color-muted-sand);
+}
+
+.cursor-contrast-lens-inner {
+  min-height: inherit;
 }
 
 .poster-label {
@@ -278,6 +353,32 @@ a {
   align-items: center;
 }
 
+.edition-marquee {
+  position: absolute;
+  top: clamp(48px, 8vh, 96px);
+  right: 0;
+  left: 0;
+  z-index: 1;
+  overflow: hidden;
+  opacity: 0.18;
+  pointer-events: none;
+}
+
+.edition-marquee-track {
+  display: flex;
+  width: max-content;
+  white-space: nowrap;
+}
+
+.edition-marquee-text {
+  padding-right: 2em;
+  font-size: clamp(48px, 10vw, 140px);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-tighter);
+  line-height: 0.85;
+  text-transform: lowercase;
+}
+
 .edition-layout {
   display: grid;
   grid-template-columns: minmax(0, 0.9fr) minmax(280px, 0.7fr);
@@ -318,10 +419,79 @@ a {
   background: color-mix(in srgb, currentColor 6%, transparent);
 }
 
+.edition-image-link {
+  display: block;
+  transition: opacity 320ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.edition-image-link:hover,
+.edition-image-link:focus-visible {
+  opacity: 0.82;
+}
+
 .edition-image img {
   display: block;
   width: 100%;
   height: auto;
+}
+
+.showcase-section .section-inner {
+  display: grid;
+  gap: clamp(48px, 8vh, 96px);
+}
+
+.showcase-layout {
+  display: grid;
+  gap: clamp(48px, 8vh, 96px);
+}
+
+.showcase-header {
+  display: grid;
+  gap: clamp(12px, 2vw, 24px);
+}
+
+.showcase-title {
+  max-width: 10ch;
+  text-transform: lowercase;
+}
+
+.showcase-edition-ref {
+  text-transform: lowercase;
+}
+
+.showcase-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: clamp(12px, 2vw, 20px);
+}
+
+.showcase-frame {
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, currentColor 16%, transparent);
+  background: color-mix(in srgb, currentColor 4%, transparent);
+}
+
+.showcase-frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.showcase-community {
+  display: grid;
+  gap: clamp(18px, 3vw, 32px);
+  max-width: 65ch;
+  padding-top: clamp(24px, 5vh, 48px);
+  border-top: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+}
+
+.showcase-community-copy {
+  display: grid;
+  gap: clamp(12px, 2vw, 20px);
+}
+
+.showcase-community-copy p {
+  margin: 0;
 }
 
 .closing-layout {
@@ -392,6 +562,23 @@ a {
 
   .manifesto-copy {
     font-size: clamp(22px, 7vw, 36px);
+  }
+
+  .fixed-wordmark-shell {
+    top: 36px;
+    left: 20px;
+  }
+
+  .cursor-contrast-lens {
+    display: none;
+  }
+
+  .edition-marquee {
+    top: 72px;
+  }
+
+  .showcase-gallery {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .poster-statements {
