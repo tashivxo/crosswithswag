@@ -60,7 +60,7 @@ One continuous scroll — five chapters (Figma Page 1 frames), not five routes:
 4. **Manifesto** (`#manifesto`) — owe nothing, wound, authority blocks
 5. **Contact** (`#contact`) — email + Instagram cards, waitlist (no invented form beyond handoff)
 
-Wordmark: lives in the header (not under a frosted bar). On load it sits at hero scale in the viewport centre; on scroll it docks into the top-left nav slot at the same size (`--wordmark-hero-width`). Header stays fixed; MENU fades out on downward scroll and fades back in on reverse scroll. MENU opens a panel-reveal overlay (current / archive / manifesto / contact) with hover-grow on the hovered chapter. MENU and CLOSE have a small bounce hover. Lenis + GSAP; `prefers-reduced-motion` respected.
+Wordmark: lives in the header (not under a frosted bar). On load it sits at hero scale in the viewport centre; on scroll it docks into the top-left nav slot at the same size (`--wordmark-hero-width`). Header stays fixed with wordmark + MENU only (chapter links live in the overlay). MENU fades out on downward scroll and fades back in on reverse scroll. MENU opens a panel-reveal overlay (current / archive / manifesto / contact) with hover-grow on the hovered chapter. MENU and CLOSE have a small bounce hover. Lenis + GSAP; `prefers-reduced-motion` respected.
 
 **Intentionally not invented:** unnamed pink/green colourways (dashed `HEX TBC` swatches); ATM/Octane/Courtside descriptions remain `—`.
 
@@ -182,7 +182,7 @@ Current Vercel deployment (personal account `tashivxo`, team `tashivxos-projects
 
 Previously deployed to work account `ict-5428s-projects`; that project was removed July 2026.
 
-The deployment built successfully, but anonymous access may be gated by Vercel authentication/protection. If Marcus sees a login screen, disable Deployment Protection for the project in Vercel settings or share a bypass link from the Vercel dashboard. Do not assign a custom production domain before launch sign-off.
+The deployment built successfully. Vercel Authentication is disabled for this project so Marcus can open the V3 preview without a login screen. Do not assign a custom production domain before launch sign-off.
 
 ## Phase Status
 
@@ -223,6 +223,6 @@ Before public launch, Marcus should still approve:
 
 ## Important Current Gaps
 
-- Vercel preview protection may block anonymous review — share via Vercel or disable protection for Marcus.
+- Vercel Authentication is off so the V3 preview is publicly viewable. Re-enable before public launch only if Marcus wants the preview gated again.
 - Analytics is intentionally not installed because the provider is not chosen.
 - `cursor.md/brand-copy.md` and Stitch docs still describe the pre-V2 nine-section structure; `lib/copy.ts` and this file are authoritative for the build.

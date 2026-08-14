@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { WordmarkDriftDock } from "@/components/v3/WordmarkDriftDock";
-import { navChapters, type ChapterId } from "@/lib/sections.config";
+import { navChapters } from "@/lib/sections.config";
 
 const FOCUSABLE =
   'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])';
@@ -56,13 +56,7 @@ function setMenuShifts(
   });
 }
 
-export function SiteHeader({
-  activeChapter,
-  ready,
-}: {
-  activeChapter: ChapterId;
-  ready: boolean;
-}) {
+export function SiteHeader({ ready }: { ready: boolean }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [menuFaded, setMenuFaded] = useState(false);
   const burgerRef = useRef<HTMLButtonElement>(null);
@@ -190,17 +184,6 @@ export function SiteHeader({
           <Link href="#home" className="hdr-mark-slot" aria-label="SWAG home">
             <WordmarkDriftDock ready={ready} />
           </Link>
-          <nav className="desk" aria-label="Primary">
-            {navChapters.map((chapter) => (
-              <Link
-                key={chapter.id}
-                href={`#${chapter.id}`}
-                className={activeChapter === chapter.id ? "on" : undefined}
-              >
-                {chapter.navLabel}
-              </Link>
-            ))}
-          </nav>
           <button
             ref={burgerRef}
             type="button"

@@ -427,37 +427,6 @@ button:focus-visible {
   position: relative;
 }
 
-nav.desk {
-  display: flex;
-  gap: 30px;
-}
-
-nav.desk a {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: rgba(214, 209, 196, 0.6);
-  position: relative;
-  padding-block: 6px;
-  transition: color 0.3s;
-}
-
-nav.desk a:hover,
-nav.desk a.on {
-  color: var(--sand);
-}
-
-nav.desk a.on::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 1px;
-  background: var(--clay);
-}
-
 .burger {
   position: relative;
   display: flex;
@@ -1306,10 +1275,6 @@ nav.desk a.on::after {
 }
 
 @media (max-width: 860px) {
-  nav.desk {
-    display: none;
-  }
-
   .feature,
   .join,
   .hero-bottom {
