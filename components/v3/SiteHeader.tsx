@@ -58,7 +58,6 @@ function setMenuShifts(
 
 export function SiteHeader({ ready }: { ready: boolean }) {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [menuFaded, setMenuFaded] = useState(false);
   const burgerRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const groupRef = useRef<HTMLDivElement>(null);
@@ -69,44 +68,6 @@ export function SiteHeader({ ready }: { ready: boolean }) {
   useEffect(() => {
     document.body.classList.toggle("locked", menuOpen);
     return () => document.body.classList.remove("locked");
-  }, [menuOpen]);
-
-  useEffect(() => {
-    if (menuOpen) return;
-
-    const TOP = 80;
-    let lastY = window.scrollY;
-
-    const apply = (y: number, direction: number) => {
-      if (y <= TOP) {
-        setMenuFaded(false);
-        return;
-      }
-      if (direction > 0) setMenuFaded(true);
-      else if (direction < 0) setMenuFaded(false);
-    };
-
-    const onWindowScroll = () => {
-      const y = window.scrollY;
-      const direction = y > lastY ? 1 : y < lastY ? -1 : 0;
-      lastY = y;
-      apply(y, direction);
-    };
-
-    const onLenisScroll = (event: Event) => {
-      const detail = (event as CustomEvent<{ scroll: number; direction: number }>)
-        .detail;
-      if (!detail) return;
-      lastY = detail.scroll;
-      apply(detail.scroll, detail.direction);
-    };
-
-    window.addEventListener("scroll", onWindowScroll, { passive: true });
-    window.addEventListener("swag:scroll", onLenisScroll);
-    return () => {
-      window.removeEventListener("scroll", onWindowScroll);
-      window.removeEventListener("swag:scroll", onLenisScroll);
-    };
   }, [menuOpen]);
 
   useEffect(() => {
@@ -190,14 +151,9 @@ export function SiteHeader({ ready }: { ready: boolean }) {
             className="burger"
             aria-expanded={menuOpen}
             aria-controls="menu"
-            aria-hidden={menuFaded}
-            tabIndex={menuFaded ? -1 : 0}
-            data-faded={menuFaded ? "true" : "false"}
             onClick={openMenu}
           >
-            <span className={`t-text-swap${menuFaded ? " is-exit" : ""}`}>
-              <span className="nav-label">menu</span>
-            </span>
+            <span className="nav-label">menu</span>
           </button>
         </div>
       </header>

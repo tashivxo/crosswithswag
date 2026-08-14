@@ -453,14 +453,6 @@ button:focus-visible {
   transform: translate(-50%, -50%);
 }
 
-.burger[data-faded="true"] {
-  pointer-events: none;
-}
-
-.burger[data-faded="true"]:focus-visible {
-  pointer-events: auto;
-}
-
 .menu-close {
   position: relative;
   min-height: 44px;
@@ -660,9 +652,6 @@ button:focus-visible {
     var(--hero-dock-scroll) + var(--header-height) + clamp(16px, 4vh, 40px)
   );
   padding-bottom: clamp(48px, 10vh, 120px);
-  opacity: 0;
-  transform: translateY(14px);
-  will-change: opacity, transform;
 }
 
 .hero-top {
@@ -817,6 +806,7 @@ button:focus-visible {
 
 .dense {
   list-style: none;
+  padding-left: 2.8em;
 }
 
 .dense li {
@@ -829,7 +819,7 @@ button:focus-visible {
   line-height: 0.98;
   padding: 2px 0;
   color: var(--sand);
-  transition: color 0.35s var(--ease), transform 0.35s var(--ease);
+  transition: color 0.35s var(--ease);
 }
 
 .dense li::before {
@@ -841,16 +831,10 @@ button:focus-visible {
   font-weight: 600;
   letter-spacing: 0.16em;
   color: var(--stone);
-  opacity: 0;
-  transition: opacity 0.35s;
 }
 
 .dense li:hover {
   color: var(--clay);
-}
-
-.dense li:hover::before {
-  opacity: 1;
 }
 
 .owe {
@@ -983,12 +967,18 @@ button:focus-visible {
   align-items: center;
   padding: 26px 0;
   border-bottom: 1px solid var(--line);
-  transition: padding-left 0.5s var(--ease), background 0.5s;
 }
 
-.arow:hover {
-  padding-left: 16px;
-  background: linear-gradient(90deg, rgba(140, 94, 74, 0.09), transparent 55%);
+.arow--open:hover .nm {
+  color: var(--clay);
+}
+
+.arow--closed {
+  opacity: 0.52;
+}
+
+.arow--closed .nm {
+  color: var(--stone);
 }
 
 .arow .no {
@@ -1111,7 +1101,7 @@ button:focus-visible {
 }
 
 .field input::placeholder {
-  color: var(--stone);
+  color: var(--body-muted);
   text-transform: lowercase;
 }
 
@@ -1127,11 +1117,64 @@ button:focus-visible {
   text-transform: uppercase;
   color: var(--clay);
   padding-left: 18px;
-  transition: color 0.3s;
+  transition: color 0.3s, transform 160ms var(--ease);
 }
 
 .field button:hover {
   color: var(--sand);
+}
+
+.field button:active {
+  transform: scale(0.97);
+}
+
+.field button:disabled {
+  color: var(--sand);
+}
+
+.t-input {
+  transition: border-color 150ms ease-out;
+  will-change: transform;
+}
+.t-input.is-error {
+  border-bottom-color: var(--clay);
+  transition: border-color var(--revert-dur, 280ms) ease-out;
+}
+
+.t-error-msg {
+  margin-top: 10px;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--clay);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity    var(--revert-dur, 280ms) ease-out,
+    visibility 0s linear var(--revert-dur, 280ms);
+}
+.t-input-wrap.is-error .t-error-msg {
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity    var(--revert-dur, 280ms) ease-out,
+    visibility 0s linear 0s;
+}
+
+.t-input.is-shaking {
+  animation: t-input-shake calc(
+      var(--shake-dur-a) * 2 + var(--shake-dur-b) * 2
+    ) linear;
+}
+@keyframes t-input-shake {
+  0%      { transform: translateX(0);                                 animation-timing-function: var(--shake-ease); }
+  28.57%  { transform: translateX(var(--shake-distance));             animation-timing-function: var(--shake-ease); }
+  57.14%  { transform: translateX(calc(var(--shake-distance) * -1)); animation-timing-function: var(--shake-ease); }
+  78.57%  { transform: translateX(var(--shake-overshoot));            animation-timing-function: var(--shake-ease); }
+  100%    { transform: translateX(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .t-input { animation: none !important; transform: none !important; }
 }
 
 .note {
@@ -1249,17 +1292,6 @@ button:focus-visible {
   color: var(--stone);
 }
 
-.rv {
-  opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.95s var(--ease), transform 0.95s var(--ease);
-}
-
-.rv.in {
-  opacity: 1;
-  transform: none;
-}
-
 @media (max-width: 1024px) {
   .grid-clothes {
     grid-template-columns: repeat(3, 1fr);
@@ -1316,10 +1348,6 @@ button:focus-visible {
     letter-spacing: -0.032em;
   }
 
-  .dense li::before {
-    display: none;
-  }
-
   .owe-split {
     grid-template-columns: 1fr;
   }
@@ -1347,17 +1375,7 @@ button:focus-visible {
     transition-duration: 0.01ms !important;
   }
 
-  .rv {
-    opacity: 1;
-    transform: none;
-  }
-
   .wordmark-drift-layer {
     transform: none !important;
-  }
-
-  .hero-content {
-    opacity: 1;
-    transform: none;
   }
 }

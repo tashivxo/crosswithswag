@@ -1,0 +1,103 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-14T15:00:00.000Z",
+  "title": "Design System: swag.",
+  "extensions": {
+    "colorMeta": {
+      "void": { "role": "primary", "displayName": "Void Black", "canonical": "#0A0A0A" },
+      "sand": { "role": "secondary", "displayName": "Sand", "canonical": "#D6D1C4" },
+      "clay": { "role": "tertiary", "displayName": "Clay", "canonical": "#8C5E4A" },
+      "stone": { "role": "neutral", "displayName": "Stone Grey", "canonical": "#575D61" }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Chapter titles and closers. Bleed allowed." },
+      "headline": { "displayName": "Headline", "purpose": "Section anchors." },
+      "body": { "displayName": "Body", "purpose": "Manifesto and edition copy." },
+      "label": { "displayName": "Label", "purpose": "Tracked uppercase UI chrome." }
+    },
+    "shadows": [],
+    "motion": [
+      { "name": "ease", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Default UI ease-out." },
+      { "name": "panel-open", "value": "400ms cubic-bezier(0.22, 1, 0.36, 1)", "purpose": "MENU overlay enter." },
+      { "name": "text-swap", "value": "200ms ease-out", "purpose": "Waitlist join → received." }
+    ],
+    "breakpoints": [
+      { "name": "compact", "value": "560px" },
+      { "name": "narrow", "value": "860px" },
+      { "name": "wide", "value": "1024px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Outline CTA",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Square tracked text CTA. Inverts to Sand fill on hover.",
+      "html": "<a class=\"ds-btn\" href=\"#archive\">the archive</a>",
+      "css": ".ds-btn { display:inline-flex; align-items:center; border:1px solid rgba(214,209,196,0.28); padding:13px 22px; font-family:Instrument Sans,sans-serif; font-size:11px; font-weight:600; letter-spacing:0.16em; text-transform:uppercase; color:#D6D1C4; text-decoration:none; transition:background 0.35s cubic-bezier(0.16,1,0.3,1), color 0.35s, border-color 0.35s; } .ds-btn:hover { background:#D6D1C4; color:#0A0A0A; border-color:#D6D1C4; } .ds-btn:active { transform:scale(0.97); }"
+    },
+    {
+      "name": "Clay CTA",
+      "kind": "button",
+      "refersTo": "button-clay",
+      "description": "Scarce Clay-stroke CTA for the current edition.",
+      "html": "<a class=\"ds-btn-clay\" href=\"#current\">the current edition</a>",
+      "css": ".ds-btn-clay { display:inline-flex; border:1px solid #8C5E4A; padding:13px 22px; font-family:Instrument Sans,sans-serif; font-size:11px; font-weight:600; letter-spacing:0.16em; text-transform:uppercase; color:#D6D1C4; text-decoration:none; } .ds-btn-clay:hover { background:#8C5E4A; color:#D6D1C4; }"
+    },
+    {
+      "name": "Waitlist field",
+      "kind": "input",
+      "refersTo": "field-join",
+      "description": "Underline email field with Clay join label.",
+      "html": "<form class=\"ds-field\"><input type=\"email\" placeholder=\"email address\" /><button type=\"submit\">join</button></form>",
+      "css": ".ds-field { display:flex; border-bottom:1px solid rgba(214,209,196,0.28); } .ds-field input { flex:1; background:none; border:0; color:#D6D1C4; font-family:Instrument Sans,sans-serif; font-size:15px; padding:14px 0; outline:none; } .ds-field input::placeholder { color:rgba(214,209,196,0.74); } .ds-field button { font-size:11px; font-weight:600; letter-spacing:0.16em; text-transform:uppercase; color:#8C5E4A; background:none; border:0; padding-left:18px; } .ds-field button:hover { color:#D6D1C4; }"
+    },
+    {
+      "name": "MENU",
+      "kind": "nav",
+      "refersTo": null,
+      "description": "Always-visible header control. Overlay chapters live elsewhere.",
+      "html": "<button class=\"ds-menu\" type=\"button\">menu</button>",
+      "css": ".ds-menu { background:none; border:0; color:#D6D1C4; font-family:Instrument Sans,sans-serif; font-size:11px; font-weight:600; letter-spacing:0.16em; text-transform:uppercase; min-height:44px; min-width:44px; } .ds-menu:hover { transform:scale(1.08) translateY(-2px); } .ds-menu:active { transform:scale(0.97); }"
+    },
+    {
+      "name": "Edition state",
+      "kind": "chip",
+      "refersTo": null,
+      "description": "Live / in development / closed chip.",
+      "html": "<span class=\"ds-state\">live</span>",
+      "css": ".ds-state { font-size:10px; font-weight:600; letter-spacing:0.16em; text-transform:uppercase; padding:6px 11px; border:1px solid #D6D1C4; color:#D6D1C4; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Typographic Poster Wall",
+    "overview": "The site is a dark gallery of oversized type, not a layout of cards. Each fold is one poster: Void Black ground, Sand ink, Clay as the rare accent. Display type is allowed to bleed. The custom wordmark is the only non-typographic mark.\n\nDensity comes from scale contrast — 11px tracked labels against clamp display — never from chrome. Motion is scroll-linked (wordmark dock, Lenis) plus honest UI state (waitlist swap/shake, menu panel). Copy is not gated behind reveals.",
+    "keyCharacteristics": [
+      "Four named colours only",
+      "One type family, three weights",
+      "Square corners, hairline rules, no pills",
+      "Text CTAs, not sales buttons",
+      "Wordmark as SVG mask, never typed"
+    ],
+    "rules": [
+      { "name": "The Four-Pigment Rule", "body": "No fifth colour, no gradient fills, no grey-on-colour that is not Stone or a Sand alpha.", "section": "colors" },
+      { "name": "The Bleed Rule", "body": "Display may exit the viewport. Sections overflow hidden. Do not shrink type to fit.", "section": "typography" },
+      { "name": "The Tracking Floor Rule", "body": "Display tracking is not tighter than -0.04em.", "section": "typography" },
+      { "name": "The No-Shadow Rule", "body": "No drop shadows. Hover is colour or a 3.5% Sand raise, never lift.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do use only Void, Stone, Clay, Sand.",
+      "Do let display type bleed.",
+      "Do keep MENU findable.",
+      "Do show copy without waiting for a reveal class.",
+      "Do make closed editions look closed."
+    ],
+    "donts": [
+      "Don't add button pills, cards, gradients, or a fifth colour.",
+      "Don't hide hero copy until the wordmark docks.",
+      "Don't report waitlist success for an empty or invalid address.",
+      "Don't invent colourways, prices, or edition stories.",
+      "Don't animate layout properties (padding/width) for hover chrome."
+    ]
+  }
+}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useLayoutEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Wordmark } from "@/components/ui/Wordmark";
@@ -24,7 +24,7 @@ function heroOffset(slot: Element) {
 export function WordmarkDriftDock({ ready }: { ready: boolean }) {
   const layerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!ready || !layerRef.current) return;
 
     const reduceMotion = window.matchMedia(
@@ -36,7 +36,6 @@ export function WordmarkDriftDock({ ready }: { ready: boolean }) {
     const layer = layerRef.current;
     const slot = layer.parentElement;
     const home = document.getElementById("home");
-    const heroContent = home?.querySelector<HTMLElement>(".hero-content");
 
     if (!home || !slot) return;
 
@@ -53,21 +52,7 @@ export function WordmarkDriftDock({ ready }: { ready: boolean }) {
         force3D: true,
       });
 
-      if (heroContent) {
-        gsap.set(heroContent, { opacity: 0, y: 14, force3D: true });
-      }
-
-      const dockTl = gsap.timeline({
-        scrollTrigger: {
-          trigger: home,
-          start: `${DOCK_START} top`,
-          end: `${DOCK_SCROLL} top`,
-          scrub: 0.6,
-          invalidateOnRefresh: true,
-        },
-      });
-
-      dockTl.fromTo(
+      gsap.fromTo(
         layer,
         {
           x: () => from().x,
@@ -81,17 +66,15 @@ export function WordmarkDriftDock({ ready }: { ready: boolean }) {
           scale: 1,
           opacity: 1,
           ease: "none",
+          scrollTrigger: {
+            trigger: home,
+            start: `${DOCK_START} top`,
+            end: `${DOCK_SCROLL} top`,
+            scrub: 0.6,
+            invalidateOnRefresh: true,
+          },
         },
       );
-
-      if (heroContent) {
-        dockTl.fromTo(
-          heroContent,
-          { opacity: 0, y: 14 },
-          { opacity: 1, y: 0, ease: "none" },
-          0.28,
-        );
-      }
 
       onResize = () => ScrollTrigger.refresh();
       window.addEventListener("resize", onResize);

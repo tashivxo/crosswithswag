@@ -17,7 +17,7 @@ export function EditionRow({
   href?: string;
 }) {
   const content = (
-  <>
+    <>
       <span className="no">{edition.no}</span>
       <span className="nm voice">{edition.name}</span>
       <span className="dsc voice">{edition.description}</span>
@@ -25,13 +25,17 @@ export function EditionRow({
     </>
   );
 
-  if (href) {
+  if (href && edition.state === "live") {
     return (
-      <Link className="arow" href={href}>
+      <Link className="arow arow--open" href={href}>
         {content}
       </Link>
     );
   }
 
-  return <div className="arow">{content}</div>;
+  return (
+    <div className="arow arow--closed">
+      {content}
+    </div>
+  );
 }
