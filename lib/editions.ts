@@ -47,7 +47,7 @@ export const editions: Edition[] = [
     no: "003",
     slug: "atm",
     name: "atm",
-    description: "all that matters.",
+    description: "—",
     state: "in-development",
   },
   {

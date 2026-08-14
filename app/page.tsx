@@ -14,16 +14,11 @@ import { chapters, type ChapterId } from "@/lib/sections.config";
 
 export default function Home() {
   const [ready, setReady] = useState(false);
-  const [docked, setDocked] = useState(false);
   const [activeChapter, setActiveChapter] = useState<ChapterId>("home");
 
   const onPreloaderComplete = useCallback(() => {
     setReady(true);
     document.body.classList.remove("locked");
-  }, []);
-
-  const onDock = useCallback(() => {
-    setDocked(true);
   }, []);
 
   useEffect(() => {
@@ -58,9 +53,12 @@ export default function Home() {
 
   return (
     <main className="page-shell">
+      <a href="#home" className="skip-link">
+        skip to content
+      </a>
       <Preloader onComplete={onPreloaderComplete} />
-      <SiteHeader docked={docked} activeChapter={activeChapter} />
-      <WordmarkDriftDock ready={ready} docked={docked} onDock={onDock} />
+      <SiteHeader activeChapter={activeChapter} />
+      <WordmarkDriftDock ready={ready} />
       <HomeChapter />
       <CurrentChapter />
       <ArchiveChapter />

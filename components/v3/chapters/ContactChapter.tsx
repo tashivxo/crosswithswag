@@ -8,24 +8,21 @@ export function ContactChapter() {
     <section id="contact" className="chapter">
       <section className="wrap page-head">
         <span className="lbl">[ contact ]</span>
-        <h1 className="display" style={{ marginTop: 18 }}>
+        <h2 className="display" style={{ marginTop: 18 }}>
           {contact.display.map((line) => (
             <span key={line}>
               {line}
               <br />
             </span>
           ))}
-        </h1>
+        </h2>
         <p className="body-copy voice" style={{ marginTop: 30 }}>
           {contact.intro}
         </p>
       </section>
 
       <section className="wrap pad-sm">
-        <Reveal
-          className="contact-grid"
-          style={{ gridTemplateColumns: "1fr 1fr" }}
-        >
+        <Reveal className="contact-grid">
           {contact.cards.map((card) => (
             <Link
               key={card.numeral}

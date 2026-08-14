@@ -8,14 +8,14 @@ export function ArchiveChapter() {
     <section id="archive" className="chapter">
       <section className="wrap page-head">
         <span className="lbl">[ the archive ]</span>
-        <h1 className="display" style={{ marginTop: 18 }}>
+        <h2 className="display" style={{ marginTop: 18 }}>
           {archive.display.map((line) => (
             <span key={line}>
               {line}
               <br />
             </span>
           ))}
-        </h1>
+        </h2>
         <p className="body-copy voice" style={{ marginTop: 30 }}>
           {archive.intro}
         </p>

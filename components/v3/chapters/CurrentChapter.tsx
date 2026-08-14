@@ -14,9 +14,9 @@ export function CurrentChapter() {
           <span className="lbl lbl--sand">{current.editionLabel}</span>
           <span className="state state--live">live</span>
         </div>
-        <h1 className="display voice" style={{ textTransform: "lowercase" }}>
+        <h2 className="display voice" style={{ textTransform: "lowercase" }}>
           {current.title}
-        </h1>
+        </h2>
         <div className="hero-bottom" style={{ borderTop: 0, paddingTop: 34 }}>
           <div className="body-copy voice">
             {current.lines.map((line) => <p key={line}>{line}</p>)}
