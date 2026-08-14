@@ -11,8 +11,8 @@ const DOCK_SCROLL = 260;
 const DOCK_START = 40;
 
 function getDockWidth(): number {
-  const vw = window.innerWidth * 0.1;
-  return Math.min(110, Math.max(72, vw));
+  const vw = window.innerWidth * 0.16;
+  return Math.min(240, Math.max(120, vw));
 }
 
 function getTargets(slot: Element, wordmark: HTMLElement) {

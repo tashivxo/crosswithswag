@@ -15,6 +15,7 @@
   --gut: clamp(18px, 4vw, 56px);
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
   --header-height: 62px;
+  --wordmark-dock-width: clamp(120px, 16vw, 240px);
   --font-display: var(--font-instrument-sans, "Instrument Sans", sans-serif);
 }
 
@@ -275,14 +276,14 @@ button:focus-visible {
 }
 
 .hdr-mark-slot {
-  min-width: clamp(72px, 10vw, 120px);
+  min-width: var(--wordmark-dock-width);
   height: 28px;
   display: flex;
   align-items: center;
 }
 
 .hdr-mark-slot .hdr-mark-static {
-  width: clamp(72px, 10vw, 110px);
+  width: var(--wordmark-dock-width);
   opacity: 0;
   visibility: hidden;
   position: absolute;
