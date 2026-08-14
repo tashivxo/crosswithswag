@@ -9,7 +9,7 @@ This is the pre-sign-off prototype for `swag.`, a scroll-driven single-page bran
 **Branch split (August 2026):**
 
 - **Production (`main`)** — V2 Canva whiteboard build (eight poster sections). Live at `https://crosswithswag.vercel.app`.
-- **`swag_V3_new_branch`** — Marcus V3 rebuild (five continuous-scroll chapters from Figma/HTML handoff). Preview-only until Marcus signs off. Do not merge to `main` without explicit approval.
+- **`swag_V3_new_branch`** — Marcus V3 rebuild (five continuous-scroll chapters from Figma/HTML handoff). Preview: `https://crosswithswag-git-swagv3newbranch-tashivxos-projects.vercel.app`. Preview-only until Marcus signs off. Do not merge to `main` without explicit approval.
 
 Marcus V3 sources live in `cursor.md/v3/` (`swag-site.html`, `SWAG-engineering-handoff.md`). Figma file `5w6qUwhO5sLBhxJHsqfC0u` is view-only for `tashivxo@gmail.com` — build follows HTML + handoff.
 
