@@ -14,8 +14,12 @@
   --lbl: rgba(214, 209, 196, 0.74);
   --gut: clamp(18px, 4vw, 56px);
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
-  --header-height: 62px;
-  --wordmark-dock-width: clamp(120px, 16vw, 240px);
+  --wordmark-hero-width: clamp(160px, 20vw, 260px);
+  --wordmark-aspect-ratio: 1.426685;
+  --wordmark-hero-height: calc(
+    var(--wordmark-hero-width) / var(--wordmark-aspect-ratio)
+  );
+  --header-height: calc(var(--wordmark-hero-height) + 12px);
   --font-display: var(--font-instrument-sans, "Instrument Sans", sans-serif);
 }
 
@@ -276,18 +280,24 @@ button:focus-visible {
 }
 
 .hdr-mark-slot {
-  min-width: var(--wordmark-dock-width);
-  height: 28px;
+  min-width: var(--wordmark-hero-width);
+  height: var(--wordmark-hero-height);
+  flex: 0 0 auto;
   display: flex;
   align-items: center;
 }
 
 .hdr-mark-slot .hdr-mark-static {
-  width: var(--wordmark-dock-width);
+  width: var(--wordmark-hero-width);
   opacity: 0;
   visibility: hidden;
   position: absolute;
   pointer-events: none;
+}
+
+.hdr-mark-slot > a {
+  display: block;
+  line-height: 0;
 }
 
 nav.desk {
@@ -364,7 +374,7 @@ nav.desk a.on::after {
 
 /* wordmark */
 .wordmark {
-  width: clamp(120px, 16vw, 240px);
+  width: var(--wordmark-hero-width);
   aspect-ratio: 1540.82 / 1080;
   background: currentColor;
   mask: url("/assets/Frame_6_clean.svg") center / contain no-repeat;
@@ -379,10 +389,6 @@ nav.desk a.on::after {
   color: var(--sand);
   pointer-events: none;
   will-change: transform, opacity;
-}
-
-.wordmark-drift-layer .wordmark {
-  width: clamp(160px, 20vw, 260px);
 }
 
 /* ticker */
@@ -421,7 +427,7 @@ nav.desk a.on::after {
 
 /* hero */
 .hero {
-  padding-top: 110px;
+  padding-top: calc(var(--header-height) + clamp(24px, 4vw, 48px));
   padding-bottom: 56px;
   min-height: 88vh;
   display: flex;

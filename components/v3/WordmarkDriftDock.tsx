@@ -10,15 +10,8 @@ gsap.registerPlugin(ScrollTrigger);
 const DOCK_SCROLL = 260;
 const DOCK_START = 40;
 
-function getDockWidth(): number {
-  const vw = window.innerWidth * 0.16;
-  return Math.min(240, Math.max(120, vw));
-}
-
-function getTargets(slot: Element, wordmark: HTMLElement) {
+function getTargets(slot: Element) {
   const rect = slot.getBoundingClientRect();
-  const introW = wordmark.offsetWidth;
-  const dockScale = introW > 0 ? getDockWidth() / introW : 1;
 
   return {
     centerX: window.innerWidth / 2,
@@ -27,7 +20,7 @@ function getTargets(slot: Element, wordmark: HTMLElement) {
     dockX: rect.left + rect.width / 2,
     dockY: rect.top + rect.height / 2,
     awayScale: 0.96,
-    dockScale,
+    dockScale: 1,
   };
 }
 
@@ -73,9 +66,6 @@ export function WordmarkDriftDock({ ready }: { ready: boolean }) {
 
     if (!home || !slot) return;
 
-    const wordmark = layer.querySelector(".wordmark") as HTMLElement | null;
-    if (!wordmark) return;
-
     let introTl: gsap.core.Timeline | null = null;
     let dockTl: gsap.core.Timeline | null = null;
     let introComplete = false;
@@ -83,7 +73,7 @@ export function WordmarkDriftDock({ ready }: { ready: boolean }) {
     let onResize: (() => void) | null = null;
 
     const ctx = gsap.context(() => {
-      const targets = () => getTargets(slot, wordmark);
+      const targets = () => getTargets(slot);
 
       const initial = targets();
       gsap.set(layer, {
