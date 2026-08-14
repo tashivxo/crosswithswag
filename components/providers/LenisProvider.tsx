@@ -24,7 +24,34 @@ export function LenisProvider({ children }: { children: ReactNode }) {
       smoothWheel: true,
     });
 
-    lenis.on("scroll", ScrollTrigger.update);
+    lenis.on("scroll", (event) => {
+      ScrollTrigger.update();
+      window.dispatchEvent(
+        new CustomEvent("swag:scroll", {
+          detail: { scroll: event.scroll, direction: event.direction },
+        }),
+      );
+    });
+
+    ScrollTrigger.scrollerProxy(document.documentElement, {
+      scrollTop(value) {
+        if (arguments.length && typeof value === "number") {
+          lenis.scrollTo(value, { immediate: true });
+        }
+        return lenis.scroll;
+      },
+      getBoundingClientRect() {
+        return {
+          top: 0,
+          left: 0,
+          width: window.innerWidth,
+          height: window.innerHeight,
+        };
+      },
+    });
+
+    ScrollTrigger.defaults({ scroller: document.documentElement });
+    ScrollTrigger.refresh();
 
     const update = (time: number) => {
       lenis.raf(time * 1000);

@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { Preloader } from "@/components/v3/Preloader";
 import { SiteHeader } from "@/components/v3/SiteHeader";
-import { WordmarkDriftDock } from "@/components/v3/WordmarkDriftDock";
 import { HomeChapter } from "@/components/v3/chapters/HomeChapter";
 import { CurrentChapter } from "@/components/v3/chapters/CurrentChapter";
 import { ArchiveChapter } from "@/components/v3/chapters/ArchiveChapter";
@@ -57,8 +56,7 @@ export default function Home() {
         skip to content
       </a>
       <Preloader onComplete={onPreloaderComplete} />
-      <SiteHeader activeChapter={activeChapter} />
-      <WordmarkDriftDock ready={ready} />
+      <SiteHeader activeChapter={activeChapter} ready={ready} />
       <HomeChapter />
       <CurrentChapter />
       <ArchiveChapter />

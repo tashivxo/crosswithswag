@@ -2,10 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { Wordmark } from "@/components/ui/Wordmark";
+import { WordmarkDriftDock } from "@/components/v3/WordmarkDriftDock";
 import { navChapters, type ChapterId } from "@/lib/sections.config";
-
-const DOCK_SCROLL = 260;
 
 const FOCUSABLE =
   'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])';
@@ -16,38 +14,105 @@ function getFocusables(container: HTMLElement) {
   );
 }
 
-export function SiteHeader({ activeChapter }: { activeChapter: ChapterId }) {
-  const [hidden, setHidden] = useState(false);
+function setMenuShifts(
+  root: HTMLElement | null,
+  activeIdx: number | null,
+  phase: "in" | "out",
+) {
+  if (!root) return;
+
+  const cs = getComputedStyle(document.documentElement);
+  const num = (name: string, fallback: number) => {
+    const value = parseFloat(cs.getPropertyValue(name));
+    return Number.isFinite(value) ? value : fallback;
+  };
+  const ease = (name: string, fallback: string) =>
+    cs.getPropertyValue(name).trim() || fallback;
+
+  const lift = num("--avatar-lift", -4);
+  const falloff = num("--avatar-falloff", 0.45);
+  const scale = num("--avatar-scale", 1.12);
+  const timing =
+    phase === "out"
+      ? ease("--avatar-ease-out", "cubic-bezier(0.34, 3.85, 0.64, 1)")
+      : ease("--avatar-ease-in", "cubic-bezier(0.22, 1, 0.36, 1)");
+
+  root.querySelectorAll<HTMLElement>(".t-avatar").forEach((el, i) => {
+    el.style.transitionTimingFunction = timing;
+    if (activeIdx == null) {
+      el.style.setProperty("--shift", "0px");
+      el.style.setProperty("--scale-active", "1");
+      return;
+    }
+    const distance = Math.abs(i - activeIdx);
+    el.style.setProperty(
+      "--shift",
+      `${(lift * Math.pow(falloff, distance)).toFixed(3)}px`,
+    );
+    el.style.setProperty(
+      "--scale-active",
+      i === activeIdx ? String(scale) : "1",
+    );
+  });
+}
+
+export function SiteHeader({
+  activeChapter,
+  ready,
+}: {
+  activeChapter: ChapterId;
+  ready: boolean;
+}) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [menuFaded, setMenuFaded] = useState(false);
   const burgerRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+  const groupRef = useRef<HTMLDivElement>(null);
   const wasMenuOpenRef = useRef(false);
   const closeMenu = () => setMenuOpen(false);
   const openMenu = () => setMenuOpen(true);
 
   useEffect(() => {
-    let last = 0;
-    const onScroll = () => {
-      const y = window.scrollY;
-
-      if (y < DOCK_SCROLL) {
-        setHidden(false);
-      } else {
-        setHidden(y > last && y > 200);
-      }
-
-      last = y;
-    };
-
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  useEffect(() => {
     document.body.classList.toggle("locked", menuOpen);
     return () => document.body.classList.remove("locked");
+  }, [menuOpen]);
+
+  useEffect(() => {
+    if (menuOpen) return;
+
+    const TOP = 80;
+    let lastY = window.scrollY;
+
+    const apply = (y: number, direction: number) => {
+      if (y <= TOP) {
+        setMenuFaded(false);
+        return;
+      }
+      if (direction > 0) setMenuFaded(true);
+      else if (direction < 0) setMenuFaded(false);
+    };
+
+    const onWindowScroll = () => {
+      const y = window.scrollY;
+      const direction = y > lastY ? 1 : y < lastY ? -1 : 0;
+      lastY = y;
+      apply(y, direction);
+    };
+
+    const onLenisScroll = (event: Event) => {
+      const detail = (event as CustomEvent<{ scroll: number; direction: number }>)
+        .detail;
+      if (!detail) return;
+      lastY = detail.scroll;
+      apply(detail.scroll, detail.direction);
+    };
+
+    window.addEventListener("scroll", onWindowScroll, { passive: true });
+    window.addEventListener("swag:scroll", onLenisScroll);
+    return () => {
+      window.removeEventListener("scroll", onWindowScroll);
+      window.removeEventListener("swag:scroll", onLenisScroll);
+    };
   }, [menuOpen]);
 
   useEffect(() => {
@@ -66,7 +131,7 @@ export function SiteHeader({ activeChapter }: { activeChapter: ChapterId }) {
 
   useEffect(() => {
     const background = document.querySelectorAll(
-      ".site-header, .wordmark-drift-layer, .chapter, .site-footer, #preloader",
+      ".site-header, .chapter, .site-footer, #preloader",
     );
 
     if (menuOpen) {
@@ -84,6 +149,7 @@ export function SiteHeader({ activeChapter }: { activeChapter: ChapterId }) {
         burgerRef.current?.focus();
       }
       wasMenuOpenRef.current = false;
+      setMenuShifts(groupRef.current, null, "out");
       return;
     }
 
@@ -119,17 +185,11 @@ export function SiteHeader({ activeChapter }: { activeChapter: ChapterId }) {
 
   return (
     <>
-      <header
-        className={["site-header", hidden ? "hidden" : ""]
-          .filter(Boolean)
-          .join(" ")}
-      >
+      <header className="site-header">
         <div className="wrap hdr-in">
-          <div className="hdr-mark-slot">
-            <Link href="#home" aria-label="SWAG home">
-              <Wordmark className="hdr-mark-static" />
-            </Link>
-          </div>
+          <Link href="#home" className="hdr-mark-slot" aria-label="SWAG home">
+            <WordmarkDriftDock ready={ready} />
+          </Link>
           <nav className="desk" aria-label="Primary">
             {navChapters.map((chapter) => (
               <Link
@@ -147,9 +207,14 @@ export function SiteHeader({ activeChapter }: { activeChapter: ChapterId }) {
             className="burger"
             aria-expanded={menuOpen}
             aria-controls="menu"
+            aria-hidden={menuFaded}
+            tabIndex={menuFaded ? -1 : 0}
+            data-faded={menuFaded ? "true" : "false"}
             onClick={openMenu}
           >
-            menu
+            <span className={`t-text-swap${menuFaded ? " is-exit" : ""}`}>
+              <span className="nav-label">menu</span>
+            </span>
           </button>
         </div>
       </header>
@@ -160,8 +225,10 @@ export function SiteHeader({ activeChapter }: { activeChapter: ChapterId }) {
         role="dialog"
         aria-modal="true"
         aria-labelledby="menu-label"
-        className={menuOpen ? "open" : undefined}
-        hidden={!menuOpen}
+        aria-hidden={!menuOpen}
+        data-open={menuOpen ? "true" : "false"}
+        className="t-panel-slide"
+        inert={!menuOpen}
       >
         <div className="pre-row">
           <span id="menu-label" className="lbl">
@@ -169,22 +236,41 @@ export function SiteHeader({ activeChapter }: { activeChapter: ChapterId }) {
           </span>
           <button
             type="button"
-            className="lbl lbl--sand"
+            className="lbl lbl--sand menu-close"
             onClick={closeMenu}
           >
-            close
+            <span className="nav-label">close</span>
           </button>
         </div>
-        <div>
-          {navChapters.map((chapter) => (
-            <Link
+        <div
+          ref={groupRef}
+          className="t-avatar-group"
+          onMouseLeave={() => setMenuShifts(groupRef.current, null, "out")}
+        >
+          {navChapters.map((chapter, index) => (
+            <div
               key={chapter.id}
-              className="mi"
-              href={`#${chapter.id}`}
-              onClick={closeMenu}
+              className="menu-item-hit"
+              onMouseEnter={() => {
+                if (
+                  window.matchMedia("(hover: hover) and (pointer: fine)")
+                    .matches
+                ) {
+                  setMenuShifts(groupRef.current, index, "in");
+                }
+              }}
             >
-              {chapter.navLabel}
-            </Link>
+              <div className="t-avatar menu-grow">
+                <Link
+                  className="mi"
+                  href={`#${chapter.id}`}
+                  tabIndex={menuOpen ? 0 : -1}
+                  onClick={closeMenu}
+                >
+                  {chapter.navLabel}
+                </Link>
+              </div>
+            </div>
           ))}
         </div>
         <div className="pre-row">
