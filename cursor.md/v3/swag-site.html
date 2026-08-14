@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0A0A0A">
+<title>SWAG — Wearable Editions</title>
+<meta name="description" content="Wearable Editions. Each edition is conceived, released, and permanently closed.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   SWAG — wearable editions
+   structural reference: kabut (framer) drop-model architecture
+   brand system: void black / stone grey / clay / muted sand
+   typeface: instrument sans only (per brand bible — web split)
+   ============================================================ */
+
+:root{
+  --void:#0A0A0A;
+  --stone:#575D61;
+  --clay:#8C5E4A;
+  --sand:#D6D1C4;
+
+  /* ink = FIRST LIGHT (documented edition 001 colourway) — no new hex introduced */
+  --ink:#EDE7D8;
+  --line:rgba(214,209,196,.14);
+  --line-strong:rgba(214,209,196,.28);
+  --raise:rgba(214,209,196,.035);
+
+  --cw-after:#0A0A0A;
+  --cw-pink:#7E4A52;      /* TBC — awaiting lock */
+  --cw-green:#2B3626;
+  --cw-dust:#4A3226;
+  --cw-first:#EDE7D8;
+
+  --gut:clamp(18px,4vw,56px);
+  --ease:cubic-bezier(.16,1,.3,1);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  background:var(--void);color:var(--ink);
+  font-family:"Instrument Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  font-size:16px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+body.locked{overflow:hidden}
+img{display:block;width:100%;height:100%;object-fit:cover}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+::selection{background:var(--clay);color:var(--ink)}
+
+/* ---------- type primitives ---------- */
+.lbl{
+  font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--stone);
+}
+.lbl--sand{color:var(--sand)}
+.lbl--clay{color:var(--clay)}
+.mono{font-variant-numeric:tabular-nums;letter-spacing:.1em}
+
+.display{
+  font-weight:700;line-height:.86;letter-spacing:-.035em;text-transform:uppercase;
+  font-size:clamp(44px,11vw,168px);
+}
+.display--sm{font-size:clamp(34px,7vw,88px)}
+h2.sect{
+  font-weight:700;line-height:.92;letter-spacing:-.03em;text-transform:uppercase;
+  font-size:clamp(30px,5.6vw,76px);
+}
+.body-copy{
+  font-size:clamp(15px,1.45vw,19px);line-height:1.62;color:rgba(237,231,216,.74);
+  max-width:60ch;
+}
+.body-copy p+p{margin-top:1.15em}
+.voice{text-transform:lowercase}
+
+/* ---------- layout ---------- */
+.wrap{padding-inline:var(--gut)}
+.rule{height:1px;background:var(--line);width:100%}
+section{position:relative}
+.sect-head{
+  display:flex;align-items:baseline;justify-content:space-between;gap:24px;
+  padding:22px 0 44px;flex-wrap:wrap;
+}
+
+/* ---------- preloader ---------- */
+#pre{
+  position:fixed;inset:0;z-index:200;background:var(--void);
+  display:flex;flex-direction:column;justify-content:space-between;
+  padding:var(--gut);transition:opacity .7s var(--ease),visibility .7s;
+}
+#pre.gone{opacity:0;visibility:hidden}
+#pre .pre-mark{font-size:clamp(52px,13vw,150px);font-weight:700;letter-spacing:-.05em;line-height:1}
+#pre .pre-bar{height:1px;background:var(--line);position:relative;margin-top:18px}
+#pre .pre-bar i{position:absolute;inset:0 auto 0 0;width:0%;background:var(--sand);transition:width .1s linear}
+.pre-row{display:flex;justify-content:space-between;align-items:flex-end;gap:20px}
+
+/* ---------- header ---------- */
+header{
+  position:fixed;top:0;left:0;right:0;z-index:120;
+  background:rgba(10,10,10,.72);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
+  transition:transform .5s var(--ease);
+}
+.hdr-in{display:flex;align-items:center;justify-content:space-between;height:62px}
+.mark{font-weight:700;letter-spacing:.02em;font-size:19px;text-transform:uppercase}
+nav.desk{display:flex;gap:30px}
+nav.desk a{
+  font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+  color:rgba(237,231,216,.6);position:relative;padding-block:6px;transition:color .3s
+}
+nav.desk a:hover,nav.desk a.on{color:var(--sand)}
+nav.desk a.on::after{
+  content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--clay)
+}
+.burger{display:none;font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--sand)}
+
+#menu{
+  position:fixed;inset:0;z-index:150;background:var(--void);
+  padding:var(--gut);display:flex;flex-direction:column;justify-content:space-between;
+  transform:translateY(-101%);transition:transform .62s var(--ease);
+}
+#menu.open{transform:translateY(0)}
+#menu a.mi{
+  display:block;font-size:clamp(38px,12vw,74px);font-weight:700;text-transform:uppercase;
+  letter-spacing:-.03em;line-height:1.06;padding:8px 0;border-bottom:1px solid var(--line);
+}
+
+/* ---------- ticker ---------- */
+.ticker{
+  border-block:1px solid var(--line);overflow:hidden;background:var(--raise);
+  padding:11px 0;white-space:nowrap;
+}
+.ticker .run{display:inline-flex;animation:slide 46s linear infinite}
+.ticker span{
+  padding-inline:22px;font-size:11px;font-weight:600;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--stone)
+}
+.ticker span b{color:var(--sand);font-weight:600}
+@keyframes slide{to{transform:translateX(-50%)}}
+
+/* ---------- hero ---------- */
+.hero{padding-top:110px;padding-bottom:56px;min-height:88vh;display:flex;flex-direction:column;justify-content:space-between}
+.hero-top{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;padding-bottom:40px}
+.hero-mark{font-weight:700;line-height:.82;letter-spacing:-.045em;text-transform:uppercase;font-size:clamp(58px,17.5vw,250px)}
+.hero-bottom{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:end;padding-top:44px;border-top:1px solid var(--line)}
+.cta-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
+.btn{
+  display:inline-flex;align-items:center;gap:10px;border:1px solid var(--line-strong);
+  padding:13px 22px;font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+  transition:background .35s var(--ease),color .35s,border-color .35s
+}
+.btn:hover{background:var(--sand);color:var(--void);border-color:var(--sand)}
+.btn--clay{border-color:var(--clay);color:var(--sand)}
+.btn--clay:hover{background:var(--clay);color:var(--ink);border-color:var(--clay)}
+
+/* ---------- edition feature ---------- */
+.feature{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(24px,4vw,64px);align-items:center}
+.frame{position:relative;overflow:hidden;background:var(--raise);border:1px solid var(--line)}
+.frame::after{content:"";display:block;padding-top:125%}
+.frame img{position:absolute;inset:0;transition:transform 1.1s var(--ease),filter .8s;filter:grayscale(.18) contrast(1.03)}
+.frame:hover img{transform:scale(1.035);filter:grayscale(0) contrast(1.05)}
+.frame .tag{
+  position:absolute;left:12px;bottom:12px;z-index:2;background:rgba(10,10,10,.78);
+  padding:6px 10px;font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--sand)
+}
+.frame--wide::after{padding-top:70%}
+.frame--sq::after{padding-top:100%}
+
+/* ---------- objects / list ---------- */
+.objs{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+.obj{background:var(--void);padding:clamp(22px,3vw,40px);min-height:230px;display:flex;flex-direction:column;justify-content:space-between;gap:26px;transition:background .4s}
+.obj:hover{background:var(--raise)}
+.obj h3{font-size:clamp(20px,2.4vw,30px);font-weight:700;text-transform:uppercase;letter-spacing:-.02em;line-height:1}
+.obj p{font-size:14px;line-height:1.55;color:rgba(237,231,216,.6)}
+
+/* ---------- what is swag — dense block
+   brand bible headline rule: 75 Bold, ALL CAPS, tracking -20 to -40,
+   "squeeze the letters slightly. this creates that dense feeling."
+   ---------- */
+.dense{list-style:none}
+.dense li{
+  display:block;position:relative;
+  font-weight:700;text-transform:uppercase;
+  font-size:clamp(21px,3.5vw,46px);
+  letter-spacing:-.038em;
+  line-height:.98;
+  padding:2px 0;
+  color:var(--ink);
+  transition:color .35s var(--ease),transform .35s var(--ease);
+}
+.dense li::before{
+  content:attr(data-n);
+  position:absolute;left:-2.6em;top:.55em;
+  font-size:10px;font-weight:600;letter-spacing:.16em;color:var(--stone);
+  opacity:0;transition:opacity .35s
+}
+.dense li:hover{color:var(--clay)}
+.dense li:hover::before{opacity:1}
+@media(max-width:860px){
+  .dense li{font-size:clamp(19px,6.4vw,32px);letter-spacing:-.032em}
+  .dense li::before{display:none}
+}
+
+.authority{border-top:1px solid var(--line)}
+.authority li{
+  list-style:none;display:flex;gap:clamp(14px,3vw,44px);align-items:baseline;
+  padding:20px 0;border-bottom:1px solid var(--line);transition:padding-left .45s var(--ease),color .45s
+}
+.authority li:hover{padding-left:14px;color:var(--sand)}
+.authority li .n{font-size:11px;font-weight:600;letter-spacing:.16em;color:var(--stone);min-width:34px}
+.authority li .t{font-size:clamp(16px,2.1vw,25px);line-height:1.28;letter-spacing:-.01em}
+
+/* ---------- manifesto: owe nothing ---------- */
+.owe{padding-block:clamp(70px,10vw,140px);border-top:1px solid var(--line)}
+.owe .owe-mark{
+  font-weight:700;text-transform:uppercase;letter-spacing:-.045em;line-height:.86;
+  font-size:clamp(52px,13vw,190px);
+}
+.owe .owe-body{
+  font-size:clamp(16px,1.7vw,22px);line-height:1.55;color:rgba(237,231,216,.8);
+  max-width:52ch;margin-top:clamp(26px,3vw,44px);letter-spacing:.006em;
+}
+.owe .owe-body b{color:var(--ink);font-weight:700}
+.regain{
+  font-weight:700;text-transform:lowercase;letter-spacing:-.042em;line-height:.94;
+  font-size:clamp(40px,8.5vw,116px);
+}
+.orb{
+  aspect-ratio:1/.92;border-radius:50%;background:var(--sand);color:var(--void);
+  display:flex;align-items:center;justify-content:center;
+  padding:clamp(26px,4vw,58px);max-width:400px;
+}
+.orb p{font-size:clamp(14px,1.4vw,18px);line-height:1.4;letter-spacing:.004em}
+.orb p b{font-weight:700}
+.owe-split{display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(28px,5vw,72px);align-items:center;margin-top:clamp(48px,7vw,96px)}
+@media(max-width:860px){.owe-split{grid-template-columns:1fr}.orb{max-width:300px}}
+
+/* ---------- clothes grid ---------- */
+.grid-clothes{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(8px,1vw,14px)}
+.grid-clothes .frame::after{padding-top:128%}
+
+/* ---------- colourways ---------- */
+.cways{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+.cw{background:var(--void);padding:0 0 22px;transition:background .4s}
+.cw:hover{background:var(--raise)}
+.cw .chip{height:150px;width:100%;border-bottom:1px solid var(--line)}
+.cw .meta{padding:16px clamp(12px,1.4vw,20px) 0}
+.cw h4{font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:7px}
+.cw .hex{font-size:11px;letter-spacing:.14em;color:var(--stone);text-transform:uppercase}
+
+/* ---------- archive rows ---------- */
+.arch{border-top:1px solid var(--line)}
+.arow{
+  display:grid;grid-template-columns:88px 1fr 190px 130px;gap:clamp(14px,3vw,40px);
+  align-items:center;padding:26px 0;border-bottom:1px solid var(--line);
+  transition:padding-left .5s var(--ease),background .5s
+}
+.arow:hover{padding-left:16px;background:linear-gradient(90deg,rgba(140,94,74,.09),transparent 55%)}
+.arow .no{font-size:11px;font-weight:600;letter-spacing:.16em;color:var(--stone)}
+.arow .nm{font-size:clamp(24px,4.4vw,54px);font-weight:700;text-transform:lowercase;letter-spacing:-.03em;line-height:1}
+.arow .dsc{font-size:13px;color:rgba(237,231,216,.55);line-height:1.5}
+.state{
+  justify-self:start;font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+  padding:6px 11px;border:1px solid var(--line-strong);white-space:nowrap
+}
+.state--closed{color:var(--stone)}
+.state--live{color:var(--sand);border-color:var(--sand)}
+.state--dev{color:var(--clay);border-color:var(--clay)}
+
+/* ---------- signature block ---------- */
+.sig{border-left:1px solid var(--clay);padding-left:clamp(18px,2.6vw,34px)}
+.sig .sig-name{margin-top:26px;font-size:13px;letter-spacing:.06em;color:var(--sand)}
+.sig .sig-ed{margin-top:5px;font-size:13px;letter-spacing:.06em;color:var(--stone)}
+
+/* ---------- specs table ---------- */
+.spec{width:100%;border-collapse:collapse;border-top:1px solid var(--line)}
+.spec tr{border-bottom:1px solid var(--line)}
+.spec td{padding:16px 0;font-size:14px;vertical-align:top}
+.spec td:first-child{width:38%;color:var(--stone);font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;padding-right:20px}
+.spec td:last-child{color:rgba(237,231,216,.82)}
+
+/* ---------- list / waitlist ---------- */
+.join{display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,4vw,64px);align-items:center}
+.field{display:flex;border-bottom:1px solid var(--line-strong);margin-top:26px}
+.field input{
+  flex:1;background:none;border:0;outline:none;color:var(--ink);
+  font-family:inherit;font-size:15px;padding:14px 0
+}
+.field input::placeholder{color:var(--stone);text-transform:lowercase}
+.field button{
+  font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--clay);padding-left:18px;transition:color .3s
+}
+.field button:hover{color:var(--sand)}
+.note{margin-top:12px;font-size:11px;letter-spacing:.06em;color:var(--stone)}
+
+/* ---------- contact ---------- */
+.contact-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+.ccard{background:var(--void);padding:clamp(24px,3vw,44px);display:flex;flex-direction:column;gap:16px;min-height:250px;transition:background .4s}
+.ccard:hover{background:var(--raise)}
+.ccard h3{font-size:clamp(19px,2.2vw,27px);font-weight:700;text-transform:uppercase;letter-spacing:-.02em}
+.ccard p{font-size:14px;color:rgba(237,231,216,.6);line-height:1.55}
+.ccard .go{margin-top:auto;font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--clay)}
+
+/* ---------- closer + footer ---------- */
+.closer{padding-block:clamp(70px,11vw,150px);text-align:center;border-top:1px solid var(--line)}
+.closer .big{font-weight:700;line-height:.82;letter-spacing:-.045em;text-transform:uppercase;font-size:clamp(52px,15vw,210px)}
+footer{border-top:1px solid var(--line);padding-block:36px}
+.foot{display:grid;grid-template-columns:2fr 1fr 1fr;gap:28px;align-items:start}
+.foot h5{font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--stone);margin-bottom:14px}
+.foot a{display:block;font-size:13px;color:rgba(237,231,216,.66);padding:4px 0;transition:color .3s}
+.foot a:hover{color:var(--sand)}
+.foot-base{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-top:38px;padding-top:20px;border-top:1px solid var(--line)}
+.foot-base span{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--stone)}
+
+/* ---------- reveal ---------- */
+.rv{opacity:0;transform:translateY(24px);transition:opacity .95s var(--ease),transform .95s var(--ease)}
+.rv.in{opacity:1;transform:none}
+
+/* ---------- pages ---------- */
+.page{display:none}
+.page.active{display:block}
+
+.pad{padding-block:clamp(64px,9vw,132px)}
+.pad-sm{padding-block:clamp(44px,6vw,84px)}
+.page-head{padding-top:104px;padding-bottom:clamp(36px,6vw,72px);border-bottom:1px solid var(--line)}
+
+/* ---------- responsive ---------- */
+@media(max-width:1024px){
+  .grid-clothes{grid-template-columns:repeat(3,1fr)}
+  .cways{grid-template-columns:repeat(3,1fr)}
+  .contact-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:860px){
+  nav.desk{display:none}
+  .burger{display:block}
+  .feature,.join,.hero-bottom{grid-template-columns:1fr}
+  .objs{grid-template-columns:1fr}
+  .arow{grid-template-columns:56px 1fr;row-gap:12px}
+  .arow .dsc{grid-column:2}
+  .arow .state{grid-column:2}
+  .foot{grid-template-columns:1fr 1fr}
+  .contact-grid{grid-template-columns:1fr}
+}
+@media(max-width:560px){
+  .grid-clothes{grid-template-columns:repeat(2,1fr)}
+  .cways{grid-template-columns:repeat(2,1fr)}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;transition-duration:.01ms!important}
+  .rv{opacity:1;transform:none}
+}
+</style>
+</head>
+<body class="locked">
+
+<!-- ============ preloader ============ -->
+<div id="pre">
+  <div class="pre-row"><span class="lbl">[ wearable editions ]</span><span class="lbl mono" id="preNum">000</span></div>
+  <div>
+    <div class="pre-mark">SWAG</div>
+    <div class="pre-bar"><i id="preBar"></i></div>
+    <div class="pre-row" style="margin-top:14px">
+      <span class="lbl">cape town</span>
+      <span class="lbl">edition 001 — kloofstreetnights</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============ header ============ -->
+<header>
+  <div class="wrap hdr-in">
+    <a href="#/" class="mark">SWAG</a>
+    <nav class="desk">
+      <a href="#/current" data-nav="current">current</a>
+      <a href="#/archive" data-nav="archive">archive</a>
+      <a href="#/manifesto" data-nav="manifesto">manifesto</a>
+      <a href="#/contact" data-nav="contact">contact</a>
+    </nav>
+    <button class="burger" id="burger">menu</button>
+  </div>
+</header>
+
+<!-- ============ mobile menu ============ -->
+<div id="menu">
+  <div class="pre-row">
+    <span class="lbl">[ navigation ]</span>
+    <button class="lbl lbl--sand" id="menuClose">close</button>
+  </div>
+  <div>
+    <a class="mi" href="#/current">current</a>
+    <a class="mi" href="#/archive">archive</a>
+    <a class="mi" href="#/manifesto">manifesto</a>
+    <a class="mi" href="#/contact">contact</a>
+  </div>
+  <div class="pre-row">
+    <span class="lbl">@crosswithswag</span>
+    <span class="lbl">nothing owing</span>
+  </div>
+</div>
+
+<main>
+
+<!-- ==================================================================
+     HOME
+     ================================================================== -->
+<div class="page active" id="p-home">
+
+  <section class="wrap hero">
+    <div>
+      <div class="hero-top">
+        <span class="lbl lbl--sand">[ edition 001 — kloofstreetnights ]</span>
+        <span class="lbl">cape town — est. 2026</span>
+      </div>
+      <h1 class="hero-mark">NOTH-<br>OWE<br>ING.</h1>
+    </div>
+    <div class="hero-bottom">
+      <div>
+        <span class="lbl lbl--clay">[ wearable editions ]</span>
+        <p class="body-copy voice" style="margin-top:16px">
+          each edition is one thought held in three objects. a garment. a campaign image. a framed print.
+          conceived, released, and permanently closed.
+        </p>
+      </div>
+      <div>
+        <div class="cta-row">
+          <a class="btn btn--clay" href="#/current">the current edition</a>
+          <a class="btn" href="#/archive">the archive</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="ticker">
+    <div class="run">
+      <span>edition 001 — <b>kloofstreetnights</b> — live</span><span>we <b>owe nothing</b> to anyone</span>
+      <span>no repeats — <b>no reissues</b></span><span>garment — campaign image — framed print</span>
+      <span>we stop explaining — we <b>start being</b></span><span>six editions — <b>one thought each</b></span>
+      <span>edition 001 — <b>kloofstreetnights</b> — live</span><span>we <b>owe nothing</b> to anyone</span>
+      <span>no repeats — <b>no reissues</b></span><span>garment — campaign image — framed print</span>
+      <span>we stop explaining — we <b>start being</b></span><span>six editions — <b>one thought each</b></span>
+    </div>
+  </div>
+
+  <!-- 01 current edition -->
+  <section class="wrap pad">
+    <div class="sect-head rv">
+      <span class="lbl">[ 01 — current edition ]</span>
+      <a class="lbl lbl--clay" href="#/current">view the edition →</a>
+    </div>
+    <div class="feature rv">
+      <div class="frame">
+        <img alt="kloofstreetnights campaign photography" src="https://crosswithswag.co.za/_next/image?url=%2Fassets%2Fwinter-drop%2FArtboard1.jpg&w=1920&q=75" onerror="this.onerror=null;this.src='https://crosswithswag.co.za/assets/winter-drop/Artboard1.jpg'">
+        <span class="tag">edition 001 — after hours</span>
+      </div>
+      <div>
+        <h2 class="sect" style="text-transform:lowercase">kloofstreetnights</h2>
+        <div class="body-copy voice" style="margin-top:24px">
+          <p>worn after the lights go down and before anyone's watching.</p>
+          <p>heavy fabric. long shadows. the hours between leaving and arriving.</p>
+          <p>five colourways, one night. from after hours to first light.</p>
+        </div>
+        <div class="cta-row">
+          <a class="btn btn--clay" href="#/current">enter the edition</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 three objects -->
+  <section class="wrap pad-sm">
+    <div class="sect-head rv">
+      <span class="lbl">[ 02 — the structure ]</span>
+      <span class="lbl">three objects — one thought</span>
+    </div>
+    <div class="objs rv">
+      <div class="obj">
+        <span class="lbl lbl--clay">[ i ]</span>
+        <div><h3>the garment</h3><p class="voice" style="margin-top:12px">heavyweight. single-colour screen print. made to be worn, not displayed.</p></div>
+      </div>
+      <div class="obj">
+        <span class="lbl lbl--clay">[ ii ]</span>
+        <div><h3>the campaign<br>image</h3><p class="voice" style="margin-top:12px">the edition's world, fixed. the record of what it felt like.</p></div>
+      </div>
+      <div class="obj">
+        <span class="lbl lbl--clay">[ iii ]</span>
+        <div><h3>the framed<br>print</h3><p class="voice" style="margin-top:12px">the campaign image as a physical art object. same world, different weight.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 the manifesto — owe nothing -->
+  <section class="wrap owe">
+    <span class="lbl">[ 03 — the manifesto ]</span>
+    <h2 class="owe-mark rv" style="margin-top:20px">OWE<br>NOTHING.</h2>
+    <p class="owe-body rv">
+      We <b>owe nothing</b> to anyone. We <b>stop explaining</b>.
+      We <b>stop convincing</b>. We <b>start being</b>.
+    </p>
+    <p class="owe-body rv" style="margin-top:1.1em">
+      We occupy the space of those who have already accepted themselves.
+    </p>
+    <div class="owe-split">
+      <div class="orb rv">
+        <p><b>swag.</b> is not a performance; it is the radical act of refusing to fragment yourself.</p>
+      </div>
+    </div>
+    <div class="cta-row rv" style="margin-top:clamp(40px,6vw,80px)">
+      <a class="btn btn--clay" href="#/manifesto">read the manifesto</a>
+    </div>
+  </section>
+
+  <!-- 04 what is swag -->
+  <section class="wrap pad">
+    <div class="feature rv" style="align-items:start">
+      <div>
+        <span class="lbl">[ 04 — authority ]</span>
+        <h2 class="sect" style="margin-top:18px">WHAT IS<br>SWAG?</h2>
+        <p class="body-copy" style="margin-top:24px">
+          Swag is not an attitude. It is becoming whole. It takes what broke you and reconstructs something stronger.
+        </p>
+      </div>
+      <ul class="dense">
+        <li data-n="01">Represents your internal authority</li>
+        <li data-n="02">Upholds truth without hesitation</li>
+        <li data-n="03">Refuses to negotiate what is essential to you</li>
+        <li data-n="04">Is daily practice. Is consistency.</li>
+        <li data-n="05">Has density. Does not fragment.</li>
+        <li data-n="06">Alchemises pain. Uses ruptures to reconstruct.</li>
+        <li data-n="07">Has weight. Embodies a new internal movement.</li>
+        <li data-n="08">Simply is.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 04 the clothes -->
+  <section class="wrap pad-sm">
+    <div class="sect-head rv">
+      <span class="lbl">[ 05 — the clothes ]</span>
+      <a class="lbl lbl--clay" href="#/current">kloofstreetnights →</a>
+    </div>
+    <div class="grid-clothes rv" id="clothesHome"></div>
+  </section>
+
+  <!-- 05 archive -->
+  <section class="wrap pad">
+    <div class="sect-head rv">
+      <span class="lbl">[ 06 — the archive ]</span>
+      <a class="lbl lbl--clay" href="#/archive">all editions →</a>
+    </div>
+    <div class="rv" style="max-width:66ch">
+      <h2 class="sect">EVERY EDITION<br>CLOSES.</h2>
+      <p class="body-copy voice" style="margin-top:24px">
+        every edition closes the moment it opens. no repeats, no reissues.
+        we're not chasing scale. we're chasing depth.
+      </p>
+    </div>
+    <div class="arch rv" style="margin-top:52px">
+      <a class="arow" href="#/current">
+        <span class="no">001</span>
+        <span class="nm">kloofstreetnights</span>
+        <span class="dsc voice">five colourways, one night. after hours to first light.</span>
+        <span class="state state--live">live</span>
+      </a>
+      <a class="arow" href="#/archive">
+        <span class="no">002</span>
+        <span class="nm">crosswithswag <span style="color:var(--stone)">— first edition</span></span>
+        <span class="dsc voice">pink and green colourways.</span>
+        <span class="state state--dev">in development</span>
+      </a>
+      <a class="arow" href="#/archive">
+        <span class="no">003</span>
+        <span class="nm">atm</span>
+        <span class="dsc voice">all that matters.</span>
+        <span class="state state--dev">in development</span>
+      </a>
+      <a class="arow" href="#/archive">
+        <span class="no">004</span>
+        <span class="nm">octane</span>
+        <span class="dsc voice">—</span>
+        <span class="state state--dev">in development</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- 06 the list -->
+  <section class="wrap pad" style="border-top:1px solid var(--line)">
+    <div class="join rv">
+      <div>
+        <span class="lbl">[ 07 — the list ]</span>
+        <h2 class="sect" style="margin-top:18px">JOIN<br>THE LIST</h2>
+      </div>
+      <div>
+        <p class="body-copy voice">
+          first access to each edition. one message when an edition opens. nothing else.
+        </p>
+        <form class="field" onsubmit="event.preventDefault();this.querySelector('button').textContent='received';this.querySelector('input').value='';">
+          <input type="email" required placeholder="email address" aria-label="email address">
+          <button type="submit">join</button>
+        </form>
+        <p class="note voice">email and whatsapp waitlist. no paid advertising. no hype.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="closer">
+    <div class="wrap">
+      <span class="lbl">[ nothing owing ]</span>
+      <div class="big rv" style="margin-top:26px">CROSS<br>WITH<br>SWAG</div>
+    </div>
+  </section>
+</div>
+
+<!-- ==================================================================
+     CURRENT — kloofstreetnights
+     ================================================================== -->
+<div class="page" id="p-current">
+  <section class="wrap page-head">
+    <div class="hero-top" style="padding-bottom:26px">
+      <span class="lbl lbl--sand">[ edition 001 ]</span>
+      <span class="state state--live">live</span>
+    </div>
+    <h1 class="display" style="text-transform:lowercase">kloofstreetnights</h1>
+    <div class="hero-bottom" style="border-top:0;padding-top:34px">
+      <div class="body-copy voice">
+        <p>worn after the lights go down and before anyone's watching.</p>
+        <p>heavy fabric. long shadows. the hours between leaving and arriving.</p>
+      </div>
+      <div>
+        <span class="lbl">[ intake ]</span>
+        <p class="body-copy voice" style="margin-top:12px">no storefront. orders come by email.</p>
+        <div class="cta-row"><a class="btn btn--clay" href="mailto:crosswithswag@gmail.com?subject=kloofstreetnights">order this edition</a></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap pad-sm">
+    <div class="sect-head rv"><span class="lbl">[ 01 — the campaign ]</span><span class="lbl">three frames</span></div>
+    <div class="grid-clothes rv" style="grid-template-columns:repeat(3,1fr)" id="campCurrent"></div>
+  </section>
+
+  <section class="wrap pad-sm">
+    <div class="sect-head rv"><span class="lbl">[ 02 — colourways ]</span><span class="lbl">one continuous night</span></div>
+    <div class="cways rv">
+      <div class="cw"><div class="chip" style="background:var(--cw-after)"></div><div class="meta"><h4>after hours</h4><div class="hex">#0A0A0A</div></div></div>
+      <div class="cw"><div class="chip" style="background:var(--cw-pink)"></div><div class="meta"><h4>[ pink — unnamed ]</h4><div class="hex">hex tbc</div></div></div>
+      <div class="cw"><div class="chip" style="background:var(--cw-green)"></div><div class="meta"><h4>[ green — unnamed ]</h4><div class="hex">#2B3626</div></div></div>
+      <div class="cw"><div class="chip" style="background:var(--cw-dust)"></div><div class="meta"><h4>swagy dust</h4><div class="hex">#4A3226</div></div></div>
+      <div class="cw"><div class="chip" style="background:var(--cw-first)"></div><div class="meta"><h4>first light</h4><div class="hex">#EDE7D8</div></div></div>
+    </div>
+    <p class="note voice" style="margin-top:16px">hex codes are targets, not finals. pantone / swatch match required before print.</p>
+  </section>
+
+  <section class="wrap pad-sm">
+    <div class="feature rv" style="align-items:start">
+      <div>
+        <span class="lbl">[ 03 — specification ]</span>
+        <h2 class="sect" style="margin-top:18px">THE<br>MAKE.</h2>
+      </div>
+      <table class="spec">
+        <tr><td>front print</td><td>A6 — chest hit</td></tr>
+        <tr><td>back print</td><td>A4 landscape — 297mm</td></tr>
+        <tr><td>print colour</td><td>muted sand #D6D1C4 — single colour screen print</td></tr>
+        <tr><td>silhouette</td><td>heavyweight, boxy</td></tr>
+        <tr><td>garments</td><td>hoodie / sweater / t-shirt</td></tr>
+        <tr><td>edition status</td><td>closes permanently — no reissue</td></tr>
+        <tr><td>despatch</td><td>paxi — economy &amp; speed</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <section class="wrap pad-sm">
+    <div class="sect-head rv"><span class="lbl">[ 04 — the clothes ]</span><span class="lbl">kloofstreetnights</span></div>
+    <div class="grid-clothes rv" id="clothesCurrent"></div>
+  </section>
+
+  <section class="wrap pad">
+    <div class="sig rv" style="max-width:70ch">
+      <span class="lbl">[ a message from the director ]</span>
+      <div class="body-copy voice" style="margin-top:20px">
+        <p>this is not a season. it is a night.</p>
+        <p>it opens once. it closes once. what you carry out of it is yours, and it will not be made again.</p>
+      </div>
+      <div class="sig-name voice">— the.director</div>
+      <div class="sig-ed voice">kloofstreetnights</div>
+    </div>
+  </section>
+</div>
+
+<!-- ==================================================================
+     ARCHIVE
+     ================================================================== -->
+<div class="page" id="p-archive">
+  <section class="wrap page-head">
+    <span class="lbl">[ the archive ]</span>
+    <h1 class="display" style="margin-top:18px">EVERY<br>EDITION<br>CLOSES.</h1>
+    <p class="body-copy voice" style="margin-top:30px">
+      the site is a living archive, not a storefront. each edition receives a permanent record.
+      the body of work is the brand.
+    </p>
+  </section>
+
+  <section class="wrap pad-sm">
+    <div class="arch rv">
+      <a class="arow" href="#/current">
+        <span class="no">001</span>
+        <span class="nm">kloofstreetnights</span>
+        <span class="dsc voice">five colourways, one night. after hours → first light. heavyweight, single-colour sand print.</span>
+        <span class="state state--live">live</span>
+      </a>
+      <div class="arow">
+        <span class="no">002</span>
+        <span class="nm">crosswithswag <span style="color:var(--stone)">— first edition</span></span>
+        <span class="dsc voice">pink and green colourways.</span>
+        <span class="state state--dev">in development</span>
+      </div>
+      <div class="arow">
+        <span class="no">003</span>
+        <span class="nm">atm</span>
+        <span class="dsc voice">all that matters.</span>
+        <span class="state state--dev">in development</span>
+      </div>
+      <div class="arow">
+        <span class="no">004</span>
+        <span class="nm">octane</span>
+        <span class="dsc voice">—</span>
+        <span class="state state--dev">in development</span>
+      </div>
+      <div class="arow">
+        <span class="no">005</span>
+        <span class="nm">mountain eater red</span>
+        <span class="dsc voice">crosswithswag second edition. red colourway.</span>
+        <span class="state state--dev">in development</span>
+      </div>
+      <div class="arow">
+        <span class="no">006</span>
+        <span class="nm">courtside club culture</span>
+        <span class="dsc voice">—</span>
+        <span class="state state--dev">in development</span>
+      </div>
+    </div>
+    <p class="note voice" style="margin-top:22px">
+      editions 002–006 are unreleased. names are locked; dates are not announced.
+    </p>
+  </section>
+
+  <section class="wrap pad-sm">
+    <div class="objs rv">
+      <div class="obj">
+        <span class="lbl lbl--clay">[ rule i ]</span>
+        <div><h3>no repeats</h3><p class="voice" style="margin-top:12px">an edition closes the moment it opens. no restock, no reissue, no second run.</p></div>
+      </div>
+      <div class="obj">
+        <span class="lbl lbl--clay">[ rule ii ]</span>
+        <div><h3>three objects</h3><p class="voice" style="margin-top:12px">garment, campaign image, framed print. every edition. non-negotiable.</p></div>
+      </div>
+      <div class="obj">
+        <span class="lbl lbl--clay">[ rule iii ]</span>
+        <div><h3>depth,<br>not scale</h3><p class="voice" style="margin-top:12px">scarcity here is structural. it is not manufactured for the sale.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="closer">
+    <div class="wrap"><span class="lbl">[ the record ]</span><div class="big rv" style="margin-top:26px">NOTH-<br>OWE<br>ING.</div></div>
+  </section>
+</div>
+
+<!-- ==================================================================
+     MANIFESTO
+     ================================================================== -->
+<div class="page" id="p-manifesto">
+  <section class="wrap page-head">
+    <span class="lbl">[ the manifesto ]</span>
+    <h1 class="display" style="margin-top:18px">OWE<br>NOTHING.</h1>
+  </section>
+
+  <!-- the brand manifesto -->
+  <section class="wrap owe" style="border-top:0">
+    <p class="owe-body rv" style="margin-top:0">
+      We <b>owe nothing</b> to anyone. We <b>stop explaining</b>.
+      We <b>stop convincing</b>. We <b>start being</b>.
+    </p>
+    <p class="owe-body rv" style="margin-top:1.1em">
+      We occupy the space of those who have already accepted themselves.
+    </p>
+    <div class="owe-split">
+      <div class="orb rv">
+        <p><b>swag.</b> is not a performance; it is the radical act of refusing to fragment yourself.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- a home for individuals -->
+  <section class="wrap pad-sm" style="border-top:1px solid var(--line)">
+    <div class="sect-head rv"><span class="lbl">[ a home for individuals ]</span><span class="lbl">does not seek permission to exist</span></div>
+    <ul class="dense rv" style="max-width:22ch">
+      <li>Is rebellion</li>
+      <li>Is resilience</li>
+      <li>Is revolutionary</li>
+      <li>Emanates presence</li>
+      <li>Does not beg to be understood</li>
+      <li>Does not convince</li>
+      <li>Liberates</li>
+    </ul>
+    <p class="body-copy rv" style="margin-top:34px">Speaks to be <b style="color:var(--ink)">true</b>, not <b style="color:var(--ink)">approved</b>. Says come as you are. Simply is.</p>
+  </section>
+
+  <section class="wrap pad">
+    <div class="feature rv" style="align-items:start">
+      <div class="sig">
+        <div class="body-copy voice">
+          <p>it starts with the wound. the disconnection from yourself.</p>
+          <p>we learned to need approval before we'd believe what we felt. to control how we were seen just to belong.</p>
+          <p>swag is not an attitude. it is becoming whole. it takes what broke you and reconstructs something stronger.</p>
+          <p>it sets boundaries without raising a voice. it does not fight. it does not explain.</p>
+          <p>it simply does not need approval to exist.</p>
+        </div>
+        <div class="sig-name voice">— the.director</div>
+        <div class="sig-ed voice">kloofstreetnights</div>
+      </div>
+      <div class="frame frame--sq">
+        <img alt="kloofstreetnights campaign photography" src="https://crosswithswag.co.za/_next/image?url=%2Fassets%2Fwinter-drop%2FArtboard3.jpg&w=1920&q=75" onerror="this.onerror=null;this.src='https://crosswithswag.co.za/assets/winter-drop/Artboard3.jpg'">
+        <span class="tag">the carrier, not the spectator</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap pad-sm">
+    <div class="sect-head rv"><span class="lbl">[ authentic expression ]</span><span class="lbl">what is swag?</span></div>
+    <div class="feature rv" style="align-items:start">
+      <h2 class="sect">AUTHENTIC<br>EXPRESSION.</h2>
+      <div class="body-copy voice">
+        <p>authenticity needs no gallery, no jury, no permission.</p>
+        <p>it decides how the fabric falls. what it's made of. what it weighs.</p>
+        <p>nothing about this edition asked to be approved.</p>
+        <p>we don't dress the spectator. we dress the carrier.</p>
+        <p>swag is not an accessory. it's what's left once you stop performing.</p>
+        <p>no explanation. no permission. just presence.</p>
+        <p>simply is.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap pad-sm">
+    <div class="sect-head rv"><span class="lbl">[ authority ]</span><span class="lbl">the daily practice</span></div>
+    <ul class="dense rv">
+      <li data-n="01">Represents your internal authority</li>
+      <li data-n="02">Upholds truth without hesitation</li>
+      <li data-n="03">Refuses to negotiate what is essential to you</li>
+      <li data-n="04">Is daily practice. Is consistency.</li>
+      <li data-n="05">Has density. Does not fragment.</li>
+      <li data-n="06">Alchemises pain. Uses ruptures to reconstruct.</li>
+      <li data-n="07">Has weight. Embodies a new internal movement.</li>
+      <li data-n="08">Simply is.</li>
+    </ul>
+    <p class="body-copy rv" style="margin-top:34px">Commands respect without raising a voice. Communicates integrity.</p>
+  </section>
+
+  <section class="closer">
+    <div class="wrap"><span class="lbl">[ the wearer ]</span><div class="big rv" style="margin-top:26px">SILENT<br>WARRIOR</div></div>
+  </section>
+</div>
+
+<!-- ==================================================================
+     CONTACT
+     ================================================================== -->
+<div class="page" id="p-contact">
+  <section class="wrap page-head">
+    <span class="lbl">[ contact ]</span>
+    <h1 class="display" style="margin-top:18px">NO<br>PERMISSION<br>NEEDED.</h1>
+    <p class="body-copy voice" style="margin-top:30px">
+      one inbox. orders, collaborations, everything. we don't need a storefront to sell you something true.
+    </p>
+  </section>
+
+  <section class="wrap pad-sm">
+    <div class="contact-grid rv" style="grid-template-columns:1fr 1fr">
+      <a class="ccard" href="mailto:crosswithswag@gmail.com">
+        <span class="lbl lbl--clay">[ 01 ]</span>
+        <h3>everything<br>comes here</h3>
+        <p class="voice">orders, collaborations, stockists, press. one inbox. we answer what matters.</p>
+        <span class="go">crosswithswag@gmail.com →</span>
+      </a>
+      <a class="ccard" href="https://www.instagram.com/crosswithswag/" target="_blank" rel="noopener">
+        <span class="lbl lbl--clay">[ 02 ]</span>
+        <h3>this lives at<br>@crosswithswag</h3>
+        <p class="voice">the edition is announced there first. nowhere else.</p>
+        <span class="go">instagram →</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="wrap pad-sm">
+    <div class="join rv">
+      <div>
+        <span class="lbl">[ the list ]</span>
+        <h2 class="sect" style="margin-top:18px">FIRST<br>ACCESS.</h2>
+      </div>
+      <div>
+        <p class="body-copy voice">one message when an edition opens. nothing else. no paid advertising, no hype.</p>
+        <form class="field" onsubmit="event.preventDefault();this.querySelector('button').textContent='received';this.querySelector('input').value='';">
+          <input type="email" required placeholder="email address" aria-label="email address">
+          <button type="submit">join</button>
+        </form>
+        <p class="note voice">email + whatsapp waitlist</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap pad-sm">
+    <div class="sig rv" style="max-width:66ch">
+      <div class="body-copy voice">
+        <p>we're not chasing scale. we're chasing depth.</p>
+        <p>so here is the invitation —</p>
+      </div>
+      <div class="sig-name voice">— the.director</div>
+      <div class="sig-ed voice">kloofstreetnights</div>
+    </div>
+  </section>
+</div>
+
+</main>
+
+<!-- ============ footer ============ -->
+<footer class="wrap">
+  <div class="foot">
+    <div>
+      <div class="mark" style="font-size:clamp(34px,7vw,72px);line-height:.9;letter-spacing:-.04em">SWAG</div>
+      <p class="lbl" style="margin-top:16px">wearable editions — cape town</p>
+    </div>
+    <div>
+      <h5>editions</h5>
+      <a href="#/current">current — kloofstreetnights</a>
+      <a href="#/archive">archive</a>
+    </div>
+    <div>
+      <h5>info</h5>
+      <a href="#/manifesto">manifesto</a>
+      <a href="#/contact">contact</a>
+      <a href="https://www.instagram.com/crosswithswag/" target="_blank" rel="noopener">@crosswithswag</a>
+    </div>
+  </div>
+  <div class="foot-base">
+    <span>nothing owing</span>
+    <span>the.director</span>
+    <span>2026</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- campaign assets ---------- */
+  var BASE_OPT = "https://crosswithswag.co.za/_next/image?url=%2Fassets%2Fwinter-drop%2FArtboard";
+  var BASE_RAW = "https://crosswithswag.co.za/assets/winter-drop/Artboard";
+  var ALL = [1,2,3,4,6,7,8,10,11,12,13,14,15,17,18,19,20];
+
+  function frame(n, i){
+    var d = document.createElement("div");
+    d.className = "frame";
+    var img = document.createElement("img");
+    img.alt = "kloofstreetnights campaign photography " + (i+1);
+    img.loading = "lazy";
+    img.src = BASE_OPT + n + ".jpg&w=1920&q=75";
+    img.onerror = function(){ this.onerror = null; this.src = BASE_RAW + n + ".jpg"; };
+    var t = document.createElement("span");
+    t.className = "tag";
+    t.textContent = "ed.001 / " + String(i+1).padStart(2,"0");
+    d.appendChild(img); d.appendChild(t);
+    return d;
+  }
+  function fill(id, list){
+    var el = document.getElementById(id); if(!el) return;
+    list.forEach(function(n,i){ el.appendChild(frame(n,i)); });
+  }
+  fill("clothesHome", ALL.slice(0,8));
+  fill("campCurrent", [1,2,3]);
+  fill("clothesCurrent", ALL);
+
+  /* ---------- preloader ---------- */
+  var pre = document.getElementById("pre"),
+      bar = document.getElementById("preBar"),
+      num = document.getElementById("preNum"),
+      v = 0;
+  var tick = setInterval(function(){
+    v += Math.random()*13 + 5;
+    if(v >= 100){ v = 100; clearInterval(tick); setTimeout(done, 340); }
+    bar.style.width = v + "%";
+    num.textContent = String(Math.floor(v)).padStart(3,"0");
+  }, 90);
+  function done(){
+    pre.classList.add("gone");
+    document.body.classList.remove("locked");
+    setTimeout(reveal, 60);
+  }
+  setTimeout(function(){ if(!pre.classList.contains("gone")){ clearInterval(tick); done(); } }, 4200);
+
+  /* ---------- routing ---------- */
+  var ROUTES = ["home","current","archive","manifesto","contact"];
+  function route(){
+    var key = (location.hash || "#/").replace("#/","").split("/")[0] || "home";
+    if(ROUTES.indexOf(key) === -1) key = "home";
+    ROUTES.forEach(function(r){
+      var el = document.getElementById("p-" + r);
+      if(el) el.classList.toggle("active", r === key);
+    });
+    document.querySelectorAll("nav.desk a").forEach(function(a){
+      a.classList.toggle("on", a.getAttribute("data-nav") === key);
+    });
+    closeMenu();
+    window.scrollTo({top:0, behavior:"instant"});
+    reveal();
+  }
+  window.addEventListener("hashchange", route);
+  route();
+
+  /* ---------- menu ---------- */
+  var menu = document.getElementById("menu");
+  function closeMenu(){ menu.classList.remove("open"); document.body.classList.remove("locked"); }
+  document.getElementById("burger").onclick = function(){
+    menu.classList.add("open"); document.body.classList.add("locked");
+  };
+  document.getElementById("menuClose").onclick = closeMenu;
+  document.addEventListener("keydown", function(e){ if(e.key === "Escape") closeMenu(); });
+
+  /* ---------- scroll reveal ---------- */
+  var io = ("IntersectionObserver" in window) ? new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); } });
+  }, {rootMargin:"0px 0px -8% 0px", threshold:.06}) : null;
+
+  function reveal(){
+    var nodes = document.querySelectorAll(".page.active .rv:not(.in)");
+    if(!io){ nodes.forEach(function(n){ n.classList.add("in"); }); return; }
+    nodes.forEach(function(n){ io.observe(n); });
+  }
+
+  /* ---------- header hide on scroll down ---------- */
+  var last = 0, hdr = document.querySelector("header");
+  window.addEventListener("scroll", function(){
+    var y = window.scrollY;
+    hdr.style.transform = (y > last && y > 200) ? "translateY(-100%)" : "translateY(0)";
+    last = y;
+  }, {passive:true});
+})();
+</script>
+</body>
+</html>

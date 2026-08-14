@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0A0A0A">
+<title>SWAG — Brand Introduction</title>
+<meta name="description" content="SWAG. Wearable Editions. Cape Town. A brand introduction.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+<style>
+/* ================================================================
+   SWAG — brand introduction
+   audience: prospective investors, presented by Banathi
+   palette: void black / slate grey / clay / muted sand — no others
+   ================================================================ */
+:root{
+  --void:#0A0A0A;
+  --stone:#575D61;
+  --clay:#8C5E4A;
+  --sand:#D6D1C4;
+  --line:rgba(214,209,196,.14);
+  --line-2:rgba(214,209,196,.3);
+  --dim:rgba(214,209,196,.72);
+  --gut:clamp(20px,5vw,84px);
+  --ease:cubic-bezier(.16,1,.3,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  background:var(--void);color:var(--sand);
+  font-family:"Instrument Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+a{color:inherit;text-decoration:none}
+::selection{background:var(--clay);color:var(--sand)}
+
+.wrap{padding-inline:var(--gut);max-width:1500px;margin-inline:auto}
+.pad{padding-block:clamp(72px,10vw,150px)}
+.rule{height:1px;background:var(--line)}
+
+.lbl{font-size:11px;font-weight:600;letter-spacing:.17em;text-transform:uppercase;color:var(--stone)}
+.lbl--clay{color:var(--clay)}
+.lbl--sand{color:var(--sand)}
+
+.display{font-weight:700;text-transform:uppercase;letter-spacing:-.042em;line-height:.84}
+h2.sect{font-weight:700;text-transform:uppercase;letter-spacing:-.032em;line-height:.92;font-size:clamp(30px,5.4vw,72px)}
+.body{font-size:clamp(15px,1.4vw,19px);line-height:1.62;color:var(--dim);max-width:62ch}
+.body p+p{margin-top:1.1em}
+.lead{font-size:clamp(18px,2.1vw,27px);line-height:1.45;color:var(--sand);max-width:26ch;letter-spacing:-.01em}
+
+/* progress bar */
+#bar{position:fixed;top:0;left:0;height:2px;width:0;background:var(--clay);z-index:90;transition:width .1s linear}
+
+/* nav */
+header{position:fixed;top:0;left:0;right:0;z-index:80;background:rgba(10,10,10,.78);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.hd{display:flex;align-items:center;justify-content:space-between;height:58px}
+.hd .m{font-weight:700;font-size:18px;letter-spacing:.02em;text-transform:uppercase}
+.hd nav{display:flex;gap:26px}
+.hd nav a{font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--stone);transition:color .3s}
+.hd nav a:hover{color:var(--sand)}
+@media(max-width:760px){.hd nav{display:none}}
+
+/* hero */
+.hero{min-height:100svh;display:flex;flex-direction:column;justify-content:space-between;padding-top:100px;padding-bottom:52px}
+.hero h1{font-size:clamp(60px,17vw,250px)}
+.hero-meta{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;padding-bottom:32px}
+.hero-foot{display:grid;grid-template-columns:1fr 1fr;gap:34px;align-items:end;padding-top:38px;border-top:1px solid var(--line)}
+@media(max-width:760px){.hero-foot{grid-template-columns:1fr}}
+
+/* two-col */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,5vw,80px);align-items:start}
+.split--tight{grid-template-columns:.85fr 1.15fr}
+@media(max-width:860px){.split,.split--tight{grid-template-columns:1fr}}
+
+.head{display:flex;justify-content:space-between;gap:22px;flex-wrap:wrap;padding-bottom:42px}
+
+/* three objects */
+.objs{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+.obj{background:var(--void);padding:clamp(24px,3vw,42px);min-height:250px;display:flex;flex-direction:column;justify-content:space-between;gap:26px;transition:background .4s}
+.obj:hover{background:rgba(214,209,196,.035)}
+.obj h3{font-size:clamp(21px,2.4vw,31px);font-weight:700;text-transform:uppercase;letter-spacing:-.025em;line-height:1}
+.obj p{font-size:14px;line-height:1.55;color:var(--dim)}
+@media(max-width:860px){.objs{grid-template-columns:1fr}}
+
+/* dense */
+.dense{list-style:none}
+.dense li{
+  font-weight:700;text-transform:uppercase;font-size:clamp(20px,3.1vw,40px);
+  letter-spacing:-.038em;line-height:.99;padding:2px 0;transition:color .35s var(--ease)
+}
+.dense li:hover{color:var(--clay)}
+
+/* manifesto */
+.owe{font-size:clamp(54px,13vw,180px)}
+.owe-body{font-size:clamp(17px,1.8vw,24px);line-height:1.5;max-width:50ch;color:var(--dim);letter-spacing:.005em}
+.owe-body b{color:var(--sand);font-weight:700}
+.orb{
+  width:min(400px,80vw);aspect-ratio:1;border-radius:50%;background:var(--sand);color:var(--void);
+  display:flex;align-items:center;justify-content:center;padding:clamp(30px,4vw,62px);margin-left:auto
+}
+.orb p{font-size:clamp(14px,1.35vw,18px);line-height:1.4}
+.orb b{font-weight:700}
+
+/* colourways */
+.ways{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+.way{background:var(--void);padding-bottom:20px}
+.way .chip{height:clamp(90px,11vw,160px);border-bottom:1px solid var(--line)}
+.way .mt{padding:15px clamp(10px,1.2vw,18px) 0}
+.way h4{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.way span{display:block;margin-top:6px;font-size:10px;letter-spacing:.14em;color:var(--stone);text-transform:uppercase}
+@media(max-width:860px){.ways{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:520px){.ways{grid-template-columns:repeat(2,1fr)}}
+
+/* editions */
+.eds{border-top:1px solid var(--line)}
+.ed{
+  display:grid;grid-template-columns:74px 1fr 300px 140px;gap:clamp(14px,3vw,40px);align-items:center;
+  padding:26px 0;border-bottom:1px solid var(--line);
+  transition:padding-left .5s var(--ease),background .5s
+}
+.ed:hover{padding-left:16px;background:linear-gradient(90deg,rgba(140,94,74,.09),transparent 55%)}
+.ed .no{font-size:11px;font-weight:600;letter-spacing:.16em;color:var(--stone)}
+.ed .nm{font-size:clamp(22px,3.6vw,46px);font-weight:700;letter-spacing:-.032em;line-height:1;text-transform:lowercase}
+.ed .ds{font-size:13px;color:var(--dim);line-height:1.5}
+.st{justify-self:start;font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;padding:6px 11px;border:1px solid var(--line-2);white-space:nowrap}
+.st--live{color:var(--sand);border-color:var(--sand)}
+.st--dev{color:var(--clay);border-color:var(--clay)}
+@media(max-width:860px){
+  .ed{grid-template-columns:54px 1fr;row-gap:10px}
+  .ed .ds,.ed .st{grid-column:2}
+}
+
+/* principles */
+.prin{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+.pr{background:var(--void);padding:clamp(24px,3vw,42px);display:flex;flex-direction:column;gap:14px;min-height:230px}
+.pr h3{font-size:clamp(19px,2.1vw,27px);font-weight:700;text-transform:uppercase;letter-spacing:-.02em;line-height:1.05}
+.pr p{font-size:14px;line-height:1.55;color:var(--dim)}
+@media(max-width:860px){.prin{grid-template-columns:1fr}}
+
+/* asset slot */
+.slot{
+  border:1px solid var(--line);aspect-ratio:4/5;display:flex;align-items:center;justify-content:center;
+  text-align:center;padding:18px
+}
+.slot span{font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--stone)}
+.slot--wide{aspect-ratio:16/10}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:760px){.grid3{grid-template-columns:1fr 1fr}}
+
+/* closer */
+.closer{text-align:center;border-top:1px solid var(--line)}
+.closer .big{font-size:clamp(48px,14vw,200px)}
+
+footer{border-top:1px solid var(--line);padding-block:34px}
+.fb{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}
+.fb span{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--stone)}
+
+/* reveal */
+.rv{opacity:0;transform:translateY(22px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
+.rv.in{opacity:1;transform:none}
+
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;transition-duration:.01ms!important}
+  .rv{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+
+<div id="bar"></div>
+
+<header>
+  <div class="wrap hd">
+    <span class="m">SWAG</span>
+    <nav>
+      <a href="#what">what it is</a>
+      <a href="#manifesto">manifesto</a>
+      <a href="#model">the model</a>
+      <a href="#editions">editions</a>
+      <a href="#now">where it is</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ============ hero ============ -->
+<section class="wrap hero">
+  <div>
+    <div class="hero-meta">
+      <span class="lbl lbl--sand">[ brand introduction ]</span>
+      <span class="lbl">cape town — 2026</span>
+    </div>
+    <h1 class="display">NOTH-<br>OWE<br>ING.</h1>
+  </div>
+  <div class="hero-foot">
+    <div>
+      <span class="lbl lbl--clay">[ wearable editions ]</span>
+      <p class="lead" style="margin-top:16px">A clothing label built as a body of work, not a catalogue.</p>
+    </div>
+    <div>
+      <p class="body">Each edition is one idea, held in three objects, released once and closed permanently. There is no season. There is no restock. The archive is the product.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ what it is ============ -->
+<section class="wrap pad" id="what">
+  <div class="head rv">
+    <span class="lbl">[ 01 — what it is ]</span>
+    <span class="lbl">quiet, not loud</span>
+  </div>
+  <div class="split rv">
+    <h2 class="sect">A LABEL<br>THAT DOES<br>NOT<br>PERFORM.</h2>
+    <div class="body">
+      <p>SWAG is a Cape Town clothing label operating on an editions model. Rather than seasonal collections, it releases discrete editions — each one a single idea expressed through a garment, a campaign image, and a framed print.</p>
+      <p>The work sits deliberately against the noise of contemporary streetwear. No logos shouting, no hype cycles, no manufactured urgency. The restraint is the position.</p>
+      <p>Everything is anchored to one idea: that presence does not require approval. The clothing is the carrier of that idea, not a vehicle for a slogan.</p>
+    </div>
+  </div>
+</section>
+
+<div class="wrap"><div class="rule"></div></div>
+
+<!-- ============ manifesto ============ -->
+<section class="wrap pad" id="manifesto">
+  <span class="lbl rv">[ 02 — the manifesto ]</span>
+  <h2 class="display owe rv" style="margin-top:20px">OWE<br>NOTHING.</h2>
+  <div class="split" style="margin-top:clamp(36px,5vw,64px);align-items:center">
+    <div class="rv">
+      <p class="owe-body">We <b>owe nothing</b> to anyone. We <b>stop explaining</b>. We <b>stop convincing</b>. We <b>start being</b>.</p>
+      <p class="owe-body" style="margin-top:1.2em">We occupy the space of those who have already accepted themselves.</p>
+    </div>
+    <div class="rv">
+      <div class="orb"><p><b>swag.</b> is not a performance; it is the radical act of refusing to fragment yourself.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ what is swag ============ -->
+<section class="wrap pad">
+  <div class="head rv">
+    <span class="lbl">[ 03 — the definition ]</span>
+    <span class="lbl">what is swag?</span>
+  </div>
+  <ul class="dense rv">
+    <li>Represents your internal authority</li>
+    <li>Upholds truth without hesitation</li>
+    <li>Refuses to negotiate what is essential to you</li>
+    <li>Is daily practice. Is consistency.</li>
+    <li>Has density. Does not fragment.</li>
+    <li>Alchemises pain. Uses ruptures to reconstruct.</li>
+    <li>Has weight. Embodies a new internal movement.</li>
+    <li>Simply is.</li>
+  </ul>
+</section>
+
+<div class="wrap"><div class="rule"></div></div>
+
+<!-- ============ the model ============ -->
+<section class="wrap pad" id="model">
+  <div class="head rv">
+    <span class="lbl">[ 04 — the model ]</span>
+    <span class="lbl">three objects — one thought</span>
+  </div>
+  <div class="split rv" style="padding-bottom:48px">
+    <h2 class="sect">EVERY<br>EDITION<br>CLOSES.</h2>
+    <div class="body">
+      <p>An edition opens and closes once. No repeats, no reissues, no second runs. Scarcity here is structural — it is a consequence of how the work is made, not a tactic applied to sell it.</p>
+      <p>What this produces is an archive that accumulates value rather than a catalogue that depreciates. The brand is not the logo. The brand is the body of work.</p>
+    </div>
+  </div>
+  <div class="objs rv">
+    <div class="obj">
+      <span class="lbl lbl--clay">[ i ]</span>
+      <div><h3>The garment</h3><p style="margin-top:12px">Heavyweight, boxy silhouette. Single-colour screen print. Made to be worn, not displayed.</p></div>
+    </div>
+    <div class="obj">
+      <span class="lbl lbl--clay">[ ii ]</span>
+      <div><h3>The campaign image</h3><p style="margin-top:12px">The edition's world, fixed. The record of what it felt like.</p></div>
+    </div>
+    <div class="obj">
+      <span class="lbl lbl--clay">[ iii ]</span>
+      <div><h3>The framed print</h3><p style="margin-top:12px">The campaign image as a physical art object. Same world, different weight.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ principles ============ -->
+<section class="wrap pad">
+  <div class="head rv">
+    <span class="lbl">[ 05 — operating principles ]</span>
+    <span class="lbl">depth, not scale</span>
+  </div>
+  <div class="prin rv">
+    <div class="pr">
+      <span class="lbl lbl--clay">[ 01 ]</span>
+      <h3>No paid<br>advertising</h3>
+      <p>Editions are announced to a direct list and on one channel. Attention is earned, not bought.</p>
+    </div>
+    <div class="pr">
+      <span class="lbl lbl--clay">[ 02 ]</span>
+      <h3>Direct<br>relationship</h3>
+      <p>No storefront, no marketplace, no intermediary. Orders come by email. The label knows who carries the work.</p>
+    </div>
+    <div class="pr">
+      <span class="lbl lbl--clay">[ 03 ]</span>
+      <h3>Made with<br>an artist</h3>
+      <p>Each edition is developed in collaboration. The brand sets the context; the collaborator works inside it.</p>
+    </div>
+  </div>
+</section>
+
+<div class="wrap"><div class="rule"></div></div>
+
+<!-- ============ edition 001 ============ -->
+<section class="wrap pad">
+  <div class="head rv">
+    <span class="lbl">[ 06 — edition 001 ]</span>
+    <span class="st st--live">live</span>
+  </div>
+  <div class="split--tight split rv" style="align-items:center">
+    <div>
+      <h2 class="sect" style="text-transform:lowercase">kloofstreetnights</h2>
+      <div class="body" style="margin-top:22px">
+        <p>Worn after the lights go down and before anyone's watching. Heavy fabric, long shadows, the hours between leaving and arriving.</p>
+        <p>Five colourways trace a single night — from after hours through to first light.</p>
+      </div>
+    </div>
+    <div class="grid3">
+      <div class="slot"><span>[ campaign 01 ]</span></div>
+      <div class="slot"><span>[ campaign 02 ]</span></div>
+      <div class="slot"><span>[ campaign 03 ]</span></div>
+    </div>
+  </div>
+
+  <div class="ways rv" style="margin-top:clamp(36px,5vw,64px)">
+    <div class="way"><div class="chip" style="background:#0A0A0A;box-shadow:inset 0 0 0 1px rgba(214,209,196,.22)"></div><div class="mt"><h4>after hours</h4><span>#0A0A0A</span></div></div>
+    <div class="way"><div class="chip" style="border:1px dashed var(--line-2);border-bottom:1px solid var(--line)"></div><div class="mt"><h4>[ unnamed ]</h4><span>hex tbc</span></div></div>
+    <div class="way"><div class="chip" style="background:#2B3626"></div><div class="mt"><h4>[ unnamed ]</h4><span>#2B3626</span></div></div>
+    <div class="way"><div class="chip" style="background:#4A3226"></div><div class="mt"><h4>swagy dust</h4><span>#4A3226</span></div></div>
+    <div class="way"><div class="chip" style="background:#EDE7D8"></div><div class="mt"><h4>first light</h4><span>#EDE7D8</span></div></div>
+  </div>
+</section>
+
+<!-- ============ editions ============ -->
+<section class="wrap pad" id="editions">
+  <div class="head rv">
+    <span class="lbl">[ 07 — the pipeline ]</span>
+    <span class="lbl">six editions</span>
+  </div>
+  <div class="eds rv">
+    <div class="ed">
+      <span class="no">001</span><span class="nm">kloofstreetnights</span>
+      <span class="ds">Five colourways, one night. After hours to first light.</span>
+      <span class="st st--live">live</span>
+    </div>
+    <div class="ed">
+      <span class="no">002</span><span class="nm">crosswithswag <span style="color:var(--stone)">— first edition</span></span>
+      <span class="ds">Pink and green colourways.</span>
+      <span class="st st--dev">in development</span>
+    </div>
+    <div class="ed">
+      <span class="no">003</span><span class="nm">atm</span>
+      <span class="ds">All That Matters.</span>
+      <span class="st st--dev">in development</span>
+    </div>
+    <div class="ed">
+      <span class="no">004</span><span class="nm">octane</span>
+      <span class="ds">—</span>
+      <span class="st st--dev">in development</span>
+    </div>
+    <div class="ed">
+      <span class="no">005</span><span class="nm">mountain eater red</span>
+      <span class="ds">Second edition. Red colourway.</span>
+      <span class="st st--dev">in development</span>
+    </div>
+    <div class="ed">
+      <span class="no">006</span><span class="nm">courtside club culture</span>
+      <span class="ds">—</span>
+      <span class="st st--dev">in development</span>
+    </div>
+  </div>
+  <p class="lbl rv" style="margin-top:22px">editions 002–006 unreleased — names locked, dates unannounced</p>
+</section>
+
+<div class="wrap"><div class="rule"></div></div>
+
+<!-- ============ identity ============ -->
+<section class="wrap pad">
+  <div class="head rv">
+    <span class="lbl">[ 08 — the identity ]</span>
+    <span class="lbl">four colours, one voice</span>
+  </div>
+  <div class="split rv">
+    <div class="body">
+      <p>The visual system is deliberately narrow. Four colours, one typeface, one rule for how headlines are set — tight, dense, uppercase.</p>
+      <p>Constraint is the point. A system this small is impossible to dilute, and every edition inherits it intact.</p>
+    </div>
+    <div class="ways" style="grid-template-columns:repeat(4,1fr)">
+      <div class="way"><div class="chip" style="background:#0A0A0A;box-shadow:inset 0 0 0 1px rgba(214,209,196,.22)"></div><div class="mt"><h4>void black</h4><span>the silence</span></div></div>
+      <div class="way"><div class="chip" style="background:#575D61"></div><div class="mt"><h4>slate grey</h4><span>the foundation</span></div></div>
+      <div class="way"><div class="chip" style="background:#8C5E4A"></div><div class="mt"><h4>deep clay</h4><span>the journey</span></div></div>
+      <div class="way"><div class="chip" style="background:#D6D1C4"></div><div class="mt"><h4>muted sand</h4><span>the clarity</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ where it is ============ -->
+<section class="wrap pad" id="now">
+  <div class="head rv">
+    <span class="lbl">[ 09 — where it is now ]</span>
+    <span class="lbl">august 2026</span>
+  </div>
+  <div class="split rv">
+    <h2 class="sect">BUILT,<br>NOT<br>PITCHED.</h2>
+    <div class="body">
+      <p>Edition 001 is live. The brand system — palette, typography, voice, and the signature format that closes every piece of writing — is documented and in use.</p>
+      <p>A five-page site has been designed and prototyped, and the full design system is built in Figma against bound brand variables. Five further editions are named and in development.</p>
+      <p>The label operates direct: one channel, one inbox, a growing list. What exists has been made without paid media.</p>
+    </div>
+  </div>
+  <div class="grid3 rv" style="margin-top:clamp(36px,5vw,64px)">
+    <div class="slot slot--wide"><span>[ site — landing ]</span></div>
+    <div class="slot slot--wide"><span>[ site — current edition ]</span></div>
+    <div class="slot slot--wide"><span>[ site — archive ]</span></div>
+  </div>
+</section>
+
+<!-- ============ closer ============ -->
+<section class="closer pad">
+  <div class="wrap">
+    <span class="lbl">[ nothing owing ]</span>
+    <div class="display big rv" style="margin-top:26px">CROSS<br>WITH<br>SWAG</div>
+    <p class="lbl rv" style="margin-top:40px">
+      <a href="mailto:crosswithswag@gmail.com" style="color:var(--clay)">crosswithswag@gmail.com</a>
+      &nbsp;·&nbsp;
+      <a href="https://www.instagram.com/crosswithswag/" target="_blank" rel="noopener" style="color:var(--clay)">@crosswithswag</a>
+    </p>
+  </div>
+</section>
+
+<footer class="wrap">
+  <div class="fb">
+    <span>swag — wearable editions</span>
+    <span>cape town</span>
+    <span>2026</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  // scroll progress
+  var bar = document.getElementById("bar");
+  function prog(){
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    bar.style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + "%";
+  }
+  window.addEventListener("scroll", prog, { passive: true });
+  prog();
+
+  // reveal
+  var nodes = document.querySelectorAll(".rv");
+  if (!("IntersectionObserver" in window)) {
+    nodes.forEach(function(n){ n.classList.add("in"); });
+    return;
+  }
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+    });
+  }, { rootMargin: "0px 0px -8% 0px", threshold: .06 });
+  nodes.forEach(function(n){ io.observe(n); });
+})();
+</script>
+</body>
+</html>

@@ -1,5 +1,5 @@
 import { SectionConfig } from "@/lib/sections.config";
-import { cta, footer } from "@/lib/copy";
+import { cta, footerV2 as footer } from "@/lib/copy.v2";
 import { SectionShell } from "@/components/sections/SectionShell";
 import { CtaLink } from "@/components/ui/CtaLink";
 import { Wordmark } from "@/components/ui/Wordmark";

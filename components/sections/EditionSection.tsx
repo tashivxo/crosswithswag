@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { SectionConfig } from "@/lib/sections.config";
-import { edition } from "@/lib/copy";
+import { edition } from "@/lib/copy.v2";
 import { SectionShell } from "@/components/sections/SectionShell";
 import { CtaLink } from "@/components/ui/CtaLink";
 import { Reveal } from "@/components/motion/Reveal";

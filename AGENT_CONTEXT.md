@@ -6,7 +6,14 @@ Read this before executing any step in this repository. If this file conflicts w
 
 This is the pre-sign-off prototype for `swag.`, a scroll-driven single-page brand site for Marcus.
 
-The repository is no longer docs/assets only. Phases 0–5 of the pre-sign-off plan have been implemented, and **Marcus Canva whiteboard feedback (V2)** has been applied to the live build:
+**Branch split (August 2026):**
+
+- **Production (`main`)** — V2 Canva whiteboard build (eight poster sections). Live at `https://crosswithswag.vercel.app`.
+- **`swag_V3_new_branch`** — Marcus V3 rebuild (five continuous-scroll chapters from Figma/HTML handoff). Preview-only until Marcus signs off. Do not merge to `main` without explicit approval.
+
+Marcus V3 sources live in `cursor.md/v3/` (`swag-site.html`, `SWAG-engineering-handoff.md`). Figma file `5w6qUwhO5sLBhxJHsqfC0u` is view-only for `tashivxo@gmail.com` — build follows HTML + handoff.
+
+The repository is no longer docs/assets only. Phases 0–5 of the pre-sign-off plan have been implemented, and **Marcus Canva whiteboard feedback (V2)** remains on production:
 
 - Phase 0 complete — Marcus sign-off locked copy, motion direction, and Section 6 content.
 - **V2 feedback build complete (July 2026)** — Canva board `DAHO-6jJydk` (`V1 Feedback Whiteboard`) implemented: new manifesto/edition copy, Presence section removed, kloofstreetnights on Void Black, clothes showcase + community section added, hero logo scroll choreography, persistent wordmark with Sand-section colour swap, cursor-contrast poster interactivity, edition title marquee.
@@ -22,7 +29,7 @@ Do not restart from a blank scaffold. Work with the current app.
 ## Canonical Source Order
 
 1. `AGENT_CONTEXT.md` — current project state and agent rules.
-2. `lib/copy.ts` — copy source of truth for the build (updated for V2 whiteboard feedback).
+2. `lib/copy.ts` — V3 copy source of truth on `swag_V3_new_branch` (from Marcus engineering handoff + `swag-site.html`). V2 copy preserved in `lib/copy.v2.ts`.
 3. `cursor.md/design.md` — visual identity, section structure, colour map, animation rules.
 4. `cursor.md/brand-copy.md` — original manifesto/raw copy (older; V2 whiteboard copy in `lib/copy.ts` wins for build).
 5. `cursor.md/marcus-signoff-checklist.md` — filled Marcus sign-off record.
@@ -43,9 +50,23 @@ Where newer docs conflict with the PRD, newer docs win. Where V2 whiteboard copy
 
 The site should feel like a sequence of typographic posters, not a product landing page.
 
-## Locked Structure (V2)
+## Locked Structure (V3 on `swag_V3_new_branch`)
 
-The V1 site now has **eight sections** after Marcus whiteboard feedback:
+One continuous scroll — five chapters (Figma Page 1 frames), not five routes:
+
+1. **Home** (`#home`) — hero, ticker, current-edition teaser, structure, manifesto teaser, what is swag, clothes grid, archive teaser, waitlist
+2. **Current edition** (`#current`) — kloofstreetnights campaign, colourways, spec, clothes, director note
+3. **Archive** (`#archive`) — six editions, three rules
+4. **Manifesto** (`#manifesto`) — owe nothing, wound, authority blocks
+5. **Contact** (`#contact`) — email + Instagram cards, waitlist (no invented form beyond handoff)
+
+Wordmark: drifts away after preloader; docks top-left in nav on scroll. Lenis + GSAP; `prefers-reduced-motion` respected.
+
+**Intentionally not invented:** unnamed pink/green colourways (dashed `HEX TBC` swatches); ATM/Octane/Courtside descriptions remain `—`.
+
+## Locked Structure (V2 on `main`)
+
+The production site has **eight sections** after Marcus whiteboard feedback:
 
 1. Hero / Landing — Void Black `#0A0A0A` (centered wordmark scrolls to top-left; persistent fixed wordmark after hero)
 2. Manifesto — Void Black `#0A0A0A` (new wound/approval copy from whiteboard)
@@ -76,7 +97,19 @@ Confirmed colour sequence:
 - One horizontal marquee max per page (kloofstreetnights title in edition section).
 - All new motion must respect `prefers-reduced-motion`.
 
-## Current Implementation Files
+## Current Implementation Files (V3 branch)
+
+- `app/page.tsx` — five scroll chapters + preloader, header, footer
+- `app/globals.css` — V3 typographic system (SAND primary text per Figma handoff)
+- `components/v3/*` — chapter components, header, wordmark drift/dock, ticker, reveal
+- `lib/copy.ts` — V3 copy
+- `lib/editions.ts` — edition data (archive, colourways, campaign artboards)
+- `lib/sections.config.ts` — five chapter ids and nav config
+- `cursor.md/v3/` — Marcus handover attachments
+
+Legacy V2 section components remain in `components/sections/` (unused on V3 page; copy in `lib/copy.v2.ts`).
+
+## Current Implementation Files (V2 production)
 
 - `app/layout.tsx` — metadata shell and Lenis provider.
 - `app/page.tsx` — renders all eight sections + motion controllers.
@@ -140,12 +173,16 @@ No test runner is configured yet. After UI changes, use browser preview or Playw
 
 ## Deployment
 
-Current Vercel deployment:
+Current Vercel deployment (personal account `tashivxo`, team `tashivxos-projects`):
 
-- Deployment URL: `https://crosswithswag-20x4bss2l-ict-5428s-projects.vercel.app`
-- Aliased URL: `https://crosswithswag.vercel.app`
+- Production alias: `https://crosswithswag.vercel.app`
+- Latest production deployment: `https://crosswithswag-rf245lomw-tashivxos-projects.vercel.app`
+- Dashboard: `https://vercel.com/tashivxos-projects/crosswithswag`
+- Inspect: `https://vercel.com/tashivxos-projects/crosswithswag/2rKxnqhyUFoLK9VLUHxruU2Fh57P`
 
-The deployment built successfully, but anonymous access may be gated by Vercel authentication/protection. Do not assign a custom production domain before launch sign-off.
+Previously deployed to work account `ict-5428s-projects`; that project was removed July 2026.
+
+The deployment built successfully, but anonymous access may be gated by Vercel authentication/protection. If Marcus sees a login screen, disable Deployment Protection for the project in Vercel settings or share a bypass link from the Vercel dashboard. Do not assign a custom production domain before launch sign-off.
 
 ## Phase Status
 
@@ -155,7 +192,8 @@ The deployment built successfully, but anonymous access may be gated by Vercel a
 | **V2 Feedback** | ✅ COMPLETE | Canva whiteboard feedback implemented in code. |
 | **Phase 1 Stitch** | ⏸ SUPERSEDED | Stitch screens predate V2; live build is current review target. |
 | **Phase 2–5** | ✅ COMPLETE | Scaffold, sections, motion infrastructure. |
-| **Marcus re-review** | ⏸ PENDING | Review updated Vercel preview against whiteboard intent. |
+| **V3 rebuild** | 🚧 ON BRANCH | `swag_V3_new_branch` — five-chapter scroll from Marcus Aug 2026 handoff. Preview pending Marcus sign-off. |
+| **Marcus re-review** | ⏸ PENDING | Review V3 preview against Figma/HTML; production stays V2 until sign-off. |
 
 ## Open Questions for Marcus
 

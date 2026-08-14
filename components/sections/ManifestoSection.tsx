@@ -1,5 +1,5 @@
 import { SectionConfig } from "@/lib/sections.config";
-import { manifesto, manifestoLines } from "@/lib/copy";
+import { manifestoLines, manifestoV2 as manifesto } from "@/lib/copy.v2";
 import { SectionShell } from "@/components/sections/SectionShell";
 import { Reveal } from "@/components/motion/Reveal";
 

@@ -1,5 +1,5 @@
 import { SectionConfig } from "@/lib/sections.config";
-import { hero } from "@/lib/copy";
+import { hero } from "@/lib/copy.v2";
 import { SectionShell } from "@/components/sections/SectionShell";
 import { Reveal } from "@/components/motion/Reveal";
 import { HeroWordmarkScroll } from "@/components/motion/HeroWordmarkScroll";

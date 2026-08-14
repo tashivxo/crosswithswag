@@ -1,5 +1,5 @@
 import { SectionConfig } from "@/lib/sections.config";
-import { close } from "@/lib/copy";
+import { close } from "@/lib/copy.v2";
 import { SectionShell } from "@/components/sections/SectionShell";
 import { Reveal } from "@/components/motion/Reveal";
 
