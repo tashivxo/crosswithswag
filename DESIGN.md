@@ -156,7 +156,7 @@ Square. Radius is `0`. Rules are 1px. Colourway chips are the exception (swatche
 - MENU stays visible while scrolling. Overlay is a full-viewport Void panel (`t-panel-slide`). Chapter labels grow from origin on hover (`t-avatar`).
 
 ### Wordmark
-- Masked SVG. Centres in the hero at `--wordmark-hero-width`. Docks into a compact header slot at `--wordmark-dock-width` (`clamp(88px, 11vw, 120px)`) over the first 260px of scroll. Header height follows the docked mark, not the hero mark.
+- Masked SVG, laid out at `--wordmark-hero-width` (largest size). Centres in the hero at scale 1. Docks by scaling down to `--wordmark-dock-width` (`clamp(88px, 11vw, 120px)`) over the first 260px of scroll — never scale the mask up. Header height follows the docked mark, not the hero mark.
 
 ## Do's and Don'ts
 

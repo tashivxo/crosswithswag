@@ -426,12 +426,6 @@ button:focus-visible {
   overflow: visible;
 }
 
-.hdr-mark-slot > a {
-  display: block;
-  line-height: 0;
-  position: relative;
-}
-
 .burger {
   position: relative;
   display: flex;
@@ -595,7 +589,11 @@ button:focus-visible {
 
 .wordmark-drift-layer {
   position: relative;
-  width: var(--wordmark-dock-width);
+  flex: 0 0 auto;
+  width: var(--wordmark-hero-width);
+  margin-inline: calc(
+    (var(--wordmark-dock-width) - var(--wordmark-hero-width)) / 2
+  );
   color: var(--sand);
   pointer-events: none;
   transform-origin: 50% 50%;
@@ -1382,6 +1380,8 @@ button:focus-visible {
   }
 
   .wordmark-drift-layer {
-    transform: none !important;
+    transform: scale(
+      calc(var(--wordmark-dock-width) / var(--wordmark-hero-width))
+    ) !important;
   }
 }

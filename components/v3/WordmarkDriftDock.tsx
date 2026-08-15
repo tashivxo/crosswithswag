@@ -19,10 +19,10 @@ function tokenPx(name: string) {
   return width;
 }
 
-function heroScale() {
+function dockScale() {
   const dock = tokenPx("--wordmark-dock-width");
   const hero = tokenPx("--wordmark-hero-width");
-  return dock > 0 ? hero / dock : 1;
+  return hero > 0 ? dock / hero : 1;
 }
 
 function heroOffset(slot: Element) {
@@ -46,26 +46,36 @@ export function WordmarkDriftDock({ ready }: { ready: boolean }) {
       "(prefers-reduced-motion: reduce)",
     ).matches;
 
-    if (reduceMotion) return;
-
     const layer = layerRef.current;
     const slot = layer.parentElement;
     const home = document.getElementById("home");
 
     if (!home || !slot) return;
 
+    if (reduceMotion) {
+      gsap.set(layer, {
+        x: 0,
+        y: 0,
+        scale: dockScale(),
+        opacity: 1,
+      });
+      return () => {
+        gsap.set(layer, { clearProps: "transform" });
+      };
+    }
+
     let onResize: (() => void) | undefined;
 
     const ctx = gsap.context(() => {
       const from = () => ({
         ...heroOffset(slot),
-        scale: heroScale(),
+        scale: 1,
       });
 
       gsap.set(layer, {
         x: from().x,
         y: from().y,
-        scale: from().scale,
+        scale: 1,
         opacity: 1,
         force3D: true,
       });
@@ -75,13 +85,13 @@ export function WordmarkDriftDock({ ready }: { ready: boolean }) {
         {
           x: () => from().x,
           y: () => from().y,
-          scale: () => from().scale,
+          scale: 1,
           opacity: 1,
         },
         {
           x: 0,
           y: 0,
-          scale: 1,
+          scale: () => dockScale(),
           opacity: 1,
           ease: "none",
           scrollTrigger: {
