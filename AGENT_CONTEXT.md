@@ -60,7 +60,7 @@ One continuous scroll — five chapters (Figma Page 1 frames), not five routes:
 4. **Manifesto** (`#manifesto`) — owe nothing, wound, authority blocks
 5. **Contact** (`#contact`) — email + Instagram cards, waitlist (no invented form beyond handoff)
 
-Wordmark: lives in the header (not under a frosted bar). On load it sits at hero scale in the viewport centre; on scroll it docks into the top-left nav slot at the same size (`--wordmark-hero-width`). Header stays fixed with wordmark + MENU only (chapter links live in the overlay). MENU stays visible while scrolling. MENU opens a panel-reveal overlay (current / archive / manifesto / contact) with hover-grow on the hovered chapter. MENU and CLOSE have a small bounce hover. Hero copy is visible as soon as the preloader ends. Lenis + GSAP; `prefers-reduced-motion` respected.
+Wordmark: lives in the header (not under a frosted bar). On load it sits at hero scale in the viewport centre; on scroll it docks into the top-left nav slot and compresses to `--wordmark-dock-width`. Header stays fixed with wordmark + MENU only (chapter links live in the overlay). MENU stays visible while scrolling. MENU opens a panel-reveal overlay (current / archive / manifesto / contact) with hover-grow on the hovered chapter. MENU and CLOSE have a small bounce hover. Hero copy is visible as soon as the preloader ends. Lenis + GSAP; `prefers-reduced-motion` respected.
 
 **Intentionally not invented:** unnamed pink/green colourways (dashed `HEX TBC` swatches); ATM/Octane/Courtside descriptions remain `—`.
 

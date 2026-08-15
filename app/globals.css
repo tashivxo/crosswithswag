@@ -15,12 +15,16 @@
   --gut: clamp(18px, 4vw, 56px);
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
   --wordmark-hero-width: clamp(160px, 20vw, 260px);
+  --wordmark-dock-width: clamp(88px, 11vw, 120px);
   --wordmark-aspect-ratio: 1.426685;
   --wordmark-hero-height: calc(
     var(--wordmark-hero-width) / var(--wordmark-aspect-ratio)
   );
+  --wordmark-dock-height: calc(
+    var(--wordmark-dock-width) / var(--wordmark-aspect-ratio)
+  );
   --hero-dock-scroll: 260px;
-  --header-height: calc(var(--wordmark-hero-height) + 12px);
+  --header-height: calc(var(--wordmark-dock-height) + 8px);
   --font-display: var(--font-instrument-sans, "Instrument Sans", sans-serif);
   /* transitions-dev */
   --resize-dur: 300ms;
@@ -413,8 +417,9 @@ button:focus-visible {
 .hdr-mark-slot {
   position: relative;
   z-index: 1;
-  min-width: var(--wordmark-hero-width);
-  height: var(--wordmark-hero-height);
+  width: var(--wordmark-dock-width);
+  min-width: var(--wordmark-dock-width);
+  height: var(--wordmark-dock-height);
   flex: 0 0 auto;
   display: flex;
   align-items: center;
@@ -581,7 +586,7 @@ button:focus-visible {
 
 /* wordmark */
 .wordmark {
-  width: var(--wordmark-hero-width);
+  width: 100%;
   aspect-ratio: 1540.82 / 1080;
   background: currentColor;
   mask: url("/assets/Frame_6_clean.svg") center / contain no-repeat;
@@ -590,9 +595,10 @@ button:focus-visible {
 
 .wordmark-drift-layer {
   position: relative;
-  width: var(--wordmark-hero-width);
+  width: var(--wordmark-dock-width);
   color: var(--sand);
   pointer-events: none;
+  transform-origin: 50% 50%;
   will-change: transform;
 }
 

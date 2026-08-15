@@ -10,6 +10,21 @@ gsap.registerPlugin(ScrollTrigger);
 const DOCK_SCROLL = 260;
 const DOCK_START = 40;
 
+function tokenPx(name: string) {
+  const probe = document.createElement("div");
+  probe.style.cssText = `position:absolute;visibility:hidden;pointer-events:none;width:var(${name})`;
+  document.body.appendChild(probe);
+  const width = probe.getBoundingClientRect().width;
+  probe.remove();
+  return width;
+}
+
+function heroScale() {
+  const dock = tokenPx("--wordmark-dock-width");
+  const hero = tokenPx("--wordmark-hero-width");
+  return dock > 0 ? hero / dock : 1;
+}
+
 function heroOffset(slot: Element) {
   const rect = slot.getBoundingClientRect();
   const cx = rect.left + rect.width / 2;
@@ -42,12 +57,15 @@ export function WordmarkDriftDock({ ready }: { ready: boolean }) {
     let onResize: (() => void) | undefined;
 
     const ctx = gsap.context(() => {
-      const from = () => heroOffset(slot);
+      const from = () => ({
+        ...heroOffset(slot),
+        scale: heroScale(),
+      });
 
       gsap.set(layer, {
         x: from().x,
         y: from().y,
-        scale: 1,
+        scale: from().scale,
         opacity: 1,
         force3D: true,
       });
@@ -57,7 +75,7 @@ export function WordmarkDriftDock({ ready }: { ready: boolean }) {
         {
           x: () => from().x,
           y: () => from().y,
-          scale: 1,
+          scale: () => from().scale,
           opacity: 1,
         },
         {

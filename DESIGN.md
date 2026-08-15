@@ -152,11 +152,11 @@ Square. Radius is `0`. Rules are 1px. Colourway chips are the exception (swatche
 - Error: Clay underline + `enter a valid email.` + shake. Success: `join` → `received` text swap; field read-only.
 
 ### Navigation
-- Fixed header: SVG wordmark (hero width, docks on scroll) + MENU.
+- Fixed header: SVG wordmark (hero scale while centred, dock width once seated) + MENU.
 - MENU stays visible while scrolling. Overlay is a full-viewport Void panel (`t-panel-slide`). Chapter labels grow from origin on hover (`t-avatar`).
 
 ### Wordmark
-- Masked SVG at `--wordmark-hero-width`. Centres in the hero, docks to the header slot on the first 260px of scroll. Same size in both states.
+- Masked SVG. Centres in the hero at `--wordmark-hero-width`. Docks into a compact header slot at `--wordmark-dock-width` (`clamp(88px, 11vw, 120px)`) over the first 260px of scroll. Header height follows the docked mark, not the hero mark.
 
 ## Do's and Don'ts
 
