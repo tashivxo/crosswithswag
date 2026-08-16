@@ -1,7 +1,7 @@
 import { SectionConfig } from "@/lib/sections.config";
-import { close } from "@/lib/copy.v2";
-import { SectionShell } from "@/components/sections/SectionShell";
-import { Reveal } from "@/components/motion/Reveal";
+import { close } from "@/archive/v2/lib/copy.v2";
+import { SectionShell } from "@/archive/v2/components/sections/SectionShell";
+import { Reveal } from "@/archive/v2/components/motion/Reveal";
 
 export function ClosingSection({ section }: { section: SectionConfig }) {
   return (

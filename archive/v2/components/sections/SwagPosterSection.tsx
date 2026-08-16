@@ -1,8 +1,8 @@
 import { SectionConfig } from "@/lib/sections.config";
 import { BleedDisplay } from "@/components/ui/BleedDisplay";
-import { SectionShell } from "@/components/sections/SectionShell";
-import { Reveal } from "@/components/motion/Reveal";
-import { CursorContrast } from "@/components/motion/CursorContrast";
+import { SectionShell } from "@/archive/v2/components/sections/SectionShell";
+import { Reveal } from "@/archive/v2/components/motion/Reveal";
+import { CursorContrast } from "@/archive/v2/components/motion/CursorContrast";
 
 export function SwagPosterSection({ section }: { section: SectionConfig }) {
   const posterContent = (

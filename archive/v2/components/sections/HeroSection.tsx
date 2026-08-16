@@ -1,8 +1,8 @@
 import { SectionConfig } from "@/lib/sections.config";
-import { hero } from "@/lib/copy.v2";
-import { SectionShell } from "@/components/sections/SectionShell";
-import { Reveal } from "@/components/motion/Reveal";
-import { HeroWordmarkScroll } from "@/components/motion/HeroWordmarkScroll";
+import { hero } from "@/archive/v2/lib/copy.v2";
+import { SectionShell } from "@/archive/v2/components/sections/SectionShell";
+import { Reveal } from "@/archive/v2/components/motion/Reveal";
+import { HeroWordmarkScroll } from "@/archive/v2/components/motion/HeroWordmarkScroll";
 
 export function HeroSection({ section }: { section: SectionConfig }) {
   return (

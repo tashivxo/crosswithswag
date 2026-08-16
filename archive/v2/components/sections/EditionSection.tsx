@@ -1,11 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { SectionConfig } from "@/lib/sections.config";
-import { edition } from "@/lib/copy.v2";
-import { SectionShell } from "@/components/sections/SectionShell";
+import { edition } from "@/archive/v2/lib/copy.v2";
+import { SectionShell } from "@/archive/v2/components/sections/SectionShell";
 import { CtaLink } from "@/components/ui/CtaLink";
-import { Reveal } from "@/components/motion/Reveal";
-import { EditionMarquee } from "@/components/motion/EditionMarquee";
+import { Reveal } from "@/archive/v2/components/motion/Reveal";
+import { EditionMarquee } from "@/archive/v2/components/motion/EditionMarquee";
 
 export function EditionSection({ section }: { section: SectionConfig }) {
   return (
