@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-This repo contains the pre-sign-off V1 prototype for `swag.`, a scroll-driven single-page brand site for Marcus. It is a quiet, type-led digital gallery for `Wearable Editions`, not an ecommerce store.
+This repo contains the production V3 site for `swag.`, a scroll-driven single-page brand gallery for Marcus. It is a quiet, type-led digital gallery for `Wearable Editions`, not an ecommerce store.
 
 Before making changes, read `AGENT_CONTEXT.md`. It is the highest-priority project context file.
 
@@ -50,9 +50,10 @@ npm run lint
 - Use npm; `package-lock.json` is present.
 - This is a Next.js App Router project with TypeScript and Tailwind CSS.
 - Do not re-run `create-next-app` over the existing app.
-- Keep all public preview work on Vercel preview/protected deployments until Marcus signs off.
+- Production is `main` (V3), live at `https://crosswithswag.co.za` and `https://crosswithswag.vercel.app`.
+- Frozen V2 lives on `v2-production-freeze` for design mining only. Do not promote it back to production.
 - Do not add analytics until the provider is chosen.
-- Do not assign a custom production domain before Marcus sign-off.
+- Custom domain `crosswithswag.co.za` is already attached. Do not change DNS or attach another domain.
 
 ## Design Rules
 
@@ -69,7 +70,7 @@ npm run lint
 - `app/page.tsx` - five V3 scroll chapters (+ preloader/header/footer).
 - `app/globals.css` - CSS variables and section composition styles.
 - `components/providers/LenisProvider.tsx` - Lenis smooth scroll.
-- `components/v3/*` - V3 chapters, chrome, motion (active on this branch).
+- `components/v3/*` - V3 chapters, chrome, motion (production on `main`).
 - `components/ui/*` - shared primitives (wordmark, watermark, CTA).
 - `lib/copy.ts` - V3 copy source of truth.
 - `lib/editions.ts` - edition / campaign data.
@@ -94,9 +95,7 @@ After UI edits, use a browser preview or Playwright-style visual check where pos
 
 ## Deployment
 
-Use Vercel preview only until Marcus signs off.
-
-Current known deployment is documented in `AGENT_CONTEXT.md` and `cursor.md/marcus-review-packet.md`. Anonymous access may be blocked by Vercel protection; do not treat the login screen as an app build failure without checking Vercel.
+Production is V3 on `main`. Frozen V2 preview is `v2-production-freeze`. Current URLs are documented in `AGENT_CONTEXT.md` and `cursor.md/marcus-review-packet.md`. Anonymous access may be blocked by Vercel protection; do not treat the login screen as an app build failure without checking Vercel.
 
 ## Agent Notes
 

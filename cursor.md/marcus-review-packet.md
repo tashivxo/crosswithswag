@@ -1,19 +1,20 @@
 # Marcus Review Packet
-## swag. V1 review
+## swag. V3 production
 
 ## Review links
 
-- Vercel deployment: https://crosswithswag.vercel.app
-- Vercel inspect: https://vercel.com/ict-5428s-projects/crosswithswag/HwkhLoYjvC6JbpWLFEZ2k2tT5qzm
+- Production (V3): https://crosswithswag.co.za
+- Production alias: https://crosswithswag.vercel.app
+- Vercel inspect (current production): https://vercel.com/tashivxos-projects/crosswithswag/CjUfoZ46aAePpPkFnj7eQpMdEZpy
+- Frozen V2 (design mining only): https://crosswithswag-git-v2-production-freeze-tashivxos-projects.vercel.app
 
-Note: this deployment built successfully, but anonymous access may be gated by Vercel authentication/protection. Share from Vercel or disable deployment protection when Marcus needs to review outside the team.
+Vercel Authentication is currently off, so these URLs are publicly viewable. Do not treat a login screen as a build failure without checking Vercel.
 
 ## What to review
 
-1. **Stitch screen compositions (primary)** — 8 desktop screens in Stitch. Checklist: `cursor.md/archive/STITCH_REVIEW_NOTES.md`. Export folder: `archive/stitch-compositions/swag-v1-stitch-compositions/screens/`.
-2. **Manifesto + tagline** — locked. Review layout and pacing only.
-3. **Section 6** — kloofstreetnights story, campaign photography, CTA wording.
-4. **Live site (secondary)** — current Vercel preview for scroll/motion feel only; layout polish waits on Stitch approval.
+1. **Live V3 production** — five-chapter scroll (Home / Current / Archive / Manifesto / Contact). Wordmark + MENU header, chapter overlay, kloofstreetnights current edition, archive, manifesto, contact/waitlist.
+2. **Frozen V2** — eight-section Canva whiteboard build on `v2-production-freeze`. Reference-only for mining layouts, motion, and copy. Not production.
+3. **Stitch screen compositions (historical)** — 8 desktop screens in Stitch. Checklist: `cursor.md/archive/STITCH_REVIEW_NOTES.md`. Export folder: `archive/stitch-compositions/swag-v1-stitch-compositions/screens/`.
 
 ## Stitch handoff
 
@@ -26,11 +27,10 @@ Note: this deployment built successfully, but anonymous access may be gated by V
 
 - `npm run lint` passes
 - `npm run build` passes
-- Vercel build completed successfully
+- Vercel production build completed successfully (August 2026 V3 cutover)
 
 ## Decisions still pending
 
-- Stitch screen visual approval
 - Analytics provider
-- Domain/DNS plan
-- Public launch date
+- Public launch announcement
+- Community-page scope

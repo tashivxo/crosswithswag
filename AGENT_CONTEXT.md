@@ -4,34 +4,35 @@ Read this before executing any step in this repository. If this file conflicts w
 
 ## Project Status
 
-This is the pre-sign-off prototype for `swag.`, a scroll-driven single-page brand site for Marcus.
+This is the live production site for `swag.`, a scroll-driven single-page brand gallery for Marcus.
 
-**Branch split (August 2026):**
+**Branch split (August 2026 cutover):**
 
-- **Production (`main`)** — V2 Canva whiteboard build (eight poster sections). Live at `https://crosswithswag.vercel.app`.
-- **`swag_V3_new_branch`** — Marcus V3 rebuild (five continuous-scroll chapters from Figma/HTML handoff). Preview: `https://crosswithswag-git-swagv3newbranch-tashivxos-projects.vercel.app`. Preview-only until Marcus signs off. Do not merge to `main` without explicit approval.
+- **Production (`main`)** — V3 five-chapter continuous-scroll site. Live at `https://crosswithswag.co.za` and `https://crosswithswag.vercel.app`. Marcus signed off the V3 cutover; that gate is lifted. Do not attach another custom domain.
+- **`v2-production-freeze`** — frozen snapshot of the pre-cutover V2 Canva whiteboard build (eight poster sections, commit `c18a1c5`). Reference-only for mining layouts, motion, and copy. Not production. Preview: `https://crosswithswag-git-v2-production-freeze-tashivxos-projects.vercel.app`.
+- **`swag_V3_new_branch`** — retained git history of the V3 rebuild. It is not a live preview line; production is `main`.
 
 Marcus V3 sources live in `cursor.md/v3/` (`swag-site.html`, `SWAG-engineering-handoff.md`). Figma file `5w6qUwhO5sLBhxJHsqfC0u` is view-only for `tashivxo@gmail.com` — build follows HTML + handoff.
 
-The repository is no longer docs/assets only. Phases 0–5 of the pre-sign-off plan have been implemented, and **Marcus Canva whiteboard feedback (V2)** remains on production:
+The repository is no longer docs/assets only. Phases 0–5 of the pre-sign-off plan have been implemented. **Marcus Canva whiteboard feedback (V2)** is frozen on `v2-production-freeze` for design mining:
 
 - Phase 0 complete — Marcus sign-off locked copy, motion direction, and Section 6 content.
 - **V2 feedback build complete (July 2026)** — Canva board `DAHO-6jJydk` (`V1 Feedback Whiteboard`) implemented: new manifesto/edition copy, Presence section removed, kloofstreetnights on Void Black, clothes showcase + community section added, hero logo scroll choreography, persistent wordmark with Sand-section colour swap, cursor-contrast poster interactivity, edition title marquee.
 - Stitch handoff exists in `stitch/`.
 - Design token sources exist in `lib/`.
 - Next.js + TypeScript + Tailwind scaffold exists.
-- Eight section shells render from `app/page.tsx` with copy from `lib/copy.ts`.
-- Lenis smooth scroll and GSAP reveal/background/wordmark infrastructure are wired.
-- Vercel deployment is live; anonymous access may be protected by Vercel authentication.
+- Five V3 chapters render from `app/page.tsx` with copy from `lib/copy.ts`.
+- Lenis smooth scroll and GSAP reveal/wordmark infrastructure are wired.
+- Vercel production is live at the custom domain; Authentication is currently off.
 
 Do not restart from a blank scaffold. Work with the current app.
 
 ## Canonical Source Order
 
 1. `AGENT_CONTEXT.md` — current project state and agent rules.
-2. `lib/copy.ts` — V3 copy source of truth on `swag_V3_new_branch` (from Marcus engineering handoff + `swag-site.html`). V2 copy preserved in `archive/v2/lib/copy.v2.ts` on this branch (live V2 copy remains on `main`).
+2. `lib/copy.ts` — V3 copy source of truth on `main` (from Marcus engineering handoff + `swag-site.html`). V2 copy is quarantined in `archive/v2/lib/copy.v2.ts` on `main`; live V2 source of truth is the `v2-production-freeze` branch.
 3. `cursor.md/design.md` — visual identity, section structure, colour map, animation rules.
-4. `cursor.md/brand-copy.md` — original manifesto/raw copy (older; V2 whiteboard copy in `lib/copy.ts` wins for build).
+4. `cursor.md/brand-copy.md` — original manifesto/raw copy (older; V3 `lib/copy.ts` on `main` wins for the live build).
 5. `cursor.md/marcus-signoff-checklist.md` — filled Marcus sign-off record.
 6. `cursor.md/marcus-review-packet.md` — review links and checklist.
 7. `cursor.md/swag_website_v1_prd.md` — older PRD. Background only.
@@ -50,7 +51,7 @@ Where newer docs conflict with the PRD, newer docs win. Where V2 whiteboard copy
 
 The site should feel like a sequence of typographic posters, not a product landing page.
 
-## Locked Structure (V3 on `swag_V3_new_branch`)
+## Locked Structure (V3 on `main`)
 
 One continuous scroll — five chapters (Figma Page 1 frames), not five routes:
 
@@ -64,9 +65,9 @@ Wordmark: lives in the header (not under a frosted bar). The drift layer is laid
 
 **Intentionally not invented:** unnamed pink/green colourways (dashed `HEX TBC` swatches); ATM/Octane/Courtside descriptions remain `—`.
 
-## Locked Structure (V2 on `main`)
+## Locked Structure (V2 on `v2-production-freeze`)
 
-The production site has **eight sections** after Marcus whiteboard feedback:
+The frozen V2 site has **eight sections** after Marcus whiteboard feedback. Mine this branch for layout/motion/copy only; do not treat it as production:
 
 1. Hero / Landing — Void Black `#0A0A0A` (centered wordmark scrolls to top-left; persistent fixed wordmark after hero)
 2. Manifesto — Void Black `#0A0A0A` (new wound/approval copy from whiteboard)
@@ -97,7 +98,7 @@ Confirmed colour sequence:
 - One horizontal marquee max per page (kloofstreetnights title in edition section).
 - All new motion must respect `prefers-reduced-motion`.
 
-## Current Implementation Files (V3 branch)
+## Current Implementation Files (V3 production on `main`)
 
 - `app/page.tsx` — five scroll chapters + preloader, header, footer
 - `app/globals.css` — V3 typographic system (SAND primary text per Figma handoff)
@@ -109,13 +110,13 @@ Confirmed colour sequence:
 - `public/assets/` — web-served clean SVGs + winter-drop JPGs
 - `marcus-assets/` — Marcus Figma/export masters (svg + winter-drop; not served)
 - `cursor.md/v3/` — Marcus handover attachments (HTML + engineering handoff)
-- `archive/v2/` — quarantined V2 sections/motion + `copy.v2.ts` (reference only; live V2 is on `main`)
+- `archive/v2/` — quarantined V2 sections/motion + `copy.v2.ts` (reference only on `main`; live V2 source of truth is `v2-production-freeze`)
 - `archive/qa/` — visual QA screenshots (kept off repo root)
 - `archive/stitch-compositions/` — expanded Stitch pack + zip
 
-## Current Implementation Files (V2 production)
+## Current Implementation Files (V2 freeze)
 
-On **`main`**, V2 lives under `components/sections/*` and `components/motion/*`. On **`swag_V3_new_branch`**, that tree is quarantined at `archive/v2/` (not imported by the V3 page).
+On **`v2-production-freeze`**, V2 lives under `components/sections/*` and `components/motion/*`. On **`main`**, that tree is quarantined at `archive/v2/` (not imported by the V3 page).
 
 - `app/layout.tsx` — metadata shell and Lenis provider.
 - `app/page.tsx` — renders all eight sections + motion controllers.
@@ -126,8 +127,8 @@ On **`main`**, V2 lives under `components/sections/*` and `components/motion/*`.
 - `components/ui/*` — wordmark, bleed display, CTA, section shell utilities.
 - `lib/design-tokens.ts` — TypeScript token source.
 - `lib/tokens.css` — CSS token source.
-- `lib/copy.ts` (on `main`) / `archive/v2/lib/copy.v2.ts` (this branch) — V2 whiteboard copy.
-- `lib/sections.config.ts` — section sequence and colour configuration (V3 chapters on this branch).
+- `lib/copy.ts` (on `v2-production-freeze`) / `archive/v2/lib/copy.v2.ts` (on `main`) — V2 whiteboard copy.
+- `lib/sections.config.ts` — section sequence and colour configuration (V3 chapters on `main`).
 - `lib/motion.config.ts` — motion constants.
 - `lib/supabase.ts` — optional Supabase client stub.
 - `public/assets/*_clean.svg` — web-served clean SVG assets.
@@ -175,16 +176,19 @@ No test runner is configured yet. After UI changes, use browser preview or Playw
 
 ## Deployment
 
-Current Vercel deployment (personal account `tashivxo`, team `tashivxos-projects`):
+Current Vercel project (personal account `tashivxo`, team `tashivxos-projects`, project `crosswithswag`, id `prj_9aDUfbyTr9qEaCWkqJo1k385x7aR`):
 
-- Production alias: `https://crosswithswag.vercel.app`
-- Latest production deployment: `https://crosswithswag-rf245lomw-tashivxos-projects.vercel.app`
+- Production (`main`, V3): `https://crosswithswag.co.za` and `https://crosswithswag.vercel.app`
+- Latest production deployment: `https://crosswithswag-l45nyaxcx-tashivxos-projects.vercel.app`
 - Dashboard: `https://vercel.com/tashivxos-projects/crosswithswag`
-- Inspect: `https://vercel.com/tashivxos-projects/crosswithswag/2rKxnqhyUFoLK9VLUHxruU2Fh57P`
+- Inspect: `https://vercel.com/tashivxos-projects/crosswithswag/CjUfoZ46aAePpPkFnj7eQpMdEZpy`
+- Frozen V2 preview (`v2-production-freeze`): `https://crosswithswag-git-v2-production-freeze-tashivxos-projects.vercel.app`
+
+Custom domain `crosswithswag.co.za` (and `www`) is already attached to this project. Do not change DNS. Do not buy or attach another domain.
 
 Previously deployed to work account `ict-5428s-projects`; that project was removed July 2026.
 
-The deployment built successfully. Vercel Authentication is disabled for this project so Marcus can open the V3 preview without a login screen. Do not assign a custom production domain before launch sign-off.
+Vercel Authentication is disabled so public URLs are viewable. Leave that as-is unless Marcus wants it gated again. Do not add analytics until a provider is chosen.
 
 ## Phase Status
 
@@ -194,18 +198,22 @@ The deployment built successfully. Vercel Authentication is disabled for this pr
 | **V2 Feedback** | ✅ COMPLETE | Canva whiteboard feedback implemented in code. |
 | **Phase 1 Stitch** | ⏸ SUPERSEDED | Stitch screens predate V2; live build is current review target. |
 | **Phase 2–5** | ✅ COMPLETE | Scaffold, sections, motion infrastructure. |
-| **V3 rebuild** | 🚧 ON BRANCH | `swag_V3_new_branch` — five-chapter scroll from Marcus Aug 2026 handoff. Preview pending Marcus sign-off. |
-| **Marcus re-review** | ⏸ PENDING | Review V3 preview against Figma/HTML; production stays V2 until sign-off. |
+| **V3 rebuild** | ✅ PRODUCTION | Five-chapter scroll from Marcus Aug 2026 handoff. Live on `main` at `crosswithswag.co.za`. |
+| **V3 production cutover** | ✅ COMPLETE | August 2026. V2 frozen on `v2-production-freeze`. Sign-off and domain-assignment gates for this cutover are lifted. |
 
 ## Open Questions for Marcus
 
 **Still open:**
 
-- Production domain name and DNS access.
 - Analytics provider (Vercel Analytics, Plausible, GA4, etc.).
-- Public launch date.
+- Public launch date / further announcement.
 - Whether community block should become a dedicated page/section expansion.
 - Waitlist backend and possible later Cloudflare (Workers/Pages) move. Not now. Frontend stays on the current Next.js/Vercel stack until a move is proven cheaper and requires no frontend rewrite.
+
+**Resolved (cutover):**
+
+- Custom production domain `crosswithswag.co.za` is attached and serving V3. Do not add another.
+- V3 is production on `main`. V2 is frozen for design mining only.
 
 **Resolved (V2):**
 
@@ -217,15 +225,16 @@ The deployment built successfully. Vercel Authentication is disabled for this pr
 
 ## Marcus Sign-Off Gate
 
-Before public launch, Marcus should still approve:
+The V3-to-production cutover is signed off. Do not re-impose “do not merge V3 to main” or “do not assign a custom production domain” for this launch.
 
-- V2 build fidelity against Canva whiteboard feedback.
-- Final motion pacing and interactivity feel.
+Still open after cutover:
+
+- Final motion pacing and interactivity feel on live V3.
 - Community section scope (in-page vs dedicated page).
-- Analytics provider and domain/DNS plan.
+- Analytics provider.
 
 ## Important Current Gaps
 
-- Vercel Authentication is off so the V3 preview is publicly viewable. Re-enable before public launch only if Marcus wants the preview gated again.
+- Vercel Authentication is off so production and the V2 freeze preview are publicly viewable. Re-enable only if Marcus wants URLs gated again.
 - Analytics is intentionally not installed because the provider is not chosen.
-- `cursor.md/brand-copy.md` and Stitch docs still describe the pre-V2 nine-section structure; `lib/copy.ts` and this file are authoritative for the build.
+- `cursor.md/brand-copy.md` and Stitch docs still describe the pre-V2 nine-section structure; `lib/copy.ts` and this file are authoritative for the live V3 build. V2 live source is `v2-production-freeze`.
