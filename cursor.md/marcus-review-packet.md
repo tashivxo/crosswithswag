@@ -10,7 +10,7 @@ Note: this deployment built successfully, but anonymous access may be gated by V
 
 ## What to review
 
-1. **Stitch screen compositions (primary)** — 8 desktop screens in Stitch. Checklist: `STITCH_REVIEW_NOTES.md`. Export folder: `swag-v1-stitch-compositions/screens/`.
+1. **Stitch screen compositions (primary)** — 8 desktop screens in Stitch. Checklist: `cursor.md/archive/STITCH_REVIEW_NOTES.md`. Export folder: `archive/stitch-compositions/swag-v1-stitch-compositions/screens/`.
 2. **Manifesto + tagline** — locked. Review layout and pacing only.
 3. **Section 6** — kloofstreetnights story, campaign photography, CTA wording.
 4. **Live site (secondary)** — current Vercel preview for scroll/motion feel only; layout polish waits on Stitch approval.
@@ -19,8 +19,8 @@ Note: this deployment built successfully, but anonymous access may be gated by V
 
 - Stitch semantic design system: `stitch/DESIGN.md`
 - Copy-verified prompts used: `stitch/SCREEN_PROMPTS.md`
-- Prompt audit: `STITCH_PROMPTS_VERIFICATION_SUMMARY.md`
-- Marcus review checklist: `STITCH_REVIEW_NOTES.md`
+- Prompt audit: `cursor.md/archive/STITCH_PROMPTS_VERIFICATION_SUMMARY.md`
+- Marcus review checklist: `cursor.md/archive/STITCH_REVIEW_NOTES.md`
 
 ## Verification
 

@@ -4,7 +4,7 @@
 
 The cleaned SVG assets are available in:
 
-- Source: `assets/*_clean.svg`
+- Source masters: `marcus-assets/svg/*_clean.svg`
 - Web-served copy: `public/assets/*_clean.svg`
 
 For production, prefer using the clean path-only SVG as a CSS mask so the mark can inherit the correct section colour. This avoids needing separate exports for every background.

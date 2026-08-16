@@ -66,16 +66,19 @@ npm run lint
 ## Current Architecture
 
 - `app/layout.tsx` - metadata shell and providers.
-- `app/page.tsx` - renders all nine sections.
+- `app/page.tsx` - five V3 scroll chapters (+ preloader/header/footer).
 - `app/globals.css` - CSS variables and section composition styles.
 - `components/providers/LenisProvider.tsx` - Lenis smooth scroll.
-- `components/motion/*` - GSAP/scroll infrastructure.
-- `components/sections/*` - section components.
-- `components/ui/*` - reusable UI primitives.
-- `lib/copy.ts` - copy source.
-- `lib/sections.config.ts` - section order and colours.
+- `components/v3/*` - V3 chapters, chrome, motion (active on this branch).
+- `components/ui/*` - shared primitives (wordmark, watermark, CTA).
+- `lib/copy.ts` - V3 copy source of truth.
+- `lib/editions.ts` - edition / campaign data.
+- `lib/sections.config.ts` - chapter order and colours.
 - `lib/motion.config.ts` - animation constants.
-- `stitch/` - Stitch design handoff.
+- `public/assets/` - web-served SVGs and winter-drop imagery.
+- `marcus-assets/` - Marcus Figma/export masters (not served).
+- `archive/` - QA shots, Stitch pack, quarantined V2 code (not imported by V3).
+- `stitch/` - Stitch design handoff docs.
 - `cursor.md/` - project documentation and review packets.
 
 ## Testing And Verification

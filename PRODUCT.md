@@ -48,9 +48,9 @@ Not ecommerce, not a drop calendar, not merch. A continuous-scroll gallery that 
 
 ## Evidence on Hand
 
-- Copy: `lib/copy.ts` (V3). V2 preserved in `lib/copy.v2.ts`.
-- Editions: `lib/editions.ts`. Campaign stills: `public/assets/winter-drop/`.
-- Wordmark: `public/assets/Frame_6_clean.svg`.
+- Copy: `lib/copy.ts` (V3). V2 preserved in `archive/v2/lib/copy.v2.ts` on this branch.
+- Editions: `lib/editions.ts`. Campaign stills: `public/assets/winter-drop/` (masters in `marcus-assets/winter-drop/`).
+- Wordmark: `public/assets/Frame_6_clean.svg` (masters in `marcus-assets/svg/`).
 - Marcus V3 handoff: `cursor.md/v3/`. Identity: `cursor.md/design.md`.
 - Do not fabricate testimonials, prices, unnamed colour hexes, or edition stories.
 

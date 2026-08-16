@@ -29,7 +29,7 @@ Do not restart from a blank scaffold. Work with the current app.
 ## Canonical Source Order
 
 1. `AGENT_CONTEXT.md` — current project state and agent rules.
-2. `lib/copy.ts` — V3 copy source of truth on `swag_V3_new_branch` (from Marcus engineering handoff + `swag-site.html`). V2 copy preserved in `lib/copy.v2.ts`.
+2. `lib/copy.ts` — V3 copy source of truth on `swag_V3_new_branch` (from Marcus engineering handoff + `swag-site.html`). V2 copy preserved in `archive/v2/lib/copy.v2.ts` on this branch (live V2 copy remains on `main`).
 3. `cursor.md/design.md` — visual identity, section structure, colour map, animation rules.
 4. `cursor.md/brand-copy.md` — original manifesto/raw copy (older; V2 whiteboard copy in `lib/copy.ts` wins for build).
 5. `cursor.md/marcus-signoff-checklist.md` — filled Marcus sign-off record.
@@ -102,35 +102,37 @@ Confirmed colour sequence:
 - `app/page.tsx` — five scroll chapters + preloader, header, footer
 - `app/globals.css` — V3 typographic system (SAND primary text per Figma handoff)
 - `components/v3/*` — chapter components, header, wordmark drift/dock, ticker, reveal
+- `components/ui/*` — shared wordmark / watermark primitives
 - `lib/copy.ts` — V3 copy
 - `lib/editions.ts` — edition data (archive, colourways, campaign artboards)
 - `lib/sections.config.ts` — five chapter ids and nav config
-- `cursor.md/v3/` — Marcus handover attachments
-
-Legacy V2 section components remain in `components/sections/` (unused on V3 page; copy in `lib/copy.v2.ts`).
+- `public/assets/` — web-served clean SVGs + winter-drop JPGs
+- `marcus-assets/` — Marcus Figma/export masters (svg + winter-drop; not served)
+- `cursor.md/v3/` — Marcus handover attachments (HTML + engineering handoff)
+- `archive/v2/` — quarantined V2 sections/motion + `copy.v2.ts` (reference only; live V2 is on `main`)
+- `archive/qa/` — visual QA screenshots (kept off repo root)
+- `archive/stitch-compositions/` — expanded Stitch pack + zip
 
 ## Current Implementation Files (V2 production)
+
+On **`main`**, V2 lives under `components/sections/*` and `components/motion/*`. On **`swag_V3_new_branch`**, that tree is quarantined at `archive/v2/` (not imported by the V3 page).
 
 - `app/layout.tsx` — metadata shell and Lenis provider.
 - `app/page.tsx` — renders all eight sections + motion controllers.
 - `app/globals.css` — global styles, CSS variables, section composition rules, wordmark/cursor-contrast/showcase styles.
 - `components/providers/LenisProvider.tsx` — smooth scroll wrapper.
-- `components/motion/ScrollColorController.tsx` — scroll-linked background CSS variable updates.
-- `components/motion/WordmarkController.tsx` — persistent fixed wordmark + Sand-section colour swap.
-- `components/motion/HeroWordmarkScroll.tsx` — hero center-to-top-left wordmark choreography.
-- `components/motion/CursorContrast.tsx` — pointer contrast lens for poster sections.
-- `components/motion/EditionMarquee.tsx` — kloofstreetnights title marquee.
-- `components/motion/Reveal.tsx` — GSAP reveal wrapper.
-- `components/sections/*` — section components (includes `ShowcaseSection.tsx`).
+- `components/motion/*` / `archive/v2/components/motion/*` — scroll colour, wordmark, marquee, reveal, cursor contrast.
+- `components/sections/*` / `archive/v2/components/sections/*` — eight V2 section components.
 - `components/ui/*` — wordmark, bleed display, CTA, section shell utilities.
 - `lib/design-tokens.ts` — TypeScript token source.
 - `lib/tokens.css` — CSS token source.
-- `lib/copy.ts` — **copy source of truth** (V2 whiteboard updates).
-- `lib/sections.config.ts` — section sequence and colour configuration.
+- `lib/copy.ts` (on `main`) / `archive/v2/lib/copy.v2.ts` (this branch) — V2 whiteboard copy.
+- `lib/sections.config.ts` — section sequence and colour configuration (V3 chapters on this branch).
 - `lib/motion.config.ts` — motion constants.
 - `lib/supabase.ts` — optional Supabase client stub.
 - `public/assets/*_clean.svg` — web-served clean SVG assets.
 - `public/assets/winter-drop/*.jpg` — kloofstreetnights campaign photography.
+- `marcus-assets/` — Figma/export masters (not served).
 
 ## Marcus V2 Feedback Status
 
