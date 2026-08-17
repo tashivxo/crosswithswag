@@ -56,16 +56,16 @@ The site should feel like a sequence of typographic posters, not a product landi
 One continuous scroll — five chapters (Figma Page 1 frames), not five routes:
 
 1. **Home** (`#home`) — first viewport is Figma overlay `214:119`/`214:124`: Void Black with the centered `swag.` mark only. On scroll the mark docks into the nav, MENU fades in, then the Landing hero (`204:53`) CROSS / WITH SWAG, edition labels, intro, and CTAs. No ghost watermark.
-2. **Current edition** (`#current`) — kloofstreetnights campaign, **After Hours + First Light** colourways only, spec, clothes, director note
-3. **Archive** (`#archive`) — six editions, three rules (`atm` description: `all that matters.`)
-4. **Manifesto** (`#manifesto`) — owe nothing, wound, authority, **The Full Manifesto**, Silent Warrior
-5. **Contact** (`#contact`) — email + Instagram cards, waitlist (no invented form beyond handoff)
+2. **Current edition** (`#current`) — kloofstreetnights campaign, **After Hours + First Light** colourways in a two-up poster grid (Figma `204:255`), spec, clothes, director note
+3. **Archive** (`#archive`) — six editions, three rules (`atm` description: `all that matters.`); Figma `204:371` layout (no closer lockup)
+4. **Manifesto** (`#manifesto`) — OWE NOTHING opener, a home for individuals, the wound, authentic expression, authority, **The Full Manifesto**, Silent Warrior; Figma `204:462`
+5. **Contact** (`#contact`) — two-up email + Instagram cards, waitlist (Figma `204:548`)
 
 Wordmark: lives in the header (not under a frosted bar). After the preloader, first paint is the large centered mark (`--wordmark-hero-width`, Figma overlay ~652 wide at 1440) on Void Black. On scroll it docks into the top-left nav slot by scaling down (`dock / hero`, never up). Docked size matches production: `--wordmark-dock-width: clamp(88px, 11vw, 120px)` with Frame_6 aspect `1.426685` (do not use the Figma header’s 72×26 crop). Header stays fixed with wordmark + MENU only (chapter links live in the overlay). **MENU chrome starts hidden after the preloader and fades/slides in as the wordmark docks.** MENU opens a panel-reveal overlay (current / archive / manifesto / contact) with hover-grow on the hovered chapter. MENU and CLOSE have a small bounce hover. CROSS WITH SWAG is the second home poster, revealed as the intro scrolls away. Lenis + GSAP; `prefers-reduced-motion` collapses the intro, docks the mark, and shows MENU with no motion.
 
 August 2026 Figma source: file `5w6qUwhO5sLBhxJHsqfC0u`, WEBSITE page `204:42`. `order this edition` links to Jotform (`https://form.jotform.com/crosswithswag/order-kloofstreetnights`).
 
-**Colourways on Current:** After Hours `#0A0A0A` and First Light `#EDE7D8` only. Unnamed pink/green and swagy dust are not shown.
+**Colourways on Current:** After Hours `#0A0A0A` and First Light `#EDE7D8` only, in a **two-column poster grid** (not the old five-column V3 strip). Unnamed pink/green and swagy dust are not shown.
 
 ## Locked Structure (V2 on `v2-production-freeze`)
 
@@ -202,6 +202,7 @@ Vercel Authentication is disabled so public URLs are viewable. Leave that as-is 
 | **Phase 2–5** | ✅ COMPLETE | Scaffold, sections, motion infrastructure. |
 | **V3 rebuild** | ✅ PRODUCTION | Five-chapter scroll from Marcus Aug 2026 handoff. Live on `main` at `crosswithswag.co.za`. |
 | **V3 production cutover** | ✅ COMPLETE | August 2026. V2 frozen on `v2-production-freeze`. Sign-off and domain-assignment gates for this cutover are lifted. |
+| **Aug 2026 Figma chapter restyle** | 🚧 IN PROGRESS (`aug-2026-website-update`) | Home intro/dock done. Current/Archive/Manifesto/Contact restyled to Figma WEBSITE frames `204:220` / `204:371` / `204:462` / `204:548`. Not merged to `main`. |
 
 ## Open Questions for Marcus
 

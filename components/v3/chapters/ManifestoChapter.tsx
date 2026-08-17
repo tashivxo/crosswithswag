@@ -32,7 +32,7 @@ export function ManifestoChapter() {
         <div className="owe-split">
           <Reveal className="orb">
             <p>
-              <b>swag.</b> is not a performance; it is the radical act of refusing to fragment yourself.
+              <b>swag.</b> {manifesto.orb.replace(/^swag\.\s*/i, "")}
             </p>
           </Reveal>
         </div>

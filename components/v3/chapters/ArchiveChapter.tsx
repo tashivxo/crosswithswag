@@ -49,20 +49,6 @@ export function ArchiveChapter() {
           ))}
         </Reveal>
       </section>
-
-      <section className="closer">
-        <div className="wrap">
-          <span className="lbl">{archive.closer.label}</span>
-          <Reveal className="big" style={{ marginTop: 26 }}>
-            {archive.closer.display.map((line) => (
-              <span key={line}>
-                {line}
-                <br />
-              </span>
-            ))}
-          </Reveal>
-        </div>
-      </section>
     </section>
   );
 }

@@ -45,7 +45,7 @@ export function CurrentChapter() {
           <span className="lbl">three frames</span>
         </Reveal>
         <Reveal>
-          <ImageGrid artboards={[1, 2, 3]} columns={3} />
+          <ImageGrid artboards={[1, 2, 3]} variant="campaign" />
         </Reveal>
       </section>
 
@@ -60,16 +60,11 @@ export function CurrentChapter() {
               <div
                 className={[
                   "chip",
-                  colourway.unnamed ? "chip--unnamed" : undefined,
                   colourway.hex === "#0A0A0A" ? "chip--void" : undefined,
                 ]
                   .filter(Boolean)
                   .join(" ")}
-                style={
-                  colourway.hex && !colourway.unnamed
-                    ? { background: colourway.hex }
-                    : undefined
-                }
+                style={{ background: colourway.hex ?? undefined }}
               />
               <div className="meta">
                 <h4>{colourway.name}</h4>
