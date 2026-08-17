@@ -105,8 +105,8 @@ export const current = {
     "worn after the lights go down and before anyone's watching.",
     "heavy fabric. long shadows. the hours between leaving and arriving.",
   ],
-  intake: "no storefront. orders come by email.",
-  // Jotform replaces mailto when URL arrives.
+  intake: "no storefront. orders go through the form.",
+  orderUrl: "https://form.jotform.com/crosswithswag/order-kloofstreetnights",
   orderSubject: "kloofstreetnights",
   colourwayNote:
     "hex codes are targets, not finals. pantone / swatch match required before print.",

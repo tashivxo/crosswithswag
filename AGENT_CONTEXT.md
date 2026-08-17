@@ -63,7 +63,7 @@ One continuous scroll — five chapters (Figma Page 1 frames), not five routes:
 
 Wordmark: lives in the header (not under a frosted bar). The drift layer is laid out at `--wordmark-hero-width` (Figma ~652×240 at 1440); on load it sits at scale 1 in the viewport centre over the hero; on scroll it docks into the top-left nav slot by scaling down (`dock / hero`, never up). Header stays fixed with wordmark + MENU only (chapter links live in the overlay). **MENU chrome starts hidden after the preloader and fades/slides in as the wordmark docks.** MENU opens a panel-reveal overlay (current / archive / manifesto / contact) with hover-grow on the hovered chapter. MENU and CLOSE have a small bounce hover. Hero copy (CROSS WITH SWAG) is visible as soon as the preloader ends. Lenis + GSAP; `prefers-reduced-motion` respected (docked mark + MENU visible, no motion).
 
-August 2026 Figma source: file `5w6qUwhO5sLBhxJHsqfC0u`, WEBSITE page `204:42`. Jotform order URL is not wired yet — `order this edition` stays mailto.
+August 2026 Figma source: file `5w6qUwhO5sLBhxJHsqfC0u`, WEBSITE page `204:42`. `order this edition` links to Jotform (`https://form.jotform.com/crosswithswag/order-kloofstreetnights`).
 
 **Colourways on Current:** After Hours `#0A0A0A` and First Light `#EDE7D8` only. Unnamed pink/green and swagy dust are not shown.
 
@@ -211,9 +211,9 @@ Vercel Authentication is disabled so public URLs are viewable. Leave that as-is 
 - Public launch date / further announcement.
 - Whether community block should become a dedicated page/section expansion.
 - Waitlist backend and possible later Cloudflare (Workers/Pages) move. Not now. Frontend stays on the current Next.js/Vercel stack until a move is proven cheaper and requires no frontend rewrite.
-- Jotform URL for `order this edition` (replaces mailto when Marcus sends it).
-
 **Resolved (cutover):**
+
+- Jotform order form wired for `order this edition` on Current (`https://form.jotform.com/crosswithswag/order-kloofstreetnights`).
 
 - Custom production domain `crosswithswag.co.za` is attached and serving V3. Do not add another.
 - V3 is production on `main`. V2 is frozen for design mining only.

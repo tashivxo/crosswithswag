@@ -2,7 +2,6 @@ import { Reveal } from "@/components/v3/Reveal";
 import { ImageGrid } from "@/components/v3/ImageGrid";
 import { current } from "@/lib/copy";
 import { campaignArtboards, currentEdition } from "@/lib/editions";
-import { site } from "@/lib/copy";
 
 export function CurrentChapter() {
   const colourways = currentEdition.colourways ?? [];
@@ -29,7 +28,9 @@ export function CurrentChapter() {
             <div className="cta-row">
               <a
                 className="btn btn--clay"
-                href={`mailto:${site.email}?subject=${current.orderSubject}`}
+                href={current.orderUrl}
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 order this edition
               </a>
