@@ -16,7 +16,7 @@ Secondary: Marcus (the director) reviewing live V3 against his Figma/HTML handof
 
 `swag.` is a quiet, type-led digital gallery for Wearable Editions. Each edition is one thought held as garment, campaign image, and framed print — conceived, released, and permanently closed.
 
-Success is a public site that feels like a sequence of typographic posters rather than a store. V3 is live on `main`; V3.1 (Marcus August 2026 Figma restyle) is on `aug-2026-website-update` until merge.
+Success is a public site that feels like a sequence of typographic posters rather than a store. V3.1 is live on `main`.
 
 ## Positioning
 

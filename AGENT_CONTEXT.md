@@ -8,8 +8,8 @@ This is the live production site for `swag.`, a scroll-driven single-page brand 
 
 **Branch split (August 2026 cutover):**
 
-- **Production (`main`)** — V3 five-chapter continuous-scroll site. Live at `https://crosswithswag.co.za` and `https://crosswithswag.vercel.app`. Marcus signed off the V3 cutover; that gate is lifted. Do not attach another custom domain.
-- **`aug-2026-website-update`** — V3.1 multi-page routing + Figma restyle against Marcus August 2026 WEBSITE frames. Five App Router routes (`/`, `/current`, `/archive`, `/manifesto`, `/contact`) with shared `SiteChrome`. Preview only; do not merge to `main` until asked. Preview: `https://crosswithswag-git-aug-2026-website-update-tashivxos-projects.vercel.app`.
+- **Production (`main`)** — V3.1 five-route gallery. Live at `https://crosswithswag.co.za` and `https://crosswithswag.vercel.app`. Marcus signed off this cutover (August 2026). Do not attach another custom domain.
+- **`aug-2026-website-update`** — branch that shipped V3.1; merged to `main` at `0d84e8f`. Keep for history; production is `main`.
 - **`v2-production-freeze`** — frozen snapshot of the pre-cutover V2 Canva whiteboard build (eight poster sections, commit `c18a1c5`). Reference-only for mining layouts, motion, and copy. Not production. Preview: `https://crosswithswag-git-v2-production-freeze-tashivxos-projects.vercel.app`.
 - **`swag_V3_new_branch`** — retained git history of the V3 rebuild. It is not a live preview line; production is `main`.
 
@@ -22,7 +22,7 @@ The repository is no longer docs/assets only. Phases 0–5 of the pre-sign-off p
 - Stitch handoff exists in `stitch/`.
 - Design token sources exist in `lib/`.
 - Next.js + TypeScript + Tailwind scaffold exists.
-- Five V3 chapters render from `app/(gallery)/*` route pages with shared `SiteChrome` on `aug-2026-website-update`; production `main` still uses single-page `app/page.tsx`.
+- Five V3.1 routes render from `app/(gallery)/*` with shared `SiteChrome`. Production is this architecture on `main`.
 - Lenis smooth scroll and GSAP reveal/wordmark infrastructure are wired.
 - Vercel production is live at the custom domain; Authentication is currently off.
 
@@ -52,15 +52,15 @@ Where newer docs conflict with the PRD, newer docs win. Where V2 whiteboard copy
 
 The site should feel like a sequence of typographic posters, not a product landing page.
 
-## Locked Structure (V3 on `main`)
+## Locked Structure (V3.1 on `main`)
 
-One continuous scroll — five chapters (Figma Page 1 frames), not five routes. **V3.1 on `aug-2026-website-update` splits these into five App Router routes with shared chrome; see below.**
+Five App Router routes with shared `SiteChrome` (preloader, header, footer). Marcus signed off; this is production.
 
-1. **Home** (`#home` or `/`) — first viewport is Figma overlay `214:119`/`214:124`: Void Black with the centered `swag.` mark only. On scroll the mark docks into the nav, MENU fades in, then the Landing hero (`204:53`) is a **two-line** CROSS / WITH SWAG lockup (WITH in Clay) at display size `clamp(44px, 11vw, 168px)`, with edition labels, wearable-editions intro, and **the current edition / the archive CTAs in that same docked viewport**. Home route also carries Figma Landing teasers (ticker, current edition, structure, manifesto teaser, authority, clothes grid, archive rows, waitlist, closer). Do not use Figma’s inline CURRENT/ARCHIVE/MANIFESTO/CONTACT header links — MENU overlay stays. No ghost watermark.
-2. **Current edition** (`#current`) — kloofstreetnights campaign (artboards 1–3), **After Hours + First Light** colourways in a two-up poster grid (Figma `204:255`), spec, **8 looks / 8 prints** clothes (artboards 2, 3, 4, 6, 7, 8, 10, 11 — garment stills only; not first-edition CROSS.WITH.SWAG boards), director note
-3. **Archive** (`#archive`) — six editions, three rules (`atm` description: `all that matters.`); Figma `204:371` layout (no closer lockup)
-4. **Manifesto** (`#manifesto`) — OWE NOTHING opener, a home for individuals, the wound, authentic expression, authority, **The Full Manifesto**, Silent Warrior; Figma `204:462`
-5. **Contact** (`#contact`) — two-up email + Instagram cards, waitlist (Figma `204:548`)
+1. **Home** (`/`) — first viewport is Figma overlay `214:119`/`214:124`: Void Black with the centered `swag.` mark only. On scroll the mark docks into the nav, MENU fades in, then the Landing hero (`204:53`) is a **two-line** CROSS / WITH SWAG lockup (WITH in Clay) at display size `clamp(44px, 11vw, 168px)`, with edition labels, wearable-editions intro, and **the current edition / the archive CTAs in that same docked viewport**. Home also carries Figma Landing teasers (ticker, current edition, structure, manifesto teaser, authority, clothes grid, archive rows, waitlist, closer). Do not use Figma’s inline CURRENT/ARCHIVE/MANIFESTO/CONTACT header links — MENU overlay stays. No ghost watermark.
+2. **Current edition** (`/current`) — kloofstreetnights campaign (artboards 1–3), **After Hours + First Light** colourways in a two-up poster grid (Figma `204:255`), spec, **8 looks / 8 prints** clothes (artboards 2, 3, 4, 6, 7, 8, 10, 11 — garment stills only; not first-edition CROSS.WITH.SWAG boards), director note
+3. **Archive** (`/archive`) — six editions, three rules (`atm` description: `all that matters.`); Figma `204:371` layout (no closer lockup)
+4. **Manifesto** (`/manifesto`) — OWE NOTHING opener, a home for individuals, the wound, authentic expression, authority, **The Full Manifesto**, Silent Warrior; Figma `204:462`
+5. **Contact** (`/contact`) — two-up email + Instagram cards, waitlist (Figma `204:548`)
 
 Wordmark: lives in the header (not under a frosted bar). After the preloader, first paint is the large centered mark (`--wordmark-hero-width`, Figma overlay ~652 wide at 1440) on Void Black. On scroll it docks into the top-left nav slot by scaling down (`dock / hero`, never up). Docked size: `--wordmark-dock-width: clamp(88px, 11vw, 120px)` (do not use the Figma header’s 72×26 crop). Live mask is `public/assets/SWAG_mark_fill.svg` — filled `swag.` path from Frame_6 with the CROSS WITH SWAG micro-text removed. Aspect `--wordmark-aspect-ratio: 1.426685` (production header padding). Do not use `SWAG_logo_clean.svg` (stroke outline), `Frame_6_clean.svg` (bakes in the micro-text), or the Group 53 PNG as the hero mask (blurry when scaled). Header stays fixed with wordmark + MENU only (chapter links live in the overlay). **MENU chrome starts hidden after the preloader and fades/slides in as the wordmark docks.** MENU opens a panel-reveal overlay (current / archive / manifesto / contact) with hover-grow on the hovered chapter. The chapter in view is marked in Clay. MENU and CLOSE have a small bounce hover. Preloader can be skipped. Waitlist errors stay until the address is valid; `received` can be cleared. CROSS WITH SWAG is the second home poster, revealed as the intro scrolls away. Lenis + GSAP; `prefers-reduced-motion` collapses the intro, docks the mark, and shows MENU with no motion.
 
@@ -68,9 +68,9 @@ August 2026 Figma source: file `5w6qUwhO5sLBhxJHsqfC0u`, WEBSITE page `204:42`. 
 
 **Colourways on Current:** After Hours `#0A0A0A` and First Light `#EDE7D8` only, in a **two-column poster grid** (not the old five-column V3 strip). Unnamed pink/green and swagy dust are not shown.
 
-## Locked Structure (V3.1 on `aug-2026-website-update`)
+## Locked Structure (V3.1 routes)
 
-Five App Router routes with shared `SiteChrome` (preloader, header, footer). Production `main` remains single-page until merge.
+Five App Router routes with shared `SiteChrome` (preloader, header, footer).
 
 | Route | Chapter | Notes |
 |-------|---------|-------|
@@ -231,8 +231,7 @@ Vercel Authentication is disabled so public URLs are viewable. Leave that as-is 
 | **Phase 2–5** | ✅ COMPLETE | Scaffold, sections, motion infrastructure. |
 | **V3 rebuild** | ✅ PRODUCTION | Five-chapter scroll from Marcus Aug 2026 handoff. Live on `main` at `crosswithswag.co.za`. |
 | **V3 production cutover** | ✅ COMPLETE | August 2026. V2 frozen on `v2-production-freeze`. Sign-off and domain-assignment gates for this cutover are lifted. |
-| **V3.1 multi-page routing** | 🚧 IN PROGRESS (`aug-2026-website-update`) | Five routes, shared `SiteChrome`, docked wordmark on inner routes, Figma landing on Home. Not merged to `main`. |
-| **V3.1 Figma restyle** | 🚧 IN PROGRESS (`aug-2026-website-update`) | Marcus August 2026 WEBSITE reworkings: filled Group 53 wordmark, docked landing fold, two-up colourways, kloofstreetnights 8-look clothes grid, manifesto/archive/contact restyle. Not merged to `main`. |
+| **V3.1 Figma restyle** | ✅ PRODUCTION | Marcus August 2026 WEBSITE reworkings: five routes, filled SVG wordmark, docked landing fold, two-up colourways, kloofstreetnights 8-look clothes grid. Merged to `main` at `0d84e8f`. |
 
 ## Open Questions for Marcus
 

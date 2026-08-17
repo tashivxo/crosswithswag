@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-This repo contains the production V3 site for `swag.`, a scroll-driven single-page brand gallery for Marcus. It is a quiet, type-led digital gallery for `Wearable Editions`, not an ecommerce store.
+This repo contains the production V3.1 site for `swag.`, a type-led digital gallery for Marcus. It is a quiet gallery for `Wearable Editions`, not an ecommerce store.
 
 Before making changes, read `AGENT_CONTEXT.md`. It is the highest-priority project context file.
 
@@ -50,7 +50,7 @@ npm run lint
 - Use npm; `package-lock.json` is present.
 - This is a Next.js App Router project with TypeScript and Tailwind CSS.
 - Do not re-run `create-next-app` over the existing app.
-- Production is `main` (V3), live at `https://crosswithswag.co.za` and `https://crosswithswag.vercel.app`.
+- Production is `main` (V3.1), live at `https://crosswithswag.co.za` and `https://crosswithswag.vercel.app`.
 - Frozen V2 lives on `v2-production-freeze` for design mining only. Do not promote it back to production.
 - Do not add analytics until the provider is chosen.
 - Custom domain `crosswithswag.co.za` is already attached. Do not change DNS or attach another domain.
@@ -67,7 +67,7 @@ npm run lint
 ## Current Architecture
 
 - `app/layout.tsx` - metadata shell and Lenis provider.
-- `app/(gallery)/*` - V3.1 five-route gallery (`aug-2026-website-update`); production `main` still uses `app/page.tsx` single-page scroll.
+- `app/(gallery)/*` - V3.1 five-route gallery (production on `main`).
 - `components/v3/SiteChrome.tsx` - shared client chrome (preloader, header, footer, scroll reset).
 - `app/globals.css` - CSS variables and section composition styles.
 - `components/providers/LenisProvider.tsx` - Lenis smooth scroll.
