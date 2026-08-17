@@ -362,6 +362,7 @@ button:focus-visible {
   justify-content: space-between;
   padding: var(--gut);
   transition: opacity 0.7s var(--ease), visibility 0.7s;
+  cursor: pointer;
 }
 
 #preloader.gone {
@@ -555,6 +556,40 @@ button:focus-visible {
   line-height: 1.06;
   padding: 8px 0;
   border-bottom: 1px solid var(--line);
+}
+
+#menu a.mi--current {
+  color: var(--clay);
+}
+
+.preloader-skip {
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  color: var(--sand);
+}
+
+.preloader-skip:hover {
+  color: var(--clay);
+}
+
+.waitlist-clear {
+  display: inline-block;
+  margin-top: 12px;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--stone);
+}
+
+.waitlist-clear:hover {
+  color: var(--sand);
 }
 
 .t-panel-slide {

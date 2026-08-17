@@ -3,6 +3,7 @@
 import { FormEvent, useRef, useState } from "react";
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const ERROR_COPY = "enter a valid email, including @.";
 
 function cssMs(name: string, fallback: number) {
   const value = parseFloat(
@@ -31,17 +32,14 @@ function swapLabel(el: HTMLElement, next: string) {
 
 export function WaitlistForm({ note }: { note: string }) {
   const [submitted, setSubmitted] = useState(false);
+  const [pending, setPending] = useState(false);
   const [error, setError] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
   const fieldRef = useRef<HTMLFormElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const labelRef = useRef<HTMLSpanElement>(null);
-  const revertRef = useRef<number | null>(null);
 
   const clearError = () => {
-    if (revertRef.current) {
-      window.clearTimeout(revertRef.current);
-      revertRef.current = null;
-    }
     wrapRef.current?.classList.remove("is-error");
     fieldRef.current?.classList.remove("is-error", "is-shaking");
     setError(false);
@@ -61,19 +59,33 @@ export function WaitlistForm({ note }: { note: string }) {
 
     const shakeMs = cssMs("--shake-dur-a", 80) * 2 + cssMs("--shake-dur-b", 60) * 2;
     window.setTimeout(() => field.classList.remove("is-shaking"), shakeMs + 20);
+  };
 
-    if (revertRef.current) window.clearTimeout(revertRef.current);
-    revertRef.current = window.setTimeout(() => {
-      revertRef.current = null;
-      wrap.classList.remove("is-error");
-      field.classList.remove("is-error");
-      setError(false);
-    }, shakeMs + cssMs("--revert-hold", 3000));
+  const reset = () => {
+    setSubmitted(false);
+    setPending(false);
+    clearError();
+    if (inputRef.current) {
+      inputRef.current.readOnly = false;
+      inputRef.current.focus();
+    }
+    if (labelRef.current) swapLabel(labelRef.current, "join");
+  };
+
+  const onInput = () => {
+    const value = inputRef.current?.value.trim().toLowerCase() ?? "";
+    if (error && EMAIL.test(value)) clearError();
+  };
+
+  const onBlur = () => {
+    const value = inputRef.current?.value.trim().toLowerCase() ?? "";
+    if (!value || submitted || pending) return;
+    if (!EMAIL.test(value)) showError();
   };
 
   const onSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (submitted) return;
+    if (submitted || pending) return;
 
     const email = String(new FormData(event.currentTarget).get("email") ?? "")
       .trim()
@@ -85,8 +97,14 @@ export function WaitlistForm({ note }: { note: string }) {
     }
 
     clearError();
-    setSubmitted(true);
-    if (labelRef.current) swapLabel(labelRef.current, "received");
+    setPending(true);
+    if (labelRef.current) swapLabel(labelRef.current, "joining");
+
+    window.setTimeout(() => {
+      setPending(false);
+      setSubmitted(true);
+      if (labelRef.current) swapLabel(labelRef.current, "received");
+    }, cssMs("--text-swap-dur", 200) + 80);
   };
 
   return (
@@ -98,29 +116,43 @@ export function WaitlistForm({ note }: { note: string }) {
         noValidate
       >
         <input
+          ref={inputRef}
           type="email"
           name="email"
           autoComplete="email"
+          inputMode="email"
           required
           placeholder="email address"
           aria-label="email address"
           aria-invalid={error}
           aria-describedby={error ? "waitlist-error" : undefined}
-          readOnly={submitted}
-          onInput={clearError}
+          readOnly={submitted || pending}
+          onInput={onInput}
+          onBlur={onBlur}
         />
-        <button type="submit" disabled={submitted}>
+        <button type="submit" disabled={submitted || pending}>
           <span ref={labelRef} className="t-text-swap">
             join
           </span>
         </button>
       </form>
+      {submitted ? (
+        <button type="button" className="waitlist-clear" onClick={reset}>
+          use a different email
+        </button>
+      ) : null}
       <p id="waitlist-error" className="t-error-msg">
-        enter a valid email.
+        {ERROR_COPY}
       </p>
       <p className="note voice">{note}</p>
       <span className="sr-only" aria-live="polite" aria-atomic="true">
-        {submitted ? "received" : error ? "enter a valid email." : ""}
+        {submitted
+          ? "received. use a different email to try again."
+          : pending
+            ? "joining"
+            : error
+              ? ERROR_COPY
+              : ""}
       </span>
     </div>
   );

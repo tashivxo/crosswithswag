@@ -9,7 +9,7 @@ import {
   WordmarkDriftDock,
   getWordmarkDockTrigger,
 } from "@/components/v3/WordmarkDriftDock";
-import { navChapters } from "@/lib/sections.config";
+import { navChapters, type ChapterId } from "@/lib/sections.config";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -66,6 +66,7 @@ function setMenuShifts(
 
 export function SiteHeader({ ready }: { ready: boolean }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [activeChapter, setActiveChapter] = useState<ChapterId>("home");
   const burgerRef = useRef<HTMLButtonElement>(null);
   const chromeRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLElement>(null);
@@ -74,6 +75,42 @@ export function SiteHeader({ ready }: { ready: boolean }) {
   const wasMenuOpenRef = useRef(false);
   const closeMenu = () => setMenuOpen(false);
   const openMenu = () => setMenuOpen(true);
+
+  useEffect(() => {
+    const nodes = navChapters
+      .map((chapter) => document.getElementById(chapter.id))
+      .filter((node): node is HTMLElement => node != null);
+
+    if (nodes.length === 0) return;
+
+    const ratios = new Map<ChapterId, number>();
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          ratios.set(entry.target.id as ChapterId, entry.intersectionRatio);
+        }
+
+        let next: ChapterId = "home";
+        let best = 0;
+        for (const chapter of navChapters) {
+          const ratio = ratios.get(chapter.id) ?? 0;
+          if (ratio > best) {
+            best = ratio;
+            next = chapter.id;
+          }
+        }
+        if (best > 0) setActiveChapter(next);
+      },
+      {
+        rootMargin: "-28% 0px -48% 0px",
+        threshold: [0, 0.2, 0.4, 0.6, 0.8, 1],
+      },
+    );
+
+    nodes.forEach((node) => observer.observe(node));
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     document.body.classList.toggle("locked", menuOpen);
@@ -285,9 +322,14 @@ export function SiteHeader({ ready }: { ready: boolean }) {
             >
               <div className="t-avatar menu-grow">
                 <Link
-                  className="mi"
+                  className={
+                    chapter.id === activeChapter ? "mi mi--current" : "mi"
+                  }
                   href={`#${chapter.id}`}
                   tabIndex={menuOpen ? 0 : -1}
+                  aria-current={
+                    chapter.id === activeChapter ? "page" : undefined
+                  }
                   onClick={closeMenu}
                 >
                   {chapter.navLabel}

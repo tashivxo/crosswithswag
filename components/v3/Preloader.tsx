@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export function Preloader({
   onComplete,
@@ -9,17 +9,20 @@ export function Preloader({
 }) {
   const [progress, setProgress] = useState(0);
   const [gone, setGone] = useState(false);
+  const finishedRef = useRef(false);
+
+  const finish = useCallback(() => {
+    if (finishedRef.current) return;
+    finishedRef.current = true;
+    setProgress(100);
+    setGone(true);
+    onComplete();
+  }, [onComplete]);
 
   useEffect(() => {
     const reduceMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
-
-    const finish = () => {
-      setProgress(100);
-      setGone(true);
-      onComplete();
-    };
 
     if (reduceMotion) {
       const timeout = window.setTimeout(finish, 0);
@@ -28,6 +31,10 @@ export function Preloader({
 
     let value = 0;
     const tick = window.setInterval(() => {
+      if (finishedRef.current) {
+        window.clearInterval(tick);
+        return;
+      }
       value += Math.random() * 13 + 5;
       if (value >= 100) {
         value = 100;
@@ -46,7 +53,21 @@ export function Preloader({
       window.clearInterval(tick);
       window.clearTimeout(fallback);
     };
-  }, [onComplete]);
+  }, [finish]);
+
+  useEffect(() => {
+    if (gone) return;
+
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape" || event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        finish();
+      }
+    };
+
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [finish, gone]);
 
   return (
     <div
@@ -54,10 +75,21 @@ export function Preloader({
       className={gone ? "gone" : undefined}
       aria-busy={!gone}
       aria-hidden={gone}
+      onClick={gone ? undefined : finish}
     >
       <div className="pre-row">
         <span className="lbl">[ wearable editions ]</span>
-        <span className="lbl">{String(progress).padStart(3, "0")}</span>
+        <button
+          type="button"
+          className="lbl preloader-skip"
+          tabIndex={gone ? -1 : 0}
+          onClick={(event) => {
+            event.stopPropagation();
+            finish();
+          }}
+        >
+          skip
+        </button>
       </div>
       <div>
         <div className="pre-mark">SWAG</div>
