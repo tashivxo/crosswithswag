@@ -79,7 +79,7 @@ export const chapters: ChapterConfig[] = [
   },
 ];
 
-export const navChapters = chapters.filter((chapter) => chapter.id !== "home");
+export const navChapters = chapters;
 
 export function chapterByPath(path: string): ChapterConfig | undefined {
   const normalized = path === "/" ? "/" : path.replace(/\/$/, "");
