@@ -16,7 +16,7 @@
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
   --wordmark-hero-width: clamp(240px, 45.3vw, 652px);
   --wordmark-dock-width: clamp(88px, 11vw, 120px);
-  --wordmark-aspect-ratio: 2.720833;
+  --wordmark-aspect-ratio: 1.426685;
   --wordmark-hero-height: calc(
     var(--wordmark-hero-width) / var(--wordmark-aspect-ratio)
   );
@@ -645,8 +645,8 @@ button:focus-visible {
   width: 100%;
   aspect-ratio: var(--wordmark-aspect-ratio);
   background: currentColor;
-  mask: url("/assets/SWAG_mark_fill.png") center / contain no-repeat;
-  -webkit-mask: url("/assets/SWAG_mark_fill.png") center / contain no-repeat;
+  mask: url("/assets/SWAG_mark_fill.svg") center / contain no-repeat;
+  -webkit-mask: url("/assets/SWAG_mark_fill.svg") center / contain no-repeat;
 }
 
 .wordmark--footer {

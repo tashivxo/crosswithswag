@@ -11,7 +11,7 @@ For production, prefer using the clean path-only SVG as a CSS mask so the mark c
 
 Current implementation target (V3.1):
 
-- Mask asset `public/assets/SWAG_mark_fill.png` (Group 53 knockout: filled `swag.`, no micro-text)
+- Mask asset `public/assets/SWAG_mark_fill.svg` (Frame_6 filled `swag.`, micro-text removed)
 - Dark sections: filled with Muted Sand `#D6D1C4`
 - Light Sand section: same mask, filled with Void Black `#0A0A0A`
 

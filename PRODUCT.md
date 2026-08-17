@@ -50,7 +50,7 @@ Not ecommerce, not a drop calendar, not merch. A continuous-scroll gallery that 
 
 - Copy: `lib/copy.ts` (V3 on `main`). V2 preserved in `archive/v2/lib/copy.v2.ts` on `main`; live V2 source of truth is `v2-production-freeze`.
 - Editions: `lib/editions.ts`. Campaign stills: `public/assets/winter-drop/` (masters in `marcus-assets/winter-drop/`).
-- Wordmark: `public/assets/SWAG_mark_fill.png` (knockout of `marcus-assets/figma-aug-2026/wordmark-group-53.png`).
+- Wordmark: `public/assets/SWAG_mark_fill.svg` (Frame_6 fill path without CROSS WITH SWAG micro-text).
 - Marcus V3 handoff: `cursor.md/v3/`. Identity: `cursor.md/design.md`.
 - Do not fabricate testimonials, prices, unnamed colour hexes, or edition stories.
 
