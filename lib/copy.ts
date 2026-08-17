@@ -105,7 +105,7 @@ export const current = {
     "worn after the lights go down and before anyone's watching.",
     "heavy fabric. long shadows. the hours between leaving and arriving.",
   ],
-  intake: "no storefront. orders go through the form.",
+  intake: "no store front at the moment. orders go through the form.",
   orderUrl: "https://form.jotform.com/crosswithswag/order-kloofstreetnights",
   orderSubject: "kloofstreetnights",
   clothesRightLabel: "8 looks / 8 prints",
