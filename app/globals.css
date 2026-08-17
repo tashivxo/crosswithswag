@@ -15,16 +15,15 @@
   --gut: clamp(18px, 4vw, 56px);
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
   --wordmark-hero-width: clamp(240px, 45.3vw, 652px);
-  --wordmark-dock-width: clamp(56px, 5vw, 72px);
-  --wordmark-aspect-ratio: 2.716667;
+  --wordmark-dock-width: clamp(88px, 11vw, 120px);
+  --wordmark-aspect-ratio: 1.426685;
   --wordmark-hero-height: calc(
     var(--wordmark-hero-width) / var(--wordmark-aspect-ratio)
   );
   --wordmark-dock-height: calc(
     var(--wordmark-dock-width) / var(--wordmark-aspect-ratio)
   );
-  --hero-dock-scroll: 260px;
-  --header-height: clamp(64px, 5.42vw, 78px);
+  --header-height: calc(var(--wordmark-dock-height) + 8px);
   --font-display: var(--font-instrument-sans, "Instrument Sans", sans-serif);
   /* transitions-dev */
   --resize-dur: 300ms;
@@ -281,6 +280,12 @@ button:focus-visible {
   position: relative;
 }
 
+.home-intro {
+  min-height: 100dvh;
+  width: 100%;
+  pointer-events: none;
+}
+
 .section-inner {
   position: relative;
   z-index: 2;
@@ -403,7 +408,7 @@ button:focus-visible {
   z-index: 120;
   overflow: visible;
   background: var(--void);
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid transparent;
 }
 
 .hdr-in {
@@ -514,11 +519,19 @@ button:focus-visible {
 @media (prefers-reduced-motion: reduce) {
   .t-text-swap { transition: none !important; }
   .nav-label { transition: none !important; transform: none !important; }
+  .site-header {
+    border-bottom-color: var(--line);
+  }
   .site-header__chrome {
     opacity: 1 !important;
     visibility: visible !important;
     transform: none !important;
     pointer-events: auto !important;
+  }
+  .home-intro {
+    min-height: 0;
+    height: 0;
+    overflow: hidden;
   }
 }
 
@@ -666,9 +679,7 @@ button:focus-visible {
   justify-content: space-between;
   min-height: 100dvh;
   gap: 32px;
-  padding-top: calc(
-    var(--hero-dock-scroll) + var(--header-height) + clamp(16px, 4vh, 40px)
-  );
+  padding-top: calc(var(--header-height) + clamp(16px, 4vh, 40px));
   padding-bottom: clamp(48px, 10vh, 120px);
 }
 

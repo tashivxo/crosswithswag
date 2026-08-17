@@ -7,8 +7,17 @@ import { Wordmark } from "@/components/ui/Wordmark";
 
 gsap.registerPlugin(ScrollTrigger);
 
-export const WORDMARK_DOCK_SCROLL = 260;
-export const WORDMARK_DOCK_START = 40;
+export const WORDMARK_DOCK_SCROLL = {
+  start: "top top",
+  end: "bottom top",
+  scrub: 0.6,
+} as const;
+
+export function getWordmarkDockTrigger() {
+  return (
+    document.getElementById("home-intro") ?? document.getElementById("home")
+  );
+}
 
 function tokenPx(name: string) {
   const probe = document.createElement("div");
@@ -32,7 +41,7 @@ function heroOffset(slot: Element) {
 
   return {
     x: window.innerWidth / 2 - cx,
-    y: window.innerHeight * 0.42 - cy,
+    y: window.innerHeight / 2 - cy,
   };
 }
 
@@ -48,9 +57,9 @@ export function WordmarkDriftDock({ ready }: { ready: boolean }) {
 
     const layer = layerRef.current;
     const slot = layer.parentElement;
-    const home = document.getElementById("home");
+    const intro = getWordmarkDockTrigger();
 
-    if (!home || !slot) return;
+    if (!intro || !slot) return;
 
     if (reduceMotion) {
       gsap.set(layer, {
@@ -95,10 +104,10 @@ export function WordmarkDriftDock({ ready }: { ready: boolean }) {
           opacity: 1,
           ease: "none",
           scrollTrigger: {
-            trigger: home,
-            start: `${WORDMARK_DOCK_START} top`,
-            end: `${WORDMARK_DOCK_SCROLL} top`,
-            scrub: 0.6,
+            trigger: intro,
+            start: WORDMARK_DOCK_SCROLL.start,
+            end: WORDMARK_DOCK_SCROLL.end,
+            scrub: WORDMARK_DOCK_SCROLL.scrub,
             invalidateOnRefresh: true,
           },
         },

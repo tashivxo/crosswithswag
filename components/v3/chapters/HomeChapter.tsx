@@ -17,8 +17,9 @@ export function HomeChapter() {
         } as CSSProperties
       }
     >
+      <div id="home-intro" className="home-intro" aria-hidden="true" />
       <div className="section-inner">
-        <div className="hero-content">
+        <div id="home-hero" className="hero-content" tabIndex={-1}>
           <div>
             <div className="hero-top">
               <span className="lbl lbl--sand">{home.editionLabel}</span>

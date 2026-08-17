@@ -24,7 +24,7 @@ export default function Home() {
 
   return (
     <main className="page-shell">
-      <a href="#home" className="skip-link">
+      <a href="#home-hero" className="skip-link">
         skip to content
       </a>
       <Preloader onComplete={onPreloaderComplete} />

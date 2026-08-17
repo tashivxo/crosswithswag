@@ -6,8 +6,8 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
   WORDMARK_DOCK_SCROLL,
-  WORDMARK_DOCK_START,
   WordmarkDriftDock,
+  getWordmarkDockTrigger,
 } from "@/components/v3/WordmarkDriftDock";
 import { navChapters } from "@/lib/sections.config";
 
@@ -68,6 +68,7 @@ export function SiteHeader({ ready }: { ready: boolean }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const burgerRef = useRef<HTMLButtonElement>(null);
   const chromeRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const groupRef = useRef<HTMLDivElement>(null);
   const wasMenuOpenRef = useRef(false);
@@ -151,17 +152,33 @@ export function SiteHeader({ ready }: { ready: boolean }) {
     if (!ready || !chromeRef.current) return;
 
     const chrome = chromeRef.current;
-    const home = document.getElementById("home");
+    const header = headerRef.current;
+    const intro = getWordmarkDockTrigger();
     const reduceMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
 
-    if (!home || reduceMotion) {
-      gsap.set(chrome, { clearProps: "transform,opacity" });
+    if (!intro || reduceMotion) {
+      gsap.set(chrome, {
+        autoAlpha: 1,
+        y: 0,
+        pointerEvents: "auto",
+      });
+      if (header) {
+        gsap.set(header, { borderBottomColor: "rgba(214, 209, 196, 0.14)" });
+      }
       return;
     }
 
     const ctx = gsap.context(() => {
+      const dockScroll = () => ({
+        trigger: intro,
+        start: WORDMARK_DOCK_SCROLL.start,
+        end: WORDMARK_DOCK_SCROLL.end,
+        scrub: WORDMARK_DOCK_SCROLL.scrub,
+        invalidateOnRefresh: true,
+      });
+
       gsap.fromTo(
         chrome,
         {
@@ -174,15 +191,21 @@ export function SiteHeader({ ready }: { ready: boolean }) {
           y: 0,
           pointerEvents: "auto",
           ease: "none",
-          scrollTrigger: {
-            trigger: home,
-            start: `${WORDMARK_DOCK_START} top`,
-            end: `${WORDMARK_DOCK_SCROLL} top`,
-            scrub: 0.6,
-            invalidateOnRefresh: true,
-          },
+          scrollTrigger: dockScroll(),
         },
       );
+
+      if (header) {
+        gsap.fromTo(
+          header,
+          { borderBottomColor: "rgba(214, 209, 196, 0)" },
+          {
+            borderBottomColor: "rgba(214, 209, 196, 0.14)",
+            ease: "none",
+            scrollTrigger: dockScroll(),
+          },
+        );
+      }
     }, chrome);
 
     return () => ctx.revert();
@@ -190,7 +213,11 @@ export function SiteHeader({ ready }: { ready: boolean }) {
 
   return (
     <>
-      <header className="site-header" data-ready={ready ? "true" : "false"}>
+      <header
+        ref={headerRef}
+        className="site-header"
+        data-ready={ready ? "true" : "false"}
+      >
         <div className="wrap hdr-in">
           <Link href="#home" className="hdr-mark-slot" aria-label="SWAG home">
             <WordmarkDriftDock ready={ready} />

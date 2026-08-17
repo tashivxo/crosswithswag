@@ -55,13 +55,13 @@ The site should feel like a sequence of typographic posters, not a product landi
 
 One continuous scroll — five chapters (Figma Page 1 frames), not five routes:
 
-1. **Home** (`#home`) — Figma Landing hero first: CROSS / WITH SWAG, edition labels, wearable-editions intro, CTAs. No ghost watermark.
+1. **Home** (`#home`) — first viewport is Figma overlay `214:119`/`214:124`: Void Black with the centered `swag.` mark only. On scroll the mark docks into the nav, MENU fades in, then the Landing hero (`204:53`) CROSS / WITH SWAG, edition labels, intro, and CTAs. No ghost watermark.
 2. **Current edition** (`#current`) — kloofstreetnights campaign, **After Hours + First Light** colourways only, spec, clothes, director note
 3. **Archive** (`#archive`) — six editions, three rules (`atm` description: `all that matters.`)
 4. **Manifesto** (`#manifesto`) — owe nothing, wound, authority, **The Full Manifesto**, Silent Warrior
 5. **Contact** (`#contact`) — email + Instagram cards, waitlist (no invented form beyond handoff)
 
-Wordmark: lives in the header (not under a frosted bar). The drift layer is laid out at `--wordmark-hero-width` (Figma ~652×240 at 1440); on load it sits at scale 1 in the viewport centre over the hero; on scroll it docks into the top-left nav slot by scaling down (`dock / hero`, never up). Header stays fixed with wordmark + MENU only (chapter links live in the overlay). **MENU chrome starts hidden after the preloader and fades/slides in as the wordmark docks.** MENU opens a panel-reveal overlay (current / archive / manifesto / contact) with hover-grow on the hovered chapter. MENU and CLOSE have a small bounce hover. Hero copy (CROSS WITH SWAG) is visible as soon as the preloader ends. Lenis + GSAP; `prefers-reduced-motion` respected (docked mark + MENU visible, no motion).
+Wordmark: lives in the header (not under a frosted bar). After the preloader, first paint is the large centered mark (`--wordmark-hero-width`, Figma overlay ~652 wide at 1440) on Void Black. On scroll it docks into the top-left nav slot by scaling down (`dock / hero`, never up). Docked size matches production: `--wordmark-dock-width: clamp(88px, 11vw, 120px)` with Frame_6 aspect `1.426685` (do not use the Figma header’s 72×26 crop). Header stays fixed with wordmark + MENU only (chapter links live in the overlay). **MENU chrome starts hidden after the preloader and fades/slides in as the wordmark docks.** MENU opens a panel-reveal overlay (current / archive / manifesto / contact) with hover-grow on the hovered chapter. MENU and CLOSE have a small bounce hover. CROSS WITH SWAG is the second home poster, revealed as the intro scrolls away. Lenis + GSAP; `prefers-reduced-motion` collapses the intro, docks the mark, and shows MENU with no motion.
 
 August 2026 Figma source: file `5w6qUwhO5sLBhxJHsqfC0u`, WEBSITE page `204:42`. `order this edition` links to Jotform (`https://form.jotform.com/crosswithswag/order-kloofstreetnights`).
 
