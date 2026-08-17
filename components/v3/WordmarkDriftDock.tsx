@@ -7,8 +7,8 @@ import { Wordmark } from "@/components/ui/Wordmark";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const DOCK_SCROLL = 260;
-const DOCK_START = 40;
+export const WORDMARK_DOCK_SCROLL = 260;
+export const WORDMARK_DOCK_START = 40;
 
 function tokenPx(name: string) {
   const probe = document.createElement("div");
@@ -96,8 +96,8 @@ export function WordmarkDriftDock({ ready }: { ready: boolean }) {
           ease: "none",
           scrollTrigger: {
             trigger: home,
-            start: `${DOCK_START} top`,
-            end: `${DOCK_SCROLL} top`,
+            start: `${WORDMARK_DOCK_START} top`,
+            end: `${WORDMARK_DOCK_SCROLL} top`,
             scrub: 0.6,
             invalidateOnRefresh: true,
           },

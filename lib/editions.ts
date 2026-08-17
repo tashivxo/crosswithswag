@@ -26,13 +26,10 @@ export const editions: Edition[] = [
     slug: "kloofstreetnights",
     name: "kloofstreetnights",
     description:
-      "five colourways, one night. after hours → first light. heavyweight, single-colour sand print.",
+      "two colourways, one night. after hours → first light. heavyweight, single-colour sand print.",
     state: "live",
     colourways: [
       { name: "after hours", hex: "#0A0A0A", locked: true },
-      { name: "[ pink — unnamed ]", hex: null, locked: false, unnamed: true },
-      { name: "[ green — unnamed ]", hex: "#2B3626", locked: false, unnamed: true },
-      { name: "swagy dust", hex: "#4A3226", locked: true },
       { name: "first light", hex: "#EDE7D8", locked: true },
     ],
   },
@@ -47,7 +44,7 @@ export const editions: Edition[] = [
     no: "003",
     slug: "atm",
     name: "atm",
-    description: "—",
+    description: "all that matters.",
     state: "in-development",
   },
   {

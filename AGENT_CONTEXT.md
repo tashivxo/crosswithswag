@@ -55,15 +55,17 @@ The site should feel like a sequence of typographic posters, not a product landi
 
 One continuous scroll — five chapters (Figma Page 1 frames), not five routes:
 
-1. **Home** (`#home`) — hero, ticker, current-edition teaser, structure, manifesto teaser, what is swag, clothes grid, archive teaser, waitlist
-2. **Current edition** (`#current`) — kloofstreetnights campaign, colourways, spec, clothes, director note
-3. **Archive** (`#archive`) — six editions, three rules
-4. **Manifesto** (`#manifesto`) — owe nothing, wound, authority blocks
+1. **Home** (`#home`) — Figma Landing hero first: CROSS / WITH SWAG, edition labels, wearable-editions intro, CTAs. No ghost watermark.
+2. **Current edition** (`#current`) — kloofstreetnights campaign, **After Hours + First Light** colourways only, spec, clothes, director note
+3. **Archive** (`#archive`) — six editions, three rules (`atm` description: `all that matters.`)
+4. **Manifesto** (`#manifesto`) — owe nothing, wound, authority, **The Full Manifesto**, Silent Warrior
 5. **Contact** (`#contact`) — email + Instagram cards, waitlist (no invented form beyond handoff)
 
-Wordmark: lives in the header (not under a frosted bar). The drift layer is laid out at `--wordmark-hero-width`; on load it sits at scale 1 in the viewport centre; on scroll it docks into the top-left nav slot by scaling down (`dock / hero`, never up). Header stays fixed with wordmark + MENU only (chapter links live in the overlay). MENU stays visible while scrolling. MENU opens a panel-reveal overlay (current / archive / manifesto / contact) with hover-grow on the hovered chapter. MENU and CLOSE have a small bounce hover. Hero copy is visible as soon as the preloader ends. Lenis + GSAP; `prefers-reduced-motion` respected.
+Wordmark: lives in the header (not under a frosted bar). The drift layer is laid out at `--wordmark-hero-width` (Figma ~652×240 at 1440); on load it sits at scale 1 in the viewport centre over the hero; on scroll it docks into the top-left nav slot by scaling down (`dock / hero`, never up). Header stays fixed with wordmark + MENU only (chapter links live in the overlay). **MENU chrome starts hidden after the preloader and fades/slides in as the wordmark docks.** MENU opens a panel-reveal overlay (current / archive / manifesto / contact) with hover-grow on the hovered chapter. MENU and CLOSE have a small bounce hover. Hero copy (CROSS WITH SWAG) is visible as soon as the preloader ends. Lenis + GSAP; `prefers-reduced-motion` respected (docked mark + MENU visible, no motion).
 
-**Intentionally not invented:** unnamed pink/green colourways (dashed `HEX TBC` swatches); ATM/Octane/Courtside descriptions remain `—`.
+August 2026 Figma source: file `5w6qUwhO5sLBhxJHsqfC0u`, WEBSITE page `204:42`. Jotform order URL is not wired yet — `order this edition` stays mailto.
+
+**Colourways on Current:** After Hours `#0A0A0A` and First Light `#EDE7D8` only. Unnamed pink/green and swagy dust are not shown.
 
 ## Locked Structure (V2 on `v2-production-freeze`)
 
@@ -87,7 +89,7 @@ Confirmed colour sequence:
 ## Design Rules
 
 - Use only the four brand colours: Void Black, Stone Grey, Clay, Sand.
-- Use Instrument Sans 400 / 500 / 700.
+- Use Instrument Sans 400 / 500 / 600 / 700.
 - Display type is uppercase, tight tracked, and allowed to bleed off section edges.
 - Sections use `min-height: 100dvh`; avoid fixed `h-screen` patterns.
 - Sections should allow growth on mobile where content needs it, especially manifesto and showcase.
@@ -209,6 +211,7 @@ Vercel Authentication is disabled so public URLs are viewable. Leave that as-is 
 - Public launch date / further announcement.
 - Whether community block should become a dedicated page/section expansion.
 - Waitlist backend and possible later Cloudflare (Workers/Pages) move. Not now. Frontend stays on the current Next.js/Vercel stack until a move is proven cheaper and requires no frontend rewrite.
+- Jotform URL for `order this edition` (replaces mailto when Marcus sends it).
 
 **Resolved (cutover):**
 

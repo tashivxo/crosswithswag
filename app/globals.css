@@ -14,9 +14,9 @@
   --lbl: rgba(214, 209, 196, 0.74);
   --gut: clamp(18px, 4vw, 56px);
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
-  --wordmark-hero-width: clamp(160px, 20vw, 260px);
-  --wordmark-dock-width: clamp(88px, 11vw, 120px);
-  --wordmark-aspect-ratio: 1.426685;
+  --wordmark-hero-width: clamp(240px, 45.3vw, 652px);
+  --wordmark-dock-width: clamp(56px, 5vw, 72px);
+  --wordmark-aspect-ratio: 2.716667;
   --wordmark-hero-height: calc(
     var(--wordmark-hero-width) / var(--wordmark-aspect-ratio)
   );
@@ -24,7 +24,7 @@
     var(--wordmark-dock-width) / var(--wordmark-aspect-ratio)
   );
   --hero-dock-scroll: 260px;
-  --header-height: calc(var(--wordmark-dock-height) + 8px);
+  --header-height: clamp(64px, 5.42vw, 78px);
   --font-display: var(--font-instrument-sans, "Instrument Sans", sans-serif);
   /* transitions-dev */
   --resize-dur: 300ms;
@@ -426,6 +426,14 @@ button:focus-visible {
   overflow: visible;
 }
 
+.site-header__chrome {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-8px);
+  will-change: transform, opacity;
+}
+
 .burger {
   position: relative;
   display: flex;
@@ -506,6 +514,12 @@ button:focus-visible {
 @media (prefers-reduced-motion: reduce) {
   .t-text-swap { transition: none !important; }
   .nav-label { transition: none !important; transform: none !important; }
+  .site-header__chrome {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+    pointer-events: auto !important;
+  }
 }
 
 #menu {
@@ -581,7 +595,7 @@ button:focus-visible {
 /* wordmark */
 .wordmark {
   width: 100%;
-  aspect-ratio: 1540.82 / 1080;
+  aspect-ratio: var(--wordmark-aspect-ratio);
   background: currentColor;
   mask: url("/assets/Frame_6_clean.svg") center / contain no-repeat;
   -webkit-mask: url("/assets/Frame_6_clean.svg") center / contain no-repeat;
@@ -672,6 +686,10 @@ button:focus-visible {
   letter-spacing: -0.045em;
   text-transform: uppercase;
   font-size: clamp(58px, 17.5vw, 250px);
+}
+
+.hero-mark__clay {
+  color: var(--clay);
 }
 
 .hero-bottom {
@@ -852,6 +870,26 @@ button:focus-visible {
   letter-spacing: -0.045em;
   line-height: 0.86;
   font-size: clamp(52px, 13vw, 190px);
+}
+
+.manifesto-full {
+  padding-block: 120px;
+}
+
+.manifesto-full__label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--stone);
+}
+
+.manifesto-full__body {
+  max-width: 700px;
+  font-size: 19px;
+  line-height: 1.62;
+  color: var(--stone);
 }
 
 .owe-body {

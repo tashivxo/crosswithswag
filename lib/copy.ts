@@ -15,10 +15,14 @@ export const site = {
 };
 
 export const home = {
-  editionLabel: "[ edition 001 — kloofstreetnights ]",
-  est: "cape town — est. 2026",
-  heroDisplay: ["NOTH-", "OWE", "ING."],
-  wearableLabel: "[ wearable editions ]",
+  editionLabel: "[ EDITION 001 — KLOOFSTREETNIGHTS ]",
+  est: "CAPE TOWN — EST. 2026",
+  heroMark: [
+    { text: "CROSS" },
+    { text: "WITH", clay: true },
+    { text: "SWAG" },
+  ],
+  wearableLabel: "[ WEARABLE EDITIONS ]",
   intro:
     "each edition is one thought held in three objects. a garment. a campaign image. a framed print. conceived, released, and permanently closed.",
   ticker: [
@@ -34,7 +38,7 @@ export const home = {
     lines: [
       "worn after the lights go down and before anyone's watching.",
       "heavy fabric. long shadows. the hours between leaving and arriving.",
-      "five colourways, one night. from after hours to first light.",
+      "two colourways, one night. from after hours to first light.",
     ],
   },
   structure: [
@@ -102,6 +106,7 @@ export const current = {
     "heavy fabric. long shadows. the hours between leaving and arriving.",
   ],
   intake: "no storefront. orders come by email.",
+  // Jotform replaces mailto when URL arrives.
   orderSubject: "kloofstreetnights",
   colourwayNote:
     "hex codes are targets, not finals. pantone / swatch match required before print.",
@@ -199,6 +204,16 @@ export const manifesto = {
   authority: {
     dense: home.whatIsSwag.dense,
     closing: "Commands respect without raising a voice. Communicates integrity.",
+  },
+  full: {
+    label: "[ THE MANIFESTO ]",
+    paragraphs: [
+      'Swag is not a performance. Swag is individuation. It is the radical act of refusing to fragment yourself to please others. It is the internal authority that says, "I am here," without asking for permission to exist.',
+      "We do not wear our hearts on our sleeves for consumption; we carry the truth on our backs. We understand that resilience is not just survival; it is alchemy. We use the ruptures of our past to reconstruct a stronger self. We welcome the pain, because we know the process of becoming whole begins there.",
+      "This is a silent revolution. It does not scream to be heard. It commands respect without raising a voice. It creates a stone wall against the noise, not as punishment, but as liberation.",
+      "We owe nothing to anyone. We stop explaining. We stop convincing. We start being. We occupy the space of those who have already accepted themselves.",
+      "Swag has weight. Swag has density. Swag is integrity. It is the consistent refusal to negotiate what is essential.",
+    ],
   },
   closer: {
     label: "[ the wearer ]",

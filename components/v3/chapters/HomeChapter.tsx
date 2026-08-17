@@ -1,14 +1,11 @@
 import type { CSSProperties } from "react";
 import Link from "next/link";
-import { GhostWatermark } from "@/components/ui/GhostWatermark";
 import { home } from "@/lib/copy";
 import { chapters } from "@/lib/sections.config";
 
 const homeChapter = chapters.find((chapter) => chapter.id === "home")!;
 
 export function HomeChapter() {
-  const ghostText = home.heroDisplay.join("\n");
-
   return (
     <section
       id="home"
@@ -20,12 +17,22 @@ export function HomeChapter() {
         } as CSSProperties
       }
     >
-      <GhostWatermark text={ghostText} />
       <div className="section-inner">
         <div className="hero-content">
-          <div className="hero-top">
-            <span className="lbl lbl--sand">{home.editionLabel}</span>
-            <span className="lbl">{home.est}</span>
+          <div>
+            <div className="hero-top">
+              <span className="lbl lbl--sand">{home.editionLabel}</span>
+              <span className="lbl">{home.est}</span>
+            </div>
+
+            <h1 className="hero-mark">
+              {home.heroMark.map((line) => (
+                <span key={line.text} className={line.clay ? "hero-mark__clay" : undefined}>
+                  {line.text}
+                  <br />
+                </span>
+              ))}
+            </h1>
           </div>
 
           <div className="hero-bottom">

@@ -123,6 +123,20 @@ export function ManifestoChapter() {
         </Reveal>
       </section>
 
+      <section className="wrap manifesto-full">
+        <span className="manifesto-full__label">{manifesto.full.label}</span>
+        {manifesto.full.paragraphs.map((paragraph, index) => (
+          <Reveal key={paragraph}>
+            <p
+              className="manifesto-full__body"
+              style={{ marginTop: index === 0 ? 29 : "1.25em" }}
+            >
+              {paragraph}
+            </p>
+          </Reveal>
+        ))}
+      </section>
+
       <section className="closer">
         <div className="wrap">
           <span className="lbl">{manifesto.closer.label}</span>

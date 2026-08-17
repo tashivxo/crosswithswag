@@ -1,9 +1,17 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { WordmarkDriftDock } from "@/components/v3/WordmarkDriftDock";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import {
+  WORDMARK_DOCK_SCROLL,
+  WORDMARK_DOCK_START,
+  WordmarkDriftDock,
+} from "@/components/v3/WordmarkDriftDock";
 import { navChapters } from "@/lib/sections.config";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const FOCUSABLE =
   'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])';
@@ -59,6 +67,7 @@ function setMenuShifts(
 export function SiteHeader({ ready }: { ready: boolean }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const burgerRef = useRef<HTMLButtonElement>(null);
+  const chromeRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const groupRef = useRef<HTMLDivElement>(null);
   const wasMenuOpenRef = useRef(false);
@@ -138,23 +147,71 @@ export function SiteHeader({ ready }: { ready: boolean }) {
     return () => menu.removeEventListener("keydown", onKeyDown);
   }, [menuOpen]);
 
+  useLayoutEffect(() => {
+    if (!ready || !chromeRef.current) return;
+
+    const chrome = chromeRef.current;
+    const home = document.getElementById("home");
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    if (!home || reduceMotion) {
+      gsap.set(chrome, { clearProps: "transform,opacity" });
+      return;
+    }
+
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        chrome,
+        {
+          autoAlpha: 0,
+          y: -8,
+          pointerEvents: "none",
+        },
+        {
+          autoAlpha: 1,
+          y: 0,
+          pointerEvents: "auto",
+          ease: "none",
+          scrollTrigger: {
+            trigger: home,
+            start: `${WORDMARK_DOCK_START} top`,
+            end: `${WORDMARK_DOCK_SCROLL} top`,
+            scrub: 0.6,
+            invalidateOnRefresh: true,
+          },
+        },
+      );
+    }, chrome);
+
+    return () => ctx.revert();
+  }, [ready]);
+
   return (
     <>
-      <header className="site-header">
+      <header className="site-header" data-ready={ready ? "true" : "false"}>
         <div className="wrap hdr-in">
           <Link href="#home" className="hdr-mark-slot" aria-label="SWAG home">
             <WordmarkDriftDock ready={ready} />
           </Link>
-          <button
-            ref={burgerRef}
-            type="button"
-            className="burger"
-            aria-expanded={menuOpen}
-            aria-controls="menu"
-            onClick={openMenu}
+          <div
+            ref={chromeRef}
+            className="site-header__chrome"
+            aria-hidden={!ready}
           >
-            <span className="nav-label">menu</span>
-          </button>
+            <button
+              ref={burgerRef}
+              type="button"
+              className="burger"
+              tabIndex={ready ? 0 : -1}
+              aria-expanded={menuOpen}
+              aria-controls="menu"
+              onClick={openMenu}
+            >
+              <span className="nav-label">menu</span>
+            </button>
+          </div>
         </div>
       </header>
 
