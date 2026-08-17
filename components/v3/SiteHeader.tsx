@@ -2,6 +2,7 @@
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
@@ -9,7 +10,7 @@ import {
   WordmarkDriftDock,
   getWordmarkDockTrigger,
 } from "@/components/v3/WordmarkDriftDock";
-import { navChapters, type ChapterId } from "@/lib/sections.config";
+import { navChapters } from "@/lib/sections.config";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -64,9 +65,20 @@ function setMenuShifts(
   });
 }
 
-export function SiteHeader({ ready }: { ready: boolean }) {
+function normalizePath(path: string) {
+  if (path === "/") return "/";
+  return path.replace(/\/$/, "");
+}
+
+export function SiteHeader({
+  ready,
+  mode,
+}: {
+  ready: boolean;
+  mode: "hero" | "docked";
+}) {
+  const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [activeChapter, setActiveChapter] = useState<ChapterId>("home");
   const burgerRef = useRef<HTMLButtonElement>(null);
   const chromeRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLElement>(null);
@@ -76,41 +88,7 @@ export function SiteHeader({ ready }: { ready: boolean }) {
   const closeMenu = () => setMenuOpen(false);
   const openMenu = () => setMenuOpen(true);
 
-  useEffect(() => {
-    const nodes = navChapters
-      .map((chapter) => document.getElementById(chapter.id))
-      .filter((node): node is HTMLElement => node != null);
-
-    if (nodes.length === 0) return;
-
-    const ratios = new Map<ChapterId, number>();
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          ratios.set(entry.target.id as ChapterId, entry.intersectionRatio);
-        }
-
-        let next: ChapterId = "home";
-        let best = 0;
-        for (const chapter of navChapters) {
-          const ratio = ratios.get(chapter.id) ?? 0;
-          if (ratio > best) {
-            best = ratio;
-            next = chapter.id;
-          }
-        }
-        if (best > 0) setActiveChapter(next);
-      },
-      {
-        rootMargin: "-28% 0px -48% 0px",
-        threshold: [0, 0.2, 0.4, 0.6, 0.8, 1],
-      },
-    );
-
-    nodes.forEach((node) => observer.observe(node));
-    return () => observer.disconnect();
-  }, []);
+  const currentPath = normalizePath(pathname);
 
   useEffect(() => {
     document.body.classList.toggle("locked", menuOpen);
@@ -133,7 +111,7 @@ export function SiteHeader({ ready }: { ready: boolean }) {
 
   useEffect(() => {
     const background = document.querySelectorAll(
-      ".site-header, .chapter, .site-footer, #preloader",
+      ".site-header, #content, .site-footer, #preloader",
     );
 
     if (menuOpen) {
@@ -195,7 +173,7 @@ export function SiteHeader({ ready }: { ready: boolean }) {
       "(prefers-reduced-motion: reduce)",
     ).matches;
 
-    if (!intro || reduceMotion) {
+    if (mode === "docked" || !intro || reduceMotion) {
       gsap.set(chrome, {
         autoAlpha: 1,
         y: 0,
@@ -246,7 +224,7 @@ export function SiteHeader({ ready }: { ready: boolean }) {
     }, chrome);
 
     return () => ctx.revert();
-  }, [ready]);
+  }, [ready, mode]);
 
   return (
     <>
@@ -254,10 +232,11 @@ export function SiteHeader({ ready }: { ready: boolean }) {
         ref={headerRef}
         className="site-header"
         data-ready={ready ? "true" : "false"}
+        data-route={mode}
       >
         <div className="wrap hdr-in">
-          <Link href="#home" className="hdr-mark-slot" aria-label="SWAG home">
-            <WordmarkDriftDock ready={ready} />
+          <Link href="/" className="hdr-mark-slot" aria-label="SWAG home">
+            <WordmarkDriftDock ready={ready} mode={mode} />
           </Link>
           <div
             ref={chromeRef}
@@ -307,36 +286,35 @@ export function SiteHeader({ ready }: { ready: boolean }) {
           className="t-avatar-group"
           onMouseLeave={() => setMenuShifts(groupRef.current, null, "out")}
         >
-          {navChapters.map((chapter, index) => (
-            <div
-              key={chapter.id}
-              className="menu-item-hit"
-              onMouseEnter={() => {
-                if (
-                  window.matchMedia("(hover: hover) and (pointer: fine)")
-                    .matches
-                ) {
-                  setMenuShifts(groupRef.current, index, "in");
-                }
-              }}
-            >
-              <div className="t-avatar menu-grow">
-                <Link
-                  className={
-                    chapter.id === activeChapter ? "mi mi--current" : "mi"
+          {navChapters.map((chapter, index) => {
+            const isCurrent = chapter.path === currentPath;
+            return (
+              <div
+                key={chapter.id}
+                className="menu-item-hit"
+                onMouseEnter={() => {
+                  if (
+                    window.matchMedia("(hover: hover) and (pointer: fine)")
+                      .matches
+                  ) {
+                    setMenuShifts(groupRef.current, index, "in");
                   }
-                  href={`#${chapter.id}`}
-                  tabIndex={menuOpen ? 0 : -1}
-                  aria-current={
-                    chapter.id === activeChapter ? "page" : undefined
-                  }
-                  onClick={closeMenu}
-                >
-                  {chapter.navLabel}
-                </Link>
+                }}
+              >
+                <div className="t-avatar menu-grow">
+                  <Link
+                    className={isCurrent ? "mi mi--current" : "mi"}
+                    href={chapter.path}
+                    tabIndex={menuOpen ? 0 : -1}
+                    aria-current={isCurrent ? "page" : undefined}
+                    onClick={closeMenu}
+                  >
+                    {chapter.navLabel}
+                  </Link>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
         <div className="pre-row">
           <span className="lbl">@crosswithswag</span>

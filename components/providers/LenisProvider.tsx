@@ -5,6 +5,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ReactNode, useEffect } from "react";
 import { motion } from "@/lib/motion.config";
+import { setLenis } from "@/lib/lenis";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -23,6 +24,8 @@ export function LenisProvider({ children }: { children: ReactNode }) {
       easing: motion.lenisEasing,
       smoothWheel: true,
     });
+
+    setLenis(lenis);
 
     lenis.on("scroll", (event) => {
       ScrollTrigger.update();
@@ -63,6 +66,7 @@ export function LenisProvider({ children }: { children: ReactNode }) {
     return () => {
       gsap.ticker.remove(update);
       lenis.destroy();
+      setLenis(null);
     };
   }, []);
 

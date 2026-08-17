@@ -8,14 +8,14 @@ export function ArchiveChapter() {
     <section id="archive" className="chapter">
       <section className="wrap page-head">
         <span className="lbl">[ the archive ]</span>
-        <h2 className="display" style={{ marginTop: 18 }}>
+        <h1 className="display" style={{ marginTop: 18 }}>
           {archive.display.map((line) => (
             <span key={line}>
               {line}
               <br />
             </span>
           ))}
-        </h2>
+        </h1>
         <p className="body-copy voice" style={{ marginTop: 30 }}>
           {archive.intro}
         </p>
@@ -27,7 +27,7 @@ export function ArchiveChapter() {
             <EditionRow
               key={edition.no}
               edition={edition}
-              href={edition.no === "001" ? "#current" : undefined}
+              href={edition.no === "001" ? "/current" : undefined}
             />
           ))}
         </Reveal>

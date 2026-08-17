@@ -649,6 +649,22 @@ button:focus-visible {
   -webkit-mask: url("/assets/SWAG_mark_fill.png") center / contain no-repeat;
 }
 
+.wordmark--footer {
+  width: clamp(160px, 22vw, 280px);
+  color: var(--sand);
+}
+
+.foot-tagline {
+  margin-top: 16px;
+}
+
+[data-route="docked"] .site-header__chrome {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: none;
+}
+
 .wordmark-drift-layer {
   position: relative;
   flex: 0 0 auto;

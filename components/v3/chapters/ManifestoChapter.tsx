@@ -7,14 +7,14 @@ export function ManifestoChapter() {
     <section id="manifesto" className="chapter">
       <section className="wrap page-head">
         <span className="lbl">[ the manifesto ]</span>
-        <h2 className="display" style={{ marginTop: 18 }}>
+        <h1 className="display" style={{ marginTop: 18 }}>
           {manifesto.display.map((line) => (
             <span key={line}>
               {line}
               <br />
             </span>
           ))}
-        </h2>
+        </h1>
       </section>
 
       <section className="wrap owe" style={{ borderTop: 0 }}>

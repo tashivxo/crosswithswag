@@ -4,6 +4,7 @@ import { useLayoutEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Wordmark } from "@/components/ui/Wordmark";
+import { getLenis } from "@/lib/lenis";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -45,7 +46,13 @@ function heroOffset(slot: Element) {
   };
 }
 
-export function WordmarkDriftDock({ ready }: { ready: boolean }) {
+export function WordmarkDriftDock({
+  ready,
+  mode,
+}: {
+  ready: boolean;
+  mode: "hero" | "docked";
+}) {
   const layerRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
@@ -57,11 +64,29 @@ export function WordmarkDriftDock({ ready }: { ready: boolean }) {
 
     const layer = layerRef.current;
     const slot = layer.parentElement;
+    const lenis = getLenis();
+    if (lenis) {
+      lenis.scrollTo(0, { immediate: true });
+    } else {
+      window.scrollTo(0, 0);
+    }
+
+    if (!slot) return;
+
+    if (mode === "docked" || reduceMotion) {
+      gsap.set(layer, {
+        x: 0,
+        y: 0,
+        scale: dockScale(),
+        opacity: 1,
+      });
+      return () => {
+        gsap.set(layer, { clearProps: "transform" });
+      };
+    }
+
     const intro = getWordmarkDockTrigger();
-
-    if (!intro || !slot) return;
-
-    if (reduceMotion) {
+    if (!intro) {
       gsap.set(layer, {
         x: 0,
         y: 0,
@@ -121,7 +146,7 @@ export function WordmarkDriftDock({ ready }: { ready: boolean }) {
       if (onResize) window.removeEventListener("resize", onResize);
       ctx.revert();
     };
-  }, [ready]);
+  }, [ready, mode]);
 
   return (
     <div ref={layerRef} className="wordmark-drift-layer" aria-hidden="true">

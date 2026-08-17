@@ -7,6 +7,7 @@ export type ChapterConfig = {
   index: number;
   navLabel: string;
   title: string;
+  path: string;
   background: string;
   foreground: string;
 };
@@ -36,6 +37,7 @@ export const chapters: ChapterConfig[] = [
     index: 1,
     navLabel: "home",
     title: "Home",
+    path: "/",
     background: colors.voidBlack,
     foreground: colors.mutedSand,
   },
@@ -44,6 +46,7 @@ export const chapters: ChapterConfig[] = [
     index: 2,
     navLabel: "current",
     title: "Current edition",
+    path: "/current",
     background: colors.voidBlack,
     foreground: colors.mutedSand,
   },
@@ -52,6 +55,7 @@ export const chapters: ChapterConfig[] = [
     index: 3,
     navLabel: "archive",
     title: "Archive",
+    path: "/archive",
     background: colors.voidBlack,
     foreground: colors.mutedSand,
   },
@@ -60,6 +64,7 @@ export const chapters: ChapterConfig[] = [
     index: 4,
     navLabel: "manifesto",
     title: "Manifesto",
+    path: "/manifesto",
     background: colors.voidBlack,
     foreground: colors.mutedSand,
   },
@@ -68,9 +73,15 @@ export const chapters: ChapterConfig[] = [
     index: 5,
     navLabel: "contact",
     title: "Contact",
+    path: "/contact",
     background: colors.voidBlack,
     foreground: colors.mutedSand,
   },
 ];
 
 export const navChapters = chapters.filter((chapter) => chapter.id !== "home");
+
+export function chapterByPath(path: string): ChapterConfig | undefined {
+  const normalized = path === "/" ? "/" : path.replace(/\/$/, "");
+  return chapters.find((chapter) => chapter.path === normalized);
+}

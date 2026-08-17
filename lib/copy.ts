@@ -259,16 +259,15 @@ export const contact = {
 };
 
 export const footer = {
-  wordmark: "SWAG",
-  tagline: "wearable editions — cape town",
+  tagline: "CROSS WITH SWAG",
   editions: [
-    { label: "current — kloofstreetnights", href: "#current" },
-    { label: "archive", href: "#archive" },
+    { label: "current — kloofstreetnights", href: "/current" },
+    { label: "archive", href: "/archive" },
   ],
   info: [
-    { label: "manifesto", href: "#manifesto" },
-    { label: "contact", href: "#contact" },
+    { label: "manifesto", href: "/manifesto" },
+    { label: "contact", href: "/contact" },
     { label: site.handle, href: site.instagramUrl, external: true },
   ],
-  meta: ["nothing owing", "the.director", site.year],
+  meta: ["WEARABLE EDITIONS — CAPE TOWN", "GRISEUS REGIUS (PTY) LTD 2026"],
 };

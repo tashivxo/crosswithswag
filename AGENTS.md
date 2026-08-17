@@ -66,8 +66,9 @@ npm run lint
 
 ## Current Architecture
 
-- `app/layout.tsx` - metadata shell and providers.
-- `app/page.tsx` - five V3 scroll chapters (+ preloader/header/footer).
+- `app/layout.tsx` - metadata shell and Lenis provider.
+- `app/(gallery)/*` - V3.1 five-route gallery (`aug-2026-website-update`); production `main` still uses `app/page.tsx` single-page scroll.
+- `components/v3/SiteChrome.tsx` - shared client chrome (preloader, header, footer, scroll reset).
 - `app/globals.css` - CSS variables and section composition styles.
 - `components/providers/LenisProvider.tsx` - Lenis smooth scroll.
 - `components/v3/*` - V3 chapters, chrome, motion (production on `main`).

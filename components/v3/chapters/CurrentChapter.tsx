@@ -17,7 +17,7 @@ export function CurrentChapter() {
           <span className="lbl lbl--sand">{current.editionLabel}</span>
           <span className="state state--live">live</span>
         </div>
-        <h2 className="display current-title voice">{current.title}</h2>
+        <h1 className="display current-title voice">{current.title}</h1>
         <div className="hero-bottom current-intro">
           <div className="body-copy voice">
             {current.lines.map((line) => (

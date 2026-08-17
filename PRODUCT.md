@@ -24,7 +24,7 @@ Not ecommerce, not a drop calendar, not merch. A continuous-scroll gallery that 
 
 ## Operating Context
 
-- Single-page continuous scroll (five V3 chapters). No routes besides `/`.
+- Single-page continuous scroll on production `main`. V3.1 on `aug-2026-website-update` uses five routes (`/`, `/current`, `/archive`, `/manifesto`, `/contact`) with shared chrome.
 - Production (`main`) is V3, live at `https://crosswithswag.co.za` and `https://crosswithswag.vercel.app`. Frozen V2 lives on `v2-production-freeze` for design mining only (`https://crosswithswag-git-v2-production-freeze-tashivxos-projects.vercel.app`).
 - Motion: Lenis + GSAP, reduced-motion respected.
 - Waitlist is currently a local validated acknowledgment only. A real list (and any later Cloudflare Workers/Pages move) is deferred until cost and “no frontend rewrite” are proven. Not this change.

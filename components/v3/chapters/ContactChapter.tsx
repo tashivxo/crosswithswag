@@ -8,14 +8,14 @@ export function ContactChapter() {
     <section id="contact" className="chapter">
       <section className="wrap page-head">
         <span className="lbl">[ contact ]</span>
-        <h2 className="display" style={{ marginTop: 18 }}>
+        <h1 className="display" style={{ marginTop: 18 }}>
           {contact.display.map((line) => (
             <span key={line}>
               {line}
               <br />
             </span>
           ))}
-        </h2>
+        </h1>
         <p className="body-copy voice" style={{ marginTop: 30 }}>
           {contact.intro}
         </p>

@@ -13,7 +13,10 @@ const instrumentSans = Instrument_Sans({
 });
 
 export const metadata: Metadata = {
-  title: meta.title,
+  title: {
+    default: meta.title,
+    template: "SWAG — %s",
+  },
   description: meta.description,
   openGraph: {
     title: meta.ogTitle,

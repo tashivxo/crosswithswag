@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Wordmark } from "@/components/ui/Wordmark";
 import { footer } from "@/lib/copy";
 
 export function SiteFooter() {
@@ -6,17 +7,8 @@ export function SiteFooter() {
     <footer className="wrap site-footer">
       <div className="foot">
         <div>
-          <div
-            className="mark-text"
-            style={{
-              fontSize: "clamp(34px, 7vw, 72px)",
-              lineHeight: 0.9,
-              letterSpacing: "-0.04em",
-            }}
-          >
-            {footer.wordmark}
-          </div>
-          <p className="lbl" style={{ marginTop: 16 }}>{footer.tagline}</p>
+          <Wordmark className="wordmark--footer" />
+          <p className="lbl foot-tagline">{footer.tagline}</p>
         </div>
         <div>
           <h5>editions</h5>

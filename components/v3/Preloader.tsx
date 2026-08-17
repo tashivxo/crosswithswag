@@ -1,6 +1,16 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+
+const PRELOADER_KEY = "swag:preloader-seen";
+
+function preloaderSeen() {
+  try {
+    return sessionStorage.getItem(PRELOADER_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
 
 export function Preloader({
   onComplete,
@@ -14,12 +24,22 @@ export function Preloader({
   const finish = useCallback(() => {
     if (finishedRef.current) return;
     finishedRef.current = true;
+    try {
+      sessionStorage.setItem(PRELOADER_KEY, "1");
+    } catch {
+      // sessionStorage unavailable
+    }
     setProgress(100);
     setGone(true);
     onComplete();
   }, [onComplete]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
+    if (preloaderSeen()) {
+      finish();
+      return;
+    }
+
     const reduceMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
@@ -69,20 +89,23 @@ export function Preloader({
     return () => window.removeEventListener("keydown", onKey);
   }, [finish, gone]);
 
+  if (gone) {
+    return <div id="preloader" className="gone" aria-hidden="true" />;
+  }
+
   return (
     <div
       id="preloader"
-      className={gone ? "gone" : undefined}
       aria-busy={!gone}
       aria-hidden={gone}
-      onClick={gone ? undefined : finish}
+      onClick={finish}
     >
       <div className="pre-row">
         <span className="lbl">[ wearable editions ]</span>
         <button
           type="button"
           className="lbl preloader-skip"
-          tabIndex={gone ? -1 : 0}
+          tabIndex={0}
           onClick={(event) => {
             event.stopPropagation();
             finish();
