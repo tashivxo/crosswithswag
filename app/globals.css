@@ -675,7 +675,6 @@ button:focus-visible {
   color: var(--sand);
   pointer-events: none;
   transform-origin: 50% 50%;
-  will-change: transform;
 }
 
 /* ticker */

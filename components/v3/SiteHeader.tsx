@@ -191,7 +191,6 @@ export function SiteHeader({
         start: WORDMARK_DOCK_SCROLL.start,
         end: WORDMARK_DOCK_SCROLL.end,
         scrub: WORDMARK_DOCK_SCROLL.scrub,
-        invalidateOnRefresh: true,
       });
 
       gsap.fromTo(

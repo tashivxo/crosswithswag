@@ -14,8 +14,12 @@ export function LenisProvider({ children }: { children: ReactNode }) {
     const reduceMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
+    const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
 
-    if (reduceMotion) {
+    ScrollTrigger.config({ ignoreMobileResize: true });
+
+    if (reduceMotion || coarsePointer) {
+      requestAnimationFrame(() => ScrollTrigger.refresh());
       return;
     }
 
@@ -23,6 +27,9 @@ export function LenisProvider({ children }: { children: ReactNode }) {
       duration: motion.lenisDuration,
       easing: motion.lenisEasing,
       smoothWheel: true,
+      syncTouch: false,
+      touchMultiplier: 1,
+      autoRaf: false,
     });
 
     setLenis(lenis);
@@ -36,24 +43,6 @@ export function LenisProvider({ children }: { children: ReactNode }) {
       );
     });
 
-    ScrollTrigger.scrollerProxy(document.documentElement, {
-      scrollTop(value) {
-        if (arguments.length && typeof value === "number") {
-          lenis.scrollTo(value, { immediate: true });
-        }
-        return lenis.scroll;
-      },
-      getBoundingClientRect() {
-        return {
-          top: 0,
-          left: 0,
-          width: window.innerWidth,
-          height: window.innerHeight,
-        };
-      },
-    });
-
-    ScrollTrigger.defaults({ scroller: document.documentElement });
     ScrollTrigger.refresh();
 
     const update = (time: number) => {

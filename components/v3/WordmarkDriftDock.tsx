@@ -11,7 +11,7 @@ gsap.registerPlugin(ScrollTrigger);
 export const WORDMARK_DOCK_SCROLL = {
   start: "top top",
   end: "bottom top",
-  scrub: 0.6,
+  scrub: true,
 } as const;
 
 export function getWordmarkDockTrigger() {
@@ -98,8 +98,6 @@ export function WordmarkDriftDock({
       };
     }
 
-    let onResize: (() => void) | undefined;
-
     const ctx = gsap.context(() => {
       const from = () => ({
         ...heroOffset(slot),
@@ -138,12 +136,9 @@ export function WordmarkDriftDock({
         },
       );
 
-      onResize = () => ScrollTrigger.refresh();
-      window.addEventListener("resize", onResize);
     }, layer);
 
     return () => {
-      if (onResize) window.removeEventListener("resize", onResize);
       ctx.revert();
     };
   }, [ready, mode]);
