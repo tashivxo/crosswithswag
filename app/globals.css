@@ -898,12 +898,13 @@ button:focus-visible {
 
 .dense {
   list-style: none;
-  padding-left: 2.8em;
+  padding-left: 0;
 }
 
 .dense li {
-  display: block;
-  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.9em;
   font-weight: 700;
   text-transform: uppercase;
   font-size: clamp(21px, 3.5vw, 46px);
@@ -916,12 +917,11 @@ button:focus-visible {
 
 .dense li::before {
   content: attr(data-n);
-  position: absolute;
-  left: -2.6em;
-  top: 0.55em;
+  flex: 0 0 auto;
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.16em;
+  line-height: 1;
   color: var(--stone);
 }
 
