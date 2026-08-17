@@ -16,7 +16,7 @@ Secondary: Marcus (the director) reviewing live V3 against his Figma/HTML handof
 
 `swag.` is a quiet, type-led digital gallery for Wearable Editions. Each edition is one thought held as garment, campaign image, and framed print — conceived, released, and permanently closed.
 
-Success is a public site that feels like a sequence of typographic posters rather than a store. V3 is live on `main`; Marcus signed off this cutover.
+Success is a public site that feels like a sequence of typographic posters rather than a store. V3 is live on `main`; V3.1 (Marcus August 2026 Figma restyle) is on `aug-2026-website-update` until merge.
 
 ## Positioning
 
@@ -44,13 +44,13 @@ Not ecommerce, not a drop calendar, not merch. A continuous-scroll gallery that 
 - Voice: quiet, type-led, editorial, non-commercial, no over-explaining. Cape Town vernacular without performance.
 - Typeface: Instrument Sans 400 / 500 / 700 (locked).
 - Colours: Void Black `#0A0A0A`, Stone Grey `#575D61`, Clay `#8C5E4A`, Sand `#D6D1C4` (locked).
-- Wordmark is custom SVG lettering, not a font.
+- Wordmark is custom lettering (CSS-masked fill), not a font.
 
 ## Evidence on Hand
 
 - Copy: `lib/copy.ts` (V3 on `main`). V2 preserved in `archive/v2/lib/copy.v2.ts` on `main`; live V2 source of truth is `v2-production-freeze`.
 - Editions: `lib/editions.ts`. Campaign stills: `public/assets/winter-drop/` (masters in `marcus-assets/winter-drop/`).
-- Wordmark: `public/assets/Frame_6_clean.svg` (masters in `marcus-assets/svg/`).
+- Wordmark: `public/assets/SWAG_mark_fill.png` (knockout of `marcus-assets/figma-aug-2026/wordmark-group-53.png`).
 - Marcus V3 handoff: `cursor.md/v3/`. Identity: `cursor.md/design.md`.
 - Do not fabricate testimonials, prices, unnamed colour hexes, or edition stories.
 

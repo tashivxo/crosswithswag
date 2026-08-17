@@ -76,7 +76,7 @@ npm run lint
 - `lib/editions.ts` - edition / campaign data.
 - `lib/sections.config.ts` - chapter order and colours.
 - `lib/motion.config.ts` - animation constants.
-- `public/assets/` - web-served SVGs and winter-drop imagery.
+- `public/assets/` - web-served fill wordmark, SVGs, and winter-drop imagery.
 - `marcus-assets/` - Marcus Figma/export masters (not served).
 - `archive/` - QA shots, Stitch pack, quarantined V2 code (not imported by V3).
 - `stitch/` - Stitch design handoff docs.

@@ -9,12 +9,13 @@ The cleaned SVG assets are available in:
 
 For production, prefer using the clean path-only SVG as a CSS mask so the mark can inherit the correct section colour. This avoids needing separate exports for every background.
 
-Current implementation target:
+Current implementation target (V3.1):
 
-- Primary dark sections: mask asset `public/assets/Frame_6_clean.svg`, filled with Muted Sand `#D6D1C4`
+- Mask asset `public/assets/SWAG_mark_fill.png` (Group 53 knockout: filled `swag.`, no micro-text)
+- Dark sections: filled with Muted Sand `#D6D1C4`
 - Light Sand section: same mask, filled with Void Black `#0A0A0A`
 
-`SWAG_logo_clean.svg` is stroke-outline only and should not be treated as the production fill wordmark unless Marcus specifically chooses that outline treatment.
+Do not use `SWAG_logo_clean.svg` as the live mask — it is stroke-outline only and reads as a hollow wire. Do not use `Frame_6_clean.svg` — it bakes in CROSS WITH SWAG micro-text under the mark.
 
 ## Section 6 — kloofstreetnights
 

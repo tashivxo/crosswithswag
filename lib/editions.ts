@@ -16,9 +16,10 @@ export interface Edition {
   colourways?: Colourway[];
 }
 
-export const campaignArtboards = [
-  1, 2, 3, 4, 6, 7, 8, 10, 11, 12, 13, 14, 15, 17, 18, 19, 20,
-] as const;
+export const campaignArtboards = [1, 2, 3] as const;
+
+/** kloofstreetnights garment stills — 8 looks / 8 prints. Not first-edition CROSS.WITH.SWAG boards. */
+export const clothesArtboards = [2, 3, 4, 6, 7, 8, 10, 11] as const;
 
 export const editions: Edition[] = [
   {

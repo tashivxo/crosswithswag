@@ -64,7 +64,7 @@ export function ImageGrid({
           key={artboard}
           artboard={artboard}
           editionName={editionName}
-          showTag={variant !== "campaign"}
+          showTag={false}
           sizes={imageSizes}
         />
       ))}

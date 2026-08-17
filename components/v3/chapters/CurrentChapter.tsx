@@ -1,7 +1,11 @@
 import { Reveal } from "@/components/v3/Reveal";
 import { ImageGrid } from "@/components/v3/ImageGrid";
 import { current } from "@/lib/copy";
-import { campaignArtboards, currentEdition } from "@/lib/editions";
+import {
+  campaignArtboards,
+  clothesArtboards,
+  currentEdition,
+} from "@/lib/editions";
 
 export function CurrentChapter() {
   const colourways = currentEdition.colourways ?? [];
@@ -43,7 +47,7 @@ export function CurrentChapter() {
           <span className="lbl">three frames</span>
         </Reveal>
         <Reveal>
-          <ImageGrid artboards={[1, 2, 3]} variant="campaign" />
+          <ImageGrid artboards={campaignArtboards} variant="campaign" />
         </Reveal>
       </section>
 
@@ -105,10 +109,10 @@ export function CurrentChapter() {
       <section className="wrap pad-sm">
         <Reveal className="sect-head">
           <span className="lbl">[ 04 — the clothes ]</span>
-          <span className="lbl">kloofstreetnights</span>
+          <span className="lbl">{current.clothesRightLabel}</span>
         </Reveal>
         <Reveal>
-          <ImageGrid artboards={campaignArtboards} />
+          <ImageGrid artboards={clothesArtboards} />
         </Reveal>
       </section>
 

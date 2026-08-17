@@ -108,6 +108,7 @@ export const current = {
   intake: "no storefront. orders go through the form.",
   orderUrl: "https://form.jotform.com/crosswithswag/order-kloofstreetnights",
   orderSubject: "kloofstreetnights",
+  clothesRightLabel: "8 looks / 8 prints",
   colourwayNote:
     "hex codes are targets, not finals. pantone / swatch match required before print.",
   spec: [
