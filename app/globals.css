@@ -346,7 +346,7 @@ button:focus-visible {
 }
 
 .page-head {
-  padding-top: 104px;
+  padding-top: calc(var(--header-height) + clamp(44px, 4vw, 56px));
   padding-bottom: clamp(36px, 6vw, 72px);
   border-bottom: 1px solid var(--line);
 }
@@ -380,7 +380,7 @@ button:focus-visible {
 .pre-mark {
   font-size: clamp(52px, 13vw, 150px);
   font-weight: 700;
-  letter-spacing: -0.05em;
+  letter-spacing: -0.04em;
   line-height: 1;
 }
 
@@ -610,8 +610,8 @@ button:focus-visible {
   width: 100%;
   aspect-ratio: var(--wordmark-aspect-ratio);
   background: currentColor;
-  mask: url("/assets/Frame_6_clean.svg") center / contain no-repeat;
-  -webkit-mask: url("/assets/Frame_6_clean.svg") center / contain no-repeat;
+  mask: url("/assets/SWAG_logo_clean.svg") center / contain no-repeat;
+  -webkit-mask: url("/assets/SWAG_logo_clean.svg") center / contain no-repeat;
 }
 
 .wordmark-drift-layer {
@@ -678,9 +678,9 @@ button:focus-visible {
   flex-direction: column;
   justify-content: space-between;
   min-height: 100dvh;
-  gap: 32px;
-  padding-top: calc(var(--header-height) + clamp(16px, 4vh, 40px));
-  padding-bottom: clamp(48px, 10vh, 120px);
+  gap: clamp(20px, 4vh, 32px);
+  padding-top: calc(var(--header-height) + clamp(12px, 2.4vh, 24px));
+  padding-bottom: clamp(24px, 5vh, 56px);
 }
 
 .hero-top {
@@ -688,35 +688,43 @@ button:focus-visible {
   justify-content: space-between;
   gap: 20px;
   flex-wrap: wrap;
-  padding-bottom: 40px;
+  padding-bottom: clamp(12px, 2.4vh, 24px);
 }
 
 .hero-mark {
   font-weight: 700;
-  line-height: 0.82;
-  letter-spacing: -0.045em;
+  line-height: 0.86;
+  letter-spacing: -0.04em;
   text-transform: uppercase;
-  font-size: clamp(58px, 17.5vw, 250px);
+  font-size: clamp(44px, 11vw, 168px);
 }
 
 .hero-mark__clay {
   color: var(--clay);
 }
 
+.hero-mark__lockup {
+  white-space: nowrap;
+}
+
 .hero-bottom {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr auto;
   gap: 32px;
   align-items: end;
-  padding-top: 44px;
+  padding-top: clamp(20px, 3vh, 32px);
   border-top: 1px solid var(--line);
+}
+
+.hero-bottom .cta-row {
+  justify-self: end;
 }
 
 .cta-row {
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
-  margin-top: 26px;
+  margin-top: 0;
 }
 
 .btn {
@@ -878,26 +886,33 @@ button:focus-visible {
 .owe-mark {
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: -0.045em;
+  letter-spacing: -0.04em;
   line-height: 0.86;
   font-size: clamp(52px, 13vw, 190px);
 }
 
 .manifesto-full {
-  padding-block: clamp(90px, 8vw, 120px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-block: 120px;
   border-top: 1px solid var(--line);
 }
 
 .manifesto-full__label {
   display: block;
+  width: 100%;
+  max-width: 700px;
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--stone);
+  text-align: center;
 }
 
 .manifesto-full__body {
+  width: 100%;
   max-width: 700px;
   font-size: 19px;
   line-height: 1.62;
@@ -919,33 +934,36 @@ button:focus-visible {
 }
 
 .orb {
-  aspect-ratio: 1 / 0.92;
-  border-radius: 50%;
-  background: var(--sand);
-  color: var(--void);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: clamp(26px, 4vw, 58px);
-  max-width: 400px;
+  margin-top: clamp(48px, 7vw, 96px);
+  max-width: 52ch;
+  border-left: 1px solid var(--clay);
+  padding-left: clamp(18px, 2.6vw, 34px);
+  color: var(--sand);
 }
 
 .orb p {
-  font-size: clamp(14px, 1.4vw, 18px);
-  line-height: 1.4;
-  letter-spacing: 0.004em;
+  font-size: clamp(15px, 1.45vw, 19px);
+  line-height: 1.62;
+  letter-spacing: 0.006em;
 }
 
 .orb p b {
   font-weight: 700;
 }
 
-.owe-split {
-  display: grid;
-  grid-template-columns: 1.15fr 0.85fr;
-  gap: clamp(28px, 5vw, 72px);
-  align-items: center;
-  margin-top: clamp(48px, 7vw, 96px);
+.stack-lines {
+  list-style: none;
+  padding: 0;
+}
+
+.stack-lines li {
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: clamp(28px, 3.8vw, 56px);
+  letter-spacing: -0.035em;
+  line-height: 0.94;
+  color: var(--sand);
+  padding: 2px 0;
 }
 
 .grid-clothes {
@@ -969,9 +987,58 @@ button:focus-visible {
 }
 
 .grid-campaign .frame {
-  height: clamp(280px, 39vw, 560px);
+  height: clamp(320px, 42vw, 620px);
 }
 
+.grid-campaign .frame img {
+  filter: none;
+}
+
+.grid-campaign .frame:hover img {
+  transform: none;
+  filter: none;
+}
+
+/* Current chapter — page head */
+#current .current-head .hero-top {
+  padding-bottom: 26px;
+}
+
+#current .current-title {
+  text-transform: lowercase;
+  font-size: clamp(52px, 12.4vw, 196px);
+}
+
+#current .current-intro {
+  border-top: 0;
+  padding-top: 34px;
+}
+
+#current .current-intake__copy {
+  margin-top: 12px;
+}
+
+#current .current-spec {
+  align-items: start;
+}
+
+#current .current-spec__title {
+  margin-top: 18px;
+}
+
+#current .current-colourway-note {
+  margin-top: 16px;
+}
+
+#current .current-sig {
+  max-width: 70ch;
+}
+
+#current .current-sig__copy {
+  margin-top: 20px;
+}
+
+/* colourways — two-up poster fields */
 .cways {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -981,31 +1048,26 @@ button:focus-visible {
 }
 
 .cw {
-  background: var(--void);
-  padding: 0;
-  transition: background 0.4s;
+  position: relative;
+  min-height: clamp(200px, 24vw, 360px);
+  overflow: hidden;
 }
 
-.cw:hover {
-  background: var(--raise);
+.cw__fill {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: clamp(16px, 2vw, 28px);
 }
 
-.cw .chip {
-  height: clamp(120px, 12vw, 170px);
-  width: 100%;
-  border-bottom: 1px solid var(--line);
+.cw--void .cw__fill {
+  outline: 1px solid var(--stone);
+  outline-offset: -1px;
 }
 
-.cw .chip--void {
-  border: 1px solid var(--stone);
-}
-
-.cw .meta {
-  min-height: 50px;
-  padding: 18px clamp(12px, 1.4vw, 20px) 0;
-}
-
-.cw h4 {
+.cw__meta h4 {
   font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
@@ -1016,8 +1078,20 @@ button:focus-visible {
 .cw .hex {
   font-size: 11px;
   letter-spacing: 0.14em;
-  color: var(--stone);
   text-transform: uppercase;
+}
+
+.cw--void .cw__meta h4 {
+  color: var(--sand);
+}
+
+.cw--void .cw__meta .hex {
+  color: var(--stone);
+}
+
+.cw--light .cw__meta h4,
+.cw--light .cw__meta .hex {
+  color: var(--void);
 }
 
 .arch {
@@ -1031,12 +1105,19 @@ button:focus-visible {
   align-items: center;
   padding: clamp(22px, 3vw, 30px) 0;
   border-bottom: 1px solid var(--line);
-  transition: padding-left 0.5s var(--ease), background 0.5s;
+  transition: background 0.5s;
+}
+
+.arow > * {
+  transition: transform 0.5s var(--ease);
 }
 
 .arow--open:hover {
-  padding-left: 16px;
   background: rgba(140, 94, 74, 0.09);
+}
+
+.arow--open:hover > * {
+  transform: translateX(16px);
 }
 
 .arow--open:hover .nm {
@@ -1068,8 +1149,9 @@ button:focus-visible {
 
 .arow .dsc {
   font-size: 13px;
-  color: rgba(214, 209, 196, 0.55);
+  color: var(--stone);
   line-height: 1.5;
+  text-align: center;
 }
 
 .state {
@@ -1150,7 +1232,11 @@ button:focus-visible {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: clamp(24px, 4vw, 64px);
-  align-items: center;
+  align-items: start;
+}
+
+.contact-invite {
+  margin-top: clamp(44px, 6vw, 84px);
 }
 
 .field {
@@ -1277,10 +1363,11 @@ button:focus-visible {
 }
 
 .ccard h3 {
-  font-size: clamp(19px, 2.2vw, 27px);
+  font-size: clamp(24px, 3.2vw, 40px);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: -0.02em;
+  line-height: 0.96;
 }
 
 .ccard p {
@@ -1307,7 +1394,7 @@ button:focus-visible {
 .closer .big {
   font-weight: 700;
   line-height: 0.82;
-  letter-spacing: -0.045em;
+  letter-spacing: -0.04em;
   text-transform: uppercase;
   font-size: clamp(52px, 15vw, 210px);
 }
@@ -1395,10 +1482,15 @@ button:focus-visible {
 
   .arow .dsc {
     grid-column: 2;
+    text-align: left;
   }
 
   .arow .state {
     grid-column: 2;
+  }
+
+  .hero-bottom .cta-row {
+    justify-self: start;
   }
 
   .foot {
@@ -1414,12 +1506,8 @@ button:focus-visible {
     letter-spacing: -0.032em;
   }
 
-  .owe-split {
-    grid-template-columns: 1fr;
-  }
-
-  .orb {
-    max-width: 300px;
+  .stack-lines li {
+    font-size: clamp(22px, 7vw, 36px);
   }
 }
 
@@ -1433,11 +1521,15 @@ button:focus-visible {
   }
 
   .grid-campaign .frame {
-    height: clamp(320px, 72vw, 480px);
+    height: clamp(360px, 72vw, 520px);
   }
 
   .cways {
     grid-template-columns: 1fr;
+  }
+
+  .cw {
+    min-height: clamp(180px, 52vw, 280px);
   }
 }
 

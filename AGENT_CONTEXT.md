@@ -55,7 +55,7 @@ The site should feel like a sequence of typographic posters, not a product landi
 
 One continuous scroll — five chapters (Figma Page 1 frames), not five routes:
 
-1. **Home** (`#home`) — first viewport is Figma overlay `214:119`/`214:124`: Void Black with the centered `swag.` mark only. On scroll the mark docks into the nav, MENU fades in, then the Landing hero (`204:53`) CROSS / WITH SWAG, edition labels, intro, and CTAs. No ghost watermark.
+1. **Home** (`#home`) — first viewport is Figma overlay `214:119`/`214:124`: Void Black with the centered `swag.` mark only. On scroll the mark docks into the nav, MENU fades in, then the Landing hero (`204:53`) is a **two-line** CROSS / WITH SWAG lockup (WITH in Clay) at display size `clamp(44px, 11vw, 168px)`, with edition labels, wearable-editions intro, and **the current edition / the archive CTAs in that same docked viewport**. Do not use Figma’s inline CURRENT/ARCHIVE/MANIFESTO/CONTACT header links — MENU overlay stays. No ghost watermark.
 2. **Current edition** (`#current`) — kloofstreetnights campaign, **After Hours + First Light** colourways in a two-up poster grid (Figma `204:255`), spec, clothes, director note
 3. **Archive** (`#archive`) — six editions, three rules (`atm` description: `all that matters.`); Figma `204:371` layout (no closer lockup)
 4. **Manifesto** (`#manifesto`) — OWE NOTHING opener, a home for individuals, the wound, authentic expression, authority, **The Full Manifesto**, Silent Warrior; Figma `204:462`

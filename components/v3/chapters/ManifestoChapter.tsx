@@ -29,22 +29,20 @@ export function ManifestoChapter() {
             </p>
           </Reveal>
         ))}
-        <div className="owe-split">
-          <Reveal className="orb">
-            <p>
-              <b>swag.</b> {manifesto.orb.replace(/^swag\.\s*/i, "")}
-            </p>
-          </Reveal>
-        </div>
+        <Reveal className="orb">
+          <p>
+            <b>swag.</b> {manifesto.orb.replace(/^swag\.\s*/i, "")}
+          </p>
+        </Reveal>
       </section>
 
-      <section className="wrap pad-sm" style={{ borderTop: "1px solid var(--line)" }}>
+      <section className="wrap pad-sm">
         <Reveal className="sect-head">
           <span className="lbl">[ a home for individuals ]</span>
           <span className="lbl">{manifesto.homeForIndividuals.label}</span>
         </Reveal>
         <Reveal>
-          <ul className="dense" style={{ maxWidth: "22ch" }}>
+          <ul className="stack-lines">
             {manifesto.homeForIndividuals.dense.map((item) => (
               <li key={item}>{item}</li>
             ))}
@@ -108,11 +106,9 @@ export function ManifestoChapter() {
           <span className="lbl">the daily practice</span>
         </Reveal>
         <Reveal>
-          <ul className="dense">
-            {manifesto.authority.dense.map((item, index) => (
-              <li key={item} data-n={String(index + 1).padStart(2, "0")}>
-                {item}
-              </li>
+          <ul className="stack-lines">
+            {manifesto.authority.dense.map((item) => (
+              <li key={item}>{item}</li>
             ))}
           </ul>
         </Reveal>

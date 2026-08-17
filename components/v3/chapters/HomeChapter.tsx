@@ -4,6 +4,7 @@ import { home } from "@/lib/copy";
 import { chapters } from "@/lib/sections.config";
 
 const homeChapter = chapters.find((chapter) => chapter.id === "home")!;
+const [crossLine, withLine, swagLine] = home.heroMark;
 
 export function HomeChapter() {
   return (
@@ -27,12 +28,16 @@ export function HomeChapter() {
             </div>
 
             <h1 className="hero-mark">
-              {home.heroMark.map((line) => (
-                <span key={line.text} className={line.clay ? "hero-mark__clay" : undefined}>
-                  {line.text}
-                  <br />
-                </span>
-              ))}
+              <span>
+                {crossLine.text}
+                <br />
+              </span>
+              <span className="hero-mark__lockup">
+                <span className={withLine.clay ? "hero-mark__clay" : undefined}>
+                  {withLine.text}
+                </span>{" "}
+                {swagLine.text}
+              </span>
             </h1>
           </div>
 

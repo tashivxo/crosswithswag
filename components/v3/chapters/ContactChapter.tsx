@@ -47,7 +47,7 @@ export function ContactChapter() {
         </Reveal>
       </section>
 
-      <section className="wrap pad-sm">
+      <section className="wrap pad-sm contact-list">
         <Reveal className="join">
           <div>
             <span className="lbl">[ the list ]</span>
@@ -65,10 +65,7 @@ export function ContactChapter() {
             <WaitlistForm note={contact.waitlist.note} />
           </div>
         </Reveal>
-      </section>
-
-      <section className="wrap pad-sm">
-        <Reveal className="sig" style={{ maxWidth: "66ch" }}>
+        <Reveal className="sig contact-invite" style={{ maxWidth: "66ch" }}>
           <div className="body-copy voice">
             {contact.signOff.lines.map((line) => (
               <p key={line}>{line}</p>

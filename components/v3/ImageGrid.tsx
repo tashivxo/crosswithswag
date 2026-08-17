@@ -5,11 +5,13 @@ export function CampaignFrame({
   artboard,
   editionName,
   tag,
+  showTag = true,
   sizes = "(max-width: 768px) 50vw, 25vw",
 }: {
   artboard: number;
   editionName: string;
   tag?: string;
+  showTag?: boolean;
   sizes?: string;
 }) {
   const src = `/assets/winter-drop/Artboard${artboard}.jpg`;
@@ -22,9 +24,11 @@ export function CampaignFrame({
         fill
         sizes={sizes}
       />
-      <span className="tag">
-        {tag ?? `ed.001 / ${String(artboard).padStart(2, "0")}`}
-      </span>
+      {showTag ? (
+        <span className="tag">
+          {tag ?? `ed.001 / ${String(artboard).padStart(2, "0")}`}
+        </span>
+      ) : null}
     </div>
   );
 }
@@ -60,6 +64,7 @@ export function ImageGrid({
           key={artboard}
           artboard={artboard}
           editionName={editionName}
+          showTag={variant !== "campaign"}
           sizes={imageSizes}
         />
       ))}

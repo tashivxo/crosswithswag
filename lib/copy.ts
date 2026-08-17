@@ -21,7 +21,7 @@ export const home = {
     { text: "CROSS" },
     { text: "WITH", clay: true },
     { text: "SWAG" },
-  ],
+  ] as const,
   wearableLabel: "[ WEARABLE EDITIONS ]",
   intro:
     "each edition is one thought held in three objects. a garment. a campaign image. a framed print. conceived, released, and permanently closed.",
@@ -130,7 +130,7 @@ export const current = {
 };
 
 export const archive = {
-  display: ["EVERY", "EDITION", "CLOSES."],
+  display: ["EVERY EDITION", "CLOSES."],
   intro:
     "the site is a living archive, not a storefront. each edition receives a permanent record. the body of work is the brand.",
   note: "editions 002–006 are unreleased. names are locked; dates are not announced.",
@@ -222,7 +222,7 @@ export const manifesto = {
 };
 
 export const contact = {
-  display: ["NO", "PERMISSION", "NEEDED."],
+  display: ["NO PERMISSION", "NEEDED."],
   intro:
     "one inbox. orders, collaborations, everything. we don't need a storefront to sell you something true.",
   cards: [
