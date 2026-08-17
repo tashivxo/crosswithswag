@@ -96,7 +96,7 @@ export function HomeChapter() {
                 <p key={line}>{line}</p>
               ))}
             </div>
-            <div className="cta-row">
+            <div className="cta-row" style={{ marginTop: "clamp(40px, 6vw, 80px)" }}>
               <Link className="btn btn--clay" href={currentPath}>
                 enter the edition
               </Link>
