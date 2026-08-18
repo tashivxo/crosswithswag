@@ -85,7 +85,7 @@ Five App Router routes with shared `SiteChrome` (preloader, header, footer).
 - Wordmark mask `SWAG_mark_fill.svg`, dock `clamp(88px, 11vw, 120px)`, aspect `1.426685` (production header padding; no micro-text).
 - Home: hero wordmark scrub against `#home-intro`. Inner routes: `mode="docked"` — no ScrollTrigger, mark seated immediately.
 - MENU overlay stays; it lists home plus the four chapter routes. No inline header chapter links.
-- Shared Figma footer on every route (filled wordmark mask + `CROSS WITH SWAG` tagline).
+- Shared Figma footer on every route (filled wordmark mask + `CROSS WITH SWAG` tagline). Meta bar includes `V3.2.0` as of V3.2.0.
 - Preloader once per browser session (`swag:preloader-seen`); layout persists across client navigations.
 
 ## Locked Structure (V2 on `v2-production-freeze`)
@@ -232,6 +232,7 @@ Vercel Authentication is disabled so public URLs are viewable. Leave that as-is 
 | **V3 rebuild** | ✅ PRODUCTION | Five-chapter scroll from Marcus Aug 2026 handoff. Live on `main` at `crosswithswag.co.za`. |
 | **V3 production cutover** | ✅ COMPLETE | August 2026. V2 frozen on `v2-production-freeze`. Sign-off and domain-assignment gates for this cutover are lifted. |
 | **V3.1 Figma restyle** | ✅ PRODUCTION | Marcus August 2026 WEBSITE reworkings: five routes, filled SVG wordmark, docked landing fold, two-up colourways, kloofstreetnights 8-look clothes grid. Merged to `main` at `0d84e8f`. |
+| **V3.2.0** | ✅ PRODUCTION | Mobile wordmark dock smoothness (cached metrics, compositor hints, header line via `::after`) + footer version label `V3.2.0`. Five-route V3.1 architecture unchanged. |
 
 ## Open Questions for Marcus
 

@@ -8,6 +8,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
   WORDMARK_DOCK_SCROLL,
   WordmarkDriftDock,
+  getDockScrub,
   getWordmarkDockTrigger,
 } from "@/components/v3/WordmarkDriftDock";
 import { navChapters } from "@/lib/sections.config";
@@ -180,7 +181,7 @@ export function SiteHeader({
         pointerEvents: "auto",
       });
       if (header) {
-        gsap.set(header, { borderBottomColor: "rgba(214, 209, 196, 0.14)" });
+        gsap.set(header, { "--header-line": 1 });
       }
       return;
     }
@@ -190,7 +191,7 @@ export function SiteHeader({
         trigger: intro,
         start: WORDMARK_DOCK_SCROLL.start,
         end: WORDMARK_DOCK_SCROLL.end,
-        scrub: WORDMARK_DOCK_SCROLL.scrub,
+        scrub: getDockScrub(),
       });
 
       gsap.fromTo(
@@ -212,9 +213,9 @@ export function SiteHeader({
       if (header) {
         gsap.fromTo(
           header,
-          { borderBottomColor: "rgba(214, 209, 196, 0)" },
+          { "--header-line": 0 },
           {
-            borderBottomColor: "rgba(214, 209, 196, 0.14)",
+            "--header-line": 1,
             ease: "none",
             scrollTrigger: dockScroll(),
           },

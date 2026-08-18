@@ -281,7 +281,8 @@ button:focus-visible {
 }
 
 .home-intro {
-  min-height: 100dvh;
+  min-height: 100vh;
+  min-height: 100svh;
   width: 100%;
   pointer-events: none;
 }
@@ -412,6 +413,22 @@ button:focus-visible {
   border-bottom: 1px solid transparent;
 }
 
+.site-header::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: rgba(214, 209, 196, 0.14);
+  opacity: var(--header-line, 0);
+  pointer-events: none;
+}
+
+[data-route="docked"] .site-header::after {
+  opacity: 1;
+}
+
 .hdr-in {
   display: flex;
   align-items: center;
@@ -520,8 +537,8 @@ button:focus-visible {
 @media (prefers-reduced-motion: reduce) {
   .t-text-swap { transition: none !important; }
   .nav-label { transition: none !important; transform: none !important; }
-  .site-header {
-    border-bottom-color: var(--line);
+  .site-header::after {
+    opacity: 1;
   }
   .site-header__chrome {
     opacity: 1 !important;
@@ -675,6 +692,8 @@ button:focus-visible {
   color: var(--sand);
   pointer-events: none;
   transform-origin: 50% 50%;
+  will-change: transform;
+  backface-visibility: hidden;
 }
 
 /* ticker */

@@ -269,5 +269,9 @@ export const footer = {
     { label: "contact", href: "/contact" },
     { label: site.handle, href: site.instagramUrl, external: true },
   ],
-  meta: ["WEARABLE EDITIONS — CAPE TOWN", "GRISEUS REGIUS (PTY) LTD 2026"],
+  meta: [
+    "WEARABLE EDITIONS — CAPE TOWN",
+    "GRISEUS REGIUS (PTY) LTD 2026",
+    "V3.2.0",
+  ],
 };
