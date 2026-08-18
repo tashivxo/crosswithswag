@@ -12,6 +12,7 @@ import {
   getWordmarkDockTrigger,
 } from "@/components/v3/WordmarkDriftDock";
 import { navChapters } from "@/lib/sections.config";
+import { getLenis } from "@/lib/lenis";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -69,6 +70,20 @@ function setMenuShifts(
 function normalizePath(path: string) {
   if (path === "/") return "/";
   return path.replace(/\/$/, "");
+}
+
+function scrollToTop() {
+  const reduceMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  ).matches;
+  const lenis = getLenis();
+  if (lenis) {
+    lenis.scrollTo(0);
+  } else if (reduceMotion) {
+    window.scrollTo(0, 0);
+  } else {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
 }
 
 export function SiteHeader({
@@ -235,7 +250,18 @@ export function SiteHeader({
         data-route={mode}
       >
         <div className="wrap hdr-in">
-          <Link href="/" className="hdr-mark-slot" aria-label="SWAG home">
+          <Link
+            href="/"
+            className="hdr-mark-slot"
+            aria-label="SWAG home"
+            onClick={(event) => {
+              if (currentPath === "/") {
+                event.preventDefault();
+                closeMenu();
+                scrollToTop();
+              }
+            }}
+          >
             <WordmarkDriftDock ready={ready} mode={mode} />
           </Link>
           <div
@@ -307,7 +333,15 @@ export function SiteHeader({
                     href={chapter.path}
                     tabIndex={menuOpen ? 0 : -1}
                     aria-current={isCurrent ? "page" : undefined}
-                    onClick={closeMenu}
+                    onClick={(event) => {
+                      if (chapter.path === "/" && currentPath === "/") {
+                        event.preventDefault();
+                        closeMenu();
+                        scrollToTop();
+                      } else {
+                        closeMenu();
+                      }
+                    }}
                   >
                     {chapter.navLabel}
                   </Link>
