@@ -1183,6 +1183,10 @@ button:focus-visible {
   padding-bottom: calc(clamp(36px, 6vw, 72px) - 32px);
 }
 
+#current-head:focus {
+  outline: none;
+}
+
 #current .current-intake .cta-row {
   margin-top: 32px;
 }

@@ -13,7 +13,7 @@ import {
 } from "@/components/v3/WordmarkDriftDock";
 import {
   isHomeIntroSeen,
-  scrollToChapterHead,
+  queueRouteScroll,
   scrollToHomeLanding,
 } from "@/lib/home-scroll";
 import { navChapters } from "@/lib/sections.config";
@@ -339,13 +339,12 @@ export function SiteHeader({
                     onClick={(event) => {
                       event.preventDefault();
                       const chapterPath = normalizePath(chapter.path);
-                      if (chapterPath === currentPath) {
-                        closeMenu();
-                        scrollToChapterHead(chapterPath);
-                      } else {
-                        router.push(chapter.path);
-                        closeMenu();
+                      document.body.classList.remove("locked");
+                      closeMenu();
+                      if (chapterPath !== currentPath) {
+                        router.push(chapter.path, { scroll: true });
                       }
+                      queueRouteScroll(chapterPath);
                     }}
                   >
                     {chapter.navLabel}

@@ -80,7 +80,7 @@ Five App Router routes with shared `SiteChrome` (preloader, header, footer).
 | `/manifesto` | Manifesto | Docked wordmark; `OWE NOTHING.` opener as `h1` |
 | `/contact` | Contact | Docked wordmark; `NO PERMISSION NEEDED.` as `h1` |
 
-- `components/v3/SiteChrome.tsx` — client island: skip link, session preloader, header, `#content` wrapper, footer, hash redirect on `/`. Inner routes restore scroll to top; `/` restores to `#home-hero` after the intro has been seen this session, otherwise to `#home-intro`.
+- `components/v3/SiteChrome.tsx` — client island: skip link, session preloader, header, `#content` wrapper, footer, hash redirect on `/`. Inner routes restore scroll to the chapter head (`#current-head` on Current) after MENU close / view transitions; `/` restores to `#home-hero` after the intro has been seen this session, otherwise to `#home-intro`. Manual `history.scrollRestoration` so iOS does not keep the previous offset.
 - `lib/sections.config.ts` — `path` per chapter drives nav/footer/CTA hrefs.
 - Wordmark mask `SWAG_mark_fill.svg`, dock `clamp(88px, 11vw, 120px)`, aspect `1.426685` (production header padding; no micro-text).
 - Home: hero wordmark scrub against `#home-intro`. Inner routes: `mode="docked"` — no ScrollTrigger, mark seated immediately.

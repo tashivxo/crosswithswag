@@ -10,8 +10,8 @@ import { SiteFooter } from "@/components/v3/SiteFooter";
 import {
   isHomeIntroSeen,
   markHomeIntroSeen,
-  scrollPageTo,
-  scrollToHomeLanding,
+  queueRouteScroll,
+  restoreRouteScroll,
 } from "@/lib/home-scroll";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -47,25 +47,24 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
     document.body.classList.add("locked");
   }, [ready]);
 
+  useEffect(() => {
+    if (!("scrollRestoration" in history)) return;
+    const previous = history.scrollRestoration;
+    history.scrollRestoration = "manual";
+    return () => {
+      history.scrollRestoration = previous;
+    };
+  }, []);
+
   useLayoutEffect(() => {
-    const normalized = normalizePath(pathname);
-    const reduceMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
-
-    if (normalized === "/") {
-      if (isHomeIntroSeen() || reduceMotion) {
-        scrollToHomeLanding({ immediate: true });
-      } else {
-        scrollPageTo(0, { immediate: true });
-      }
-    } else {
-      scrollPageTo(0, { immediate: true });
-    }
-
+    restoreRouteScroll(pathname);
     requestAnimationFrame(() => {
       ScrollTrigger.refresh();
     });
+  }, [pathname]);
+
+  useEffect(() => {
+    return queueRouteScroll(pathname);
   }, [pathname]);
 
   useEffect(() => {

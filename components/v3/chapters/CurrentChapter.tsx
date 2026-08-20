@@ -12,7 +12,11 @@ export function CurrentChapter() {
 
   return (
     <section id="current" className="chapter">
-      <section className="wrap page-head current-head">
+      <section
+        id="current-head"
+        className="wrap page-head current-head"
+        tabIndex={-1}
+      >
         <div className="hero-top">
           <span className="lbl lbl--sand">{current.editionLabel}</span>
           <span className="state state--live">live</span>
