@@ -7,7 +7,12 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Preloader } from "@/components/v3/Preloader";
 import { SiteHeader } from "@/components/v3/SiteHeader";
 import { SiteFooter } from "@/components/v3/SiteFooter";
-import { getLenis } from "@/lib/lenis";
+import {
+  isHomeIntroSeen,
+  markHomeIntroSeen,
+  scrollPageTo,
+  scrollToHomeLanding,
+} from "@/lib/home-scroll";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -43,16 +48,37 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
   }, [ready]);
 
   useLayoutEffect(() => {
-    const lenis = getLenis();
-    if (lenis) {
-      lenis.scrollTo(0, { immediate: true });
+    const normalized = normalizePath(pathname);
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    if (normalized === "/") {
+      if (isHomeIntroSeen() || reduceMotion) {
+        scrollToHomeLanding({ immediate: true });
+      } else {
+        scrollPageTo(0, { immediate: true });
+      }
     } else {
-      window.scrollTo(0, 0);
+      scrollPageTo(0, { immediate: true });
     }
 
     requestAnimationFrame(() => {
       ScrollTrigger.refresh();
     });
+  }, [pathname]);
+
+  useEffect(() => {
+    const normalized = normalizePath(pathname);
+    if (normalized !== "/") return;
+
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    if (reduceMotion || isHomeIntroSeen()) {
+      markHomeIntroSeen();
+    }
   }, [pathname]);
 
   useEffect(() => {

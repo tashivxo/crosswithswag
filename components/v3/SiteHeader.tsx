@@ -2,7 +2,7 @@
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
@@ -11,8 +11,12 @@ import {
   getDockScrub,
   getWordmarkDockTrigger,
 } from "@/components/v3/WordmarkDriftDock";
+import {
+  isHomeIntroSeen,
+  scrollToChapterHead,
+  scrollToHomeLanding,
+} from "@/lib/home-scroll";
 import { navChapters } from "@/lib/sections.config";
-import { getLenis } from "@/lib/lenis";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -72,20 +76,6 @@ function normalizePath(path: string) {
   return path.replace(/\/$/, "");
 }
 
-function scrollToTop() {
-  const reduceMotion = window.matchMedia(
-    "(prefers-reduced-motion: reduce)",
-  ).matches;
-  const lenis = getLenis();
-  if (lenis) {
-    lenis.scrollTo(0);
-  } else if (reduceMotion) {
-    window.scrollTo(0, 0);
-  } else {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
-}
-
 export function SiteHeader({
   ready,
   mode,
@@ -94,6 +84,7 @@ export function SiteHeader({
   mode: "hero" | "docked";
 }) {
   const pathname = usePathname();
+  const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const burgerRef = useRef<HTMLButtonElement>(null);
   const chromeRef = useRef<HTMLDivElement>(null);
@@ -188,8 +179,9 @@ export function SiteHeader({
     const reduceMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
+    const introSeen = isHomeIntroSeen();
 
-    if (mode === "docked" || !intro || reduceMotion) {
+    const showChrome = () => {
       gsap.set(chrome, {
         autoAlpha: 1,
         y: 0,
@@ -198,7 +190,16 @@ export function SiteHeader({
       if (header) {
         gsap.set(header, { "--header-line": 1 });
       }
+    };
+
+    if (mode === "docked" || !intro || reduceMotion) {
+      showChrome();
       return;
+    }
+
+    if (introSeen) {
+      scrollToHomeLanding({ immediate: true });
+      showChrome();
     }
 
     const ctx = gsap.context(() => {
@@ -221,6 +222,7 @@ export function SiteHeader({
           y: 0,
           pointerEvents: "auto",
           ease: "none",
+          immediateRender: !introSeen,
           scrollTrigger: dockScroll(),
         },
       );
@@ -232,6 +234,7 @@ export function SiteHeader({
           {
             "--header-line": 1,
             ease: "none",
+            immediateRender: !introSeen,
             scrollTrigger: dockScroll(),
           },
         );
@@ -258,7 +261,7 @@ export function SiteHeader({
               if (currentPath === "/") {
                 event.preventDefault();
                 closeMenu();
-                scrollToTop();
+                scrollToHomeLanding();
               }
             }}
           >
@@ -334,11 +337,13 @@ export function SiteHeader({
                     tabIndex={menuOpen ? 0 : -1}
                     aria-current={isCurrent ? "page" : undefined}
                     onClick={(event) => {
-                      if (chapter.path === "/" && currentPath === "/") {
-                        event.preventDefault();
+                      event.preventDefault();
+                      const chapterPath = normalizePath(chapter.path);
+                      if (chapterPath === currentPath) {
                         closeMenu();
-                        scrollToTop();
+                        scrollToChapterHead(chapterPath);
                       } else {
+                        router.push(chapter.path);
                         closeMenu();
                       }
                     }}

@@ -1179,6 +1179,14 @@ button:focus-visible {
   margin-top: 12px;
 }
 
+#current .current-head {
+  padding-bottom: calc(clamp(36px, 6vw, 72px) - 32px);
+}
+
+#current .current-intake .cta-row {
+  margin-top: 32px;
+}
+
 #current .current-spec {
   align-items: start;
 }
@@ -1650,8 +1658,14 @@ button:focus-visible {
     grid-column: 2;
   }
 
+  .hero-content {
+    justify-content: flex-start;
+    gap: clamp(28px, 5vh, 48px);
+  }
+
   .hero-bottom .cta-row {
     justify-self: start;
+    margin-top: 28px;
   }
 
   .foot {

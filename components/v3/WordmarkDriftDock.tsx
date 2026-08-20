@@ -4,7 +4,11 @@ import { useLayoutEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Wordmark } from "@/components/ui/Wordmark";
-import { getLenis } from "@/lib/lenis";
+import {
+  isHomeIntroSeen,
+  markHomeIntroSeen,
+  scrollToHomeLanding,
+} from "@/lib/home-scroll";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -65,12 +69,6 @@ export function WordmarkDriftDock({
 
     const layer = layerRef.current;
     const slot = layer.parentElement;
-    const lenis = getLenis();
-    if (lenis) {
-      lenis.scrollTo(0, { immediate: true });
-    } else {
-      window.scrollTo(0, 0);
-    }
 
     if (!slot) return;
 
@@ -102,6 +100,11 @@ export function WordmarkDriftDock({
     let startX = 0;
     let startY = 0;
     let endScale = 1;
+    const introSeen = isHomeIntroSeen();
+
+    if (introSeen) {
+      scrollToHomeLanding({ immediate: true });
+    }
 
     const measure = () => {
       const from = heroOffset(slot);
@@ -114,9 +117,9 @@ export function WordmarkDriftDock({
       measure();
 
       gsap.set(layer, {
-        x: startX,
-        y: startY,
-        scale: 1,
+        x: introSeen ? 0 : startX,
+        y: introSeen ? 0 : startY,
+        scale: introSeen ? endScale : 1,
         opacity: 1,
         force3D: true,
       });
@@ -137,6 +140,7 @@ export function WordmarkDriftDock({
           opacity: 1,
           force3D: true,
           ease: "none",
+          immediateRender: !introSeen,
           scrollTrigger: {
             trigger: intro,
             start: WORDMARK_DOCK_SCROLL.start,
@@ -144,9 +148,19 @@ export function WordmarkDriftDock({
             scrub: getDockScrub(),
             invalidateOnRefresh: true,
             onRefresh: measure,
+            onLeave: () => markHomeIntroSeen(),
+            onUpdate: (self) => {
+              if (self.progress >= 1) {
+                markHomeIntroSeen();
+              }
+            },
           },
         },
       );
+
+      requestAnimationFrame(() => {
+        ScrollTrigger.refresh();
+      });
     }, layer);
 
     return () => {
