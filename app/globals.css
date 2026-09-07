@@ -1161,13 +1161,21 @@ button:focus-visible {
 }
 
 /* Current chapter — page head */
+#current .current-head {
+  container-type: inline-size;
+}
+
 #current .current-head .hero-top {
   padding-bottom: 26px;
 }
 
 #current .current-title {
   text-transform: lowercase;
-  font-size: clamp(52px, 12.4vw, 196px);
+  white-space: nowrap;
+  font-size: min(
+    clamp(52px, 12.4vw, 196px),
+    calc(100cqw / 9.75)
+  );
 }
 
 #current .current-intro {
