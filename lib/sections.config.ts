@@ -1,3 +1,4 @@
+import { current } from "@/lib/copy";
 import { colors } from "@/lib/design-tokens";
 
 export type ChapterId = "home" | "current" | "archive" | "manifesto" | "contact";
@@ -10,6 +11,13 @@ export type ChapterConfig = {
   path: string;
   background: string;
   foreground: string;
+};
+
+export type NavItem = {
+  id: string;
+  navLabel: string;
+  href: string;
+  external?: boolean;
 };
 
 /** @deprecated V2 section shell type — legacy components only */
@@ -80,6 +88,26 @@ export const chapters: ChapterConfig[] = [
 ];
 
 export const navChapters = chapters;
+
+export const navItems: NavItem[] = chapters.flatMap((chapter) => {
+  const item: NavItem = {
+    id: chapter.id,
+    navLabel: chapter.navLabel,
+    href: chapter.path,
+  };
+
+  if (chapter.id !== "current") return [item];
+
+  return [
+    item,
+    {
+      id: "order",
+      navLabel: "order",
+      href: current.orderUrl,
+      external: true,
+    },
+  ];
+});
 
 export function chapterByPath(path: string): ChapterConfig | undefined {
   const normalized = path === "/" ? "/" : path.replace(/\/$/, "");

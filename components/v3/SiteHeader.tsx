@@ -16,7 +16,7 @@ import {
   queueRouteScroll,
   scrollToHomeLanding,
 } from "@/lib/home-scroll";
-import { navChapters } from "@/lib/sections.config";
+import { navItems } from "@/lib/sections.config";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -315,11 +315,12 @@ export function SiteHeader({
           className="t-avatar-group"
           onMouseLeave={() => setMenuShifts(groupRef.current, null, "out")}
         >
-          {navChapters.map((chapter, index) => {
-            const isCurrent = chapter.path === currentPath;
+          {navItems.map((item, index) => {
+            const isCurrent = !item.external && item.href === currentPath;
+
             return (
               <div
-                key={chapter.id}
+                key={item.id}
                 className="menu-item-hit"
                 onMouseEnter={() => {
                   if (
@@ -331,24 +332,40 @@ export function SiteHeader({
                 }}
               >
                 <div className="t-avatar menu-grow">
-                  <Link
-                    className={isCurrent ? "mi mi--current" : "mi"}
-                    href={chapter.path}
-                    tabIndex={menuOpen ? 0 : -1}
-                    aria-current={isCurrent ? "page" : undefined}
-                    onClick={(event) => {
-                      event.preventDefault();
-                      const chapterPath = normalizePath(chapter.path);
-                      document.body.classList.remove("locked");
-                      closeMenu();
-                      if (chapterPath !== currentPath) {
-                        router.push(chapter.path, { scroll: true });
-                      }
-                      queueRouteScroll(chapterPath);
-                    }}
-                  >
-                    {chapter.navLabel}
-                  </Link>
+                  {item.external ? (
+                    <a
+                      className="mi"
+                      href={item.href}
+                      tabIndex={menuOpen ? 0 : -1}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => {
+                        document.body.classList.remove("locked");
+                        closeMenu();
+                      }}
+                    >
+                      {item.navLabel}
+                    </a>
+                  ) : (
+                    <Link
+                      className={isCurrent ? "mi mi--current" : "mi"}
+                      href={item.href}
+                      tabIndex={menuOpen ? 0 : -1}
+                      aria-current={isCurrent ? "page" : undefined}
+                      onClick={(event) => {
+                        event.preventDefault();
+                        const chapterPath = normalizePath(item.href);
+                        document.body.classList.remove("locked");
+                        closeMenu();
+                        if (chapterPath !== currentPath) {
+                          router.push(item.href, { scroll: true });
+                        }
+                        queueRouteScroll(chapterPath);
+                      }}
+                    >
+                      {item.navLabel}
+                    </Link>
+                  )}
                 </div>
               </div>
             );
