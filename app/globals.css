@@ -733,8 +733,10 @@ button:focus-visible {
 
 .t-avatar-group {
   min-height: 0;
+  overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior: contain;
+  overscroll-behavior-x: none;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
   scrollbar-color: rgba(87, 93, 97, 0.55) transparent;
