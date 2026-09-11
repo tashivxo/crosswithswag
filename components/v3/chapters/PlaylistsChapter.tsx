@@ -1,5 +1,6 @@
 import { Reveal } from "@/components/v3/Reveal";
 import { PlaylistBlock } from "@/components/v3/PlaylistBlock";
+import { PlaylistCurators } from "@/components/v3/PlaylistCurators";
 import { playlistsPage } from "@/lib/copy";
 import { playlists } from "@/lib/playlists";
 
@@ -28,6 +29,8 @@ export function PlaylistsChapter() {
           ))}
         </Reveal>
       </section>
+
+      <PlaylistCurators />
     </section>
   );
 }

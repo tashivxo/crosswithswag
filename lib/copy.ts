@@ -262,6 +262,10 @@ export const playlistsPage = {
   label: "[ playlists ]",
   display: ["THE MIX."],
   intro: "3 playlists. from our curators, 2 u",
+  curators: {
+    label: "[ curators ]",
+    lab: "curators.lab",
+  },
 };
 
 export const footer = {

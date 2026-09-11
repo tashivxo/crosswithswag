@@ -3,6 +3,11 @@ export type PlaylistSlug =
   | "stepwithswag"
   | "freefallwithswag";
 
+export type PlaylistCurator = {
+  handle: string;
+  href: string;
+};
+
 export type Playlist = {
   slug: PlaylistSlug;
   title: string;
@@ -10,11 +15,19 @@ export type Playlist = {
   spotifyId: string | null;
   spotifyUrl: string | null;
   cover: string | null;
+  curators: PlaylistCurator[];
 };
 
 const SPOTIFY_EMBED_BASE = "https://open.spotify.com/embed/playlist";
 const SPOTIFY_PAGE_BASE = "https://open.spotify.com/playlist";
 const COVER_REVALIDATE_SECONDS = 60 * 60 * 24;
+
+function instagramCurator(handleWithoutAt: string): PlaylistCurator {
+  return {
+    handle: `@${handleWithoutAt}`,
+    href: `https://www.instagram.com/${handleWithoutAt}/`,
+  };
+}
 
 export const playlists: Playlist[] = [
   {
@@ -25,6 +38,10 @@ export const playlists: Playlist[] = [
     spotifyId: "76e1Mn0Lig2WiNqkAXeSWQ",
     spotifyUrl: "https://open.spotify.com/playlist/76e1Mn0Lig2WiNqkAXeSWQ",
     cover: "/assets/playlists/dalawithswag.jpg",
+    curators: [
+      instagramCurator("tashivxo"),
+      instagramCurator("t8rsten"),
+    ],
   },
   {
     slug: "stepwithswag",
@@ -34,6 +51,10 @@ export const playlists: Playlist[] = [
     spotifyId: "4r8rIbGWFwOzAyRG2rUtUZ",
     spotifyUrl: "https://open.spotify.com/playlist/4r8rIbGWFwOzAyRG2rUtUZ",
     cover: null,
+    curators: [
+      instagramCurator("vustarrr"),
+      instagramCurator("windows.ocean2001"),
+    ],
   },
   {
     slug: "freefallwithswag",
@@ -43,6 +64,10 @@ export const playlists: Playlist[] = [
     spotifyId: "3ShE7C9FsLA8Rk2bW4hz8C",
     spotifyUrl: "https://open.spotify.com/playlist/3ShE7C9FsLA8Rk2bW4hz8C",
     cover: "/assets/playlists/freefallwithswag.jpg",
+    curators: [
+      instagramCurator("chinglaania"),
+      instagramCurator("tarasabali"),
+    ],
   },
 ];
 
