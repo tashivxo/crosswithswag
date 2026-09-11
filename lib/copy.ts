@@ -283,6 +283,6 @@ export const footer = {
   meta: [
     "WEARABLE EDITIONS — CAPE TOWN",
     "GRISEUS REGIUS (PTY) LTD 2026",
-    "V3.2.2",
+    "V3.3.0",
   ],
 };

@@ -153,13 +153,13 @@ Square. Radius is `0`. Rules are 1px. Colourway chips are the exception (swatche
 
 ### Navigation
 - Fixed header: filled wordmark mask (`SWAG_mark_fill.svg`, hero scale on `/` only, dock width on inner routes) + MENU.
-- MENU stays visible while scrolling (immediately on inner routes; fades in on Home scroll). Overlay is a full-viewport Void panel (`t-panel-slide`). Chapter labels grow from origin on hover (`t-avatar`). Routes: `/`, `/current`, `/archive`, `/manifesto`, `/contact` on `aug-2026-website-update`.
+- MENU stays visible while scrolling (immediately on inner routes; fades in on Home scroll). Overlay is a full-viewport Void panel (`t-panel-slide`). Chapter labels grow from origin on hover (`t-avatar`). Routes: `/`, `/current`, `/archive`, `/manifesto`, `/playlists`, `/contact`.
 
 ### Wordmark
 - Masked fill SVG (`SWAG_mark_fill.svg`, Frame_6 path without micro-text, aspect `1.426685`), laid out at `--wordmark-hero-width` on Home only. Centres in the hero at scale 1. Docks by scaling down to `--wordmark-dock-width` (`clamp(88px, 11vw, 120px)`) over the first intro viewport on Home — never scale the mask up. Inner routes start docked. Header height follows the production dock box, not the hero mark.
 
 ### Footer (V3.1)
-- Filled wordmark mask at `clamp(160px, 22vw, 280px)`, tagline `CROSS WITH SWAG`, editions/info link columns, meta bar `WEARABLE EDITIONS — CAPE TOWN` / `GRISEUS REGIUS (PTY) LTD 2026` / `V3.2.2`. On every route.
+- Filled wordmark mask at `clamp(160px, 22vw, 280px)`, tagline `CROSS WITH SWAG`, editions/info link columns, meta bar `WEARABLE EDITIONS — CAPE TOWN` / `GRISEUS REGIUS (PTY) LTD 2026` / `V3.3.0`. On every route.
 
 ## Do's and Don'ts
 

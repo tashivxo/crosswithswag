@@ -87,7 +87,7 @@ Six App Router routes with shared `SiteChrome` (preloader, header, footer).
 - Wordmark mask `SWAG_mark_fill.svg`, dock `clamp(88px, 11vw, 120px)`, aspect `1.426685` (production header padding; no micro-text).
 - Home: hero wordmark scrub against `#home-intro`. Inner routes: `mode="docked"` — no ScrollTrigger, mark seated immediately.
 - MENU overlay stays; it lists home, current, order (Jotform, new tab), archive, manifesto, playlists, and contact. No inline header chapter links.
-- Shared Figma footer on every route (filled wordmark mask + `CROSS WITH SWAG` tagline). Meta bar includes `V3.2.2` as of V3.2.2.
+- Shared Figma footer on every route (filled wordmark mask + `CROSS WITH SWAG` tagline). Meta bar includes `V3.3.0`.
 - Preloader once per browser session (`swag:preloader-seen`); layout persists across client navigations.
 
 ## Locked Structure (V2 on `v2-production-freeze`)
@@ -241,7 +241,7 @@ Vercel Authentication is disabled so public URLs are viewable. Leave that as-is 
 | **V3.1 Figma restyle** | ✅ PRODUCTION | Marcus August 2026 WEBSITE reworkings: five routes, filled SVG wordmark, docked landing fold, two-up colourways, kloofstreetnights 8-look clothes grid. Merged to `main` at `0d84e8f`. |
 | **V3.2.0** | ✅ SHIPPED | Mobile wordmark dock smoothness (cached metrics, compositor hints, header line via `::after`) + footer version label `V3.2.0`. Five-route V3.1 architecture unchanged. |
 | **V3.2.2** | ✅ PRODUCTION | Current intake / Home mobile spacing, MENU overlay navigation reliability, Home MENU/wordmark lands on `#home-hero` (CROSS WITH SWAG) after the intro has been seen; `#home-intro` remains reverse-scroll only; footer label `V3.2.2`. |
-| **Playlists v1** | 🛠 THIS BRANCH | Sixth route `/playlists`. Spotify embeds only. No OAuth / Web Playback SDK / secrets. Footer still `V3.2.2`. |
+| **V3.3.0** | 🛠 THIS BRANCH | Sixth route `/playlists`. Spotify embeds, curator credits, local covers. No OAuth / Web Playback SDK / secrets. Footer `V3.3.0`. |
 
 ## Open Questions for Marcus
 

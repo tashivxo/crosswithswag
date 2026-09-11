@@ -21,7 +21,8 @@ function PlaylistCover({
           src={src}
           alt={`${title} playlist cover`}
           fill
-          sizes="(max-width: 768px) 100vw, 352px"
+          quality={90}
+          sizes="(max-width: 768px) 100vw, 1200px"
         />
       </div>
     );

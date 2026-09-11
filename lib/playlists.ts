@@ -50,7 +50,7 @@ export const playlists: Playlist[] = [
       "Confident, pregame energy, hip hop, hot club energy. Amapiano, afrobeats, hip-hop, gqom. Sounds of South Ah.",
     spotifyId: "4r8rIbGWFwOzAyRG2rUtUZ",
     spotifyUrl: "https://open.spotify.com/playlist/4r8rIbGWFwOzAyRG2rUtUZ",
-    cover: null,
+    cover: "/assets/playlists/stepwithswag.jpg",
     curators: [
       instagramCurator("vustarrr"),
       instagramCurator("windows.ocean2001"),

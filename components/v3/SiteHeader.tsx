@@ -313,6 +313,7 @@ export function SiteHeader({
         <div
           ref={groupRef}
           className="t-avatar-group"
+          data-lenis-prevent
           onMouseLeave={() => setMenuShifts(groupRef.current, null, "out")}
         >
           {navItems.map((item, index) => {

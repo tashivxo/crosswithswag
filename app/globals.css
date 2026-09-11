@@ -733,9 +733,26 @@ button:focus-visible {
   z-index: 150;
   background: var(--void);
   padding: var(--gut);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  overflow: hidden;
+}
+
+.t-avatar-group {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(87, 93, 97, 0.55) transparent;
+}
+
+.t-avatar-group::-webkit-scrollbar {
+  width: 3px;
+}
+
+.t-avatar-group::-webkit-scrollbar-thumb {
+  background: rgba(87, 93, 97, 0.55);
 }
 
 #menu a.mi {
