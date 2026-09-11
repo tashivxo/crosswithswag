@@ -19,27 +19,30 @@ const COVER_REVALIDATE_SECONDS = 60 * 60 * 24;
 export const playlists: Playlist[] = [
   {
     slug: "dalawithswag",
-    title: "Dala with Swag",
-    description: "the working mix. what plays while the edition is being made.",
+    title: "dalawithswag.",
+    description:
+      "for the lock in sessions. Hip Hop, Indie, Lofi, 3 step, house, edm, afrotech",
     spotifyId: "76e1Mn0Lig2WiNqkAXeSWQ",
     spotifyUrl: "https://open.spotify.com/playlist/76e1Mn0Lig2WiNqkAXeSWQ",
-    cover: null,
+    cover: "/assets/playlists/dalawithswag.jpg",
   },
   {
     slug: "stepwithswag",
-    title: "Step with Swag",
-    description: "movement first. a list for walking the city.",
+    title: "stepwithswag.",
+    description:
+      "Confident, pregame energy, hip hop, hot club energy. Amapiano, afrobeats, hip-hop, gqom. Sounds of South Ah.",
     spotifyId: "4r8rIbGWFwOzAyRG2rUtUZ",
     spotifyUrl: "https://open.spotify.com/playlist/4r8rIbGWFwOzAyRG2rUtUZ",
     cover: null,
   },
   {
     slug: "freefallwithswag",
-    title: "Freefall with Swag",
-    description: "the drop. no plan, just the fall.",
+    title: "freefallwithswag.",
+    description:
+      "the drop. no plan, just the fall. Chill. Decompression, warmth. Neo-soul, R&B, soft amapiano, downtempo.",
     spotifyId: "3ShE7C9FsLA8Rk2bW4hz8C",
     spotifyUrl: "https://open.spotify.com/playlist/3ShE7C9FsLA8Rk2bW4hz8C",
-    cover: null,
+    cover: "/assets/playlists/freefallwithswag.jpg",
   },
 ];
 

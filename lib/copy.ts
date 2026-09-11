@@ -261,7 +261,7 @@ export const contact = {
 export const playlistsPage = {
   label: "[ playlists ]",
   display: ["THE MIX."],
-  intro: "three lists. press play. the mix lives on spotify.",
+  intro: "3 playlists. from our curators, 2 u",
 };
 
 export const footer = {
