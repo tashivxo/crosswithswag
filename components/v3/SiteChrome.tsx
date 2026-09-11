@@ -13,22 +13,9 @@ import {
   queueRouteScroll,
   restoreRouteScroll,
 } from "@/lib/home-scroll";
+import { hashRoutes, normalizePath } from "@/lib/sections.config";
 
 gsap.registerPlugin(ScrollTrigger);
-
-const HASH_ROUTES: Record<string, string> = {
-  "#current": "/current",
-  "#archive": "/archive",
-  "#manifesto": "/manifesto",
-  "#playlists": "/playlists",
-  "#contact": "/contact",
-  "#home": "/",
-};
-
-function normalizePath(path: string) {
-  if (path === "/") return "/";
-  return path.replace(/\/$/, "");
-}
 
 export function SiteChrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -87,14 +74,10 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
     const hash = window.location.hash;
     if (!hash) return;
 
-    const target = HASH_ROUTES[hash];
+    const target = hashRoutes[hash];
     if (!target) return;
 
-    if (target === "/") {
-      router.replace("/", { scroll: false });
-    } else {
-      router.replace(target, { scroll: false });
-    }
+    router.replace(target, { scroll: false });
   }, [pathname, router]);
 
   const mode = normalizePath(pathname) === "/" ? "hero" : "docked";

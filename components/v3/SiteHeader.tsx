@@ -16,7 +16,7 @@ import {
   queueRouteScroll,
   scrollToHomeLanding,
 } from "@/lib/home-scroll";
-import { navItems } from "@/lib/sections.config";
+import { navItems, normalizePath } from "@/lib/sections.config";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -69,11 +69,6 @@ function setMenuShifts(
       i === activeIdx ? String(scale) : "1",
     );
   });
-}
-
-function normalizePath(path: string) {
-  if (path === "/") return "/";
-  return path.replace(/\/$/, "");
 }
 
 export function SiteHeader({

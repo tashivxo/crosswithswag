@@ -34,13 +34,8 @@ export function LenisProvider({ children }: { children: ReactNode }) {
 
     setLenis(lenis);
 
-    lenis.on("scroll", (event) => {
+    lenis.on("scroll", () => {
       ScrollTrigger.update();
-      window.dispatchEvent(
-        new CustomEvent("swag:scroll", {
-          detail: { scroll: event.scroll, direction: event.direction },
-        }),
-      );
     });
 
     ScrollTrigger.refresh();

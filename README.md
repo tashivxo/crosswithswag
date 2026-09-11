@@ -32,12 +32,10 @@ Edit `lib/playlists.ts` and add an entry to the `playlists` array:
 - `title` - display name
 - `description` - one short line under the title
 - `spotifyId` - Spotify playlist id, or `null` for coming soon
-- `spotifyUrl` - canonical `open.spotify.com` url, or `null`
-- `cover` - optional local path such as `/assets/playlists/dala.jpg`
+- `cover` - local path such as `/assets/playlists/dalawithswag.jpg`, or `null` for the typographic fallback
+- `curators` - Instagram handles for the curator row
 
-Cover order: local `cover` wins, then Spotify oEmbed (`https://open.spotify.com/oembed?url=…`, revalidated, no client secret), then a typographic Void Black title if both fail.
-
-Set `spotifyId` to `null` to keep the coming-soon path (no iframe, no open-in-spotify link). All three v1 lists are live.
+Embed and open-in-spotify URLs are derived from `spotifyId`. Set `spotifyId` to `null` to keep the coming-soon path. All three v1 lists are live.
 
 ## Out of scope (v2)
 

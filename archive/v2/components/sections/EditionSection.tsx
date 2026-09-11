@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { SectionConfig } from "@/lib/sections.config";
+import { SectionConfig } from "@/archive/v2/lib/section-config";
 import { edition } from "@/archive/v2/lib/copy.v2";
 import { SectionShell } from "@/archive/v2/components/sections/SectionShell";
 import { CtaLink } from "@/components/ui/CtaLink";

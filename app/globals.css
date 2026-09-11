@@ -464,13 +464,6 @@ button:focus-visible {
   margin-bottom: clamp(28px, 4vw, 44px);
 }
 
-.playlist-curators-lab {
-  margin-top: 14px;
-  font-size: 13px;
-  color: var(--stone);
-  letter-spacing: 0.04em;
-}
-
 .playlist-curators {
   border-top: 1px solid var(--line);
 }

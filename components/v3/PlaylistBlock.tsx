@@ -1,19 +1,12 @@
 import Image from "next/image";
 import {
-  getPlaylistCoverUrl,
   getPlaylistEmbedUrl,
   getPlaylistPageUrl,
   isPlaylistLive,
   type Playlist,
 } from "@/lib/playlists";
 
-function PlaylistCover({
-  title,
-  src,
-}: {
-  title: string;
-  src: string | null;
-}) {
+function PlaylistCover({ title, src }: { title: string; src: string | null }) {
   if (src) {
     return (
       <div className="playlist-cover">
@@ -35,8 +28,7 @@ function PlaylistCover({
   );
 }
 
-export async function PlaylistBlock({ playlist }: { playlist: Playlist }) {
-  const coverSrc = await getPlaylistCoverUrl(playlist);
+export function PlaylistBlock({ playlist }: { playlist: Playlist }) {
   const pageUrl = getPlaylistPageUrl(playlist);
   const live = isPlaylistLive(playlist);
 
@@ -46,7 +38,7 @@ export async function PlaylistBlock({ playlist }: { playlist: Playlist }) {
       <p className="body-copy voice playlist-desc">{playlist.description}</p>
 
       <div className="playlist-media">
-        <PlaylistCover title={playlist.title} src={coverSrc} />
+        <PlaylistCover title={playlist.title} src={playlist.cover} />
 
         {live ? (
           <div className="playlist-embed" data-lenis-prevent>

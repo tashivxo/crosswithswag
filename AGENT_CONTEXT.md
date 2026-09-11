@@ -125,11 +125,11 @@ Confirmed colour sequence:
 
 ## Current Implementation Files (V3 production on `main`)
 
-- `app/page.tsx` — five scroll chapters + preloader, header, footer (single-page)
+- `app/(gallery)/*` — six-route gallery (Home, Current, Archive, Manifesto, Playlists, Contact)
 - `app/globals.css` — V3 typographic system (SAND primary text per Figma handoff)
 - `components/v3/*` — chapter components, header, wordmark drift/dock, ticker, reveal
 
-## Current Implementation Files (V3.1 on `aug-2026-website-update`)
+## Current Implementation Files (V3.1 six-route gallery)
 
 - `app/(gallery)/layout.tsx` — wraps routes with `SiteChrome`
 - `app/(gallery)/template.tsx` — remounts per chapter; wraps content in `ChapterTransition`
@@ -143,8 +143,8 @@ Confirmed colour sequence:
 - `components/ui/*` — shared wordmark / watermark primitives
 - `lib/copy.ts` — V3 copy
 - `lib/editions.ts` — edition data (archive, colourways, campaign vs clothes artboards)
-- `lib/playlists.ts` — playlist data, embed URL helper, optional Spotify oEmbed cover fetch
-- `lib/sections.config.ts` — six chapter ids and nav config
+- `lib/playlists.ts` — playlist data; embed/page URLs derived from `spotifyId`
+- `lib/sections.config.ts` — six chapter ids, head ids, hash redirects, and nav config
 - `public/assets/` — web-served fill wordmark PNG + winter-drop JPGs + clean SVGs (SVG masters only)
 - `marcus-assets/` — Marcus Figma/export masters (svg + winter-drop; not served)
 - `cursor.md/v3/` — Marcus handover attachments (HTML + engineering handoff)
@@ -164,7 +164,7 @@ On **`v2-production-freeze`**, V2 lives under `components/sections/*` and `compo
 - `components/sections/*` / `archive/v2/components/sections/*` — eight V2 section components.
 - `components/ui/*` — wordmark, bleed display, CTA, section shell utilities.
 - `lib/design-tokens.ts` — TypeScript token source.
-- `lib/tokens.css` — CSS token source.
+- `lib/tokens.css` — unused V2 token sheet (not imported by the live layout). Live CSS tokens live in `app/globals.css`.
 - `lib/copy.ts` (on `v2-production-freeze`) / `archive/v2/lib/copy.v2.ts` (on `main`) — V2 whiteboard copy.
 - `lib/sections.config.ts` — section sequence and colour configuration (V3 chapters on `main`).
 - `lib/motion.config.ts` — motion constants.

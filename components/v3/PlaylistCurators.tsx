@@ -7,7 +7,6 @@ export function PlaylistCurators() {
     <section className="wrap pad-sm playlist-curators-section">
       <div className="playlist-curators-head">
         <span className="lbl">{playlistsPage.curators.label}</span>
-        <p className="voice playlist-curators-lab">{playlistsPage.curators.lab}</p>
       </div>
 
       <Reveal className="playlist-curators">

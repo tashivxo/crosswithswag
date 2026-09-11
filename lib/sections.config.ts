@@ -15,6 +15,7 @@ export type ChapterConfig = {
   navLabel: string;
   title: string;
   path: string;
+  headId: string;
   background: string;
   foreground: string;
 };
@@ -26,24 +27,10 @@ export type NavItem = {
   external?: boolean;
 };
 
-/** @deprecated V2 section shell type — legacy components only */
-export type SectionTone = "dark" | "light";
-
-/** @deprecated V2 section shell type — legacy components only */
-export type SectionConfig = {
-  id: string;
-  index: number;
-  title: string;
-  background: string;
-  foreground: string;
-  tone: SectionTone;
-  label?: string;
-  bleedWord?: string;
-  displayHeadline?: string;
-  ghost?: string;
-  statements?: readonly string[];
-  interactive?: boolean;
-};
+export function normalizePath(path: string): string {
+  if (path === "/") return "/";
+  return path.replace(/\/$/, "");
+}
 
 export const chapters: ChapterConfig[] = [
   {
@@ -52,6 +39,7 @@ export const chapters: ChapterConfig[] = [
     navLabel: "home",
     title: "Home",
     path: "/",
+    headId: "home-hero",
     background: colors.voidBlack,
     foreground: colors.mutedSand,
   },
@@ -61,6 +49,7 @@ export const chapters: ChapterConfig[] = [
     navLabel: "current",
     title: "Current edition",
     path: "/current",
+    headId: "current-head",
     background: colors.voidBlack,
     foreground: colors.mutedSand,
   },
@@ -70,6 +59,7 @@ export const chapters: ChapterConfig[] = [
     navLabel: "archive",
     title: "Archive",
     path: "/archive",
+    headId: "archive",
     background: colors.voidBlack,
     foreground: colors.mutedSand,
   },
@@ -79,6 +69,7 @@ export const chapters: ChapterConfig[] = [
     navLabel: "manifesto",
     title: "Manifesto",
     path: "/manifesto",
+    headId: "manifesto",
     background: colors.voidBlack,
     foreground: colors.mutedSand,
   },
@@ -88,6 +79,7 @@ export const chapters: ChapterConfig[] = [
     navLabel: "playlists",
     title: "Playlists",
     path: "/playlists",
+    headId: "playlists",
     background: colors.voidBlack,
     foreground: colors.mutedSand,
   },
@@ -97,12 +89,15 @@ export const chapters: ChapterConfig[] = [
     navLabel: "contact",
     title: "Contact",
     path: "/contact",
+    headId: "contact",
     background: colors.voidBlack,
     foreground: colors.mutedSand,
   },
 ];
 
-export const navChapters = chapters;
+export const hashRoutes: Record<string, string> = Object.fromEntries(
+  chapters.map((chapter) => [`#${chapter.id}`, chapter.path]),
+);
 
 export const navItems: NavItem[] = chapters.flatMap((chapter) => {
   const item: NavItem = {
@@ -125,6 +120,14 @@ export const navItems: NavItem[] = chapters.flatMap((chapter) => {
 });
 
 export function chapterByPath(path: string): ChapterConfig | undefined {
-  const normalized = path === "/" ? "/" : path.replace(/\/$/, "");
+  const normalized = normalizePath(path);
   return chapters.find((chapter) => chapter.path === normalized);
+}
+
+const chaptersById = Object.fromEntries(
+  chapters.map((chapter) => [chapter.id, chapter]),
+) as Record<ChapterId, ChapterConfig>;
+
+export function chapterById(id: ChapterId): ChapterConfig {
+  return chaptersById[id];
 }

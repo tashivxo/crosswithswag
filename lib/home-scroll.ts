@@ -1,15 +1,7 @@
 import { getLenis } from "@/lib/lenis";
+import { chapterByPath } from "@/lib/sections.config";
 
 export const HOME_INTRO_SEEN_KEY = "swag:home-intro-seen";
-
-const CHAPTER_HEAD_IDS: Record<string, string> = {
-  "/": "home-hero",
-  "/current": "current-head",
-  "/archive": "archive",
-  "/manifesto": "manifesto",
-  "/playlists": "playlists",
-  "/contact": "contact",
-};
 
 const RESTORE_DELAYS_MS = [0, 50, 220, 360];
 
@@ -38,12 +30,6 @@ export function markHomeIntroSeen(): void {
 
 function elementDocumentY(element: HTMLElement): number {
   return element.getBoundingClientRect().top + window.scrollY;
-}
-
-export function homeLandingY(): number {
-  const hero = document.getElementById("home-hero");
-  if (!hero) return 0;
-  return elementDocumentY(hero);
 }
 
 function hardScrollTo(y: number): void {
@@ -97,9 +83,9 @@ export function scrollToHomeLanding(options?: { immediate?: boolean }): void {
 }
 
 function chapterHeadElement(path: string): HTMLElement | null {
-  const id = CHAPTER_HEAD_IDS[path];
-  if (id) {
-    const named = document.getElementById(id);
+  const chapter = chapterByPath(path);
+  if (chapter) {
+    const named = document.getElementById(chapter.headId);
     if (named) return named;
   }
 
@@ -108,10 +94,10 @@ function chapterHeadElement(path: string): HTMLElement | null {
 }
 
 export function restoreRouteScroll(path: string): void {
-  const normalized = path === "/" ? "/" : path.replace(/\/$/, "");
+  const chapter = chapterByPath(path);
   const reduceMotion = prefersReducedMotion();
 
-  if (normalized === "/") {
+  if (chapter?.id === "home") {
     if (isHomeIntroSeen() || reduceMotion) {
       scrollToHomeLanding({ immediate: true });
     } else {
@@ -121,7 +107,7 @@ export function restoreRouteScroll(path: string): void {
   }
 
   scrollPageTo(0, { immediate: true });
-  const head = chapterHeadElement(normalized);
+  const head = chapterHeadElement(path);
   if (head) {
     head.scrollIntoView({ block: "start", behavior: "auto" });
     hardScrollTo(Math.max(0, elementDocumentY(head)));
@@ -156,15 +142,4 @@ export function queueRouteScroll(path: string): () => void {
   );
 
   return cancelRouteScroll;
-}
-
-export function scrollToChapterHead(path: string): void {
-  const normalized = path === "/" ? "/" : path.replace(/\/$/, "");
-
-  if (normalized === "/") {
-    scrollToHomeLanding({ immediate: true });
-    return;
-  }
-
-  restoreRouteScroll(normalized);
 }

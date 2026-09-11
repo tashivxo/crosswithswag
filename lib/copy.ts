@@ -264,7 +264,6 @@ export const playlistsPage = {
   intro: "3 playlists. from our curators, 2 u",
   curators: {
     label: "[ curators ]",
-    lab: "curators.lab",
   },
 };
 

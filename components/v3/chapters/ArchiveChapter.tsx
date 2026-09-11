@@ -2,6 +2,9 @@ import { Reveal } from "@/components/v3/Reveal";
 import { EditionRow } from "@/components/v3/EditionRow";
 import { archive } from "@/lib/copy";
 import { editions } from "@/lib/editions";
+import { chapterById } from "@/lib/sections.config";
+
+const currentPath = chapterById("current").path;
 
 export function ArchiveChapter() {
   return (
@@ -27,7 +30,7 @@ export function ArchiveChapter() {
             <EditionRow
               key={edition.no}
               edition={edition}
-              href={edition.no === "001" ? "/current" : undefined}
+              href={edition.no === "001" ? currentPath : undefined}
             />
           ))}
         </Reveal>

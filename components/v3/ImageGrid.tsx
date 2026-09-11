@@ -35,12 +35,10 @@ export function CampaignFrame({
 
 export function ImageGrid({
   artboards,
-  columns = 4,
   variant = "clothes",
   editionName = currentEdition.name,
 }: {
   artboards: readonly number[];
-  columns?: number;
   variant?: "clothes" | "campaign";
   editionName?: string;
 }) {
@@ -51,14 +49,7 @@ export function ImageGrid({
       : "(max-width: 768px) 50vw, 25vw";
 
   return (
-    <div
-      className={gridClass}
-      style={
-        variant === "clothes" && columns === 3
-          ? { gridTemplateColumns: "repeat(3, 1fr)" }
-          : undefined
-      }
-    >
+    <div className={gridClass}>
       {artboards.map((artboard) => (
         <CampaignFrame
           key={artboard}

@@ -49,7 +49,7 @@ WHAT V1 ALREADY SHIPPED (do not rebuild)
      id: 3ShE7C9FsLA8Rk2bW4hz8C
      url: https://open.spotify.com/playlist/3ShE7C9FsLA8Rk2bW4hz8C
 
-- Cover: local override → Spotify public oEmbed → typographic fallback
+- Cover: local asset, or a typographic Void Black title if `cover` is null
 - Coming-soon path exists when spotifyId is null
 - Official Spotify iframe embeds (theme=0), open-in-spotify text links
 - No API keys, no OAuth, no client secrets in v1

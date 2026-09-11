@@ -1,4 +1,4 @@
-import { SectionConfig } from "@/lib/sections.config";
+import { SectionConfig } from "@/archive/v2/lib/section-config";
 import { hero } from "@/archive/v2/lib/copy.v2";
 import { SectionShell } from "@/archive/v2/components/sections/SectionShell";
 import { Reveal } from "@/archive/v2/components/motion/Reveal";

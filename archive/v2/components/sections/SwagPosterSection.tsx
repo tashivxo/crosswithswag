@@ -1,4 +1,4 @@
-import { SectionConfig } from "@/lib/sections.config";
+import { SectionConfig } from "@/archive/v2/lib/section-config";
 import { BleedDisplay } from "@/components/ui/BleedDisplay";
 import { SectionShell } from "@/archive/v2/components/sections/SectionShell";
 import { Reveal } from "@/archive/v2/components/motion/Reveal";

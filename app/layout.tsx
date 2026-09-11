@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Instrument_Sans } from "next/font/google";
-import "@/lib/tokens.css";
 import "./globals.css";
 import { LenisProvider } from "@/components/providers/LenisProvider";
 import { meta } from "@/lib/copy";

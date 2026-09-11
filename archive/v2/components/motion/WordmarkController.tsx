@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Wordmark } from "@/components/ui/Wordmark";
-import type { SectionConfig } from "@/lib/sections.config";
+import type { SectionConfig } from "@/archive/v2/lib/section-config";
 import { colors } from "@/lib/design-tokens";
 
 gsap.registerPlugin(ScrollTrigger);

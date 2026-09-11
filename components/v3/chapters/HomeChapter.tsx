@@ -7,12 +7,12 @@ import { CampaignFrame, ImageGrid } from "@/components/v3/ImageGrid";
 import { EditionRow } from "@/components/v3/EditionRow";
 import { home } from "@/lib/copy";
 import { clothesArtboards, editions } from "@/lib/editions";
-import { chapters } from "@/lib/sections.config";
+import { chapterById } from "@/lib/sections.config";
 
-const homeChapter = chapters.find((chapter) => chapter.id === "home")!;
-const currentPath = chapters.find((chapter) => chapter.id === "current")!.path;
-const archivePath = chapters.find((chapter) => chapter.id === "archive")!.path;
-const manifestoPath = chapters.find((chapter) => chapter.id === "manifesto")!.path;
+const homeChapter = chapterById("home");
+const currentPath = chapterById("current").path;
+const archivePath = chapterById("archive").path;
+const manifestoPath = chapterById("manifesto").path;
 const [crossLine, withLine, swagLine] = home.heroMark;
 
 export function HomeChapter() {
