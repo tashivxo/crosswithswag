@@ -8,7 +8,7 @@ export function ContactChapter() {
     <section id="contact" className="chapter">
       <section className="wrap page-head">
         <span className="lbl">[ contact ]</span>
-        <h1 className="display" style={{ marginTop: 18 }}>
+        <h1 className="display">
           {contact.display.map((line) => (
             <span key={line}>
               {line}
@@ -51,7 +51,7 @@ export function ContactChapter() {
         <Reveal className="join">
           <div>
             <span className="lbl">[ the list ]</span>
-            <h2 className="sect" style={{ marginTop: 18 }}>
+            <h2 className="sect">
               {contact.waitlist.title.map((line) => (
                 <span key={line}>
                   {line}
