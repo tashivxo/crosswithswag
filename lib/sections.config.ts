@@ -1,7 +1,13 @@
 import { current } from "@/lib/copy";
 import { colors } from "@/lib/design-tokens";
 
-export type ChapterId = "home" | "current" | "archive" | "manifesto" | "contact";
+export type ChapterId =
+  | "home"
+  | "current"
+  | "archive"
+  | "manifesto"
+  | "playlists"
+  | "contact";
 
 export type ChapterConfig = {
   id: ChapterId;
@@ -77,8 +83,17 @@ export const chapters: ChapterConfig[] = [
     foreground: colors.mutedSand,
   },
   {
-    id: "contact",
+    id: "playlists",
     index: 5,
+    navLabel: "playlists",
+    title: "Playlists",
+    path: "/playlists",
+    background: colors.voidBlack,
+    foreground: colors.mutedSand,
+  },
+  {
+    id: "contact",
+    index: 6,
     navLabel: "contact",
     title: "Contact",
     path: "/contact",

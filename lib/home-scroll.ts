@@ -7,6 +7,7 @@ const CHAPTER_HEAD_IDS: Record<string, string> = {
   "/current": "current-head",
   "/archive": "archive",
   "/manifesto": "manifesto",
+  "/playlists": "playlists",
   "/contact": "contact",
 };
 

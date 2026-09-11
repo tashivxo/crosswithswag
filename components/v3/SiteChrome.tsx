@@ -20,6 +20,7 @@ const HASH_ROUTES: Record<string, string> = {
   "#current": "/current",
   "#archive": "/archive",
   "#manifesto": "/manifesto",
+  "#playlists": "/playlists",
   "#contact": "/contact",
   "#home": "/",
 };

@@ -8,7 +8,7 @@ This is the live production site for `swag.`, a scroll-driven single-page brand 
 
 **Branch split (August 2026 cutover):**
 
-- **Production (`main`)** — V3.1 five-route gallery. Live at `https://crosswithswag.co.za` and `https://crosswithswag.vercel.app`. Marcus signed off this cutover (August 2026). Do not attach another custom domain.
+- **Production (`main`)** — V3.1 six-route gallery. Live at `https://crosswithswag.co.za` and `https://crosswithswag.vercel.app`. Marcus signed off this cutover (August 2026). Do not attach another custom domain.
 - **`aug-2026-website-update`** — branch that shipped V3.1; merged to `main` at `0d84e8f`. Keep for history; production is `main`.
 - **`v2-production-freeze`** — frozen snapshot of the pre-cutover V2 Canva whiteboard build (eight poster sections, commit `c18a1c5`). Reference-only for mining layouts, motion, and copy. Not production. Preview: `https://crosswithswag-git-v2-production-freeze-tashivxos-projects.vercel.app`.
 - **`swag_V3_new_branch`** — retained git history of the V3 rebuild. It is not a live preview line; production is `main`.
@@ -22,7 +22,7 @@ The repository is no longer docs/assets only. Phases 0–5 of the pre-sign-off p
 - Stitch handoff exists in `stitch/`.
 - Design token sources exist in `lib/`.
 - Next.js + TypeScript + Tailwind scaffold exists.
-- Five V3.1 routes render from `app/(gallery)/*` with shared `SiteChrome`. Production is this architecture on `main`.
+- Six V3.1 routes render from `app/(gallery)/*` with shared `SiteChrome`. Production is this architecture on `main`.
 - Lenis smooth scroll and GSAP reveal/wordmark infrastructure are wired.
 - Vercel production is live at the custom domain; Authentication is currently off.
 
@@ -54,15 +54,16 @@ The site should feel like a sequence of typographic posters, not a product landi
 
 ## Locked Structure (V3.1 on `main`)
 
-Five App Router routes with shared `SiteChrome` (preloader, header, footer). Marcus signed off; this is production.
+Six App Router routes with shared `SiteChrome` (preloader, header, footer). Marcus signed off the original five; `/playlists` is the sixth chapter (Spotify embeds only).
 
 1. **Home** (`/`) — first viewport is Figma overlay `214:119`/`214:124`: Void Black with the centered `swag.` mark only. On scroll the mark docks into the nav, MENU fades in, then the Landing hero (`204:53`) is a **two-line** CROSS / WITH SWAG lockup (WITH in Clay) at display size `clamp(44px, 11vw, 168px)`, with edition labels, wearable-editions intro, and **the current edition / the archive CTAs in that same docked viewport**. Home also carries Figma Landing teasers (ticker, current edition, structure, manifesto teaser, authority, clothes grid, archive rows, waitlist, closer). Do not use Figma’s inline CURRENT/ARCHIVE/MANIFESTO/CONTACT header links — MENU overlay stays. No ghost watermark.
 2. **Current edition** (`/current`) — kloofstreetnights campaign (artboards 1–3), **After Hours + First Light** colourways in a two-up poster grid (Figma `204:255`), spec, **8 looks / 8 prints** clothes (artboards 2, 3, 4, 6, 7, 8, 10, 11 — garment stills only; not first-edition CROSS.WITH.SWAG boards), director note
 3. **Archive** (`/archive`) — six editions, three rules (`atm` description: `all that matters.`); Figma `204:371` layout (no closer lockup)
 4. **Manifesto** (`/manifesto`) — OWE NOTHING opener, a home for individuals, the wound, authentic expression, authority, **The Full Manifesto**, Silent Warrior; Figma `204:462`
-5. **Contact** (`/contact`) — two-up email + Instagram cards, waitlist (Figma `204:548`)
+5. **Playlists** (`/playlists`) — THE MIX. Three stacked editorial Spotify embeds (Dala / Step / Freefall with Swag). Public iframe only; no OAuth, Web Playback SDK, or secrets. `spotifyId: null` keeps a coming-soon path.
+6. **Contact** (`/contact`) — two-up email + Instagram cards, waitlist (Figma `204:548`)
 
-Wordmark: lives in the header (not under a frosted bar). After the preloader, first paint is the large centered mark (`--wordmark-hero-width`, Figma overlay ~652 wide at 1440) on Void Black. On scroll it docks into the top-left nav slot by scaling down (`dock / hero`, never up). Docked size: `--wordmark-dock-width: clamp(88px, 11vw, 120px)` (do not use the Figma header’s 72×26 crop). Live mask is `public/assets/SWAG_mark_fill.svg` — filled `swag.` path from Frame_6 with the CROSS WITH SWAG micro-text removed. Aspect `--wordmark-aspect-ratio: 1.426685` (production header padding). Do not use `SWAG_logo_clean.svg` (stroke outline), `Frame_6_clean.svg` (bakes in the micro-text), or the Group 53 PNG as the hero mask (blurry when scaled). Header stays fixed with wordmark + MENU only (chapter links live in the overlay). **MENU chrome starts hidden after the preloader and fades/slides in as the wordmark docks.** MENU opens a panel-reveal overlay (home / current / order / archive / manifesto / contact) with hover-grow on the hovered chapter. `order` is a MENU action, not a route — it opens the kloofstreetnights Jotform in a new tab. The chapter in view is marked in Clay. MENU and CLOSE have a small bounce hover. Preloader can be skipped. Waitlist errors stay until the address is valid; `received` can be cleared. CROSS WITH SWAG is the second home poster, revealed as the intro scrolls away. Lenis + GSAP; `prefers-reduced-motion` collapses the intro, docks the mark, and shows MENU with no motion. Chapter navigations (MENU, logo, in-page CTAs, footer) use a 200ms opacity + 8px + 3px-blur View Transition on chapter content; header and MENU stay anchored; MENU home and the wordmark home control land on `#home-hero` once the intro has been seen this session (`swag:home-intro-seen`). First visit still plays `#home-intro`. Reverse scroll still reveals the large mark. Forced scroll-to-top on `/` return visits is gone.
+Wordmark: lives in the header (not under a frosted bar). After the preloader, first paint is the large centered mark (`--wordmark-hero-width`, Figma overlay ~652 wide at 1440) on Void Black. On scroll it docks into the top-left nav slot by scaling down (`dock / hero`, never up). Docked size: `--wordmark-dock-width: clamp(88px, 11vw, 120px)` (do not use the Figma header’s 72×26 crop). Live mask is `public/assets/SWAG_mark_fill.svg` — filled `swag.` path from Frame_6 with the CROSS WITH SWAG micro-text removed. Aspect `--wordmark-aspect-ratio: 1.426685` (production header padding). Do not use `SWAG_logo_clean.svg` (stroke outline), `Frame_6_clean.svg` (bakes in the micro-text), or the Group 53 PNG as the hero mask (blurry when scaled). Header stays fixed with wordmark + MENU only (chapter links live in the overlay). **MENU chrome starts hidden after the preloader and fades/slides in as the wordmark docks.** MENU opens a panel-reveal overlay (home / current / order / archive / manifesto / playlists / contact) with hover-grow on the hovered chapter. `order` is a MENU action, not a route — it opens the kloofstreetnights Jotform in a new tab. The chapter in view is marked in Clay. MENU and CLOSE have a small bounce hover. Preloader can be skipped. Waitlist errors stay until the address is valid; `received` can be cleared. CROSS WITH SWAG is the second home poster, revealed as the intro scrolls away. Lenis + GSAP; `prefers-reduced-motion` collapses the intro, docks the mark, and shows MENU with no motion. Chapter navigations (MENU, logo, in-page CTAs, footer) use a 200ms opacity + 8px + 3px-blur View Transition on chapter content; header and MENU stay anchored; MENU home and the wordmark home control land on `#home-hero` once the intro has been seen this session (`swag:home-intro-seen`). First visit still plays `#home-intro`. Reverse scroll still reveals the large mark. Forced scroll-to-top on `/` return visits is gone.
 
 August 2026 Figma source: file `5w6qUwhO5sLBhxJHsqfC0u`, WEBSITE page `204:42`. `order this edition` links to Jotform (`https://form.jotform.com/crosswithswag/order-kloofstreetnights`).
 
@@ -70,7 +71,7 @@ August 2026 Figma source: file `5w6qUwhO5sLBhxJHsqfC0u`, WEBSITE page `204:42`. 
 
 ## Locked Structure (V3.1 routes)
 
-Five App Router routes with shared `SiteChrome` (preloader, header, footer).
+Six App Router routes with shared `SiteChrome` (preloader, header, footer).
 
 | Route | Chapter | Notes |
 |-------|---------|-------|
@@ -78,13 +79,14 @@ Five App Router routes with shared `SiteChrome` (preloader, header, footer).
 | `/current` | Current edition | Wordmark docked immediately; kloofstreetnights `h1` |
 | `/archive` | Archive | Docked wordmark; `EVERY EDITION CLOSES.` as `h1` |
 | `/manifesto` | Manifesto | Docked wordmark; `OWE NOTHING.` opener as `h1` |
+| `/playlists` | Playlists | Docked wordmark; `THE MIX.` as `h1`; three Spotify embeds |
 | `/contact` | Contact | Docked wordmark; `NO PERMISSION NEEDED.` as `h1` |
 
 - `components/v3/SiteChrome.tsx` — client island: skip link, session preloader, header, `#content` wrapper, footer, hash redirect on `/`. Inner routes restore scroll to the chapter head (`#current-head` on Current) after MENU close / view transitions; `/` restores to `#home-hero` after the intro has been seen this session, otherwise to `#home-intro`. Manual `history.scrollRestoration` so iOS does not keep the previous offset.
 - `lib/sections.config.ts` — `path` per chapter drives nav/footer/CTA hrefs.
 - Wordmark mask `SWAG_mark_fill.svg`, dock `clamp(88px, 11vw, 120px)`, aspect `1.426685` (production header padding; no micro-text).
 - Home: hero wordmark scrub against `#home-intro`. Inner routes: `mode="docked"` — no ScrollTrigger, mark seated immediately.
-- MENU overlay stays; it lists home, current, order (Jotform, new tab), archive, manifesto, and contact. No inline header chapter links.
+- MENU overlay stays; it lists home, current, order (Jotform, new tab), archive, manifesto, playlists, and contact. No inline header chapter links.
 - Shared Figma footer on every route (filled wordmark mask + `CROSS WITH SWAG` tagline). Meta bar includes `V3.2.2` as of V3.2.2.
 - Preloader once per browser session (`swag:preloader-seen`); layout persists across client navigations.
 
@@ -132,14 +134,17 @@ Confirmed colour sequence:
 - `app/(gallery)/layout.tsx` — wraps routes with `SiteChrome`
 - `app/(gallery)/template.tsx` — remounts per chapter; wraps content in `ChapterTransition`
 - `app/(gallery)/page.tsx` — Home (`HomeChapter` with intro + long landing)
-- `app/(gallery)/current/page.tsx` etc. — inner chapter routes
+- `app/(gallery)/current/page.tsx` etc. — inner chapter routes including `/playlists`
 - `components/v3/SiteChrome.tsx` — shared client chrome island
 - `components/v3/ChapterTransition.tsx` — React `ViewTransition` wrapper for chapter enter/exit
+- `components/v3/PlaylistBlock.tsx` — editorial Spotify embed block
+- `components/v3/chapters/PlaylistsChapter.tsx` — Playlists chapter
 - `lib/lenis.ts` — module-level Lenis instance for scroll reset on route change
 - `components/ui/*` — shared wordmark / watermark primitives
 - `lib/copy.ts` — V3 copy
 - `lib/editions.ts` — edition data (archive, colourways, campaign vs clothes artboards)
-- `lib/sections.config.ts` — five chapter ids and nav config
+- `lib/playlists.ts` — playlist data, embed URL helper, optional Spotify oEmbed cover fetch
+- `lib/sections.config.ts` — six chapter ids and nav config
 - `public/assets/` — web-served fill wordmark PNG + winter-drop JPGs + clean SVGs (SVG masters only)
 - `marcus-assets/` — Marcus Figma/export masters (svg + winter-drop; not served)
 - `cursor.md/v3/` — Marcus handover attachments (HTML + engineering handoff)
@@ -236,6 +241,7 @@ Vercel Authentication is disabled so public URLs are viewable. Leave that as-is 
 | **V3.1 Figma restyle** | ✅ PRODUCTION | Marcus August 2026 WEBSITE reworkings: five routes, filled SVG wordmark, docked landing fold, two-up colourways, kloofstreetnights 8-look clothes grid. Merged to `main` at `0d84e8f`. |
 | **V3.2.0** | ✅ SHIPPED | Mobile wordmark dock smoothness (cached metrics, compositor hints, header line via `::after`) + footer version label `V3.2.0`. Five-route V3.1 architecture unchanged. |
 | **V3.2.2** | ✅ PRODUCTION | Current intake / Home mobile spacing, MENU overlay navigation reliability, Home MENU/wordmark lands on `#home-hero` (CROSS WITH SWAG) after the intro has been seen; `#home-intro` remains reverse-scroll only; footer label `V3.2.2`. |
+| **Playlists v1** | 🛠 THIS BRANCH | Sixth route `/playlists`. Spotify embeds only. No OAuth / Web Playback SDK / secrets. Footer still `V3.2.2`. |
 
 ## Open Questions for Marcus
 

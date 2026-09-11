@@ -67,7 +67,7 @@ npm run lint
 ## Current Architecture
 
 - `app/layout.tsx` - metadata shell and Lenis provider.
-- `app/(gallery)/*` - V3.1 five-route gallery (production on `main`).
+- `app/(gallery)/*` - V3.1 six-route gallery (production on `main`; `/playlists` added).
 - `components/v3/SiteChrome.tsx` - shared client chrome (preloader, header, footer, scroll reset).
 - `app/globals.css` - CSS variables and section composition styles.
 - `components/providers/LenisProvider.tsx` - Lenis smooth scroll.
@@ -75,6 +75,7 @@ npm run lint
 - `components/ui/*` - shared primitives (wordmark, watermark, CTA).
 - `lib/copy.ts` - V3 copy source of truth.
 - `lib/editions.ts` - edition / campaign data.
+- `lib/playlists.ts` - playlist / Spotify embed data.
 - `lib/sections.config.ts` - chapter order and colours.
 - `lib/motion.config.ts` - animation constants.
 - `public/assets/` - web-served fill wordmark, SVGs, and winter-drop imagery.

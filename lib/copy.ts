@@ -258,6 +258,12 @@ export const contact = {
   },
 };
 
+export const playlistsPage = {
+  label: "[ playlists ]",
+  display: ["THE MIX."],
+  intro: "three lists. press play. the mix lives on spotify.",
+};
+
 export const footer = {
   tagline: "CROSS WITH SWAG",
   editions: [
@@ -266,6 +272,7 @@ export const footer = {
   ],
   info: [
     { label: "manifesto", href: "/manifesto" },
+    { label: "playlists", href: "/playlists" },
     { label: "contact", href: "/contact" },
     { label: site.handle, href: site.instagramUrl, external: true },
   ],
