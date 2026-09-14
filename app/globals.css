@@ -1409,6 +1409,17 @@ button:focus-visible {
   margin-top: 32px;
 }
 
+#current .current-intake .btn {
+  font-size: 14px;
+  letter-spacing: 0.14em;
+  padding: 18px 32px;
+  min-height: 44px;
+}
+
+#current .current-intake__cue {
+  margin-top: 12px;
+}
+
 #current .current-spec {
   align-items: start;
 }
