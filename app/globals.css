@@ -1391,6 +1391,7 @@ button:focus-visible {
 #current .current-intro {
   border-top: 0;
   padding-top: 34px;
+  align-items: start;
 }
 
 #current .current-intake__copy {
@@ -1406,7 +1407,8 @@ button:focus-visible {
 }
 
 #current .current-intake .cta-row {
-  margin-top: 32px;
+  justify-self: start;
+  margin-top: 20px;
 }
 
 #current .current-intake .btn {
@@ -1417,7 +1419,8 @@ button:focus-visible {
 }
 
 #current .current-intake__cue {
-  margin-top: 12px;
+  margin-top: 0;
+  padding-top: 14px;
 }
 
 #current .current-spec {
