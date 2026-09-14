@@ -105,7 +105,8 @@ export const current = {
     "worn after the lights go down and before anyone's watching.",
     "heavy fabric. long shadows. the hours between leaving and arriving.",
   ],
-  intake: "no store front at the moment. orders go through the form.",
+  intake: "no store. orders go through the form.",
+  orderCue: "opens in a new tab",
   orderUrl: "https://form.jotform.com/crosswithswag/order-kloofstreetnights",
   orderSubject: "kloofstreetnights",
   clothesRightLabel: "8 looks / 8 prints",
@@ -282,6 +283,6 @@ export const footer = {
   meta: [
     "WEARABLE EDITIONS — CAPE TOWN",
     "GRISEUS REGIUS (PTY) LTD 2026",
-    "V3.3.0",
+    "V3.3.1",
   ],
 };
