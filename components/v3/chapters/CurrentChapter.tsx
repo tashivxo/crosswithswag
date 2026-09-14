@@ -41,6 +41,7 @@ export function CurrentChapter() {
                 order this edition
               </a>
             </div>
+            <p className="lbl current-intake__cue">{current.orderCue}</p>
           </div>
         </div>
       </section>
