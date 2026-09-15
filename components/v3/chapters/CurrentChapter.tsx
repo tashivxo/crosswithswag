@@ -37,10 +37,14 @@ export function CurrentChapter() {
                 href={current.orderUrl}
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-describedby="current-intake-cue"
               >
                 order this edition
               </a>
             </div>
+            <p id="current-intake-cue" className="lbl current-intake__cue">
+              {current.orderCue}
+            </p>
           </div>
         </div>
       </section>

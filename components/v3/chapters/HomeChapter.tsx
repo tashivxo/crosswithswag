@@ -126,7 +126,7 @@ export function HomeChapter() {
       <section className="wrap owe">
         <span className="lbl">[ 03 — the manifesto ]</span>
         <Reveal>
-          <h2 className="owe-mark" style={{ marginTop: 20 }}>
+          <h2 className="owe-mark">
             {home.manifestoTeaser.display.map((line) => (
               <span key={line}>
                 {line}
@@ -167,7 +167,7 @@ export function HomeChapter() {
         <Reveal className="feature" style={{ alignItems: "start" }}>
           <div>
             <span className="lbl">[ 04 — authority ]</span>
-            <h2 className="sect" style={{ marginTop: 18 }}>
+            <h2 className="sect">
               WHAT IS
               <br />
               SWAG?
@@ -235,7 +235,7 @@ export function HomeChapter() {
         <Reveal className="join">
           <div>
             <span className="lbl">[ 07 — the list ]</span>
-            <h2 className="sect" style={{ marginTop: 18 }}>
+            <h2 className="sect">
               {home.waitlist.title.map((line) => (
                 <span key={line}>
                   {line}
@@ -256,7 +256,7 @@ export function HomeChapter() {
       <section className="closer">
         <div className="wrap">
           <span className="lbl">{home.closer.label}</span>
-          <Reveal className="big" style={{ marginTop: 26 }}>
+          <Reveal className="big">
             {home.closer.display.map((line) => (
               <span key={line}>
                 {line}

@@ -7,7 +7,7 @@ export function ManifestoChapter() {
     <section id="manifesto" className="chapter">
       <section className="wrap page-head">
         <span className="lbl">[ the manifesto ]</span>
-        <h1 className="display" style={{ marginTop: 18 }}>
+        <h1 className="display">
           {manifesto.display.map((line) => (
             <span key={line}>
               {line}
@@ -136,7 +136,7 @@ export function ManifestoChapter() {
       <section className="closer">
         <div className="wrap">
           <span className="lbl">{manifesto.closer.label}</span>
-          <Reveal className="big" style={{ marginTop: 26 }}>
+          <Reveal className="big">
             {manifesto.closer.display.map((line) => (
               <span key={line}>
                 {line}

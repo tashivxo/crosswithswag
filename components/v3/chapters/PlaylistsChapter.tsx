@@ -9,7 +9,7 @@ export function PlaylistsChapter() {
     <section id="playlists" className="chapter">
       <section className="wrap page-head">
         <span className="lbl">{playlistsPage.label}</span>
-        <h1 className="display" style={{ marginTop: 18 }}>
+        <h1 className="display">
           {playlistsPage.display.map((line) => (
             <span key={line}>
               {line}

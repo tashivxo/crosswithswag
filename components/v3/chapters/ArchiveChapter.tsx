@@ -11,7 +11,7 @@ export function ArchiveChapter() {
     <section id="archive" className="chapter">
       <section className="wrap page-head">
         <span className="lbl">[ the archive ]</span>
-        <h1 className="display" style={{ marginTop: 18 }}>
+        <h1 className="display">
           {archive.display.map((line) => (
             <span key={line}>
               {line}

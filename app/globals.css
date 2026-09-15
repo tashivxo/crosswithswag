@@ -226,6 +226,8 @@ button:focus-visible {
   letter-spacing: -0.035em;
   text-transform: uppercase;
   font-size: clamp(44px, 11vw, 168px);
+  /* keep clay ::selection inside the heading box */
+  padding-top: 0.07em;
 }
 
 .sect {
@@ -234,6 +236,7 @@ button:focus-visible {
   letter-spacing: -0.03em;
   text-transform: uppercase;
   font-size: clamp(30px, 5.6vw, 76px);
+  padding-top: 0.04em;
 }
 
 .body-copy {
@@ -350,6 +353,28 @@ button:focus-visible {
   padding-top: calc(var(--header-height) + clamp(44px, 4vw, 56px));
   padding-bottom: clamp(36px, 6vw, 72px);
   border-bottom: 1px solid var(--line);
+}
+
+.page-head .lbl {
+  display: block;
+  position: relative;
+  z-index: 1;
+}
+
+.page-head .lbl + .display {
+  margin-top: 18px;
+}
+
+.lbl + .sect {
+  margin-top: 18px;
+}
+
+.owe > .lbl + .rv {
+  margin-top: 20px;
+}
+
+.closer .lbl + .rv {
+  margin-top: 26px;
 }
 
 .playlist-block {
@@ -1234,6 +1259,7 @@ button:focus-visible {
   letter-spacing: -0.04em;
   line-height: 0.86;
   font-size: clamp(52px, 13vw, 190px);
+  padding-top: 0.07em;
 }
 
 .manifesto-full {
@@ -1365,6 +1391,7 @@ button:focus-visible {
 #current .current-intro {
   border-top: 0;
   padding-top: 34px;
+  align-items: start;
 }
 
 #current .current-intake__copy {
@@ -1380,7 +1407,20 @@ button:focus-visible {
 }
 
 #current .current-intake .cta-row {
-  margin-top: 32px;
+  justify-self: start;
+  margin-top: 20px;
+}
+
+#current .current-intake .btn {
+  font-size: 14px;
+  letter-spacing: 0.14em;
+  padding: 18px 32px;
+  min-height: 44px;
+}
+
+#current .current-intake__cue {
+  margin-top: 0;
+  padding-top: 14px;
 }
 
 #current .current-spec {
@@ -1762,6 +1802,7 @@ button:focus-visible {
   letter-spacing: -0.04em;
   text-transform: uppercase;
   font-size: clamp(52px, 15vw, 210px);
+  padding-top: 0.09em;
 }
 
 .site-footer {

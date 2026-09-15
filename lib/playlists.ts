@@ -41,7 +41,7 @@ export const playlists: Playlist[] = [
     slug: "stepwithswag",
     title: "stepwithswag.",
     description:
-      "Confident, pregame energy, hip hop, hot club energy. Amapiano, afrobeats, hip-hop, gqom. Sounds of South Ah.",
+      "Confident, pregame vibes, hip hop, hot club energy. Amapiano, afrobeats, hip-hop, gqom. Sounds of South Ah.",
     spotifyId: "4r8rIbGWFwOzAyRG2rUtUZ",
     cover: "/assets/playlists/stepwithswag.jpg",
     curators: [
