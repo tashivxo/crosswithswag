@@ -28,6 +28,14 @@ The repository is no longer docs/assets only. Phases 0–5 of the pre-sign-off p
 
 Do not restart from a blank scaffold. Work with the current app.
 
+## V4 Planning
+
+Draft spec: `cursor.md/v4-spec.md` (Tashiv notes, Sep 2026). Production remains the V3.1 gallery plus Jotform. Do not implement cart, checkout, or payment keys on `main` until Marcus signs archive IA and the next edition structure.
+
+Tashiv-locked for that future branch: on-site browse → cart → order; kloofstreetnights closed into archive; a standard edition template from V4; Yoco and PayFast; shoot photography as required media.
+
+Marcus still owns: how previous drops exist, whether a previous-drop menu lives in archive or MENU, leftover stock on closed editions, and the next edition’s objects.
+
 ## Canonical Source Order
 
 1. `AGENT_CONTEXT.md` — current project state and agent rules.
@@ -37,8 +45,9 @@ Do not restart from a blank scaffold. Work with the current app.
 5. `cursor.md/marcus-signoff-checklist.md` — filled Marcus sign-off record.
 6. `cursor.md/marcus-review-packet.md` — review links and checklist.
 7. `cursor.md/swag_website_v1_prd.md` — older PRD. Background only.
+8. `cursor.md/v4-spec.md` — V4 commerce / archive draft. Planning only. Does not override live V3.1 until Marcus signs the archive and next-edition gates.
 
-Where newer docs conflict with the PRD, newer docs win. Where V2 whiteboard copy conflicts with `brand-copy.md`, `lib/copy.ts` wins.
+Where newer docs conflict with the PRD, newer docs win. Where V2 whiteboard copy conflicts with `brand-copy.md`, `lib/copy.ts` wins. V4 spec does not change production behaviour.
 
 ## Brand Direction
 
