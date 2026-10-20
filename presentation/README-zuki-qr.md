@@ -8,6 +8,8 @@
 
 Open the HTML in a browser to preview. Attendees need the **https** URL in the QR code (not a local `file://` path).
 
+Links on the page: website, Instagram, WhatsApp, Facebook, TikTok (`@crosswithswag`). Row icons are local PNGs under `presentation/icons/` (mirrored in `public/presentation/icons/`).
+
 ## QR for slides
 
 Use `presentation/swag-connect-qr.png` (points at the live URL above).
