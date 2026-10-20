@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#0A0A0A">
 <title>swag. — connect</title>
-<meta name="description" content="swag. — instagram, whatsapp, facebook, and the site.">
+<meta name="description" content="swag. — website, instagram, whatsapp, facebook, tiktok.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
@@ -17,6 +17,12 @@
   --sand: #D6D1C4;
   --line: rgba(214, 209, 196, 0.14);
   --gut: clamp(24px, 6vw, 72px);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --motion-ms: 160ms;
+  /* Black PNG → Sand #D6D1C4 (tuned via invert/sepia/saturate/hue-rotate/brightness) */
+  --icon-filter-sand: brightness(0) saturate(100%) invert(88%) sepia(12%) saturate(247%) hue-rotate(350deg) brightness(99%) contrast(89%);
+  /* Black PNG → Clay #8C5E4A */
+  --icon-filter-clay: brightness(0) saturate(100%) invert(45%) sepia(28%) saturate(667%) hue-rotate(334deg) brightness(93%) contrast(88%);
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { -webkit-text-size-adjust: 100%; }
@@ -85,11 +91,11 @@ a:focus-visible { outline: 1px solid var(--clay); outline-offset: 4px; }
 
 .links a {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
   gap: 16px;
   padding: clamp(18px, 3vh, 28px) 0;
-  transition: color 0.25s ease;
+  transition: color var(--motion-ms) var(--ease-out);
 }
 
 .links a:hover,
@@ -97,10 +103,32 @@ a:focus-visible { outline: 1px solid var(--clay); outline-offset: 4px; }
   color: var(--clay);
 }
 
+.links .cluster {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.links .icon {
+  display: block;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  opacity: 0.72;
+  transform: translateX(0);
+  filter: var(--icon-filter-sand);
+  transition:
+    transform var(--motion-ms) var(--ease-out),
+    opacity var(--motion-ms) var(--ease-out),
+    filter var(--motion-ms) var(--ease-out);
+}
+
 .links .name {
   font-weight: 500;
   font-size: clamp(17px, 2.4vw, 22px);
   letter-spacing: -0.01em;
+  transition: color var(--motion-ms) var(--ease-out);
 }
 
 .links .go {
@@ -110,12 +138,28 @@ a:focus-visible { outline: 1px solid var(--clay); outline-offset: 4px; }
   text-transform: uppercase;
   color: var(--stone);
   flex-shrink: 0;
-  transition: color 0.25s ease;
+  transition: color var(--motion-ms) var(--ease-out);
 }
 
+.links a:hover .name,
+.links a:focus-visible .name,
 .links a:hover .go,
 .links a:focus-visible .go {
   color: var(--clay);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .links a:hover .icon {
+    opacity: 1;
+    transform: translateX(4px);
+    filter: var(--icon-filter-clay);
+  }
+}
+
+.links a:focus-visible .icon {
+  opacity: 1;
+  transform: translateX(4px);
+  filter: var(--icon-filter-clay);
 }
 
 .foot {
@@ -127,9 +171,32 @@ a:focus-visible { outline: 1px solid var(--clay); outline-offset: 4px; }
   color: var(--stone);
 }
 
+.foot a {
+  color: var(--stone);
+  transition: color var(--motion-ms) var(--ease-out);
+}
+
+.foot a:hover,
+.foot a:focus-visible {
+  color: var(--clay);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .links a,
-  .links .go { transition: none; }
+  .links .name,
+  .links .go,
+  .links .icon,
+  .foot a {
+    transition: none;
+  }
+  .links .icon {
+    opacity: 1;
+    transform: none;
+  }
+  .links a:hover .icon,
+  .links a:focus-visible .icon {
+    transform: none;
+  }
 }
 </style>
 </head>
@@ -142,31 +209,52 @@ a:focus-visible { outline: 1px solid var(--clay); outline-offset: 4px; }
     <ul class="links">
       <li>
         <a href="https://crosswithswag.co.za/" target="_blank" rel="noopener noreferrer">
-          <span class="name">Website</span>
+          <span class="cluster">
+            <img class="icon" src="icons/website.png" alt="" width="24" height="24">
+            <span class="name">Website</span>
+          </span>
           <span class="go">crosswithswag.co.za →</span>
         </a>
       </li>
       <li>
         <a href="https://www.instagram.com/crosswithswag/" target="_blank" rel="noopener noreferrer">
-          <span class="name">Instagram</span>
+          <span class="cluster">
+            <img class="icon" src="icons/instagram.png" alt="" width="24" height="24">
+            <span class="name">Instagram</span>
+          </span>
           <span class="go">@crosswithswag →</span>
         </a>
       </li>
       <li>
         <a href="https://wa.me/27682812891?text=Hi%20%E2%80%94%20connecting%20from%20swag." target="_blank" rel="noopener noreferrer">
-          <span class="name">WhatsApp</span>
+          <span class="cluster">
+            <img class="icon" src="icons/whatsapp.png" alt="" width="24" height="24">
+            <span class="name">WhatsApp</span>
+          </span>
           <span class="go">+27 68 281 2891 →</span>
         </a>
       </li>
       <li>
         <a href="https://www.facebook.com/people/crosswithswag/61594135325116/" target="_blank" rel="noopener noreferrer">
-          <span class="name">Facebook</span>
+          <span class="cluster">
+            <img class="icon" src="icons/facebook.png" alt="" width="24" height="24">
+            <span class="name">Facebook</span>
+          </span>
           <span class="go">crosswithswag →</span>
+        </a>
+      </li>
+      <li>
+        <a href="https://www.tiktok.com/@crosswithswag" target="_blank" rel="noopener noreferrer">
+          <span class="cluster">
+            <img class="icon" src="icons/tiktok.png" alt="" width="24" height="24">
+            <span class="name">TikTok</span>
+          </span>
+          <span class="go">@crosswithswag →</span>
         </a>
       </li>
     </ul>
   </div>
-  <p class="foot">cape town — 2026</p>
+  <p class="foot">cape town — 2026 · <a href="https://icons8.com" target="_blank" rel="noopener noreferrer">icons by Icons8</a></p>
 </main>
 </body>
 </html>
