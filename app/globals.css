@@ -1974,3 +1974,272 @@ button:focus-visible {
     ) !important;
   }
 }
+
+/* ==========================================================================
+   Coming soon poster (Figma 202:253). Marcus uses Clay Light #C98A70 for
+   errors and a filled Sand button on this page only.
+   ========================================================================== */
+.cs {
+  --cs-sand-80: rgba(214, 209, 196, 0.8);
+  --cs-sand-65: rgba(214, 209, 196, 0.65);
+  --cs-sand-50: rgba(214, 209, 196, 0.5);
+  --cs-sand-35: rgba(214, 209, 196, 0.35);
+  --cs-clay-light: #c98a70;
+  position: relative;
+  min-height: 100dvh;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "label" "left" "right" "fl";
+  grid-template-rows: auto auto auto 1fr;
+  row-gap: 0;
+  padding: 28px 24px;
+  background: var(--void);
+  color: var(--sand);
+  overflow: hidden;
+}
+
+.cs-label {
+  font-size: 11px;
+  line-height: 13px;
+  font-weight: 600;
+  letter-spacing: 1.76px;
+  color: var(--cs-sand-65);
+}
+.cs-label--top { grid-area: label; }
+.cs-label--field { color: var(--cs-sand-80); }
+
+.cs-left { grid-area: left; margin-top: 56px; }
+/* Figma frame is 652x239.83; the shared mask SVG carries padding, so crop it. */
+.cs-wordmark {
+  width: min(342px, 100%);
+  aspect-ratio: 652 / 239.83;
+  color: var(--sand);
+  /* glyph bbox is 76.1% of the SVG width (viewBox 9088x6968); 1 / 0.761 = 131.4% */
+  mask-size: 131.4% auto;
+  -webkit-mask-size: 131.4% auto;
+}
+
+.cs-identifier {
+  margin-top: 24px;
+  font-size: 12px;
+  line-height: 15px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  color: var(--sand);
+}
+
+.cs-statement {
+  margin-top: 56px;
+  display: flex;
+  flex-direction: column;
+  font-size: 38px;
+  line-height: 40px;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  color: var(--sand);
+}
+
+.cs-right { grid-area: right; margin-top: 40px; }
+
+.cs-footer { align-self: end; padding-top: 48px; }
+.cs-footer--left { grid-area: fl; }
+.cs-footer--right { display: none; }
+
+.cs-form,
+.cs-success { display: flex; flex-direction: column; gap: 24px; width: 100%; }
+
+.cs-field { display: flex; flex-direction: column; gap: 10px; }
+
+.cs-input {
+  box-sizing: border-box;
+  width: 100%;
+  height: 52px;
+  padding: 0 16px;
+  border: 1px solid var(--cs-sand-50);
+  border-radius: 0;
+  background: transparent;
+  color: var(--sand);
+  font: 400 16px/20px var(--font-display);
+  transition: border-color 150ms ease-out;
+}
+.cs-input::placeholder { color: var(--cs-sand-65); }
+.cs-input:hover:not(:disabled) { border-color: var(--sand); }
+.cs-input:focus-visible {
+  outline: 2px solid var(--sand);
+  outline-offset: 3px;
+  border-color: var(--sand);
+}
+.cs-input:disabled { border-color: var(--cs-sand-35); opacity: 0.7; }
+.cs-input[aria-invalid="true"] {
+  border-color: var(--cs-clay-light);
+  box-shadow: inset 0 0 0 1px var(--cs-clay-light);
+}
+
+.cs-consent { display: flex; flex-direction: column; gap: 10px; }
+.cs-consent__row { display: flex; align-items: flex-start; gap: 14px; }
+.cs-consent__text { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+.cs-consent__label {
+  font-size: 16px;
+  line-height: 24px;
+  color: var(--sand);
+  cursor: pointer;
+}
+.cs-consent__detail {
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--cs-sand-65);
+}
+
+.cs-checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  position: relative;
+  flex: none;
+  box-sizing: border-box;
+  width: 24px;
+  height: 24px;
+  margin: 0;
+  border: 1px solid var(--sand);
+  border-radius: 0;
+  background: transparent;
+  cursor: pointer;
+  transition: background-color 150ms ease-out;
+}
+.cs-checkbox:hover:not(:disabled) { background: rgba(214, 209, 196, 0.12); }
+.cs-checkbox:focus-visible { outline: 2px solid var(--sand); outline-offset: 3px; }
+.cs-checkbox:checked { background: var(--sand); }
+.cs-checkbox:checked::after {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 4px;
+  width: 10px;
+  height: 6px;
+  border-left: 2px solid var(--void);
+  border-bottom: 2px solid var(--void);
+  transform: rotate(-45deg);
+}
+.cs-checkbox:disabled { cursor: default; }
+.cs-checkbox:checked:disabled { background: var(--cs-sand-50); }
+.cs-checkbox[aria-invalid="true"] {
+  border-width: 2px;
+  border-color: var(--cs-clay-light);
+}
+
+.cs-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  line-height: 19px;
+  color: var(--cs-clay-light);
+}
+.cs-error__marker {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  margin-top: 5.5px;
+  background: var(--cs-clay-light);
+}
+
+.cs-submit { display: flex; flex-direction: column; gap: 16px; }
+
+.cs-button {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 52px;
+  border: 1px solid var(--sand);
+  border-radius: 0;
+  background: var(--sand);
+  color: var(--void);
+  font: 600 12px/15px var(--font-display);
+  letter-spacing: 0.16em;
+  cursor: pointer;
+  transition: background-color 150ms ease-out, color 150ms ease-out;
+}
+.cs-button:hover:not(:disabled) { background: transparent; color: var(--sand); }
+.cs-button:focus-visible { outline: 2px solid var(--sand); outline-offset: 3px; }
+.cs-button:disabled {
+  background: transparent;
+  border-color: var(--cs-sand-50);
+  color: var(--sand);
+  cursor: default;
+}
+
+.cs-progress {
+  position: relative;
+  height: 2px;
+  background: rgba(214, 209, 196, 0.25);
+  overflow: hidden;
+}
+.cs-progress__bar {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 40%;
+  background: var(--sand);
+  animation: cs-progress 1.4s ease-in-out infinite;
+}
+@keyframes cs-progress {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(250%); }
+}
+
+.cs-note { font-size: 13px; line-height: 20px; color: var(--cs-sand-65); }
+
+.cs-failure {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 16px;
+  border: 1px solid var(--cs-clay-light);
+}
+.cs-failure__headline {
+  font-size: 15px;
+  line-height: 22px;
+  font-weight: 500;
+  color: var(--cs-clay-light);
+}
+.cs-failure__fallback { font-size: 14px; line-height: 21px; color: var(--sand); }
+
+.cs-success__headline {
+  font-size: 44px;
+  line-height: 44px;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  color: var(--sand);
+  outline: none;
+}
+.cs-success__body { font-size: 17px; line-height: 26px; color: var(--sand); }
+.cs-rule { width: 100%; height: 1px; border: 0; background: var(--cs-sand-50); }
+
+@media (min-width: 1100px) {
+  .cs {
+    grid-template-columns: minmax(0, 1fr) 480px;
+    grid-template-areas: "label label" "left right" "fl fr";
+    grid-template-rows: auto 1fr auto;
+    column-gap: 56px;
+    padding: 56px;
+  }
+  .cs-left { margin-top: 59px; }
+  .cs-wordmark { width: min(652px, 100%); }
+  .cs-identifier { margin-top: 22px; font-size: 14px; line-height: 17px; }
+  .cs-statement { margin-top: 143px; font-size: 64px; line-height: 64px; }
+  .cs-right { margin-top: 415px; }
+  .cs-footer { padding-top: 0; }
+  .cs-footer--right { display: block; grid-area: fr; justify-self: end; letter-spacing: 1.54px; }
+  .cs-form, .cs-success { gap: 28px; }
+  .cs-input { height: 56px; font-size: 19px; line-height: 23px; }
+  .cs-consent__label { font-size: 17px; }
+  .cs-button { height: 56px; }
+  .cs-success__headline { font-size: 64px; line-height: 64px; }
+  .cs-success__body { font-size: 19px; line-height: 29px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cs-progress__bar { animation: none; }
+  .cs-input, .cs-checkbox, .cs-button { transition: none; }
+}

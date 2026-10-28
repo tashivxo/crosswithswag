@@ -4,6 +4,7 @@ import { useLayoutEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Wordmark } from "@/components/ui/Wordmark";
+import { comingSoonEnabled } from "@/lib/coming-soon";
 import {
   isHomeIntroSeen,
   markHomeIntroSeen,
@@ -95,6 +96,32 @@ export function WordmarkDriftDock({
       return () => {
         gsap.set(layer, { clearProps: "transform" });
       };
+    }
+
+    if (comingSoonEnabled()) {
+      // The poster carries its own wordmark: the dock mark simply fades in
+      // alongside MENU as the poster scrolls away (no centred flight).
+      let dockedScale = dockScale(slot, layer);
+      const posterCtx = gsap.context(() => {
+        gsap.set(layer, { x: 0, y: 0, scale: dockedScale, opacity: 0 });
+        gsap.to(layer, {
+          opacity: 1,
+          ease: "none",
+          scrollTrigger: {
+            trigger: intro,
+            start: WORDMARK_DOCK_SCROLL.start,
+            end: WORDMARK_DOCK_SCROLL.end,
+            scrub: getDockScrub(),
+            invalidateOnRefresh: true,
+            onRefresh: () => {
+              dockedScale = dockScale(slot, layer);
+              gsap.set(layer, { scale: dockedScale });
+            },
+          },
+        });
+        requestAnimationFrame(() => ScrollTrigger.refresh());
+      }, layer);
+      return () => posterCtx.revert();
     }
 
     let startX = 0;

@@ -286,3 +286,30 @@ export const footer = {
     "V3.3.1",
   ],
 };
+
+// Coming-soon poster (Figma file lCZqp5HNaFCPBcWgPzAwUU, node 202:253).
+// Strings marked VERIFY were not machine-readable from Figma; confirm against the Copy deck.
+export const comingSoon = {
+  label: "COMING SOON",
+  identifier: "WEARABLE EDITIONS",
+  statement: ["the next edition", "is being made."],
+  emailLabel: "EMAIL ADDRESS",
+  emailPlaceholder: "name@email.com",
+  emailError: "enter a valid email, including @.", // VERIFY
+  consentLabel: "yes, tell me when the next edition opens.", // VERIFY
+  consentDetail:
+    "one message when an edition opens. nothing else. you can unsubscribe at any time.", // VERIFY
+  consentError: "tick the box to continue.", // VERIFY
+  submit: "TELL ME WHEN IT OPENS →",
+  submitting: "SENDING…",
+  retry: "TRY AGAIN →",
+  note: "no paid advertising. no hype.", // VERIFY
+  successLabel: "SIGNED UP", // VERIFY
+  successHeadline: "received.",
+  successBody: "we will write once, when the next edition opens.", // VERIFY
+  successNote: "nothing to buy. nothing to confirm.", // VERIFY
+  failureHeadline: "that did not go through.", // VERIFY
+  failureFallback: "nothing was saved. try again in a moment.", // VERIFY
+  footerLeft: "CAPE TOWN — 2026", // VERIFY
+  footerRight: "CROSSWITHSWAG.CO.ZA", // VERIFY
+};
