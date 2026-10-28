@@ -215,7 +215,7 @@ Vitest (`npm test`, `tests/**/*.test.ts`) covers the waitlist/Jotform logic and 
 
 ## Coming-soon landing (branch `jotform`, flag `NEXT_PUBLIC_COMING_SOON=1`)
 
-- With the flag on, `HomeChapter` renders `ComingSoonChapter` as `#home-intro` (the first screen) in place of the old logo-first intro spacer. Scroll fades in the MENU and docked mark via the existing scrub, then the normal home (hero, ticker, sections) follows. Flag off = unchanged production behaviour. `isHomeIntroSeen()` is false while the flag is on, so every visit starts on the poster.
+- With the flag on, `HomeChapter` renders `ComingSoonChapter` as `#home-intro` (the first screen) in place of the old logo-first intro spacer, and the old CROSS WITH SWAG hero block is not rendered. Scroll fades in the MENU and docked mark via the existing scrub, then the rest of the home (ticker, sections) follows. Flag off = unchanged production behaviour. `isHomeIntroSeen()` is false while the flag is on, so every visit starts on the poster.
 - The form posts to `POST /api/waitlist` (`lib/waitlist.ts` validation, `lib/waitlist-handler.ts`, `lib/jotform.ts`). The Jotform API key stays server-side.
 - Env: `JOTFORM_API_KEY`, `JOTFORM_FORM_ID`, `JOTFORM_EMAIL_QID`, `JOTFORM_CONSENT_QID`, optional `JOTFORM_CONSENT_VALUE`, `JOTFORM_API_BASE`. Unset = the API returns 503.
 - Copy lives in `lib/copy.ts` (`comingSoon`); strings marked `// VERIFY` must be checked against Marcus's Figma copy deck.
