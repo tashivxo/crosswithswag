@@ -103,6 +103,8 @@ export function ComingSoonForm() {
             name="consent"
             checked={consent}
             disabled={submitting}
+            required
+            aria-required="true"
             aria-invalid={Boolean(errors.consent)}
             aria-describedby={
               errors.consent ? "cs-consent-detail cs-consent-error" : "cs-consent-detail"
