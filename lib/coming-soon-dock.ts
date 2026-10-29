@@ -9,20 +9,50 @@ export const COMING_SOON_DOCK_ATTR = "data-cs-dock";
 /** Timeline position where the mark lands in the nav slot. The header fills solid only in the 5% after it. */
 export const COMING_SOON_LANDING = 0.95;
 
-/** The label starts fading at this share of the flight. */
-export const LABEL_FADE_START = 0.55;
-
 /**
  * Latest share of the flight by which the label must be gone. The fade ends
  * earlier when the mark's box would reach the label sooner (see labelFadeEnd).
  */
 export const LABEL_FADE_END = 0.7;
 
+/** The label fade always lasts this share of the flight (start = end minus this, never below 0). */
+export const LABEL_FADE_LENGTH = 0.15;
+
 /** Share of the flight kept clear between "gone" and the mark's box reaching the label. */
 export const LABEL_CLEAR_MARGIN = 0.02;
 
 /** Upward drift of the label while it fades, in px. */
 export const LABEL_DRIFT_PX = 5;
+
+/**
+ * Screens this short (or shorter) get no pin and no flight: the nav starts
+ * docked and the poster mark and label are collapsed. The tallest the poster is
+ * at rest is 844px (two-column layout, 1100px wide and up; 802 to 820px in the
+ * stacked layout), so 860px leaves 16px for font and subpixel differences and
+ * everything taller fits without the form being cut off while pinned.
+ *
+ * ONE source of truth: app/globals.css repeats this exact query in the
+ * "nav starts docked" block, and tests/coming-soon-dock.test.ts asserts they match.
+ */
+export const SHORT_SCREEN_MAX_HEIGHT = 860;
+export const SHORT_SCREEN_QUERY = `(max-height: ${SHORT_SCREEN_MAX_HEIGHT}px)`;
+
+export function isShortScreen() {
+  return window.matchMedia(SHORT_SCREEN_QUERY).matches;
+}
+
+/** useSyncExternalStore subscribe: re-run the dock when the breakpoint is crossed. */
+export function subscribeShortScreen(callback: () => void) {
+  if (!comingSoonEnabled()) return () => {};
+  const query = window.matchMedia(SHORT_SCREEN_QUERY);
+  query.addEventListener("change", callback);
+  return () => query.removeEventListener("change", callback);
+}
+
+/** Always false with the flag off, so the legacy home never re-runs its effects. */
+export function getShortScreenSnapshot() {
+  return comingSoonEnabled() && isShortScreen();
+}
 
 /** Pin length as a share of the viewport height. */
 export const COMING_SOON_PIN_VH = 0.6;
@@ -43,8 +73,6 @@ export const FLIGHT_EPSILON = 0.001;
 function flightStateFor(progress: number): FlightState {
   return progress > FLIGHT_EPSILON ? "flying" : "idle";
 }
-
-const FIT_TOLERANCE = 2;
 
 type FlightState = "idle" | "flying";
 
@@ -134,13 +162,11 @@ function teardown(state: Shared) {
 export function acquireComingSoonDock(): ComingSoonDock | null {
   if (!comingSoonEnabled()) return null;
   if (prefersReducedMotion()) return null;
+  if (isShortScreen()) return null;
 
   if (!shared) {
     const home = document.getElementById("home");
     if (!home) return null;
-    // Pinning a poster taller than the viewport would cut the form off for the
-    // whole pin. Short screens get the static docked nav instead.
-    if (home.offsetHeight > window.innerHeight + FIT_TOLERANCE) return null;
 
     const timeline = gsap.timeline({
       defaults: { ease: "none" },
@@ -262,10 +288,7 @@ function labelFadeEnd(
       cy - height / 2 < labelBottom &&
       cy + height / 2 > labelTop;
     if (reaches) {
-      return Math.max(
-        LABEL_FADE_START,
-        Math.min(LABEL_FADE_END, f - LABEL_CLEAR_MARGIN),
-      );
+      return Math.max(0.05, Math.min(LABEL_FADE_END, f - LABEL_CLEAR_MARGIN));
     }
   }
   return LABEL_FADE_END;
@@ -305,19 +328,9 @@ export function mountComingSoonFlight({
     };
   };
 
-  if (prefersReducedMotion()) {
-    // The mark is docked from load, so the poster label would sit under it:
-    // hide it from first paint (CSS does the same before scripts run).
-    const label = document
-      .getElementById("home")
-      ?.querySelector<HTMLElement>(".cs-label--top");
-    if (label) gsap.set(label, { opacity: 0 });
-    const undock = showDocked();
-    return () => {
-      undock();
-      if (label) gsap.set(label, { clearProps: "opacity" });
-    };
-  }
+  // Reduced motion and short screens: the nav is docked from load and CSS has
+  // already collapsed the poster mark and label, so there is nothing to animate.
+  if (prefersReducedMotion() || isShortScreen()) return showDocked();
 
   const dock = acquireComingSoonDock();
   const poster = dock?.home.querySelector<HTMLElement>(".cs-wordmark") ?? null;
@@ -328,14 +341,15 @@ export function mountComingSoonFlight({
 
   const { home, timeline } = dock;
   const label = home.querySelector<HTMLElement>(".cs-label--top");
-  // The tween spans the designer's 55% to 70% window; this squeezes it so the
-  // label is gone sooner where the mark's box reaches it sooner.
-  let fadeScale = 1;
+  // The tween spans 0 to LABEL_FADE_END of the flight; the ease maps that onto
+  // the measured fade window (end minus 15%, end pulled earlier where the
+  // mark's box reaches the label sooner) and is re-measured on refresh.
+  let fadeStart = LABEL_FADE_END - LABEL_FADE_LENGTH;
+  let fadeEnd = LABEL_FADE_END;
   const measureFade = () => {
     if (!label) return;
-    const end = labelFadeEnd(home, poster, slot, label);
-    fadeScale =
-      (LABEL_FADE_END - LABEL_FADE_START) / (end - LABEL_FADE_START);
+    fadeEnd = labelFadeEnd(home, poster, slot, label);
+    fadeStart = Math.max(0, fadeEnd - LABEL_FADE_LENGTH);
   };
   measureFade();
   const stopListening = label ? dock.onRefresh(measureFade) : () => {};
@@ -368,10 +382,14 @@ export function mountComingSoonFlight({
         {
           opacity: 0,
           y: -LABEL_DRIFT_PX,
-          ease: (t: number) => Math.min(1, t * fadeScale),
-          duration: (LABEL_FADE_END - LABEL_FADE_START) * COMING_SOON_LANDING,
+          ease: (t: number) => {
+            const share = t * LABEL_FADE_END;
+            const length = Math.max(fadeEnd - fadeStart, 0.01);
+            return Math.min(1, Math.max(0, (share - fadeStart) / length));
+          },
+          duration: LABEL_FADE_END * COMING_SOON_LANDING,
         },
-        LABEL_FADE_START * COMING_SOON_LANDING,
+        0,
       );
     }
   }, layer);

@@ -455,14 +455,16 @@ describe("nav starts docked on short screens", () => {
   it("is flag-scoped: the header rules only match when the coming-soon poster is on the page", () => {
     const prelude = `@media (prefers-reduced-motion: reduce), ${SHORT_SCREEN_QUERY} {`;
     const block = css.slice(css.indexOf(prelude), css.indexOf("\n}\n", css.indexOf(prelude)));
-    for (const selector of block.match(/^\s*[^{}\n]+\{/gm) ?? []) {
+    const selectors = (block.match(/^\s*[^{}\n]+\{/gm) ?? []).slice(1);
+    expect(selectors.length).toBeGreaterThan(0);
+    for (const selector of selectors) {
       expect(selector.trim()).toMatch(/^(html:has\(\.cs\)|\.cs)/);
     }
   });
 
   it("gives the form the room once the poster mark and label are gone", () => {
     expect(css).toMatch(
-      /@media \(min-width: 1100px\) and \(prefers-reduced-motion: reduce\), \(min-width: 1100px\) and \(max-height: \d+px\) \{[^}]*\.cs-right\s*\{[^}]*margin-top/,
+      /@media \(min-width: 1100px\) and \(prefers-reduced-motion: reduce\),\s*\(min-width: 1100px\) and \(max-height: \d+px\) \{[^}]*\.cs-right\s*\{[^}]*margin-top/,
     );
   });
 

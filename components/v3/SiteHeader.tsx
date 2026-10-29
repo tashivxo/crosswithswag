@@ -12,6 +12,7 @@ import {
   getWordmarkDockTrigger,
 } from "@/components/v3/WordmarkDriftDock";
 import { mountComingSoonChrome } from "@/lib/coming-soon-dock";
+import { useShortScreen } from "@/lib/use-short-screen";
 import {
   isHomeIntroSeen,
   queueRouteScroll,
@@ -82,6 +83,7 @@ export function SiteHeader({
   const pathname = usePathname();
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
+  const shortScreen = useShortScreen();
   const burgerRef = useRef<HTMLButtonElement>(null);
   const chromeRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLElement>(null);
@@ -243,7 +245,7 @@ export function SiteHeader({
     }, chrome);
 
     return () => ctx.revert();
-  }, [ready, mode]);
+  }, [ready, mode, shortScreen]);
 
   return (
     <>
