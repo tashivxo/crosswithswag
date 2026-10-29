@@ -9,11 +9,17 @@ export const COMING_SOON_DOCK_ATTR = "data-cs-dock";
 /** Timeline position where the mark lands in the nav slot. The header fills solid only in the 5% after it. */
 export const COMING_SOON_LANDING = 0.95;
 
-/** The label starts fading at this share of the flight (0.8 * landing on the timeline). */
-export const LABEL_FADE_START = 0.8;
+/** The label starts fading at this share of the flight. */
+export const LABEL_FADE_START = 0.55;
 
-/** Timeline length of the label fade. Ends well before the landing so label and mark never overlap. */
-export const LABEL_FADE_SPAN = 0.1;
+/**
+ * Latest share of the flight by which the label must be gone. The fade ends
+ * earlier when the mark's box would reach the label sooner (see labelFadeEnd).
+ */
+export const LABEL_FADE_END = 0.7;
+
+/** Share of the flight kept clear between "gone" and the mark's box reaching the label. */
+export const LABEL_CLEAR_MARGIN = 0.02;
 
 /** Upward drift of the label while it fades, in px. */
 export const LABEL_DRIFT_PX = 5;
@@ -45,6 +51,8 @@ type FlightState = "idle" | "flying";
 export type ComingSoonDock = {
   timeline: gsap.core.Timeline;
   home: HTMLElement;
+  /** Runs after every ScrollTrigger refresh. Returns an unsubscribe. */
+  onRefresh: (callback: () => void) => () => void;
   release: () => void;
 };
 
@@ -54,6 +62,7 @@ type Shared = {
   refs: number;
   observer: ResizeObserver | null;
   refreshQueued: boolean;
+  refreshListeners: Set<() => void>;
 };
 
 let shared: Shared | null = null;
@@ -111,6 +120,7 @@ function observeResize(state: Shared) {
 
 function teardown(state: Shared) {
   state.observer?.disconnect();
+  state.refreshListeners.clear();
   state.timeline.scrollTrigger?.kill(true);
   state.timeline.kill();
   setFlightState(null);
@@ -146,8 +156,10 @@ export function acquireComingSoonDock(): ComingSoonDock | null {
         invalidateOnRefresh: true,
         onUpdate: (self: { progress: number }) =>
           setFlightState(flightStateFor(self.progress)),
-        onRefresh: (self: { progress: number }) =>
-          setFlightState(flightStateFor(self.progress)),
+        onRefresh: (self: { progress: number }) => {
+          setFlightState(flightStateFor(self.progress));
+          shared?.refreshListeners.forEach((listener) => listener());
+        },
       },
     });
     timeline.to({}, { duration: 1 }, 0);
@@ -158,6 +170,7 @@ export function acquireComingSoonDock(): ComingSoonDock | null {
       refs: 0,
       observer: null,
       refreshQueued: false,
+      refreshListeners: new Set(),
     };
     shared = state;
     setFlightState("idle");
@@ -172,6 +185,10 @@ export function acquireComingSoonDock(): ComingSoonDock | null {
   return {
     timeline: state.timeline,
     home: state.home,
+    onRefresh: (callback) => {
+      state.refreshListeners.add(callback);
+      return () => state.refreshListeners.delete(callback);
+    },
     release: () => {
       if (released) return;
       released = true;
@@ -203,6 +220,55 @@ function measureFlight(
       (slotBox.top + slotBox.height / 2),
     scale: hero > 0 ? posterBox.width / (hero * HEADER_GLYPH_FRACTION) : 1,
   };
+}
+
+/**
+ * Share of the flight by which the label must be fully gone: the designer's
+ * outer bound, pulled earlier when the mark's glyph box would reach the label's
+ * box sooner (the mark is much wider than the label on desktop). The glyph box
+ * is modelled as a straight interpolation from the poster mark to the docked
+ * glyph, with the poster's aspect ratio.
+ */
+function labelFadeEnd(
+  home: HTMLElement,
+  poster: HTMLElement,
+  slot: HTMLElement,
+  label: HTMLElement,
+) {
+  const homeTop = home.getBoundingClientRect().top;
+  const p = poster.getBoundingClientRect();
+  const s = slot.getBoundingClientRect();
+  const l = label.getBoundingClientRect();
+  if (p.width <= 0) return LABEL_FADE_END;
+
+  const aspect = p.height / p.width;
+  const pcx = p.left + p.width / 2;
+  const pcy = p.top - homeTop + p.height / 2;
+  const scx = s.left + s.width / 2;
+  const scy = s.top + s.height / 2;
+  const labelTop = l.top - homeTop;
+  const labelBottom = l.bottom - homeTop;
+
+  const steps = 200;
+  for (let i = 0; i <= steps; i++) {
+    const f = i / steps;
+    const width = p.width + (s.width * HEADER_GLYPH_FRACTION - p.width) * f;
+    const height = width * aspect;
+    const cx = pcx + (scx - pcx) * f;
+    const cy = pcy + (scy - pcy) * f;
+    const reaches =
+      cx - width / 2 < l.right &&
+      cx + width / 2 > l.left &&
+      cy - height / 2 < labelBottom &&
+      cy + height / 2 > labelTop;
+    if (reaches) {
+      return Math.max(
+        LABEL_FADE_START,
+        Math.min(LABEL_FADE_END, f - LABEL_CLEAR_MARGIN),
+      );
+    }
+  }
+  return LABEL_FADE_END;
 }
 
 function once(fn: () => void) {
@@ -262,6 +328,17 @@ export function mountComingSoonFlight({
 
   const { home, timeline } = dock;
   const label = home.querySelector<HTMLElement>(".cs-label--top");
+  // The tween spans the designer's 55% to 70% window; this squeezes it so the
+  // label is gone sooner where the mark's box reaches it sooner.
+  let fadeScale = 1;
+  const measureFade = () => {
+    if (!label) return;
+    const end = labelFadeEnd(home, poster, slot, label);
+    fadeScale =
+      (LABEL_FADE_END - LABEL_FADE_START) / (end - LABEL_FADE_START);
+  };
+  measureFade();
+  const stopListening = label ? dock.onRefresh(measureFade) : () => {};
   const ctx = gsap.context(() => {
     timeline.fromTo(
       layer,
@@ -291,8 +368,8 @@ export function mountComingSoonFlight({
         {
           opacity: 0,
           y: -LABEL_DRIFT_PX,
-          ease: "none",
-          duration: LABEL_FADE_SPAN,
+          ease: (t: number) => Math.min(1, t * fadeScale),
+          duration: (LABEL_FADE_END - LABEL_FADE_START) * COMING_SOON_LANDING,
         },
         LABEL_FADE_START * COMING_SOON_LANDING,
       );
@@ -300,6 +377,7 @@ export function mountComingSoonFlight({
   }, layer);
 
   return once(() => {
+    stopListening();
     ctx.revert();
     dock.release();
   });
