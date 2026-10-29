@@ -98,7 +98,12 @@ vi.mock("gsap/ScrollTrigger", () => ({ ScrollTrigger: h.ScrollTrigger }));
 import {
   COMING_SOON_DOCK_ATTR,
   HEADER_GLYPH_FRACTION,
+  LABEL_FADE_LENGTH,
+  SHORT_SCREEN_MAX_HEIGHT,
+  SHORT_SCREEN_QUERY,
   acquireComingSoonDock,
+  getShortScreenSnapshot,
+  subscribeShortScreen,
   mountComingSoonChrome,
   mountComingSoonFlight,
 } from "@/lib/coming-soon-dock";
@@ -141,7 +146,7 @@ type Geometry = {
 };
 
 const desktop: Geometry = {
-  viewport: { width: 1440, height: 800 },
+  viewport: { width: 1440, height: 1000 },
   poster: posterBox,
   slot: slotBox,
   label: rect(56, 56, 1328, 13),
@@ -149,7 +154,7 @@ const desktop: Geometry = {
 };
 
 const mobile: Geometry = {
-  viewport: { width: 390, height: 844 },
+  viewport: { width: 390, height: 900 },
   poster: rect(24, 97, 342, 126),
   slot: rect(18, 4, 88, 62),
   label: rect(24, 28, 342, 13),
@@ -198,13 +203,20 @@ function installDom(
     innerWidth: geo.viewport.width,
     innerHeight: geo.viewport.height,
     visualViewport: undefined,
-    matchMedia: (query: string) => ({
-      matches: query.includes("prefers-reduced-motion")
-        ? reduceMotion
-        : query.includes("pointer: coarse")
-          ? coarse
-          : false,
-    }),
+    matchMedia: (query: string) => {
+      const maxHeight = /\(max-height:\s*(\d+)px\)/.exec(query);
+      return {
+        matches: query.includes("prefers-reduced-motion")
+          ? reduceMotion
+          : query.includes("pointer: coarse")
+            ? coarse
+            : maxHeight
+              ? geo.viewport.height <= Number(maxHeight[1])
+              : false,
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+      };
+    },
     requestAnimationFrame: (cb: (t: number) => void) => {
       cb(0);
       return 1;
@@ -333,30 +345,154 @@ describe("reduced motion", () => {
       opacity: 1,
     });
     expect(setFor(env.chrome)).toMatchObject({ autoAlpha: 1, y: 0 });
+    expect(setFor(env.label)).toBeUndefined();
+    expect(setFor(env.poster)).toBeUndefined();
 
     flight?.();
     chrome?.();
   });
 });
 
-describe("poster taller than the viewport", () => {
-  it("does not pin, so the form is never cut off, and docks the nav statically", () => {
-    const env = installDom(false);
-    env.home.offsetHeight = 1000;
+describe("nav starts docked on short screens", () => {
+  const css = readFileSync(join(process.cwd(), "app/globals.css"), "utf8");
+  const withHeight = (height: number): Geometry => ({
+    ...desktop,
+    viewport: { ...desktop.viewport, height },
+  });
+
+  it("uses one breakpoint, shared by CSS and JS, as a max-height media query", () => {
+    expect(SHORT_SCREEN_QUERY).toBe(`(max-height: ${SHORT_SCREEN_MAX_HEIGHT}px)`);
+    const prelude = `@media (prefers-reduced-motion: reduce), ${SHORT_SCREEN_QUERY} {`;
+    expect(css).toContain(prelude);
+    const maxHeights = css.match(/max-height:\s*\d+px/g) ?? [];
+    expect(new Set(maxHeights.filter((q) => q.includes(`${SHORT_SCREEN_MAX_HEIGHT}px`))).size).toBe(1);
+  });
+
+  it.each([
+    ["1px below", SHORT_SCREEN_MAX_HEIGHT - 1],
+    ["exactly at", SHORT_SCREEN_MAX_HEIGHT],
+  ])("%s the breakpoint: no pin, no flight, nav docked, no flight state", (_label, height) => {
+    const env = installDom(false, false, withHeight(height));
     const { flight, chrome } = mountBoth(env);
 
     expect(acquire()).toBeNull();
     expect(h.gsap.timeline).not.toHaveBeenCalled();
+    expect(h.ScrollTrigger.create).not.toHaveBeenCalled();
     expect(pinConfigs()).toHaveLength(0);
     expect(env.rootAttrs.has(COMING_SOON_DOCK_ATTR)).toBe(false);
-    expect(flight).toBeTypeOf("function");
-    expect(chrome).toBeTypeOf("function");
+
+    expect(h.state.sets.find(([t]) => t === env.layer)?.[1]).toMatchObject({
+      x: 0,
+      y: 0,
+      scale: slotBox.width / env.layer.offsetWidth,
+      opacity: 1,
+    });
     expect(h.state.sets.find(([t]) => t === env.chrome)?.[1]).toMatchObject({
       autoAlpha: 1,
     });
+    // The poster and label are collapsed by CSS, never tweened by JS.
+    expect(h.state.sets.some(([t]) => t === env.label || t === env.poster)).toBe(false);
 
     flight?.();
     chrome?.();
+  });
+
+  it("1px above the breakpoint: one pin, a flight, and one mark at a time", () => {
+    const env = installDom(false, false, withHeight(SHORT_SCREEN_MAX_HEIGHT + 1));
+    const { flight, chrome } = mountBoth(env);
+
+    expect(h.gsap.timeline).toHaveBeenCalledTimes(1);
+    expect(pinConfigs()).toHaveLength(1);
+    expect(env.rootAttrs.get(COMING_SOON_DOCK_ATTR)).toBe("idle");
+    const [tl] = h.state.timelines;
+    expect(tl.calls.some((c) => c.args[0] === env.layer)).toBe(true);
+    expect(tl.calls.some((c) => c.args[0] === env.label)).toBe(true);
+
+    const onUpdate = tl.scrollTrigger?.onUpdate as (self: { progress: number }) => void;
+    onUpdate({ progress: 0.5 });
+    expect(env.rootAttrs.get(COMING_SOON_DOCK_ATTR)).toBe("flying");
+    onUpdate({ progress: 0 });
+    expect(env.rootAttrs.get(COMING_SOON_DOCK_ATTR)).toBe("idle");
+
+    flight?.();
+    chrome?.();
+  });
+
+  it("decides from the media query alone, not from measuring #home", () => {
+    const tall = installDom(false, false, withHeight(SHORT_SCREEN_MAX_HEIGHT + 1));
+    tall.home.offsetHeight = 5000;
+    const a = mountBoth(tall);
+    expect(pinConfigs()).toHaveLength(1);
+    a.flight?.();
+    a.chrome?.();
+
+    h.state.timelines.length = 0;
+    const short = installDom(false, false, withHeight(SHORT_SCREEN_MAX_HEIGHT));
+    short.home.offsetHeight = 10;
+    const b = mountBoth(short);
+    expect(h.state.timelines).toHaveLength(0);
+    b.flight?.();
+    b.chrome?.();
+  });
+
+  it("collapses the poster mark and the COMING SOON label in CSS, with no JS", () => {
+    const prelude = `@media (prefers-reduced-motion: reduce), ${SHORT_SCREEN_QUERY} {`;
+    const block = css.slice(css.indexOf(prelude), css.indexOf("\n}\n", css.indexOf(prelude)));
+    expect(block).toMatch(/\.cs-wordmark,\s*\.cs-label--top\s*\{[^}]*display:\s*none/);
+    expect(block).not.toMatch(/visibility:\s*hidden/);
+    // The header mark is docked and MENU is visible before any script runs.
+    expect(block).toMatch(/html:has\(\.cs\) \.wordmark-drift-layer\s*\{[^}]*transform:\s*scale/);
+    expect(block).toMatch(/html:has\(\.cs\) \.site-header__chrome\s*\{[^}]*opacity:\s*1/);
+  });
+
+  it("does not collapse the poster outside those queries", () => {
+    const base = css.slice(css.indexOf(".cs-wordmark {"), css.indexOf(".cs-identifier {"));
+    expect(base).not.toMatch(/display:\s*none/);
+    const label = css.slice(css.indexOf(".cs-label {"), css.indexOf(".cs-label--field"));
+    expect(label).not.toMatch(/display:\s*none/);
+  });
+
+  it("is flag-scoped: the header rules only match when the coming-soon poster is on the page", () => {
+    const prelude = `@media (prefers-reduced-motion: reduce), ${SHORT_SCREEN_QUERY} {`;
+    const block = css.slice(css.indexOf(prelude), css.indexOf("\n}\n", css.indexOf(prelude)));
+    for (const selector of block.match(/^\s*[^{}\n]+\{/gm) ?? []) {
+      expect(selector.trim()).toMatch(/^(html:has\(\.cs\)|\.cs)/);
+    }
+  });
+
+  it("gives the form the room once the poster mark and label are gone", () => {
+    expect(css).toMatch(
+      /@media \(min-width: 1100px\) and \(prefers-reduced-motion: reduce\), \(min-width: 1100px\) and \(max-height: \d+px\) \{[^}]*\.cs-right\s*\{[^}]*margin-top/,
+    );
+  });
+
+  it("exposes the same decision to React, and is false whenever the flag is off", () => {
+    installDom(false, false, withHeight(SHORT_SCREEN_MAX_HEIGHT));
+    expect(getShortScreenSnapshot()).toBe(true);
+    installDom(false, false, withHeight(SHORT_SCREEN_MAX_HEIGHT + 1));
+    expect(getShortScreenSnapshot()).toBe(false);
+    vi.stubEnv("NEXT_PUBLIC_COMING_SOON", "");
+    installDom(false, false, withHeight(SHORT_SCREEN_MAX_HEIGHT));
+    expect(getShortScreenSnapshot()).toBe(false);
+  });
+
+  it("subscribes to the media query so crossing the breakpoint rebuilds the dock", () => {
+    installDom(false);
+    const add = vi.fn();
+    const remove = vi.fn();
+    const queries: string[] = [];
+    vi.stubGlobal("window", {
+      matchMedia: (query: string) => {
+        queries.push(query);
+        return { matches: false, addEventListener: add, removeEventListener: remove };
+      },
+    });
+    const callback = vi.fn();
+    const unsubscribe = subscribeShortScreen(callback);
+    expect(queries).toEqual([SHORT_SCREEN_QUERY]);
+    expect(add).toHaveBeenCalledWith("change", callback);
+    unsubscribe();
+    expect(remove).toHaveBeenCalledWith("change", callback);
   });
 });
 
@@ -417,7 +553,7 @@ describe("pin shared between the poster mark and the header", () => {
     const { flight, chrome } = mountBoth(env);
     const config = pinConfigs()[0];
     expect(typeof config.end).toBe("function");
-    expect((config.end as () => string)()).toBe("+=480");
+    expect((config.end as () => string)()).toBe("+=600");
     flight?.();
     chrome?.();
   });
@@ -609,12 +745,68 @@ describe("COMING SOON label", () => {
     return { env, flight, chrome };
   }
 
-  it("starts fading at about 55% of the flight", () => {
+  /** Where the label starts to fade and where it reaches 0, as shares of the flight. */
+  function fadeWindow(env: Env) {
+    let start = 0;
+    let end = 1;
+    for (let i = 0; i <= 2000; i++) {
+      const f = i / 2000;
+      if (labelAt(env, f).opacity >= 1 - 1e-9) start = f;
+    }
+    for (let i = 2000; i >= 0; i--) {
+      const f = i / 2000;
+      if (labelAt(env, f).opacity <= 1e-9) end = f;
+    }
+    return { start, end };
+  }
+
+  it("fades over about 15% of the flight: the start is the end minus 15%", () => {
+    expect(LABEL_FADE_LENGTH).toBe(0.15);
+    for (const geo of [desktop, mobile]) {
+      const { env, flight, chrome } = mount(geo);
+      const { start, end } = fadeWindow(env);
+      expect(end - start).toBeGreaterThanOrEqual(0.14);
+      expect(end - start).toBeLessThanOrEqual(0.16);
+      flight?.();
+      chrome?.();
+      h.state.timelines.length = 0;
+    }
+  });
+
+  it("desktop window: roughly 44% to 59% of the flight", () => {
     const { env, flight, chrome } = mount(desktop);
-    const { start } = labelCall(env);
-    expect(start / flightLanding(env)).toBeGreaterThanOrEqual(0.5);
-    expect(start / flightLanding(env)).toBeLessThanOrEqual(0.6);
-    expect(labelAt(env, 0.5).opacity).toBe(1);
+    const { start, end } = fadeWindow(env);
+    expect(start).toBeGreaterThanOrEqual(0.43);
+    expect(start).toBeLessThanOrEqual(0.46);
+    expect(end).toBeGreaterThanOrEqual(0.58);
+    expect(end).toBeLessThanOrEqual(0.61);
+    flight?.();
+    chrome?.();
+  });
+
+  it("mobile and tablet window: 55% to 70% of the flight", () => {
+    const { env, flight, chrome } = mount(mobile);
+    const { start, end } = fadeWindow(env);
+    expect(start).toBeGreaterThanOrEqual(0.54);
+    expect(start).toBeLessThanOrEqual(0.56);
+    expect(end).toBeGreaterThanOrEqual(0.69);
+    expect(end).toBeLessThanOrEqual(0.71);
+    flight?.();
+    chrome?.();
+  });
+
+  it("never starts before 0 when the mark's box reaches the label almost at once", () => {
+    const early: Geometry = {
+      ...desktop,
+      label: rect(56, 128, 1328, 13),
+    };
+    const { env, flight, chrome } = mount(early);
+    const { start, end } = fadeWindow(env);
+    expect(start).toBeGreaterThanOrEqual(0);
+    expect(end).toBeLessThan(0.15);
+    expect(labelAt(env, 0).opacity).toBe(1);
+    expect(Number.isFinite(labelAt(env, 0.05).opacity)).toBe(true);
+    expect(labelAt(env, 1).opacity).toBe(0);
     flight?.();
     chrome?.();
   });
@@ -655,25 +847,19 @@ describe("COMING SOON label", () => {
     },
   );
 
-  it("keeps the label fully visible until the fade starts", () => {
-    for (const geo of [desktop, mobile]) {
-      const { env, flight, chrome } = mount(geo);
-      expect(labelAt(env, 0).opacity).toBe(1);
-      expect(labelAt(env, 0.4).opacity).toBe(1);
-      expect(labelAt(env, 0.52).opacity).toBe(1);
-      flight?.();
-      chrome?.();
-      h.state.timelines.length = 0;
-    }
-  });
+  it("keeps the label fully visible until its fade starts", () => {
+    const first = mount(desktop);
+    expect(labelAt(first.env, 0).opacity).toBe(1);
+    expect(labelAt(first.env, 0.4).opacity).toBe(1);
+    first.flight?.();
+    first.chrome?.();
+    h.state.timelines.length = 0;
 
-  it("fades gradually where there is room (mobile keeps the full 55% to 70% window)", () => {
-    const { env, flight, chrome } = mount(mobile);
-    const mid = labelAt(env, 0.625).opacity;
-    expect(mid).toBeGreaterThan(0.3);
-    expect(mid).toBeLessThan(0.7);
-    flight?.();
-    chrome?.();
+    const second = mount(mobile);
+    expect(labelAt(second.env, 0).opacity).toBe(1);
+    expect(labelAt(second.env, 0.5).opacity).toBe(1);
+    second.flight?.();
+    second.chrome?.();
   });
 
   it("drifts upward by 4 to 6px as it fades, landing on that drift", () => {
@@ -733,17 +919,11 @@ describe("COMING SOON label", () => {
     chrome?.();
   });
 
-  it("is hidden from first paint with reduced motion, as a plain opacity switch with no drift, and never scrolls back in", () => {
+  it("is collapsed by CSS with reduced motion, so JS creates no tween, no timeline and no pin for it", () => {
     const env = installDom(true);
     const { flight, chrome } = mountBoth(env);
 
-    const set = h.state.sets.find(([t]) => t === env.label)?.[1] as
-      | Record<string, unknown>
-      | undefined;
-    expect(set).toMatchObject({ opacity: 0 });
-    expect(set).not.toHaveProperty("y");
-    expect(set).not.toHaveProperty("x");
-
+    expect(h.state.sets.some(([t]) => t === env.label || t === env.poster)).toBe(false);
     expect(h.gsap.timeline).not.toHaveBeenCalled();
     expect(h.gsap.to).not.toHaveBeenCalled();
     expect(h.gsap.fromTo).not.toHaveBeenCalled();
@@ -763,17 +943,12 @@ describe("COMING SOON label", () => {
 
   const css = readFileSync(join(process.cwd(), "app/globals.css"), "utf8");
 
-  it("hides the label in CSS before any script runs when motion is reduced, with no transition", () => {
-    const start = css.lastIndexOf("@media (prefers-reduced-motion: reduce)");
-    const blocks = [...css.matchAll(/@media \(prefers-reduced-motion: reduce\) \{/g)];
-    const hits = blocks
-      .map((m) => css.slice(m.index, css.indexOf("\n}\n", m.index)))
-      .filter((block) => block.includes(".cs-label--top"));
+  it("collapses the poster mark and label in CSS before any script runs when motion is reduced", () => {
+    const prelude = `@media (prefers-reduced-motion: reduce), ${SHORT_SCREEN_QUERY} {`;
+    const start = css.indexOf(prelude);
     expect(start).toBeGreaterThan(0);
-    expect(hits).toHaveLength(1);
-    expect(hits[0]).toMatch(/\.cs-label--top\s*\{[^}]*opacity:\s*0/);
-    expect(hits[0]).toMatch(/\.cs-label--top\s*\{[^}]*transition:\s*none/);
-    expect(hits[0]).not.toMatch(/transform|translate/);
+    const block = css.slice(start, css.indexOf("\n}\n", start));
+    expect(block).toMatch(/\.cs-wordmark,\s*\.cs-label--top\s*\{[^}]*display:\s*none/);
   });
 
   it("does not hide the label outside reduced motion", () => {
