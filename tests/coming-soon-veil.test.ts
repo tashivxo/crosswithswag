@@ -98,9 +98,30 @@ describe("veil layer", () => {
     );
   });
 
-  it("only makes the coming-soon header transparent", () => {
+  it("leaves header backgrounds to the dock code", () => {
+    const rules = css.match(/[^{}]+\{[^{}]*\}/g) ?? [];
+    const veilHeaderBackground = rules.filter((rule) => {
+      const [selector, body] = rule.split("{");
+      return (
+        /\.cs-veil/.test(selector) &&
+        /\.site-header/.test(selector) &&
+        /background/.test(body)
+      );
+    });
+    expect(veilHeaderBackground).toEqual([]);
+    expect(css).not.toMatch(/:has\(\.cs-veil\)[^{]*\.site-header/);
+  });
+
+  it("keeps the veil behind #home, hidden from assistive tech, and inert", () => {
+    vi.stubEnv("NEXT_PUBLIC_COMING_SOON", "1");
+    const markup = renderToStaticMarkup(
+      createElement(ComingSoonChapter, { id: "home-intro" }),
+    );
+    expect(markup).toMatch(
+      /^<section[^>]*><div[^>]*class="cs-veil"[^>]*aria-hidden="true"/,
+    );
     expect(css).toMatch(
-      /:has\(\.cs-veil\)[^{]*\.site-header[^{]*\{[^}]*background/,
+      /\.cs-veil\s*\{[^}]*z-index:\s*0[^}]*pointer-events:\s*none/,
     );
   });
 });
