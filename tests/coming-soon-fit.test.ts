@@ -166,9 +166,22 @@ function evaluate(expression: string, env: Env, depth = 0): number {
 const val = (tokens: Tokens, name: string, vh: number) =>
   evaluate(`var(${name})`, { vh, vars: tokens });
 
+function narrowTokens(): Tokens {
+  return declarations(blockAfter(/@media \(max-width: 389px\) \{\s*\.cs \{/));
+}
+
 function tokensFor(width: number): Tokens {
   const base = stackedTokens();
-  return width >= 1100 ? { ...base, ...desktopTokens() } : base;
+  if (width >= 1100) return { ...base, ...desktopTokens() };
+  return width < 390 ? { ...base, ...narrowTokens() } : base;
+}
+
+/** Form height without its gaps, measured in Chrome: the consent text wraps on narrow screens. */
+function stackedFormBase(width: number): number {
+  if (width < 340) return 269;
+  if (width < 390) return 251;
+  if (width < 600) return 227;
+  return 209;
 }
 
 /** Height of the poster, form and error headroom, stacked top to bottom. */
@@ -188,7 +201,7 @@ function posterHeight(width: number, vh: number, errors: boolean): number {
     return 2 * padY + LABEL + Math.max(left, right) + FOOTER + v("--cs-foot-pad");
   }
 
-  const formBase = 227;
+  const formBase = stackedFormBase(width);
   return (
     2 * padY +
     LABEL +
@@ -209,6 +222,8 @@ const COMMON: Array<[string, number, number]> = [
   ["1280x720", 1280, 720],
   ["390x664", 390, 664],
   ["360x640", 360, 640],
+  ["375x667", 375, 667],
+  ["414x736", 414, 736],
   ["1440x900", 1440, 900],
   ["1920x1080", 1920, 1080],
   ["390x844", 390, 844],
@@ -233,6 +248,8 @@ describe("poster scaled to the viewport height", () => {
 
   it("defines every token in both layouts and uses them on the poster", () => {
     const names = [
+      "--cs-ref",
+      "--cs-k",
       "--cs-pad-y",
       "--cs-left-top",
       "--cs-mark-w",
@@ -261,7 +278,7 @@ describe("poster scaled to the viewport height", () => {
     },
   );
 
-  it.each([390, 768, 1024, 1099, 1100, 1280, 1440, 1920])(
+  it.each([340, 360, 375, 390, 414, 600, 768, 1024, 1099, 1100, 1280, 1440, 1920])(
     "%spx wide: fits at every height above the breakpoint, with errors shown",
     (width) => {
       for (let vh = 621; vh <= 1400; vh++) {
@@ -291,13 +308,14 @@ describe("poster scaled to the viewport height", () => {
         expect(w).toBeGreaterThanOrEqual(previous);
         previous = w;
       }
-      expect(val(t, "--cs-mark-w", 621)).toBeGreaterThan(150);
+      expect(val(t, "--cs-mark-w", 621)).toBeGreaterThanOrEqual(180);
     }
   });
 
   it("keeps the mark large enough to read at the shortest pinned size", () => {
     expect(val(tokensFor(1366), "--cs-mark-w", 657)).toBeGreaterThanOrEqual(500);
     expect(val(tokensFor(390), "--cs-mark-w", 664)).toBeGreaterThanOrEqual(200);
+    expect(val(tokensFor(360), "--cs-mark-w", 640)).toBeGreaterThanOrEqual(180);
   });
 
   it("turns scaling off where the nav starts docked", () => {

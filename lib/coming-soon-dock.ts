@@ -26,15 +26,17 @@ export const LABEL_DRIFT_PX = 5;
 
 /**
  * Screens this short (or shorter) get no pin and no flight: the nav starts
- * docked and the poster mark and label are collapsed. The tallest the poster is
- * at rest is 844px (two-column layout, 1100px wide and up; 802 to 820px in the
- * stacked layout), so 860px leaves 16px for font and subpixel differences and
- * everything taller fits without the form being cut off while pinned.
+ * docked and the poster mark and label are collapsed. This is the floor of the
+ * poster's scaling, not the poster's natural height: above it the poster, the
+ * form and 58px of validation-error headroom are fitted into the viewport with
+ * `svh` (the --cs-* tokens in app/globals.css), so the pin and flight run on
+ * laptops and phones. Below it the scaled mark gets too small to fly, which in
+ * practice means phones held sideways.
  *
  * ONE source of truth: app/globals.css repeats this exact query in the
  * "nav starts docked" block, and tests/coming-soon-dock.test.ts asserts they match.
  */
-export const SHORT_SCREEN_MAX_HEIGHT = 860;
+export const SHORT_SCREEN_MAX_HEIGHT = 620;
 export const SHORT_SCREEN_QUERY = `(max-height: ${SHORT_SCREEN_MAX_HEIGHT}px)`;
 
 export function isShortScreen() {
