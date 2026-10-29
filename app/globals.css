@@ -1998,6 +1998,24 @@ button:focus-visible {
   overflow: hidden;
 }
 
+/* DarkVeil sits behind the poster content and never leaves the chapter. */
+.cs-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+.cs > *:not(.cs-veil) {
+  position: relative;
+  z-index: 1;
+}
+
+/* Coming-soon home only: let the veil run full bleed under the fixed header,
+   then fade the Void background in with the dock (--header-line 0 to 1). */
+body:has(.cs-veil) .site-header[data-route="hero"] {
+  background: rgb(10 10 10 / var(--header-line, 0));
+}
+
 .cs-label {
   font-size: 11px;
   line-height: 13px;
