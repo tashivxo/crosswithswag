@@ -102,6 +102,7 @@ import {
   SHORT_SCREEN_MAX_HEIGHT,
   SHORT_SCREEN_ATTR,
   SHORT_SCREEN_QUERY,
+  shortScreenInitScript,
   acquireComingSoonDock,
   getShortScreenSnapshot,
   subscribeShortScreen,
@@ -247,6 +248,7 @@ function installDom(
   vi.stubGlobal("window", {
     innerWidth: geo.viewport.width,
     innerHeight: geo.viewport.height,
+    location: { pathname: "/" },
     visualViewport: undefined,
     matchMedia: (query: string) => {
       const maxHeight = /\(max-height:\s*(\d+)px\)/.exec(query);
@@ -1182,5 +1184,91 @@ describe("cleanup on unmount", () => {
     flight?.();
     chrome?.();
     expect(disconnect).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("the dock and the head script agree on the header mark", () => {
+  const runHeadScript = () =>
+    new Function("window", "document", shortScreenInitScript())(
+      globalThis.window,
+      globalThis.document,
+    );
+
+  it("the dock keeps the idle attribute the head script set, with no flip and no second write", () => {
+    const env = installDom(false, false, { ...desktop, viewport: { width: 1440, height: 900 } });
+    runHeadScript();
+    expect(env.rootAttrs.get(COMING_SOON_DOCK_ATTR)).toBe("idle");
+    const writes: string[] = [];
+    const root = (globalThis.document as unknown as { documentElement: { setAttribute: (k: string, v: string) => void } }).documentElement;
+    const original = root.setAttribute;
+    root.setAttribute = (k, v) => {
+      if (k === COMING_SOON_DOCK_ATTR) writes.push(v);
+      original(k, v);
+    };
+    const { flight, chrome } = mountBoth(env);
+    expect(env.rootAttrs.get(COMING_SOON_DOCK_ATTR)).toBe("idle");
+    expect(writes.every((value) => value === "idle")).toBe(true);
+    flight?.();
+    chrome?.();
+    expect(env.rootAttrs.has(COMING_SOON_DOCK_ATTR)).toBe(false);
+  });
+
+  it("a short screen flips after the script set idle: the dock clears it, so the header mark shows", () => {
+    const env = installDom(false, false, { ...desktop, viewport: { width: 1440, height: 900 } });
+    runHeadScript();
+    expect(env.rootAttrs.get(COMING_SOON_DOCK_ATTR)).toBe("idle");
+    env.rootAttrs.set(SHORT_SCREEN_ATTR, "1");
+    const { flight, chrome } = mountBoth(env);
+    expect(acquire()).toBeNull();
+    expect(env.rootAttrs.has(COMING_SOON_DOCK_ATTR)).toBe(false);
+    flight?.();
+    chrome?.();
+  });
+
+  it("reduced motion switched on after the script set idle: the dock clears it", () => {
+    const env = installDom(true, false, { ...desktop, viewport: { width: 1440, height: 900 } });
+    env.rootAttrs.set(COMING_SOON_DOCK_ATTR, "idle");
+    const { flight, chrome } = mountBoth(env);
+    expect(acquire()).toBeNull();
+    expect(env.rootAttrs.has(COMING_SOON_DOCK_ATTR)).toBe(false);
+    flight?.();
+    chrome?.();
+  });
+
+  it("a missing #home clears a stale idle attribute rather than leaving the header mark hidden", () => {
+    const env = installDom(false, false, { ...desktop, viewport: { width: 1440, height: 900 } });
+    env.rootAttrs.set(COMING_SOON_DOCK_ATTR, "idle");
+    vi.stubGlobal("document", {
+      documentElement: {
+        setAttribute: (k: string, v: string) => env.rootAttrs.set(k, v),
+        removeAttribute: (k: string) => env.rootAttrs.delete(k),
+        getAttribute: (k: string) => env.rootAttrs.get(k) ?? null,
+      },
+      getElementById: () => null,
+    });
+    expect(acquire()).toBeNull();
+    expect(env.rootAttrs.has(COMING_SOON_DOCK_ATTR)).toBe(false);
+  });
+
+  it("a live pin is never disturbed by a refused second acquire", () => {
+    const env = installDom(false, false, { ...desktop, viewport: { width: 1440, height: 900 } });
+    const first = acquire();
+    expect(first).not.toBeNull();
+    expect(env.rootAttrs.get(COMING_SOON_DOCK_ATTR)).toBe("idle");
+    const second = acquire();
+    expect(second).not.toBeNull();
+    expect(env.rootAttrs.get(COMING_SOON_DOCK_ATTR)).toBe("idle");
+  });
+
+  it("flag off: the dock never touches the attribute", () => {
+    vi.stubEnv("NEXT_PUBLIC_COMING_SOON", "");
+    const env = installDom(false);
+    env.rootAttrs.set(COMING_SOON_DOCK_ATTR, "idle");
+    const { flight, chrome } = mountBoth(env);
+    expect(acquire()).toBeNull();
+    expect(env.rootAttrs.get(COMING_SOON_DOCK_ATTR)).toBe("idle");
+    expect(env.rootAttrs.has(SHORT_SCREEN_ATTR)).toBe(false);
+    flight?.();
+    chrome?.();
   });
 });

@@ -9,6 +9,7 @@ vi.mock("gsap", () => {
 vi.mock("gsap/ScrollTrigger", () => ({ ScrollTrigger: {} }));
 
 import {
+  COMING_SOON_DOCK_ATTR,
   getShortScreenSnapshot,
   isShortScreen,
   SHORT_SCREEN_ATTR,
@@ -28,6 +29,7 @@ import {
 
 type Viewport = {
   win: {
+    location: { pathname: string };
     innerWidth: number;
     innerHeight: number;
     __csShortEval?: { width: number; height: number };
@@ -39,13 +41,21 @@ type Viewport = {
   resize: (width: number, height: number) => void;
 };
 
-function stubViewport(width: number, height: number): Viewport {
+function stubViewport(
+  width: number,
+  height: number,
+  options: { reduced?: boolean; path?: string } = {},
+): Viewport {
   const attrs = new Map<string, string>();
   const listeners = new Map<string, Array<() => void>>();
   const win = {
     innerWidth: width,
     innerHeight: height,
+    location: { pathname: options.path ?? "/" },
     matchMedia: (query: string) => {
+      if (query.includes("prefers-reduced-motion")) {
+        return { matches: Boolean(options.reduced) };
+      }
       const max = /\(max-height:\s*(\d+)px\)/.exec(query);
       return { matches: max ? win.innerHeight <= Number(max[1]) : false };
     },
@@ -327,5 +337,81 @@ describe("flag on, server rendering", () => {
     expect(layout).toMatch(/<head>[\s\S]*<ShortScreenScript\s*\/>[\s\S]*<\/head>/);
     expect(layout).toContain("suppressHydrationWarning");
     expect(layout).toMatch(/comingSoonEnabled\(\)/);
+  });
+});
+
+describe("the header mark is hidden by the head script too, so only the poster mark shows before the app runs", () => {
+  const css = readFileSync(join(process.cwd(), "app/globals.css"), "utf8");
+
+  it.each([
+    ["1440x621", 1440, 621],
+    ["1440x900", 1440, 900],
+    ["1440x1080", 1440, 1080],
+    ["390x664", 390, 664],
+    ["1366x657", 1366, 657],
+  ])("%s on the home route: the same script sets the dock attribute to idle", (_name, width, height) => {
+    const vp = stubViewport(width, height);
+    runInitScript();
+    expect(vp.attrs.get(SHORT_SCREEN_ATTR)).toBe("0");
+    expect(vp.attrs.get(COMING_SOON_DOCK_ATTR)).toBe("idle");
+  });
+
+  it.each([619, 620])("a %spx tall screen is docked: no idle attribute, only the header mark", (height) => {
+    const vp = stubViewport(1440, height);
+    runInitScript();
+    expect(vp.attrs.get(SHORT_SCREEN_ATTR)).toBe("1");
+    expect(vp.attrs.has(COMING_SOON_DOCK_ATTR)).toBe(false);
+  });
+
+  it("reduced motion is docked: no idle attribute, only the header mark", () => {
+    const vp = stubViewport(1440, 900, { reduced: true });
+    runInitScript();
+    expect(vp.attrs.has(COMING_SOON_DOCK_ATTR)).toBe(false);
+  });
+
+  it.each(["/editions", "/playlists", "/about"])("%s is not the home route: no idle attribute", (path) => {
+    const vp = stubViewport(1440, 900, { path });
+    runInitScript();
+    expect(vp.attrs.get(SHORT_SCREEN_ATTR)).toBe("0");
+    expect(vp.attrs.has(COMING_SOON_DOCK_ATTR)).toBe(false);
+  });
+
+  it("uses the dock's own attribute and value, not a second one", () => {
+    const script = shortScreenInitScript();
+    expect(script).toContain(COMING_SOON_DOCK_ATTR);
+    expect(COMING_SOON_DOCK_ATTR).toBe("data-cs-dock");
+    const vp = stubViewport(1440, 900);
+    runInitScript();
+    expect([...vp.attrs.keys()].sort()).toEqual([COMING_SOON_DOCK_ATTR, SHORT_SCREEN_ATTR].sort());
+  });
+
+  it("still never throws when the window is incomplete", () => {
+    const bare = new Function("window", "document", shortScreenInitScript());
+    expect(() => bare({ matchMedia: () => ({ matches: false }) }, { documentElement: { setAttribute() {} } })).not.toThrow();
+    expect(() => bare({ matchMedia: () => ({ matches: false }), location: undefined }, { documentElement: { setAttribute() {} } })).not.toThrow();
+  });
+
+  it("CSS hides the header mark while idle, and the docked states always win over a stale idle", () => {
+    expect(css).toMatch(/html\[data-cs-dock="idle"\] \.wordmark-drift-layer\s*\{[^}]*visibility:\s*hidden/);
+    const reduced = css.slice(
+      css.indexOf("@media (prefers-reduced-motion: reduce) {\n  .cs {\n    --cs-fit: 0;"),
+    );
+    expect(reduced).toMatch(
+      /html:has\(\.cs\) \.wordmark-drift-layer\s*\{[^}]*visibility:\s*visible/,
+    );
+    const short = css.slice(css.indexOf("/* docked: short screen */"));
+    expect(short).toMatch(
+      /html\[data-cs-short="1"\]:has\(\.cs\) \.wordmark-drift-layer\s*\{[^}]*visibility:\s*visible/,
+    );
+    // The docked rules are later in the file and at least as specific as the idle rule.
+    expect(css.indexOf('html[data-cs-dock="idle"] .wordmark-drift-layer')).toBeLessThan(
+      css.indexOf("/* docked: short screen */"),
+    );
+  });
+
+  it("the flag-off page gets no attribute from the script component", async () => {
+    vi.stubEnv("NEXT_PUBLIC_COMING_SOON", "");
+    const { ShortScreenScript } = await import("@/components/ShortScreenScript");
+    expect(ShortScreenScript()).toBeNull();
   });
 });
