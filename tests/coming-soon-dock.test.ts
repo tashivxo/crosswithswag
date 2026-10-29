@@ -442,6 +442,61 @@ describe("flight", () => {
   });
 });
 
+describe("header background timing", () => {
+  const num = (value: unknown, fallback: number) =>
+    typeof value === "number" ? value : fallback;
+
+  it("stays transparent until the mark lands, then fills over only the last 5% of the timeline", () => {
+    const env = installDom(false);
+    const { flight, chrome } = mountBoth(env);
+    const [tl] = h.state.timelines;
+
+    const flightCall = tl.calls.find(
+      (c) => c.kind === "fromTo" && c.args[0] === env.layer,
+    );
+    const landing =
+      num(flightCall?.args[3], 0) +
+      num((flightCall?.args[2] as { duration?: number }).duration, 0.5);
+
+    const fill = tl.calls.find(
+      (c) =>
+        c.args[0] === env.header && "--header-solid" in (c.args[1] as object),
+    );
+    const fillStart = num(fill?.args[3], 0);
+    const fillEnd =
+      fillStart + num((fill?.args[2] as { duration?: number }).duration, 0.5);
+
+    expect(landing).toBeLessThanOrEqual(0.95 + 1e-9);
+    expect(fillStart).toBeGreaterThanOrEqual(landing - 1e-9);
+    expect(fillEnd).toBeCloseTo(1);
+    expect(fillEnd - fillStart).toBeLessThanOrEqual(0.05 + 1e-9);
+
+    flight?.();
+    chrome?.();
+  });
+
+  it("finishes the MENU fade and header line no later than the landing", () => {
+    const env = installDom(false);
+    const { flight, chrome } = mountBoth(env);
+    const [tl] = h.state.timelines;
+    const flightCall = tl.calls.find(
+      (c) => c.kind === "fromTo" && c.args[0] === env.layer,
+    );
+    const landing =
+      num(flightCall?.args[3], 0) +
+      num((flightCall?.args[2] as { duration?: number }).duration, 0.5);
+
+    const menu = tl.calls.find((c) => c.args[0] === env.chrome);
+    const menuEnd =
+      num(menu?.args[3], 0) +
+      num((menu?.args[2] as { duration?: number }).duration, 0.5);
+    expect(menuEnd).toBeLessThanOrEqual(landing + 1e-9);
+
+    flight?.();
+    chrome?.();
+  });
+});
+
 describe("one visible mark", () => {
   const root = (env: Env) => env.rootAttrs.get(COMING_SOON_DOCK_ATTR);
   const progress = (value: number) =>
