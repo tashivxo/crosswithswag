@@ -161,6 +161,32 @@ const mobile: Geometry = {
   layerWidth: 240,
 };
 
+// Laptop and phone sizes with the poster scaled to the viewport height
+// (see tests/coming-soon-fit.test.ts for the layout model they come from).
+const laptop: Geometry = {
+  viewport: { width: 1366, height: 657 },
+  poster: rect(56, 82, 572, 210),
+  slot: slotBox,
+  label: rect(56, 35, 1254, 13),
+  layerWidth: 619,
+};
+
+const laptop720: Geometry = {
+  viewport: { width: 1280, height: 720 },
+  poster: rect(56, 94, 592, 218),
+  slot: slotBox,
+  label: rect(56, 41, 1168, 13),
+  layerWidth: 580,
+};
+
+const phone: Geometry = {
+  viewport: { width: 390, height: 664 },
+  poster: rect(24, 59, 224, 82),
+  slot: rect(18, 4, 88, 62),
+  label: rect(24, 20, 342, 13),
+  layerWidth: 240,
+};
+
 type Env = {
   home: ReturnType<typeof fakeElement>;
   poster: ReturnType<typeof fakeElement>;
@@ -358,6 +384,28 @@ describe("nav starts docked on short screens", () => {
   const withHeight = (height: number): Geometry => ({
     ...desktop,
     viewport: { ...desktop.viewport, height },
+  });
+
+  it("the breakpoint is 620px: only truly short screens get the docked fallback", () => {
+    expect(SHORT_SCREEN_MAX_HEIGHT).toBe(620);
+    expect(SHORT_SCREEN_QUERY).toBe("(max-height: 620px)");
+    expect(css).toContain(
+      "@media (prefers-reduced-motion: reduce), (max-height: 620px) {",
+    );
+    expect(css).not.toMatch(/max-height:\s*860px/);
+  });
+
+  it.each([
+    ["619px", 619, true],
+    ["620px", 620, true],
+    ["621px", 621, false],
+  ])("a %s tall screen is short: %s", (_label, height, short) => {
+    const env = installDom(false, false, withHeight(height));
+    expect(getShortScreenSnapshot()).toBe(short);
+    const { flight, chrome } = mountBoth(env);
+    expect(acquire() === null).toBe(short);
+    flight?.();
+    chrome?.();
   });
 
   it("uses one breakpoint, shared by CSS and JS, as a max-height media query", () => {
@@ -764,7 +812,7 @@ describe("COMING SOON label", () => {
 
   it("fades over about 15% of the flight: the start is the end minus 15%", () => {
     expect(LABEL_FADE_LENGTH).toBe(0.15);
-    for (const geo of [desktop, mobile]) {
+    for (const geo of [desktop, mobile, laptop, laptop720, phone]) {
       const { env, flight, chrome } = mount(geo);
       const { start, end } = fadeWindow(env);
       expect(end - start).toBeGreaterThanOrEqual(0.14);
@@ -797,6 +845,33 @@ describe("COMING SOON label", () => {
     chrome?.();
   });
 
+  it.each([
+    ["laptop 1366x657", laptop],
+    ["laptop 1280x720", laptop720],
+    ["phone 390x664", phone],
+  ])(
+    "scaled poster on %s: window is 15% long, ends by 70% and 2% before contact",
+    (_name, geo) => {
+      const { env, flight, chrome } = mount(geo);
+      const { start, end } = fadeWindow(env);
+      let contact = 1;
+      for (let i = 0; i <= 2000; i++) {
+        const f = i / 2000;
+        if (overlaps(markBox(geo, f), geo.label)) {
+          contact = f;
+          break;
+        }
+      }
+      expect(end - start).toBeGreaterThanOrEqual(0.14);
+      expect(end - start).toBeLessThanOrEqual(0.16);
+      expect(end).toBeLessThanOrEqual(0.7 + 0.005);
+      expect(end).toBeLessThanOrEqual(contact - 0.015);
+      expect(start).toBeGreaterThanOrEqual(0);
+      flight?.();
+      chrome?.();
+    },
+  );
+
   it("never starts before 0 when the mark's box reaches the label almost at once", () => {
     const early: Geometry = {
       ...desktop,
@@ -816,6 +891,9 @@ describe("COMING SOON label", () => {
   it.each([
     ["desktop", desktop],
     ["mobile", mobile],
+    ["laptop 1366x657", laptop],
+    ["laptop 1280x720", laptop720],
+    ["phone 390x664", phone],
   ])("is at opacity 0 by 70% of the flight on %s", (_name, geo) => {
     const { env, flight, chrome } = mount(geo);
     expect(labelAt(env, 0.7).opacity).toBe(0);
@@ -828,6 +906,9 @@ describe("COMING SOON label", () => {
   it.each([
     ["desktop", desktop],
     ["mobile", mobile],
+    ["laptop 1366x657", laptop],
+    ["laptop 1280x720", laptop720],
+    ["phone 390x664", phone],
   ])(
     "is never visible while the mark's box overlaps the label's box on %s",
     (_name, geo) => {
