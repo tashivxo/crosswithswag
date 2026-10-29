@@ -133,6 +133,7 @@ const slotBox = rect(56, 4, 120, 84);
 type Env = {
   home: ReturnType<typeof fakeElement>;
   poster: ReturnType<typeof fakeElement>;
+  label: ReturnType<typeof fakeElement>;
   layer: ReturnType<typeof fakeElement>;
   slot: ReturnType<typeof fakeElement>;
   chrome: ReturnType<typeof fakeElement>;
@@ -142,10 +143,12 @@ type Env = {
 
 function installDom(reduceMotion: boolean, coarse = false): Env {
   const poster = fakeElement(posterBox);
+  const label = fakeElement(rect(56, 56, 90, 13));
   const cs = fakeElement(rect(0, 0, 1440, 800));
   const home = fakeElement(rect(0, 0, 1440, 800), {
     querySelector: vi.fn((selector: string) => {
       if (selector === ".cs-wordmark") return poster;
+      if (selector === ".cs-label--top") return label;
       if (selector === ".cs") return cs;
       return null;
     }),
@@ -191,6 +194,7 @@ function installDom(reduceMotion: boolean, coarse = false): Env {
   return {
     home,
     poster,
+    label,
     layer: fakeElement(rect(0, 0, 652, 457)),
     slot: fakeElement(slotBox),
     chrome: fakeElement(rect(1300, 20, 60, 44)),
@@ -494,6 +498,139 @@ describe("header background timing", () => {
 
     flight?.();
     chrome?.();
+  });
+});
+
+describe("COMING SOON label", () => {
+  const num = (value: unknown, fallback: number) =>
+    typeof value === "number" ? value : fallback;
+
+  function flightLanding(env: Env) {
+    const [tl] = h.state.timelines;
+    const call = tl.calls.find(
+      (c) => c.kind === "fromTo" && c.args[0] === env.layer,
+    );
+    return (
+      num(call?.args[3], 0) +
+      num((call?.args[2] as { duration?: number }).duration, 0.5)
+    );
+  }
+
+  function labelCall(env: Env) {
+    const [tl] = h.state.timelines;
+    const call = tl.calls.find((c) => c.args[0] === env.label);
+    expect(call, "label tween missing").toBeDefined();
+    const from = call?.args[1] as Record<string, number>;
+    const to = call?.args[2] as Record<string, number | string>;
+    const start = num(call?.args[3], 0);
+    const end = start + num(to.duration, 0.5);
+    return { call, from, to, start, end };
+  }
+
+  it("starts fading at about 80% of the flight", () => {
+    const env = installDom(false);
+    const { flight, chrome } = mountBoth(env);
+    const { start } = labelCall(env);
+    const ratio = start / flightLanding(env);
+    expect(ratio).toBeGreaterThanOrEqual(0.75);
+    expect(ratio).toBeLessThanOrEqual(0.85);
+    flight?.();
+    chrome?.();
+  });
+
+  it("is fully transparent before the mark lands, so they never overlap", () => {
+    const env = installDom(false);
+    const { flight, chrome } = mountBoth(env);
+    const { from, to, end } = labelCall(env);
+    expect(from.opacity).toBe(1);
+    expect(to.opacity).toBe(0);
+    expect(end).toBeLessThan(flightLanding(env));
+    flight?.();
+    chrome?.();
+  });
+
+  it("drifts upward by 4 to 6px as it fades", () => {
+    const env = installDom(false);
+    const { flight, chrome } = mountBoth(env);
+    const { from, to } = labelCall(env);
+    expect(from.y).toBe(0);
+    expect(Number(to.y)).toBeLessThanOrEqual(-4);
+    expect(Number(to.y)).toBeGreaterThanOrEqual(-6);
+    flight?.();
+    chrome?.();
+  });
+
+  it("is a scrubbed tween on the one shared timeline, so scroll back reverses it, with no new trigger or pin", () => {
+    const env = installDom(false);
+    const { flight, chrome } = mountBoth(env);
+    const { call, to } = labelCall(env);
+    expect(call?.kind).toBe("fromTo");
+    expect(h.state.timelines[0].calls).toContain(call);
+    expect(to.ease).toBe("none");
+    expect("scrollTrigger" in to).toBe(false);
+    expect(h.state.timelines).toHaveLength(1);
+    expect(h.ScrollTrigger.create).not.toHaveBeenCalled();
+    expect(h.gsap.to).not.toHaveBeenCalled();
+    expect(h.gsap.fromTo).not.toHaveBeenCalled();
+    expect(pinConfigs()).toHaveLength(1);
+    flight?.();
+    chrome?.();
+  });
+
+  it("is restored when the flight unmounts", () => {
+    const env = installDom(false);
+    const { flight, chrome } = mountBoth(env);
+    flight?.();
+    expect(h.state.contexts[0].revert).toHaveBeenCalledTimes(1);
+    chrome?.();
+  });
+
+  it("is hidden from first paint with reduced motion, as a plain opacity switch with no drift, and never scrolls back in", () => {
+    const env = installDom(true);
+    const { flight, chrome } = mountBoth(env);
+
+    const set = h.state.sets.find(([t]) => t === env.label)?.[1] as
+      | Record<string, unknown>
+      | undefined;
+    expect(set).toMatchObject({ opacity: 0 });
+    expect(set).not.toHaveProperty("y");
+    expect(set).not.toHaveProperty("x");
+
+    expect(h.gsap.timeline).not.toHaveBeenCalled();
+    expect(h.gsap.to).not.toHaveBeenCalled();
+    expect(h.gsap.fromTo).not.toHaveBeenCalled();
+    expect(h.ScrollTrigger.create).not.toHaveBeenCalled();
+    expect(pinConfigs()).toHaveLength(0);
+
+    flight?.();
+    chrome?.();
+  });
+
+  it("leaves the label alone when the flag is off", () => {
+    vi.stubEnv("NEXT_PUBLIC_COMING_SOON", "");
+    const env = installDom(true);
+    mountBoth(env);
+    expect(h.state.sets.some(([t]) => t === env.label)).toBe(false);
+  });
+
+  const css = readFileSync(join(process.cwd(), "app/globals.css"), "utf8");
+
+  it("hides the label in CSS before any script runs when motion is reduced, with no transition", () => {
+    const start = css.lastIndexOf("@media (prefers-reduced-motion: reduce)");
+    const blocks = [...css.matchAll(/@media \(prefers-reduced-motion: reduce\) \{/g)];
+    const hits = blocks
+      .map((m) => css.slice(m.index, css.indexOf("\n}\n", m.index)))
+      .filter((block) => block.includes(".cs-label--top"));
+    expect(start).toBeGreaterThan(0);
+    expect(hits).toHaveLength(1);
+    expect(hits[0]).toMatch(/\.cs-label--top\s*\{[^}]*opacity:\s*0/);
+    expect(hits[0]).toMatch(/\.cs-label--top\s*\{[^}]*transition:\s*none/);
+    expect(hits[0]).not.toMatch(/transform|translate/);
+  });
+
+  it("does not hide the label outside reduced motion", () => {
+    const base = css.slice(css.indexOf(".cs-label {"), css.indexOf(".cs-label--field"));
+    expect(base).not.toMatch(/opacity:\s*0/);
   });
 });
 
