@@ -2249,3 +2249,25 @@ button:focus-visible {
   .cs-progress__bar { animation: none; }
   .cs-input, .cs-checkbox, .cs-button { transition: none; }
 }
+
+/* Coming-soon pin and flight. The attribute is only set on <html> while the
+   shared pin exists (flag on, motion allowed, home route), so inner routes,
+   reduced motion and the flag-off site never match these rules. */
+html[data-cs-dock="idle"] .wordmark-drift-layer {
+  visibility: hidden;
+}
+
+html[data-cs-dock="flying"] .wordmark-drift-layer {
+  visibility: visible;
+}
+
+/* Hidden, not removed: the poster mark keeps its layout box. */
+html[data-cs-dock="flying"] .cs-wordmark {
+  visibility: hidden;
+}
+
+/* Transparent until the dock completes, so a veil behind the poster shows
+   through the header strip. --header-solid is driven by the shared timeline. */
+html[data-cs-dock] .site-header {
+  background: rgba(10, 10, 10, var(--header-solid, 0));
+}

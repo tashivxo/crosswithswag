@@ -11,6 +11,7 @@ import {
   getDockScrub,
   getWordmarkDockTrigger,
 } from "@/components/v3/WordmarkDriftDock";
+import { mountComingSoonChrome } from "@/lib/coming-soon-dock";
 import {
   isHomeIntroSeen,
   queueRouteScroll,
@@ -170,6 +171,11 @@ export function SiteHeader({
 
     const chrome = chromeRef.current;
     const header = headerRef.current;
+    if (mode === "hero") {
+      const cleanup = mountComingSoonChrome({ chrome, header });
+      if (cleanup) return cleanup;
+    }
+
     const intro = getWordmarkDockTrigger();
     const reduceMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
