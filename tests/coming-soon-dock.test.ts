@@ -211,12 +211,24 @@ function pinConfigs() {
   );
 }
 
+const pendingCleanups: (() => void)[] = [];
+
+function acquire() {
+  const dock = acquireComingSoonDock();
+  if (dock) pendingCleanups.push(dock.release);
+  return dock;
+}
+
 function mountBoth(env: Env) {
-  const flight = mountComingSoonFlight({ layer: env.layer as never, slot: env.slot as never });
+  const flight = mountComingSoonFlight({
+    layer: env.layer as never,
+    slot: env.slot as never,
+  });
   const chrome = mountComingSoonChrome({
     chrome: env.chrome as never,
     header: env.header as never,
   });
+  for (const cleanup of [flight, chrome]) if (cleanup) pendingCleanups.push(cleanup);
   return { flight, chrome };
 }
 
@@ -231,6 +243,8 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+  // A failing assertion must not leak a live pin into the next test.
+  while (pendingCleanups.length) pendingCleanups.pop()?.();
   vi.unstubAllEnvs();
   vi.unstubAllGlobals();
 });
@@ -240,7 +254,7 @@ describe("flag off", () => {
     vi.stubEnv("NEXT_PUBLIC_COMING_SOON", "");
     const env = installDom(false);
 
-    expect(acquireComingSoonDock()).toBeNull();
+    expect(acquire()).toBeNull();
     expect(mountBoth(env)).toEqual({ flight: null, chrome: null });
 
     expect(h.gsap.timeline).not.toHaveBeenCalled();
@@ -254,7 +268,7 @@ describe("flag off", () => {
   it("treats any value other than 1 as off", () => {
     vi.stubEnv("NEXT_PUBLIC_COMING_SOON", "true");
     installDom(false);
-    expect(acquireComingSoonDock()).toBeNull();
+    expect(acquire()).toBeNull();
     expect(h.gsap.timeline).not.toHaveBeenCalled();
   });
 });
@@ -266,7 +280,7 @@ describe("reduced motion", () => {
 
     expect(flight).toBeTypeOf("function");
     expect(chrome).toBeTypeOf("function");
-    expect(acquireComingSoonDock()).toBeNull();
+    expect(acquire()).toBeNull();
 
     expect(h.gsap.timeline).not.toHaveBeenCalled();
     expect(h.ScrollTrigger.create).not.toHaveBeenCalled();
@@ -297,7 +311,7 @@ describe("poster taller than the viewport", () => {
     env.home.offsetHeight = 1000;
     const { flight, chrome } = mountBoth(env);
 
-    expect(acquireComingSoonDock()).toBeNull();
+    expect(acquire()).toBeNull();
     expect(h.gsap.timeline).not.toHaveBeenCalled();
     expect(pinConfigs()).toHaveLength(0);
     expect(env.rootAttrs.has(COMING_SOON_DOCK_ATTR)).toBe(false);
@@ -337,8 +351,8 @@ describe("pin shared between the poster mark and the header", () => {
 
   it("hands the same timeline to every acquirer", () => {
     installDom(false);
-    const a = acquireComingSoonDock();
-    const b = acquireComingSoonDock();
+    const a = acquire();
+    const b = acquire();
     expect(a).not.toBeNull();
     expect(b).not.toBeNull();
     expect(a?.timeline).toBe(b?.timeline);
