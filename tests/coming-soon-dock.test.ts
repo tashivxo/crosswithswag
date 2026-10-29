@@ -100,6 +100,7 @@ import {
   HEADER_GLYPH_FRACTION,
   LABEL_FADE_LENGTH,
   SHORT_SCREEN_MAX_HEIGHT,
+  SHORT_SCREEN_ATTR,
   SHORT_SCREEN_QUERY,
   acquireComingSoonDock,
   getShortScreenSnapshot,
@@ -107,6 +108,24 @@ import {
   mountComingSoonChrome,
   mountComingSoonFlight,
 } from "@/lib/coming-soon-dock";
+
+const globalsCss = readFileSync(join(process.cwd(), "app/globals.css"), "utf8");
+
+/** CSS the docked state applies for reduced motion (a media query, live). */
+function reducedMotionDockedCss() {
+  const start = globalsCss.indexOf("@media (prefers-reduced-motion: reduce) {\n  .cs {\n    --cs-fit: 0;");
+  expect(start, "reduced-motion docked block missing").toBeGreaterThan(0);
+  return globalsCss.slice(start, globalsCss.indexOf("\n}\n", start));
+}
+
+/** CSS the docked state applies for a short screen: keyed off the attribute, not a media query. */
+function shortScreenDockedCss() {
+  const start = globalsCss.indexOf("/* docked: short screen */");
+  const end = globalsCss.indexOf("/* end docked: short screen */");
+  expect(start, "short-screen docked block missing").toBeGreaterThan(0);
+  expect(end).toBeGreaterThan(start);
+  return globalsCss.slice(start, end);
+}
 
 function rect(left: number, top: number, width: number, height: number) {
   return {
@@ -389,9 +408,6 @@ describe("nav starts docked on short screens", () => {
   it("the breakpoint is 620px: only truly short screens get the docked fallback", () => {
     expect(SHORT_SCREEN_MAX_HEIGHT).toBe(620);
     expect(SHORT_SCREEN_QUERY).toBe("(max-height: 620px)");
-    expect(css).toContain(
-      "@media (prefers-reduced-motion: reduce), (max-height: 620px) {",
-    );
     expect(css).not.toMatch(/max-height:\s*860px/);
   });
 
@@ -408,12 +424,11 @@ describe("nav starts docked on short screens", () => {
     chrome?.();
   });
 
-  it("uses one breakpoint, shared by CSS and JS, as a max-height media query", () => {
+  it("one decision drives both: the query is evaluated in JS and CSS keys off the attribute it sets, never a live max-height media query", () => {
     expect(SHORT_SCREEN_QUERY).toBe(`(max-height: ${SHORT_SCREEN_MAX_HEIGHT}px)`);
-    const prelude = `@media (prefers-reduced-motion: reduce), ${SHORT_SCREEN_QUERY} {`;
-    expect(css).toContain(prelude);
-    const maxHeights = css.match(/max-height:\s*\d+px/g) ?? [];
-    expect(new Set(maxHeights.filter((q) => q.includes(`${SHORT_SCREEN_MAX_HEIGHT}px`))).size).toBe(1);
+    expect(SHORT_SCREEN_ATTR).toBe("data-cs-short");
+    expect(css).not.toMatch(/@media[^{]*max-height/);
+    expect(css).toContain(`html[${SHORT_SCREEN_ATTR}="1"]`);
   });
 
   it.each([
@@ -484,13 +499,18 @@ describe("nav starts docked on short screens", () => {
   });
 
   it("collapses the poster mark and the COMING SOON label in CSS, with no JS", () => {
-    const prelude = `@media (prefers-reduced-motion: reduce), ${SHORT_SCREEN_QUERY} {`;
-    const block = css.slice(css.indexOf(prelude), css.indexOf("\n}\n", css.indexOf(prelude)));
-    expect(block).toMatch(/\.cs-wordmark,\s*\.cs-label--top\s*\{[^}]*display:\s*none/);
-    expect(block).not.toMatch(/visibility:\s*hidden/);
-    // The header mark is docked and MENU is visible before any script runs.
-    expect(block).toMatch(/html:has\(\.cs\) \.wordmark-drift-layer\s*\{[^}]*transform:\s*scale/);
-    expect(block).toMatch(/html:has\(\.cs\) \.site-header__chrome\s*\{[^}]*opacity:\s*1/);
+    const short = `html[${SHORT_SCREEN_ATTR}="1"]`;
+    const reduced = reducedMotionDockedCss();
+    const attr = shortScreenDockedCss();
+    for (const block of [reduced, attr]) {
+      expect(block).toMatch(/\.cs-wordmark,[^{]*\.cs-label--top\s*\{[^}]*display:\s*none/);
+      expect(block).not.toMatch(/visibility:\s*hidden/);
+      // The header mark is docked and MENU is visible before any script runs.
+      expect(block).toMatch(/\.wordmark-drift-layer\s*\{[^}]*transform:\s*scale/);
+      expect(block).toMatch(/\.site-header__chrome\s*\{[^}]*opacity:\s*1/);
+    }
+    expect(attr).toContain(`${short} .cs-wordmark`);
+    expect(attr).toMatch(new RegExp(`${short.replace(/[[\]"]/g, "\\$&")} \\.cs \\{[^}]*--cs-fit:\\s*0`));
   });
 
   it("does not collapse the poster outside those queries", () => {
@@ -501,18 +521,26 @@ describe("nav starts docked on short screens", () => {
   });
 
   it("is flag-scoped: the header rules only match when the coming-soon poster is on the page", () => {
-    const prelude = `@media (prefers-reduced-motion: reduce), ${SHORT_SCREEN_QUERY} {`;
-    const block = css.slice(css.indexOf(prelude), css.indexOf("\n}\n", css.indexOf(prelude)));
-    const selectors = (block.match(/^\s*[^{}\n]+\{/gm) ?? []).slice(1);
-    expect(selectors.length).toBeGreaterThan(0);
-    for (const selector of selectors) {
+    const reduced = (reducedMotionDockedCss().match(/^\s*[^{}\n@]+\{/gm) ?? []);
+    expect(reduced.length).toBeGreaterThan(0);
+    for (const selector of reduced) {
       expect(selector.trim()).toMatch(/^(html:has\(\.cs\)|\.cs)/);
+    }
+    const short = (shortScreenDockedCss().match(/^\s*[^{}\n@/*]+\{/gm) ?? []);
+    expect(short.length).toBeGreaterThan(0);
+    for (const selector of short) {
+      expect(selector.trim()).toMatch(
+        new RegExp(`^html\\[${SHORT_SCREEN_ATTR}="1"\\](:has\\(\\.cs\\))? (\\.cs|\\.site-header|\\.wordmark-drift-layer)`),
+      );
     }
   });
 
   it("gives the form the room once the poster mark and label are gone", () => {
     expect(css).toMatch(
-      /@media \(min-width: 1100px\) and \(prefers-reduced-motion: reduce\),\s*\(min-width: 1100px\) and \(max-height: \d+px\) \{[^}]*\.cs-right\s*\{[^}]*margin-top/,
+      /@media \(min-width: 1100px\) and \(prefers-reduced-motion: reduce\) \{[^}]*\.cs-right\s*\{[^}]*margin-top/,
+    );
+    expect(shortScreenDockedCss()).toMatch(
+      /@media \(min-width: 1100px\) \{\s*html\[data-cs-short="1"\] \.cs-right\s*\{[^}]*margin-top/,
     );
   });
 
@@ -526,23 +554,24 @@ describe("nav starts docked on short screens", () => {
     expect(getShortScreenSnapshot()).toBe(false);
   });
 
-  it("subscribes to the media query so crossing the breakpoint rebuilds the dock", () => {
+  it("subscribes to resize, not to the live media query, so the URL bar cannot flip the dock", () => {
     installDom(false);
     const add = vi.fn();
     const remove = vi.fn();
-    const queries: string[] = [];
+    const matchMedia = vi.fn();
     vi.stubGlobal("window", {
-      matchMedia: (query: string) => {
-        queries.push(query);
-        return { matches: false, addEventListener: add, removeEventListener: remove };
-      },
+      innerWidth: 390,
+      innerHeight: 664,
+      matchMedia,
+      addEventListener: add,
+      removeEventListener: remove,
     });
     const callback = vi.fn();
     const unsubscribe = subscribeShortScreen(callback);
-    expect(queries).toEqual([SHORT_SCREEN_QUERY]);
-    expect(add).toHaveBeenCalledWith("change", callback);
+    expect(add.mock.calls.map(([type]) => type)).toContain("resize");
+    expect(matchMedia).not.toHaveBeenCalled();
     unsubscribe();
-    expect(remove).toHaveBeenCalledWith("change", callback);
+    expect(remove.mock.calls.map(([type]) => type)).toContain("resize");
   });
 });
 
@@ -1027,11 +1056,9 @@ describe("COMING SOON label", () => {
   const css = readFileSync(join(process.cwd(), "app/globals.css"), "utf8");
 
   it("collapses the poster mark and label in CSS before any script runs when motion is reduced", () => {
-    const prelude = `@media (prefers-reduced-motion: reduce), ${SHORT_SCREEN_QUERY} {`;
-    const start = css.indexOf(prelude);
-    expect(start).toBeGreaterThan(0);
-    const block = css.slice(start, css.indexOf("\n}\n", start));
-    expect(block).toMatch(/\.cs-wordmark,\s*\.cs-label--top\s*\{[^}]*display:\s*none/);
+    expect(reducedMotionDockedCss()).toMatch(
+      /\.cs-wordmark,\s*\.cs-label--top\s*\{[^}]*display:\s*none/,
+    );
   });
 
   it("does not hide the label outside reduced motion", () => {
