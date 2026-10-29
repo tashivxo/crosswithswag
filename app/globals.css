@@ -2246,6 +2246,8 @@ button:focus-visible {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  /* The nav mark is docked from load, so the poster label would sit under it. */
+  .cs-label--top { opacity: 0; transition: none; }
   .cs-progress__bar { animation: none; }
   .cs-input, .cs-checkbox, .cs-button { transition: none; }
 }

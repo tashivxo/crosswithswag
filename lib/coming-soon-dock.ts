@@ -9,6 +9,15 @@ export const COMING_SOON_DOCK_ATTR = "data-cs-dock";
 /** Timeline position where the mark lands in the nav slot. The header fills solid only in the 5% after it. */
 export const COMING_SOON_LANDING = 0.95;
 
+/** The label starts fading at this share of the flight (0.8 * landing on the timeline). */
+export const LABEL_FADE_START = 0.8;
+
+/** Timeline length of the label fade. Ends well before the landing so label and mark never overlap. */
+export const LABEL_FADE_SPAN = 0.1;
+
+/** Upward drift of the label while it fades, in px. */
+export const LABEL_DRIFT_PX = 5;
+
 /** Pin length as a share of the viewport height. */
 export const COMING_SOON_PIN_VH = 0.6;
 
@@ -230,6 +239,20 @@ export function mountComingSoonFlight({
     };
   };
 
+  if (prefersReducedMotion()) {
+    // The mark is docked from load, so the poster label would sit under it:
+    // hide it from first paint (CSS does the same before scripts run).
+    const label = document
+      .getElementById("home")
+      ?.querySelector<HTMLElement>(".cs-label--top");
+    if (label) gsap.set(label, { opacity: 0 });
+    const undock = showDocked();
+    return () => {
+      undock();
+      if (label) gsap.set(label, { clearProps: "opacity" });
+    };
+  }
+
   const dock = acquireComingSoonDock();
   const poster = dock?.home.querySelector<HTMLElement>(".cs-wordmark") ?? null;
   if (!dock || !poster) {
@@ -238,6 +261,7 @@ export function mountComingSoonFlight({
   }
 
   const { home, timeline } = dock;
+  const label = home.querySelector<HTMLElement>(".cs-label--top");
   const ctx = gsap.context(() => {
     timeline.fromTo(
       layer,
@@ -259,6 +283,20 @@ export function mountComingSoonFlight({
       },
       0,
     );
+
+    if (label) {
+      timeline.fromTo(
+        label,
+        { opacity: 1, y: 0 },
+        {
+          opacity: 0,
+          y: -LABEL_DRIFT_PX,
+          ease: "none",
+          duration: LABEL_FADE_SPAN,
+        },
+        LABEL_FADE_START * COMING_SOON_LANDING,
+      );
+    }
   }, layer);
 
   return once(() => {
