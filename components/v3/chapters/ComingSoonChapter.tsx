@@ -1,10 +1,12 @@
 import { Wordmark } from "@/components/ui/Wordmark";
+import { ComingSoonVeil } from "@/components/v3/ComingSoonVeil";
 import { ComingSoonForm } from "@/components/v3/ComingSoonForm";
 import { comingSoon as copy } from "@/lib/copy";
 
 export function ComingSoonChapter({ id }: { id?: string }) {
   return (
     <section id={id} className="cs" aria-labelledby="cs-statement">
+      <ComingSoonVeil />
       <p className="cs-label cs-label--top">{copy.label}</p>
 
       <div className="cs-left">

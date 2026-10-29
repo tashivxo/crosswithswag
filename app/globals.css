@@ -1998,6 +1998,18 @@ button:focus-visible {
   overflow: hidden;
 }
 
+/* DarkVeil sits behind the poster content and never leaves the chapter. */
+.cs-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+.cs > *:not(.cs-veil) {
+  position: relative;
+  z-index: 1;
+}
+
 .cs-label {
   font-size: 11px;
   line-height: 13px;
