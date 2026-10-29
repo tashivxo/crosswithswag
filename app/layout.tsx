@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Instrument_Sans } from "next/font/google";
 import "./globals.css";
 import { LenisProvider } from "@/components/providers/LenisProvider";
+import { ShortScreenScript } from "@/components/ShortScreenScript";
+import { comingSoonEnabled } from "@/lib/coming-soon";
 import { meta } from "@/lib/copy";
 
 const instrumentSans = Instrument_Sans({
@@ -35,8 +37,20 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const comingSoon = comingSoonEnabled();
+
   return (
-    <html lang="en" className={instrumentSans.variable}>
+    // The head script sets data-cs-short on <html> before hydration (flag on only).
+    <html
+      lang="en"
+      className={instrumentSans.variable}
+      suppressHydrationWarning={comingSoon || undefined}
+    >
+      {comingSoon ? (
+        <head>
+          <ShortScreenScript />
+        </head>
+      ) : null}
       <body>
         <LenisProvider>{children}</LenisProvider>
       </body>

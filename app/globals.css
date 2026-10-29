@@ -1985,6 +1985,29 @@ button:focus-visible {
   --cs-sand-50: rgba(214, 209, 196, 0.5);
   --cs-sand-35: rgba(214, 209, 196, 0.35);
   --cs-clay-light: #c98a70;
+  /* Poster fitted to the viewport height, so #home fits one screen while
+     pinned. Each token runs from its natural size (tall screens, unchanged)
+     down to a floor. --cs-ref is the screen height at which the natural
+     poster + form + 58px of validation-error headroom just fits (860px in the
+     stacked layout, 902px at 1100px wide and up, more on narrow phones where
+     the consent text wraps); --cs-k is 1 / (--cs-ref - 626px), so every floor
+     is reached at 626px tall, just above the 620px docked breakpoint. svh, never
+     plain vh or dvh: the mobile URL bar must not change the layout. The
+     nav-starts-docked block below sets --cs-fit to 0, which restores the
+     natural sizes. */
+  --cs-vh: 100vh;
+  --cs-fit: 1;
+  --cs-ref: 860px;
+  --cs-k: 0.004274;
+  --cs-slack: calc(var(--cs-vh) - var(--cs-ref));
+  --cs-pad-y: clamp(15px, calc(28px + var(--cs-fit) * var(--cs-slack) * var(--cs-k) * 13), 28px);
+  --cs-left-top: clamp(14px, calc(56px + var(--cs-fit) * var(--cs-slack) * var(--cs-k) * 42), 56px);
+  --cs-mark-w: clamp(180px, calc(342px + var(--cs-fit) * var(--cs-slack) * var(--cs-k) * 162), 342px);
+  --cs-ident-top: clamp(14px, calc(24px + var(--cs-fit) * var(--cs-slack) * var(--cs-k) * 10), 24px);
+  --cs-stmt-top: clamp(14px, calc(56px + var(--cs-fit) * var(--cs-slack) * var(--cs-k) * 42), 56px);
+  --cs-right-top: clamp(16px, calc(40px + var(--cs-fit) * var(--cs-slack) * var(--cs-k) * 24), 40px);
+  --cs-form-gap: clamp(14px, calc(24px + var(--cs-fit) * var(--cs-slack) * var(--cs-k) * 10), 24px);
+  --cs-foot-pad: clamp(8px, calc(48px + var(--cs-fit) * var(--cs-slack) * var(--cs-k) * 40), 48px);
   position: relative;
   min-height: 100dvh;
   display: grid;
@@ -1992,7 +2015,7 @@ button:focus-visible {
   grid-template-areas: "label" "left" "right" "fl";
   grid-template-rows: auto auto auto 1fr;
   row-gap: 0;
-  padding: 28px 24px;
+  padding: var(--cs-pad-y) 24px;
   background: var(--void);
   color: var(--sand);
   overflow: hidden;
@@ -2020,10 +2043,25 @@ button:focus-visible {
 .cs-label--top { grid-area: label; }
 .cs-label--field { color: var(--cs-sand-80); }
 
-.cs-left { grid-area: left; margin-top: 56px; }
+@supports (height: 100svh) {
+  .cs {
+    --cs-vh: 100svh;
+  }
+}
+
+/* Narrow phones: the consent text wraps and the form grows by about 24px, and
+   the mark is capped by the column width so its scaling takes effect later. */
+@media (max-width: 389px) {
+  .cs {
+    --cs-ref: 900px;
+    --cs-k: 0.00365;
+  }
+}
+
+.cs-left { grid-area: left; margin-top: var(--cs-left-top); }
 /* Figma frame is 652x239.83; the shared mask SVG carries padding, so crop it. */
 .cs-wordmark {
-  width: min(342px, 100%);
+  width: min(var(--cs-mark-w), 100%);
   aspect-ratio: 652 / 239.83;
   color: var(--sand);
   /* glyph bbox is 76.1% of the SVG width (viewBox 9088x6968); 1 / 0.761 = 131.4% */
@@ -2032,7 +2070,7 @@ button:focus-visible {
 }
 
 .cs-identifier {
-  margin-top: 24px;
+  margin-top: var(--cs-ident-top);
   font-size: 12px;
   line-height: 15px;
   font-weight: 600;
@@ -2041,7 +2079,7 @@ button:focus-visible {
 }
 
 .cs-statement {
-  margin-top: 56px;
+  margin-top: var(--cs-stmt-top);
   display: flex;
   flex-direction: column;
   font-size: 38px;
@@ -2051,14 +2089,14 @@ button:focus-visible {
   color: var(--sand);
 }
 
-.cs-right { grid-area: right; margin-top: 40px; }
+.cs-right { grid-area: right; margin-top: var(--cs-right-top); }
 
-.cs-footer { align-self: end; padding-top: 48px; }
+.cs-footer { align-self: end; padding-top: var(--cs-foot-pad); }
 .cs-footer--left { grid-area: fl; }
 .cs-footer--right { display: none; }
 
 .cs-form,
-.cs-success { display: flex; flex-direction: column; gap: 24px; width: 100%; }
+.cs-success { display: flex; flex-direction: column; gap: var(--cs-form-gap); width: 100%; }
 
 .cs-field { display: flex; flex-direction: column; gap: 10px; }
 
@@ -2236,20 +2274,26 @@ button:focus-visible {
 
 @media (min-width: 1100px) {
   .cs {
+    /* Natural size is 902px tall with validation errors showing. */
+    --cs-ref: 902px;
+    --cs-k: 0.003623;
+    --cs-pad-y: clamp(32px, calc(56px + var(--cs-fit) * var(--cs-slack) * var(--cs-k) * 24), 56px);
+    --cs-left-top: clamp(30px, calc(59px + var(--cs-fit) * var(--cs-slack) * var(--cs-k) * 29), 59px);
+    --cs-mark-w: clamp(560px, calc(652px + var(--cs-fit) * var(--cs-slack) * var(--cs-k) * 92), 652px);
+    --cs-ident-top: clamp(16px, calc(22px + var(--cs-fit) * var(--cs-slack) * var(--cs-k) * 6), 22px);
+    --cs-stmt-top: clamp(100px, calc(143px + var(--cs-fit) * var(--cs-slack) * var(--cs-k) * 43), 143px);
+    --cs-right-top: clamp(182px, calc(415px + var(--cs-fit) * var(--cs-slack) * var(--cs-k) * 233), 415px);
+    --cs-form-gap: 28px;
+    --cs-foot-pad: 0px;
     grid-template-columns: minmax(0, 1fr) 480px;
     grid-template-areas: "label label" "left right" "fl fr";
     grid-template-rows: auto 1fr auto;
     column-gap: 56px;
-    padding: 56px;
+    padding: var(--cs-pad-y) 56px;
   }
-  .cs-left { margin-top: 59px; }
-  .cs-wordmark { width: min(652px, 100%); }
-  .cs-identifier { margin-top: 22px; font-size: 14px; line-height: 17px; }
-  .cs-statement { margin-top: 143px; font-size: 64px; line-height: 64px; }
-  .cs-right { margin-top: 415px; }
-  .cs-footer { padding-top: 0; }
+  .cs-identifier { font-size: 14px; line-height: 17px; }
+  .cs-statement { font-size: 64px; line-height: 64px; }
   .cs-footer--right { display: block; grid-area: fr; justify-self: end; letter-spacing: 1.54px; }
-  .cs-form, .cs-success { gap: 28px; }
   .cs-input { height: 56px; font-size: 19px; line-height: 23px; }
   .cs-consent__label { font-size: 17px; }
   .cs-button { height: 56px; }
@@ -2261,3 +2305,109 @@ button:focus-visible {
   .cs-progress__bar { animation: none; }
   .cs-input, .cs-checkbox, .cs-button { transition: none; }
 }
+
+/* Coming-soon pin and flight. The attribute is only set on <html> while the
+   shared pin exists (flag on, motion allowed, home route), so inner routes,
+   reduced motion and the flag-off site never match these rules. */
+html[data-cs-dock="idle"] .wordmark-drift-layer {
+  visibility: hidden;
+}
+
+/* The head script (lib/short-screen.ts) sets idle before any app script runs, so
+   only the poster mark shows at first paint. The docked rules further down
+   restore visibility, so a stale idle can never hide the only mark. */
+
+html[data-cs-dock="flying"] .wordmark-drift-layer {
+  visibility: visible;
+}
+
+/* Hidden, not removed: the poster mark keeps its layout box. */
+html[data-cs-dock="flying"] .cs-wordmark {
+  visibility: hidden;
+}
+
+/* Transparent until the dock completes, so a veil behind the poster shows
+   through the header strip. --header-solid is driven by the shared timeline. */
+html[data-cs-dock] .site-header {
+  background: rgba(10, 10, 10, var(--header-solid, 0));
+}
+
+/* Nav starts docked: reduced motion, or a screen too short to pin the poster.
+   Only the header mark shows; the poster mark and COMING SOON label are
+   collapsed so the form gets the room. Settled in CSS before any script runs.
+
+   Reduced motion is a live media query. A short screen is NOT: a raw
+   max-height media query would follow the mobile URL bar immediately while the
+   pin is still built. The inline head script evaluates SHORT_SCREEN_QUERY once
+   (lib/short-screen.ts) into html[data-cs-short], the dock updates it only on a
+   width change or a height change of more than 100px, and the rules below key
+   off it. */
+@media (prefers-reduced-motion: reduce) {
+  .cs {
+    --cs-fit: 0;
+  }
+
+  .cs-wordmark,
+  .cs-label--top {
+    display: none;
+  }
+
+  html:has(.cs) .wordmark-drift-layer {
+    visibility: visible;
+    transform: scale(
+      calc(var(--wordmark-dock-width) / var(--wordmark-hero-width))
+    ) !important;
+  }
+
+  html:has(.cs) .site-header__chrome {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+    pointer-events: auto !important;
+  }
+
+  html:has(.cs) .site-header::after {
+    opacity: 1;
+  }
+}
+
+@media (min-width: 1100px) and (prefers-reduced-motion: reduce) {
+  .cs-right {
+    margin-top: calc(var(--header-height) - 40px);
+  }
+}
+
+/* docked: short screen */
+html[data-cs-short="1"] .cs {
+  --cs-fit: 0;
+}
+
+html[data-cs-short="1"] .cs-wordmark,
+html[data-cs-short="1"] .cs-label--top {
+  display: none;
+}
+
+html[data-cs-short="1"]:has(.cs) .wordmark-drift-layer {
+  visibility: visible;
+  transform: scale(
+    calc(var(--wordmark-dock-width) / var(--wordmark-hero-width))
+  ) !important;
+}
+
+html[data-cs-short="1"]:has(.cs) .site-header__chrome {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
+  pointer-events: auto !important;
+}
+
+html[data-cs-short="1"]:has(.cs) .site-header::after {
+  opacity: 1;
+}
+
+@media (min-width: 1100px) {
+  html[data-cs-short="1"] .cs-right {
+    margin-top: calc(var(--header-height) - 40px);
+  }
+}
+/* end docked: short screen */
