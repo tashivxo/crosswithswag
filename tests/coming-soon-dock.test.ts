@@ -291,6 +291,27 @@ describe("reduced motion", () => {
   });
 });
 
+describe("poster taller than the viewport", () => {
+  it("does not pin, so the form is never cut off, and docks the nav statically", () => {
+    const env = installDom(false);
+    env.home.offsetHeight = 1000;
+    const { flight, chrome } = mountBoth(env);
+
+    expect(acquireComingSoonDock()).toBeNull();
+    expect(h.gsap.timeline).not.toHaveBeenCalled();
+    expect(pinConfigs()).toHaveLength(0);
+    expect(env.rootAttrs.has(COMING_SOON_DOCK_ATTR)).toBe(false);
+    expect(flight).toBeTypeOf("function");
+    expect(chrome).toBeTypeOf("function");
+    expect(h.state.sets.find(([t]) => t === env.chrome)?.[1]).toMatchObject({
+      autoAlpha: 1,
+    });
+
+    flight?.();
+    chrome?.();
+  });
+});
+
 describe("pin shared between the poster mark and the header", () => {
   it("creates exactly one pin on #home, however many consumers mount", () => {
     const env = installDom(false);
@@ -420,6 +441,8 @@ describe("one visible mark", () => {
 
     expect(root(env)).toBe("idle");
     progress(0);
+    expect(root(env)).toBe("idle");
+    progress(0.0000018);
     expect(root(env)).toBe("idle");
     progress(0.4);
     expect(root(env)).toBe("flying");
