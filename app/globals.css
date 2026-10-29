@@ -2301,6 +2301,10 @@ html[data-cs-dock="idle"] .wordmark-drift-layer {
   visibility: hidden;
 }
 
+/* The head script (lib/short-screen.ts) sets idle before any app script runs, so
+   only the poster mark shows at first paint. The docked rules further down
+   restore visibility, so a stale idle can never hide the only mark. */
+
 html[data-cs-dock="flying"] .wordmark-drift-layer {
   visibility: visible;
 }
@@ -2337,6 +2341,7 @@ html[data-cs-dock] .site-header {
   }
 
   html:has(.cs) .wordmark-drift-layer {
+    visibility: visible;
     transform: scale(
       calc(var(--wordmark-dock-width) / var(--wordmark-hero-width))
     ) !important;
@@ -2371,6 +2376,7 @@ html[data-cs-short="1"] .cs-label--top {
 }
 
 html[data-cs-short="1"]:has(.cs) .wordmark-drift-layer {
+  visibility: visible;
   transform: scale(
     calc(var(--wordmark-dock-width) / var(--wordmark-hero-width))
   ) !important;

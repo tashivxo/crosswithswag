@@ -1,11 +1,10 @@
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { comingSoonEnabled } from "@/lib/coming-soon";
-import { isShortScreen } from "@/lib/short-screen";
+import { COMING_SOON_DOCK_ATTR, isShortScreen } from "@/lib/short-screen";
 
 gsap.registerPlugin(ScrollTrigger);
 
-export const COMING_SOON_DOCK_ATTR = "data-cs-dock";
 
 /** Timeline position where the mark lands in the nav slot. The header fills solid only in the 5% after it. */
 export const COMING_SOON_LANDING = 0.95;
@@ -26,6 +25,7 @@ export const LABEL_CLEAR_MARGIN = 0.02;
 export const LABEL_DRIFT_PX = 5;
 
 export {
+  COMING_SOON_DOCK_ATTR,
   SHORT_SCREEN_ATTR,
   SHORT_SCREEN_MAX_HEIGHT,
   SHORT_SCREEN_QUERY,
@@ -143,12 +143,19 @@ function teardown(state: Shared) {
  */
 export function acquireComingSoonDock(): ComingSoonDock | null {
   if (!comingSoonEnabled()) return null;
-  if (prefersReducedMotion()) return null;
-  if (isShortScreen()) return null;
+  // The head script may have set "idle" before this decision was final; with no
+  // pin to follow, clear it so the header mark is not left hidden.
+  if (prefersReducedMotion() || isShortScreen()) {
+    if (!shared) setFlightState(null);
+    return null;
+  }
 
   if (!shared) {
     const home = document.getElementById("home");
-    if (!home) return null;
+    if (!home) {
+      setFlightState(null);
+      return null;
+    }
 
     const timeline = gsap.timeline({
       defaults: { ease: "none" },

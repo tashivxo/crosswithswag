@@ -17,6 +17,12 @@ import { comingSoonEnabled } from "@/lib/coming-soon";
 export const SHORT_SCREEN_MAX_HEIGHT = 620;
 export const SHORT_SCREEN_QUERY = `(max-height: ${SHORT_SCREEN_MAX_HEIGHT}px)`;
 
+/**
+ * On <html>: the coming-soon dock's state, "idle" or "flying" (absent when
+ * there is no pin). Defined here so the head script and the dock share it.
+ */
+export const COMING_SOON_DOCK_ATTR = "data-cs-dock";
+
 /** On <html>: "1" when the nav starts docked because the screen is short, "0" otherwise. */
 export const SHORT_SCREEN_ATTR = "data-cs-short";
 
@@ -39,15 +45,18 @@ declare global {
 /**
  * The inline script for the document head. It runs before first paint, so the
  * CSS that keys off the attribute is right from the first frame, and it records
- * the size it evaluated at for the re-evaluation rule above. Self-contained:
+ * the size it evaluated at for the re-evaluation rule above. On the home route,
+ * when the nav does not start docked, it also sets the dock attribute to
+ * "idle" (exactly what the dock sets when it builds the pin), so the header
+ * mark is hidden and only the poster mark shows before any app script runs. Self-contained:
  * it is serialised into the HTML, so it cannot reference anything in this file.
  */
 export function shortScreenInitScript() {
-  return `(function(w,d){try{d.documentElement.setAttribute(${JSON.stringify(
-    SHORT_SCREEN_ATTR,
-  )},w.matchMedia(${JSON.stringify(
-    SHORT_SCREEN_QUERY,
-  )}).matches?"1":"0");w.__csShortEval={width:w.innerWidth,height:w.innerHeight}}catch(e){}})(window,document);`;
+  const attr = JSON.stringify(SHORT_SCREEN_ATTR);
+  const query = JSON.stringify(SHORT_SCREEN_QUERY);
+  const dock = JSON.stringify(COMING_SOON_DOCK_ATTR);
+  const reduced = JSON.stringify("(prefers-reduced-motion: reduce)");
+  return `(function(w,d){try{var r=d.documentElement,s=w.matchMedia(${query}).matches;r.setAttribute(${attr},s?"1":"0");w.__csShortEval={width:w.innerWidth,height:w.innerHeight};if(!s&&!w.matchMedia(${reduced}).matches&&w.location.pathname==="/")r.setAttribute(${dock},"idle")}catch(e){}})(window,document);`;
 }
 
 /** Evaluate the shared query now and store the result as the one decision. */
