@@ -116,19 +116,45 @@ function rect(left: number, top: number, width: number, height: number) {
   };
 }
 
-function fakeElement(box: ReturnType<typeof rect>, extra = {}) {
-  return {
+function fakeElement(initial: ReturnType<typeof rect>, extra = {}) {
+  const el = {
     style: {} as Record<string, string>,
-    offsetWidth: box.width,
-    offsetHeight: box.height,
-    getBoundingClientRect: () => box,
+    box: initial,
+    offsetWidth: initial.width,
+    offsetHeight: initial.height,
+    getBoundingClientRect: () => el.box,
     querySelector: vi.fn(() => null),
     ...extra,
   };
+  return el;
 }
 
-const posterBox = rect(56, 115, 652, 240);
+const posterBox = rect(56, 128, 652, 240);
 const slotBox = rect(56, 4, 120, 84);
+
+type Geometry = {
+  viewport: { width: number; height: number };
+  poster: ReturnType<typeof rect>;
+  slot: ReturnType<typeof rect>;
+  label: ReturnType<typeof rect>;
+  layerWidth: number;
+};
+
+const desktop: Geometry = {
+  viewport: { width: 1440, height: 800 },
+  poster: posterBox,
+  slot: slotBox,
+  label: rect(56, 56, 1328, 13),
+  layerWidth: 652,
+};
+
+const mobile: Geometry = {
+  viewport: { width: 390, height: 844 },
+  poster: rect(24, 97, 342, 126),
+  slot: rect(18, 4, 88, 62),
+  label: rect(24, 28, 342, 13),
+  layerWidth: 240,
+};
 
 type Env = {
   home: ReturnType<typeof fakeElement>;
@@ -141,11 +167,15 @@ type Env = {
   rootAttrs: Map<string, string>;
 };
 
-function installDom(reduceMotion: boolean, coarse = false): Env {
-  const poster = fakeElement(posterBox);
-  const label = fakeElement(rect(56, 56, 90, 13));
-  const cs = fakeElement(rect(0, 0, 1440, 800));
-  const home = fakeElement(rect(0, 0, 1440, 800), {
+function installDom(
+  reduceMotion: boolean,
+  coarse = false,
+  geo: Geometry = desktop,
+): Env {
+  const poster = fakeElement(geo.poster);
+  const label = fakeElement(geo.label);
+  const cs = fakeElement(rect(0, 0, geo.viewport.width, geo.viewport.height));
+  const home = fakeElement(rect(0, 0, geo.viewport.width, geo.viewport.height), {
     querySelector: vi.fn((selector: string) => {
       if (selector === ".cs-wordmark") return poster;
       if (selector === ".cs-label--top") return label;
@@ -165,8 +195,8 @@ function installDom(reduceMotion: boolean, coarse = false): Env {
   });
 
   vi.stubGlobal("window", {
-    innerWidth: 1440,
-    innerHeight: 800,
+    innerWidth: geo.viewport.width,
+    innerHeight: geo.viewport.height,
     visualViewport: undefined,
     matchMedia: (query: string) => ({
       matches: query.includes("prefers-reduced-motion")
@@ -195,8 +225,8 @@ function installDom(reduceMotion: boolean, coarse = false): Env {
     home,
     poster,
     label,
-    layer: fakeElement(rect(0, 0, 652, 457)),
-    slot: fakeElement(slotBox),
+    layer: fakeElement(rect(0, 0, geo.layerWidth, geo.layerWidth / 1.426685)),
+    slot: fakeElement(geo.slot),
     chrome: fakeElement(rect(1300, 20, 60, 44)),
     header: fakeElement(rect(0, 0, 1440, 92)),
     rootAttrs,
@@ -505,6 +535,13 @@ describe("COMING SOON label", () => {
   const num = (value: unknown, fallback: number) =>
     typeof value === "number" ? value : fallback;
 
+  type LabelTo = {
+    opacity: number;
+    y: number;
+    duration: number;
+    ease: ((t: number) => number) | string;
+  };
+
   function flightLanding(env: Env) {
     const [tl] = h.state.timelines;
     const call = tl.calls.find(
@@ -518,61 +555,172 @@ describe("COMING SOON label", () => {
 
   function labelCall(env: Env) {
     const [tl] = h.state.timelines;
-    const call = tl.calls.find((c) => c.args[0] === env.label);
-    expect(call, "label tween missing").toBeDefined();
-    const from = call?.args[1] as Record<string, number>;
-    const to = call?.args[2] as Record<string, number | string>;
-    const start = num(call?.args[3], 0);
-    const end = start + num(to.duration, 0.5);
-    return { call, from, to, start, end };
+    const calls = tl.calls.filter((c) => c.args[0] === env.label);
+    expect(calls.length, "label tween missing").toBeGreaterThan(0);
+    const call = calls[calls.length - 1];
+    const from = call.args[1] as Record<string, number>;
+    const to = call.args[2] as unknown as LabelTo;
+    const start = num(call.args[3], 0);
+    return { call, from, to, start };
   }
 
-  it("starts fading at about 80% of the flight", () => {
-    const env = installDom(false);
+  /** Label opacity and drift at a share (0 to 1) of the flight. */
+  function labelAt(env: Env, flightShare: number) {
+    const { from, to, start } = labelCall(env);
+    const position = flightShare * flightLanding(env);
+    const raw = Math.min(1, Math.max(0, (position - start) / to.duration));
+    const eased = typeof to.ease === "function" ? to.ease(raw) : raw;
+    return {
+      opacity: from.opacity + (to.opacity - from.opacity) * eased,
+      y: from.y + (to.y - from.y) * eased,
+    };
+  }
+
+  /** Independent model of the mark's glyph box during the flight. */
+  function markBox(geo: Geometry, f: number) {
+    const aspect = geo.poster.height / geo.poster.width;
+    const width =
+      geo.poster.width +
+      (geo.slot.width * HEADER_GLYPH_FRACTION - geo.poster.width) * f;
+    const pcx = geo.poster.left + geo.poster.width / 2;
+    const pcy = geo.poster.top + geo.poster.height / 2;
+    const scx = geo.slot.left + geo.slot.width / 2;
+    const scy = geo.slot.top + geo.slot.height / 2;
+    const cx = pcx + (scx - pcx) * f;
+    const cy = pcy + (scy - pcy) * f;
+    const height = width * aspect;
+    return {
+      left: cx - width / 2,
+      right: cx + width / 2,
+      top: cy - height / 2,
+      bottom: cy + height / 2,
+    };
+  }
+
+  const overlaps = (
+    a: { left: number; right: number; top: number; bottom: number },
+    b: { left: number; right: number; top: number; bottom: number },
+  ) =>
+    a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
+
+  function mount(geo: Geometry) {
+    const env = installDom(false, false, geo);
     const { flight, chrome } = mountBoth(env);
+    return { env, flight, chrome };
+  }
+
+  it("starts fading at about 55% of the flight", () => {
+    const { env, flight, chrome } = mount(desktop);
     const { start } = labelCall(env);
-    const ratio = start / flightLanding(env);
-    expect(ratio).toBeGreaterThanOrEqual(0.75);
-    expect(ratio).toBeLessThanOrEqual(0.85);
+    expect(start / flightLanding(env)).toBeGreaterThanOrEqual(0.5);
+    expect(start / flightLanding(env)).toBeLessThanOrEqual(0.6);
+    expect(labelAt(env, 0.5).opacity).toBe(1);
     flight?.();
     chrome?.();
   });
 
-  it("is fully transparent before the mark lands, so they never overlap", () => {
-    const env = installDom(false);
-    const { flight, chrome } = mountBoth(env);
-    const { from, to, end } = labelCall(env);
-    expect(from.opacity).toBe(1);
-    expect(to.opacity).toBe(0);
-    expect(end).toBeLessThan(flightLanding(env));
+  it.each([
+    ["desktop", desktop],
+    ["mobile", mobile],
+  ])("is at opacity 0 by 70% of the flight on %s", (_name, geo) => {
+    const { env, flight, chrome } = mount(geo);
+    expect(labelAt(env, 0.7).opacity).toBe(0);
+    expect(labelAt(env, 0.85).opacity).toBe(0);
+    expect(labelAt(env, 1).opacity).toBe(0);
     flight?.();
     chrome?.();
   });
 
-  it("drifts upward by 4 to 6px as it fades", () => {
-    const env = installDom(false);
-    const { flight, chrome } = mountBoth(env);
-    const { from, to } = labelCall(env);
+  it.each([
+    ["desktop", desktop],
+    ["mobile", mobile],
+  ])(
+    "is never visible while the mark's box overlaps the label's box on %s",
+    (_name, geo) => {
+      const { env, flight, chrome } = mount(geo);
+      let overlapSamples = 0;
+      for (let i = 0; i <= 400; i++) {
+        const f = i / 400;
+        if (overlaps(markBox(geo, f), geo.label)) {
+          overlapSamples += 1;
+          expect(
+            labelAt(env, f).opacity,
+            `label visible while overlapped at ${(f * 100).toFixed(1)}% of the flight`,
+          ).toBeLessThanOrEqual(1e-6);
+        }
+      }
+      expect(overlapSamples).toBeGreaterThan(0);
+      flight?.();
+      chrome?.();
+    },
+  );
+
+  it("keeps the label fully visible until the fade starts", () => {
+    for (const geo of [desktop, mobile]) {
+      const { env, flight, chrome } = mount(geo);
+      expect(labelAt(env, 0).opacity).toBe(1);
+      expect(labelAt(env, 0.4).opacity).toBe(1);
+      expect(labelAt(env, 0.52).opacity).toBe(1);
+      flight?.();
+      chrome?.();
+      h.state.timelines.length = 0;
+    }
+  });
+
+  it("fades gradually where there is room (mobile keeps the full 55% to 70% window)", () => {
+    const { env, flight, chrome } = mount(mobile);
+    const mid = labelAt(env, 0.625).opacity;
+    expect(mid).toBeGreaterThan(0.3);
+    expect(mid).toBeLessThan(0.7);
+    flight?.();
+    chrome?.();
+  });
+
+  it("drifts upward by 4 to 6px as it fades, landing on that drift", () => {
+    const { env, flight, chrome } = mount(desktop);
+    const { from } = labelCall(env);
     expect(from.y).toBe(0);
-    expect(Number(to.y)).toBeLessThanOrEqual(-4);
-    expect(Number(to.y)).toBeGreaterThanOrEqual(-6);
+    const end = labelAt(env, 0.7).y;
+    expect(end).toBeLessThanOrEqual(-4);
+    expect(end).toBeGreaterThanOrEqual(-6);
+    expect(labelAt(env, 1).y).toBe(end);
+    flight?.();
+    chrome?.();
+  });
+
+  it("re-measures on refresh, so a resize between layouts keeps the label clear of the mark", () => {
+    const { env, flight, chrome } = mount(mobile);
+    expect(labelAt(env, 0.65).opacity).toBeGreaterThan(0);
+
+    env.poster.box = desktop.poster;
+    env.slot.box = desktop.slot;
+    env.label.box = desktop.label;
+    env.layer.offsetWidth = desktop.layerWidth;
+    const trigger = h.state.timelines[0].scrollTrigger as unknown as {
+      onRefresh: (self: { progress: number }) => void;
+    };
+    trigger.onRefresh({ progress: 0 });
+
+    expect(labelAt(env, 0.65).opacity).toBe(0);
     flight?.();
     chrome?.();
   });
 
   it("is a scrubbed tween on the one shared timeline, so scroll back reverses it, with no new trigger or pin", () => {
-    const env = installDom(false);
-    const { flight, chrome } = mountBoth(env);
-    const { call, to } = labelCall(env);
-    expect(call?.kind).toBe("fromTo");
+    const { env, flight, chrome } = mount(desktop);
+    const { call, to, from } = labelCall(env);
+    expect(call.kind).toBe("fromTo");
     expect(h.state.timelines[0].calls).toContain(call);
-    expect(to.ease).toBe("none");
+    expect(from.opacity).toBe(1);
+    expect(from.y).toBe(0);
     expect("scrollTrigger" in to).toBe(false);
     expect(h.state.timelines).toHaveLength(1);
     expect(h.ScrollTrigger.create).not.toHaveBeenCalled();
     expect(h.gsap.to).not.toHaveBeenCalled();
     expect(h.gsap.fromTo).not.toHaveBeenCalled();
     expect(pinConfigs()).toHaveLength(1);
+    // Same value at the same scroll point going down and coming back up.
+    expect(labelAt(env, 0.6)).toEqual(labelAt(env, 0.6));
     flight?.();
     chrome?.();
   });
