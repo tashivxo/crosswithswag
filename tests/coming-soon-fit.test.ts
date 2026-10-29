@@ -318,11 +318,11 @@ describe("poster scaled to the viewport height", () => {
     expect(val(tokensFor(360), "--cs-mark-w", 640)).toBeGreaterThanOrEqual(180);
   });
 
-  it("turns scaling off where the nav starts docked", () => {
-    const docked = blockAfter(
-      /@media \(prefers-reduced-motion: reduce\), \(max-height: 620px\) \{/,
+  it("turns scaling off where the nav starts docked: reduced motion and the short-screen attribute", () => {
+    expect(css).toMatch(
+      /@media \(prefers-reduced-motion: reduce\) \{\s*\.cs \{\s*--cs-fit:\s*0/,
     );
-    expect(docked).toMatch(/\.cs\s*\{[^}]*--cs-fit:\s*0/);
+    expect(css).toMatch(/html\[data-cs-short="1"\] \.cs \{\s*--cs-fit:\s*0/);
     for (const tokens of [stackedTokens(), desktopTokens()]) {
       const merged = { ...stackedTokens(), ...tokens };
       const off = { ...merged, "--cs-fit": "0" };

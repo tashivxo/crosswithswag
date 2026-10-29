@@ -27,7 +27,14 @@ import {
  */
 
 type Viewport = {
-  win: Record<string, unknown> & { innerWidth: number; innerHeight: number };
+  win: {
+    innerWidth: number;
+    innerHeight: number;
+    __csShortEval?: { width: number; height: number };
+    matchMedia: (query: string) => { matches: boolean };
+    addEventListener: (type: string, cb: () => void) => void;
+    removeEventListener: (type: string, cb: () => void) => void;
+  };
   attrs: Map<string, string>;
   resize: (width: number, height: number) => void;
 };
@@ -285,7 +292,7 @@ describe("flag off", () => {
   it("never sets the attribute, never listens and never reports a short screen", () => {
     const vp = stubViewport(390, 400);
     const callback = vi.fn();
-    const addSpy = vi.spyOn(vp.win as { addEventListener: () => void }, "addEventListener");
+    const addSpy = vi.spyOn(vp.win, "addEventListener");
     const unsubscribe = subscribeShortScreen(callback);
     vp.resize(390, 100);
     expect(getShortScreenSnapshot()).toBe(false);

@@ -555,13 +555,15 @@ describe("nav starts docked on short screens", () => {
   });
 
   it("subscribes to resize, not to the live media query, so the URL bar cannot flip the dock", () => {
-    installDom(false);
+    const env = installDom(false);
+    env.rootAttrs.set(SHORT_SCREEN_ATTR, "0");
     const add = vi.fn();
     const remove = vi.fn();
     const matchMedia = vi.fn();
     vi.stubGlobal("window", {
       innerWidth: 390,
       innerHeight: 664,
+      __csShortEval: { width: 390, height: 664 },
       matchMedia,
       addEventListener: add,
       removeEventListener: remove,

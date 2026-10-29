@@ -2,7 +2,7 @@ import { useSyncExternalStore } from "react";
 import {
   getShortScreenSnapshot,
   subscribeShortScreen,
-} from "@/lib/coming-soon-dock";
+} from "@/lib/short-screen";
 
 /**
  * True when the coming-soon dock is switched off by the short-screen query.

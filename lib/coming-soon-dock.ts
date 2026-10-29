@@ -1,6 +1,7 @@
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { comingSoonEnabled } from "@/lib/coming-soon";
+import { isShortScreen } from "@/lib/short-screen";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -24,37 +25,16 @@ export const LABEL_CLEAR_MARGIN = 0.02;
 /** Upward drift of the label while it fades, in px. */
 export const LABEL_DRIFT_PX = 5;
 
-/**
- * Screens this short (or shorter) get no pin and no flight: the nav starts
- * docked and the poster mark and label are collapsed. This is the floor of the
- * poster's scaling, not the poster's natural height: above it the poster, the
- * form and 58px of validation-error headroom are fitted into the viewport with
- * `svh` (the --cs-* tokens in app/globals.css), so the pin and flight run on
- * laptops and phones. Below it the scaled mark gets too small to fly, which in
- * practice means phones held sideways.
- *
- * ONE source of truth: app/globals.css repeats this exact query in the
- * "nav starts docked" block, and tests/coming-soon-dock.test.ts asserts they match.
- */
-export const SHORT_SCREEN_MAX_HEIGHT = 620;
-export const SHORT_SCREEN_QUERY = `(max-height: ${SHORT_SCREEN_MAX_HEIGHT}px)`;
-
-export function isShortScreen() {
-  return window.matchMedia(SHORT_SCREEN_QUERY).matches;
-}
-
-/** useSyncExternalStore subscribe: re-run the dock when the breakpoint is crossed. */
-export function subscribeShortScreen(callback: () => void) {
-  if (!comingSoonEnabled()) return () => {};
-  const query = window.matchMedia(SHORT_SCREEN_QUERY);
-  query.addEventListener("change", callback);
-  return () => query.removeEventListener("change", callback);
-}
-
-/** Always false with the flag off, so the legacy home never re-runs its effects. */
-export function getShortScreenSnapshot() {
-  return comingSoonEnabled() && isShortScreen();
-}
+export {
+  SHORT_SCREEN_ATTR,
+  SHORT_SCREEN_MAX_HEIGHT,
+  SHORT_SCREEN_QUERY,
+  SHORT_SCREEN_REEVALUATE_PX,
+  getShortScreenSnapshot,
+  isShortScreen,
+  shortScreenInitScript,
+  subscribeShortScreen,
+} from "@/lib/short-screen";
 
 /** Pin length as a share of the viewport height. */
 export const COMING_SOON_PIN_VH = 0.6;

@@ -2317,11 +2317,16 @@ html[data-cs-dock] .site-header {
 }
 
 /* Nav starts docked: reduced motion, or a screen too short to pin the poster.
-   The max-height here must stay identical to SHORT_SCREEN_QUERY in
-   lib/coming-soon-dock.ts, which makes the same call in JS (no pin, no flight).
    Only the header mark shows; the poster mark and COMING SOON label are
-   collapsed so the form gets the room. Settled in CSS before any script runs. */
-@media (prefers-reduced-motion: reduce), (max-height: 620px) {
+   collapsed so the form gets the room. Settled in CSS before any script runs.
+
+   Reduced motion is a live media query. A short screen is NOT: a raw
+   max-height media query would follow the mobile URL bar immediately while the
+   pin is still built. The inline head script evaluates SHORT_SCREEN_QUERY once
+   (lib/short-screen.ts) into html[data-cs-short], the dock updates it only on a
+   width change or a height change of more than 100px, and the rules below key
+   off it. */
+@media (prefers-reduced-motion: reduce) {
   .cs {
     --cs-fit: 0;
   }
@@ -2349,9 +2354,42 @@ html[data-cs-dock] .site-header {
   }
 }
 
-@media (min-width: 1100px) and (prefers-reduced-motion: reduce),
-  (min-width: 1100px) and (max-height: 620px) {
+@media (min-width: 1100px) and (prefers-reduced-motion: reduce) {
   .cs-right {
     margin-top: calc(var(--header-height) - 40px);
   }
 }
+
+/* docked: short screen */
+html[data-cs-short="1"] .cs {
+  --cs-fit: 0;
+}
+
+html[data-cs-short="1"] .cs-wordmark,
+html[data-cs-short="1"] .cs-label--top {
+  display: none;
+}
+
+html[data-cs-short="1"]:has(.cs) .wordmark-drift-layer {
+  transform: scale(
+    calc(var(--wordmark-dock-width) / var(--wordmark-hero-width))
+  ) !important;
+}
+
+html[data-cs-short="1"]:has(.cs) .site-header__chrome {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
+  pointer-events: auto !important;
+}
+
+html[data-cs-short="1"]:has(.cs) .site-header::after {
+  opacity: 1;
+}
+
+@media (min-width: 1100px) {
+  html[data-cs-short="1"] .cs-right {
+    margin-top: calc(var(--header-height) - 40px);
+  }
+}
+/* end docked: short screen */
