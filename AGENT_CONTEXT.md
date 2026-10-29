@@ -215,11 +215,18 @@ Vitest (`npm test`, `tests/**/*.test.ts`) covers the waitlist/Jotform logic and 
 
 ## Coming-soon landing (branch `jotform`, flag `NEXT_PUBLIC_COMING_SOON=1`)
 
-- With the flag on, `HomeChapter` renders `ComingSoonChapter` as `#home-intro` (the first screen) in place of the old logo-first intro spacer, and the old CROSS WITH SWAG hero block is not rendered. Scroll fades in the MENU and docked mark via the existing scrub, then the rest of the home (ticker, sections) follows. Flag off = unchanged production behaviour. `isHomeIntroSeen()` is false while the flag is on, so every visit starts on the poster.
+- With the flag on, `HomeChapter` renders `ComingSoonChapter` as `#home-intro` (the first screen) in place of the old logo-first intro spacer, and the old CROSS WITH SWAG hero block is not rendered. Scroll pins `#home` while the poster mark flies into the nav and MENU fades in (see Pin and flight), then the rest of the home (ticker, sections) follows. Flag off = unchanged production behaviour. `isHomeIntroSeen()` is false while the flag is on, so every visit starts on the poster.
 - The form posts to `POST /api/waitlist` (`lib/waitlist.ts` validation, `lib/waitlist-handler.ts`, `lib/jotform.ts`). The Jotform API key stays server-side.
 - Env: `JOTFORM_API_KEY`, `JOTFORM_FORM_ID`, `JOTFORM_EMAIL_QID`, `JOTFORM_CONSENT_QID`, optional `JOTFORM_CONSENT_VALUE`, `JOTFORM_API_BASE`. Unset = the API returns 503.
 - Copy lives in `lib/copy.ts` (`comingSoon`); strings marked `// VERIFY` must be checked against Marcus's Figma copy deck.
 - Marcus's Figma overrides the usual rules on this page only: a filled Sand submit button and Clay Light `#C98A70` for errors.
+
+### Pin and flight (flag on only)
+
+- `lib/coming-soon-dock.ts` owns the single pin: one scrubbed GSAP timeline with a ScrollTrigger on `#home` (`top top`, `+=0.6 * innerHeight`, `pin`, `pinSpacing`, `anticipatePin: 1`). `WordmarkDriftDock` (mark flight) and `SiteHeader` (MENU, header line, header solid) only add tweens to that timeline. Never add a second pin or trigger for this sequence.
+- The header mark flies from the `.cs-wordmark` rect to the nav slot and ends at the usual dock scale. `html[data-cs-dock]` is `idle` at progress 0 (poster mark visible, header mark hidden) and `flying` after (poster mark `visibility: hidden`, so it keeps its layout box, header mark visible). Scroll back up reverses it. When the flight ends the pin releases and the ticker scrolls normally.
+- The header is transparent (`--header-solid`) until the dock completes so a veil behind the poster can show through; it must stay above content (z-index 120). Inner routes keep the solid Void header.
+- No pin or flight (static docked nav) with reduced motion, or when the poster is taller than the viewport (short screens), so the form is never cut off. A ResizeObserver on `.cs` refreshes ScrollTrigger. Lenis needs no scrollerProxy (it scrolls the window). The pin is torn down with `scrollTrigger.kill(true)` before the DOM goes, so React never sees GSAP's pin-spacer.
 
 ## Deployment
 
