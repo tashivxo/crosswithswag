@@ -225,7 +225,7 @@ Vitest (`npm test`, `tests/**/*.test.ts`) covers the waitlist/Jotform logic and 
 
 - `lib/coming-soon-dock.ts` owns the single pin: one scrubbed GSAP timeline with a ScrollTrigger on `#home` (`top top`, `+=0.6 * innerHeight`, `pin`, `pinSpacing`, `anticipatePin: 1`). `WordmarkDriftDock` (mark flight) and `SiteHeader` (MENU, header line, header solid) only add tweens to that timeline. Never add a second pin or trigger for this sequence.
 - The header mark flies from the `.cs-wordmark` rect to the nav slot and ends at the usual dock scale. `html[data-cs-dock]` is `idle` at progress 0 (poster mark visible, header mark hidden) and `flying` after (poster mark `visibility: hidden`, so it keeps its layout box, header mark visible). Scroll back up reverses it. When the flight ends the pin releases and the ticker scrolls normally.
-- The header is transparent (`--header-solid`) until the dock completes so a veil behind the poster can show through; it must stay above content (z-index 120). Inner routes keep the solid Void header.
+- The header is fully transparent (`--header-solid`) for the whole flight so the "COMING SOON" label and any veil stay visible, then fills solid over the final 5% of the timeline, after the mark lands (`COMING_SOON_LANDING`). It must stay above content (z-index 120). Inner routes keep the solid Void header.
 - No pin or flight (static docked nav) with reduced motion, or when the poster is taller than the viewport (short screens), so the form is never cut off. A ResizeObserver on `.cs` refreshes ScrollTrigger. Lenis needs no scrollerProxy (it scrolls the window). The pin is torn down with `scrollTrigger.kill(true)` before the DOM goes, so React never sees GSAP's pin-spacer.
 
 ## Deployment

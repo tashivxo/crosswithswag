@@ -6,6 +6,9 @@ gsap.registerPlugin(ScrollTrigger);
 
 export const COMING_SOON_DOCK_ATTR = "data-cs-dock";
 
+/** Timeline position where the mark lands in the nav slot. The header fills solid only in the 5% after it. */
+export const COMING_SOON_LANDING = 0.95;
+
 /** Pin length as a share of the viewport height. */
 export const COMING_SOON_PIN_VH = 0.6;
 
@@ -252,7 +255,7 @@ export function mountComingSoonFlight({
         opacity: 1,
         force3D: true,
         ease: "none",
-        duration: 1,
+        duration: COMING_SOON_LANDING,
       },
       0,
     );
@@ -266,7 +269,7 @@ export function mountComingSoonFlight({
 
 /**
  * Coming-soon header chrome on the shared pin: MENU fades in, the header line
- * draws and the header goes from transparent to solid. Returns null when the
+ * draws and the header stays transparent until the mark lands, then fills solid. Returns null when the
  * flag is off so the caller keeps the legacy header untouched.
  */
 export function mountComingSoonChrome({
@@ -297,7 +300,7 @@ export function mountComingSoonChrome({
         y: 0,
         pointerEvents: "auto",
         ease: "none",
-        duration: 1,
+        duration: COMING_SOON_LANDING,
       },
       0,
     );
@@ -312,8 +315,8 @@ export function mountComingSoonChrome({
       timeline.fromTo(
         header,
         { "--header-solid": 0 },
-        { "--header-solid": 1, ease: "none", duration: 0.15 },
-        0.85,
+        { "--header-solid": 1, ease: "none", duration: 1 - COMING_SOON_LANDING },
+        COMING_SOON_LANDING,
       );
     }
   }, chrome);
