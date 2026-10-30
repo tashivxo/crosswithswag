@@ -5,6 +5,8 @@ import { Ticker } from "@/components/v3/Ticker";
 import { WaitlistForm } from "@/components/v3/WaitlistForm";
 import { CampaignFrame, ImageGrid } from "@/components/v3/ImageGrid";
 import { EditionRow } from "@/components/v3/EditionRow";
+import { ComingSoonChapter } from "@/components/v3/chapters/ComingSoonChapter";
+import { comingSoonEnabled } from "@/lib/coming-soon";
 import { home } from "@/lib/copy";
 import { clothesArtboards, editions } from "@/lib/editions";
 import { chapterById } from "@/lib/sections.config";
@@ -16,6 +18,7 @@ const manifestoPath = chapterById("manifesto").path;
 const [crossLine, withLine, swagLine] = home.heroMark;
 
 export function HomeChapter() {
+  const comingSoon = comingSoonEnabled();
   return (
     <>
       <section
@@ -28,7 +31,13 @@ export function HomeChapter() {
           } as CSSProperties
         }
       >
-        <div id="home-intro" className="home-intro" aria-hidden="true" />
+        {comingSoon ? (
+          <ComingSoonChapter id="home-intro" />
+        ) : (
+          <div id="home-intro" className="home-intro" aria-hidden="true" />
+        )}
+        {/* Coming-soon poster replaces the old CROSS WITH SWAG hero. */}
+        {!comingSoon && (
         <div className="section-inner">
           <div id="home-hero" className="hero-content" tabIndex={-1}>
             <div>
@@ -69,6 +78,7 @@ export function HomeChapter() {
             </div>
           </div>
         </div>
+        )}
       </section>
 
       <Ticker />

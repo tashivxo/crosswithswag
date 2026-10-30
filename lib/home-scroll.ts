@@ -1,3 +1,4 @@
+import { comingSoonEnabled } from "@/lib/coming-soon";
 import { getLenis } from "@/lib/lenis";
 import { chapterByPath } from "@/lib/sections.config";
 
@@ -13,6 +14,8 @@ function prefersReducedMotion(): boolean {
 }
 
 export function isHomeIntroSeen(): boolean {
+  // The coming-soon poster is the intro; every visit starts on it.
+  if (comingSoonEnabled()) return false;
   try {
     return sessionStorage.getItem(HOME_INTRO_SEEN_KEY) === "1";
   } catch {

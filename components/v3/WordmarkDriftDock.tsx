@@ -4,6 +4,8 @@ import { useLayoutEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Wordmark } from "@/components/ui/Wordmark";
+import { mountComingSoonFlight } from "@/lib/coming-soon-dock";
+import { useShortScreen } from "@/lib/use-short-screen";
 import {
   isHomeIntroSeen,
   markHomeIntroSeen,
@@ -59,6 +61,7 @@ export function WordmarkDriftDock({
   mode: "hero" | "docked";
 }) {
   const layerRef = useRef<HTMLDivElement>(null);
+  const shortScreen = useShortScreen();
 
   useLayoutEffect(() => {
     if (!ready || !layerRef.current) return;
@@ -71,6 +74,11 @@ export function WordmarkDriftDock({
     const slot = layer.parentElement;
 
     if (!slot) return;
+
+    if (mode === "hero") {
+      const cleanup = mountComingSoonFlight({ layer, slot });
+      if (cleanup) return cleanup;
+    }
 
     if (mode === "docked" || reduceMotion) {
       gsap.set(layer, {
@@ -166,7 +174,7 @@ export function WordmarkDriftDock({
     return () => {
       ctx.revert();
     };
-  }, [ready, mode]);
+  }, [ready, mode, shortScreen]);
 
   return (
     <div ref={layerRef} className="wordmark-drift-layer" aria-hidden="true">
