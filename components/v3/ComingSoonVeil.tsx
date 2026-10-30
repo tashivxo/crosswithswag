@@ -6,6 +6,7 @@ import { comingSoonEnabled } from "@/lib/coming-soon";
 import { watchVeilLayout } from "@/lib/coming-soon-veil-refresh";
 import {
   COMING_SOON_VEIL_PROPS,
+  resolveVeilDpr,
   resolveVeilQuality,
 } from "@/lib/coming-soon-veil";
 
@@ -29,17 +30,26 @@ const getQuality = () =>
 
 const getReducedMotion = () => window.matchMedia(REDUCED_QUERY).matches;
 
+// 0 stands for "DarkVeil's default" so the snapshot is always a number.
+const getDpr = () =>
+  resolveVeilDpr({ coarsePointer: window.matchMedia(COARSE_QUERY).matches }) ??
+  0;
+
 // DarkVeil only mounts on the client, once quality is known, so it never
 // initialises WebGL at the wrong resolution.
 const getServerQuality = () => null;
 const getServerReducedMotion = () => false;
+const getServerDpr = () => 0;
 
 export function ComingSoonVeilLayer({
   quality,
   reducedMotion = false,
+  dpr,
 }: {
   quality: number | null;
   reducedMotion?: boolean;
+  /** Canvas pixel ratio; omitted on desktop so DarkVeil keeps its default. */
+  dpr?: number;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const ready = quality !== null;
@@ -55,6 +65,7 @@ export function ComingSoonVeilLayer({
         <DarkVeil
           {...COMING_SOON_VEIL_PROPS}
           quality={quality}
+          {...(dpr ? { dpr } : {})}
           paused={reducedMotion}
           intro={!reducedMotion}
           mouseInteraction={!reducedMotion}
@@ -77,6 +88,14 @@ export function ComingSoonVeil() {
     getServerReducedMotion,
   );
 
+  const dpr = useSyncExternalStore(subscribeToQueries, getDpr, getServerDpr);
+
   if (!enabled) return null;
-  return <ComingSoonVeilLayer quality={quality} reducedMotion={reducedMotion} />;
+  return (
+    <ComingSoonVeilLayer
+      quality={quality}
+      reducedMotion={reducedMotion}
+      dpr={dpr || undefined}
+    />
+  );
 }
