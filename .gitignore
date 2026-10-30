@@ -17,3 +17,5 @@ mcp.json
 .cursor/mcp.json
 
 .vercel
+playwright-report/
+test-results/

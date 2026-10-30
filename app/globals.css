@@ -2028,6 +2028,22 @@ button:focus-visible {
   z-index: 0;
   pointer-events: none;
 }
+
+/* Touch: size the veil to the large viewport so the URL bar cannot shrink
+   the WebGL layer (and clear the canvas) mid-scroll. Desktop stays inset: 0. */
+@media (pointer: coarse) {
+  .cs-veil {
+    bottom: auto;
+    height: 100vh;
+    min-height: 100vh;
+  }
+  @supports (height: 100lvh) {
+    .cs-veil {
+      height: 100lvh;
+      min-height: 100lvh;
+    }
+  }
+}
 .cs > *:not(.cs-veil) {
   position: relative;
   z-index: 1;
