@@ -2,6 +2,8 @@
 
 import { useEffect, useLayoutEffect, useRef } from 'react';
 
+import { createFieldTarget } from '@/lib/veil-field-target';
+
 import './DarkVeil.css';
 
 const QUAD_VERTEX = `#version 300 es
@@ -302,23 +304,8 @@ export const DarkVeil = ({
     gl.enableVertexAttribArray(0);
     gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
 
-    const texture = gl.createTexture();
-    const framebuffer = gl.createFramebuffer();
-    const target = { width: 0, height: 0 };
-    const sizeTarget = (width, height) => {
-      if (target.width === width && target.height === height) return;
-      target.width = width;
-      target.height = height;
-      gl.bindTexture(gl.TEXTURE_2D, texture);
-      const levels = Math.floor(Math.log2(Math.max(width, height))) + 1;
-      gl.texStorage2D(gl.TEXTURE_2D, levels, floatTargets ? gl.RGBA16F : gl.RGBA8, width, height);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-      gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
-      gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0);
-    };
+    // A resize needs a new texture: immutable storage cannot be re-specified.
+    const target = createFieldTarget(gl, { floatTargets });
 
     const probe = document.createElement('canvas').getContext('2d', { willReadFrequently: true });
     const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
@@ -361,10 +348,10 @@ export const DarkVeil = ({
       const s = settingsRef.current;
       const presence = state.intro * state.intro * state.intro * (state.intro * (state.intro * 6 - 15) + 10);
       gl.bindVertexArray(vao);
-      sizeTarget(view.fieldWidth, view.fieldHeight);
+      target.resize(view.fieldWidth, view.fieldHeight);
 
       const f = fieldProgram.uniforms;
-      gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
+      gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer);
       gl.viewport(0, 0, target.width, target.height);
       gl.useProgram(fieldProgram.program);
       const angle = (s.rotation * Math.PI) / 180;
@@ -382,7 +369,7 @@ export const DarkVeil = ({
       gl.uniform1f(f.uUnfold, (1 - presence) * 0.45);
       gl.uniform1f(f.uDither, floatTargets ? 0 : 1 / 255);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
-      gl.bindTexture(gl.TEXTURE_2D, texture);
+      gl.bindTexture(gl.TEXTURE_2D, target.texture);
       gl.generateMipmap(gl.TEXTURE_2D);
 
       const c = compositeProgram.uniforms;
@@ -414,7 +401,7 @@ export const DarkVeil = ({
         0
       );
       gl.activeTexture(gl.TEXTURE0);
-      gl.bindTexture(gl.TEXTURE_2D, texture);
+      gl.bindTexture(gl.TEXTURE_2D, target.texture);
       gl.uniform1i(c.uField, 0);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
     };
@@ -541,8 +528,7 @@ export const DarkVeil = ({
       window.removeEventListener('pointermove', onPointerMove);
       document.documentElement.removeEventListener('pointerleave', onPointerLeave);
       document.removeEventListener('visibilitychange', onVisibility);
-      gl.deleteTexture(texture);
-      gl.deleteFramebuffer(framebuffer);
+      target.dispose();
       gl.deleteProgram(fieldProgram.program);
       gl.deleteProgram(compositeProgram.program);
       gl.deleteBuffer(buffer);

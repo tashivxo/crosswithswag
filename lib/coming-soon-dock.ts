@@ -2,6 +2,10 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { comingSoonEnabled } from "@/lib/coming-soon";
 import { COMING_SOON_DOCK_ATTR, isShortScreen } from "@/lib/short-screen";
+import {
+  SCROLL_TRIGGER_REFRESH_KEY,
+  requestScrollSafeRefresh,
+} from "@/lib/scroll-refresh-gate";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -106,7 +110,12 @@ function queueRefresh(state: Shared) {
   state.refreshQueued = true;
   window.requestAnimationFrame(() => {
     state.refreshQueued = false;
-    if (shared === state) ScrollTrigger.refresh();
+    if (shared !== state) return;
+    // On touch, a resize mid-scroll (the URL bar) waits for the scroll to
+    // settle instead of re-pinning under the finger. Desktop: immediate.
+    requestScrollSafeRefresh(SCROLL_TRIGGER_REFRESH_KEY, () => {
+      if (shared) ScrollTrigger.refresh();
+    });
   });
 }
 
