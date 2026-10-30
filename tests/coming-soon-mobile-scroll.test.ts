@@ -23,6 +23,7 @@ const h = vi.hoisted(() => {
     refresh,
     update: vi.fn(),
     config: vi.fn(),
+    normalizeScroll: vi.fn(),
     create: vi.fn(() => ({ kill: vi.fn() })),
   };
   const timeline = vi.fn((vars?: { scrollTrigger?: Record<string, unknown> }) => {
@@ -497,6 +498,52 @@ describe("veil field target", () => {
     );
     expect(source).toContain("createFieldTarget");
     expect(source).not.toContain("texStorage2D");
+  });
+});
+
+describe("veil redraw vs ScrollTrigger settle gate", () => {
+  it("a veil redraw runs on the next frame even while a touch scroll is settling", async () => {
+    const { scheduleVeilRedraw, requestScrollSafeRefresh } = await import(
+      "@/lib/scroll-refresh-gate"
+    );
+    const fw = fakeWindow({ coarse: true });
+    vi.stubGlobal("window", fw.win);
+    const draw = vi.fn();
+    const refresh = vi.fn();
+    // Install the shared gate, then start a gesture.
+    expect(requestScrollSafeRefresh("st", refresh)).toBe(true);
+    fw.dispatch("touchstart");
+    expect(requestScrollSafeRefresh("st", refresh)).toBe(false);
+    expect(refresh).toHaveBeenCalledTimes(1);
+
+    const queued: FrameRequestCallback[] = [];
+    scheduleVeilRedraw(draw, (cb) => {
+      queued.push(cb);
+      return 1;
+    });
+    expect(draw).not.toHaveBeenCalled();
+    queued[0](0);
+    expect(draw).toHaveBeenCalledTimes(1);
+    expect(refresh).toHaveBeenCalledTimes(1);
+  });
+
+  it("DarkVeil never imports the settle gate, and a real resize redraws next frame", () => {
+    const source = readFileSync(
+      new URL("../components/v3/DarkVeil.jsx", import.meta.url),
+      "utf8",
+    );
+    expect(source).toContain("nextVeilCanvasSize");
+    expect(source).toContain("scheduleVeilRedraw");
+    expect(source).not.toContain("requestScrollSafeRefresh");
+  });
+
+  it("DarkVeil restores the context if iOS drops it", () => {
+    const source = readFileSync(
+      new URL("../components/v3/DarkVeil.jsx", import.meta.url),
+      "utf8",
+    );
+    expect(source).toContain("webglcontextlost");
+    expect(source).toContain("webglcontextrestored");
   });
 });
 
