@@ -11,7 +11,12 @@
  * events are still arriving, now runs once the scroll has settled. Requests
  * share a key, so the dock and the veil cost one refresh. Fine pointers
  * (desktop) refresh immediately, exactly as before.
+ *
+ * This gate is for ScrollTrigger.refresh only. Veil redraws use
+ * scheduleVeilRedraw and must never wait for the settle timer.
  */
+
+export { scheduleVeilRedraw } from "@/lib/veil-canvas-size";
 
 /** Quiet time after the last touch or scroll event before held refreshes run. */
 export const SCROLL_SETTLE_MS = 160;

@@ -394,7 +394,9 @@ describe("the header mark is hidden by the head script too, so only the poster m
   it("CSS hides the header mark while idle, and the docked states always win over a stale idle", () => {
     expect(css).toMatch(/html\[data-cs-dock="idle"\] \.wordmark-drift-layer\s*\{[^}]*visibility:\s*hidden/);
     const reduced = css.slice(
-      css.indexOf("@media (prefers-reduced-motion: reduce) {\n  .cs {\n    --cs-fit: 0;"),
+      css.search(
+        /@media \(prefers-reduced-motion: reduce\) \{\r?\n  \.cs \{\r?\n    --cs-fit: 0;/,
+      ),
     );
     expect(reduced).toMatch(
       /html:has\(\.cs\) \.wordmark-drift-layer\s*\{[^}]*visibility:\s*visible/,

@@ -98,6 +98,12 @@ describe("veil layer", () => {
     );
   });
 
+  it("on coarse pointers is sized in lvh so the URL bar cannot shrink the WebGL layer", () => {
+    expect(css).toMatch(
+      /@media\s*\(pointer:\s*coarse\)[\s\S]*?\.cs-veil\s*\{[\s\S]*?100lvh/,
+    );
+  });
+
   it("leaves header backgrounds to the dock code", () => {
     const rules = css.match(/[^{}]+\{[^{}]*\}/g) ?? [];
     const veilHeaderBackground = rules.filter((rule) => {

@@ -77,6 +77,7 @@ type Shared = {
   observer: ResizeObserver | null;
   refreshQueued: boolean;
   refreshListeners: Set<() => void>;
+  disableTouchPin: () => void;
 };
 
 let shared: Shared | null = null;
@@ -86,7 +87,23 @@ function prefersReducedMotion() {
 }
 
 function dockScrub() {
-  return window.matchMedia("(pointer: coarse)").matches ? 0.25 : true;
+  // 1:1 with scroll on every pointer. A numeric scrub (was 0.25 on touch)
+  // interpolates on the ticker, which iOS starves mid-gesture, so the mark
+  // stepped and trailed the finger while the pinned copy stayed put.
+  return true;
+}
+
+function isCoarsePointer() {
+  return window.matchMedia("(pointer: coarse)").matches;
+}
+
+function enableTouchPin() {
+  ScrollTrigger.config({ ignoreMobileResize: true });
+  if (!isCoarsePointer()) return () => {};
+  ScrollTrigger.normalizeScroll(true);
+  return () => {
+    ScrollTrigger.normalizeScroll(false);
+  };
 }
 
 function setFlightState(state: FlightState | null) {
@@ -142,6 +159,7 @@ function teardown(state: Shared) {
   state.refreshListeners.clear();
   state.timeline.scrollTrigger?.kill(true);
   state.timeline.kill();
+  state.disableTouchPin();
   setFlightState(null);
   if (shared === state) shared = null;
 }
@@ -195,6 +213,7 @@ export function acquireComingSoonDock(): ComingSoonDock | null {
       observer: null,
       refreshQueued: false,
       refreshListeners: new Set(),
+      disableTouchPin: enableTouchPin(),
     };
     shared = state;
     setFlightState("idle");

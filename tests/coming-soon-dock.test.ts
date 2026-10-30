@@ -87,6 +87,7 @@ const h = vi.hoisted(() => {
     refresh: vi.fn(),
     update: vi.fn(),
     config: vi.fn(),
+    normalizeScroll: vi.fn(),
   };
 
   return { state, gsap, ScrollTrigger };
@@ -114,9 +115,13 @@ const globalsCss = readFileSync(join(process.cwd(), "app/globals.css"), "utf8");
 
 /** CSS the docked state applies for reduced motion (a media query, live). */
 function reducedMotionDockedCss() {
-  const start = globalsCss.indexOf("@media (prefers-reduced-motion: reduce) {\n  .cs {\n    --cs-fit: 0;");
+  const start = globalsCss.search(
+    /@media \(prefers-reduced-motion: reduce\) \{\r?\n  \.cs \{\r?\n    --cs-fit: 0;/,
+  );
   expect(start, "reduced-motion docked block missing").toBeGreaterThan(0);
-  return globalsCss.slice(start, globalsCss.indexOf("\n}\n", start));
+  const rest = globalsCss.slice(start);
+  const end = rest.search(/\r?\n\}\r?\n/);
+  return rest.slice(0, end);
 }
 
 /** CSS the docked state applies for a short screen: keyed off the attribute, not a media query. */
@@ -597,9 +602,32 @@ describe("pin shared between the poster mark and the header", () => {
       start: "top top",
       invalidateOnRefresh: true,
     });
+    expect(pins[0].scrub).toBe(true);
 
     flight?.();
     chrome?.();
+  });
+
+  it("touch: scrubs 1:1 with scroll so the mark cannot trail the finger in 0.25s chunks", () => {
+    installDom(false, true, phone);
+    const dock = acquire();
+    expect(h.state.timelines[0].vars?.scrollTrigger?.scrub).toBe(true);
+    dock?.release();
+  });
+
+  it("touch: turns on normalizeScroll for the pin, and restores native scroll on release", () => {
+    installDom(false, true, phone);
+    const dock = acquire();
+    expect(h.ScrollTrigger.normalizeScroll).toHaveBeenCalledWith(true);
+    dock?.release();
+    expect(h.ScrollTrigger.normalizeScroll).toHaveBeenCalledWith(false);
+  });
+
+  it("desktop: never calls normalizeScroll (Lenis owns that scroller)", () => {
+    installDom(false, false);
+    const dock = acquire();
+    expect(h.ScrollTrigger.normalizeScroll).not.toHaveBeenCalled();
+    dock?.release();
   });
 
   it("hands the same timeline to every acquirer", () => {
