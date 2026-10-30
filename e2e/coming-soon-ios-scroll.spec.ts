@@ -96,6 +96,37 @@ test.describe("coming-soon iOS scroll (iPhone 13 Pro Max WebKit)", () => {
     ).toEqual([]);
   });
 
+  test("landscape 844x390: veil reaches the section bottom when the section is taller than the viewport", async ({
+    page,
+  }) => {
+    await installCanvasProbe(page);
+    await page.setViewportSize({ width: 844, height: 390 });
+    await page.goto("/");
+    await skipPreloader(page);
+    await expect(page.locator(".cs-veil")).toBeAttached({ timeout: 20_000 });
+    await page.waitForTimeout(300);
+
+    const boxes = await page.evaluate(() => {
+      const section = document.querySelector(".cs");
+      const veil = document.querySelector(".cs-veil");
+      if (!section || !veil) return null;
+      const s = section.getBoundingClientRect();
+      const v = veil.getBoundingClientRect();
+      return {
+        sectionHeight: s.height,
+        veilHeight: v.height,
+        sectionBottom: s.bottom,
+        veilBottom: v.bottom,
+        viewportHeight: window.innerHeight,
+      };
+    });
+
+    expect(boxes).not.toBeNull();
+    expect(boxes!.sectionHeight).toBeGreaterThan(boxes!.viewportHeight);
+    expect(boxes!.veilBottom).toBeGreaterThanOrEqual(boxes!.sectionBottom - 1);
+    expect(boxes!.veilHeight).toBeGreaterThanOrEqual(boxes!.sectionHeight - 1);
+  });
+
   test("pinned swag. mark scale tracks scroll without 0.25s lag steps", async ({
     page,
   }) => {
