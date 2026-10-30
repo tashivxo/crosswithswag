@@ -2029,18 +2029,17 @@ button:focus-visible {
   pointer-events: none;
 }
 
-/* Touch: size the veil to the large viewport so the URL bar cannot shrink
-   the WebGL layer (and clear the canvas) mid-scroll. Desktop stays inset: 0. */
+/* Touch: keep inset: 0 so the veil stretches with a section taller than
+   the viewport (landscape). min-height max(100%, 100lvh) also cannot shrink
+   below the large viewport, so the URL bar cannot clear the canvas.
+   Desktop stays inset: 0 with no extra min-height. */
 @media (pointer: coarse) {
   .cs-veil {
-    bottom: auto;
-    height: 100vh;
-    min-height: 100vh;
+    min-height: max(100%, 100vh);
   }
   @supports (height: 100lvh) {
     .cs-veil {
-      height: 100lvh;
-      min-height: 100lvh;
+      min-height: max(100%, 100lvh);
     }
   }
 }
