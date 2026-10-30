@@ -1,5 +1,9 @@
 import { gsap } from "gsap";
 import { comingSoonEnabled } from "@/lib/coming-soon";
+import {
+  SCROLL_TRIGGER_REFRESH_KEY,
+  requestScrollSafeRefresh,
+} from "@/lib/scroll-refresh-gate";
 
 type ScrollTriggerLike = { refresh?: () => void };
 
@@ -31,13 +35,24 @@ type WatchOptions = {
 };
 
 /**
+ * The default refresh: on touch devices it waits for any scroll in progress to
+ * settle (the URL bar resizes the veil mid-gesture), and it shares one pending
+ * refresh with the dock.
+ */
+function refreshWhenSettled() {
+  requestScrollSafeRefresh(SCROLL_TRIGGER_REFRESH_KEY, () => {
+    refreshScrollTrigger();
+  });
+}
+
+/**
  * Refreshes ScrollTrigger once after the veil first lays out, then again on a
  * debounced resize. Returns a cleanup that cancels pending work.
  */
 export function watchVeilLayout(
   element: Element,
   {
-    refresh = refreshScrollTrigger,
+    refresh = refreshWhenSettled,
     debounceMs = 150,
     raf = (callback) => requestAnimationFrame(callback),
     cancelRaf = (id) => cancelAnimationFrame(id),
