@@ -323,7 +323,30 @@ describe("requestScrollSafeRefresh (shared gate)", () => {
 });
 
 describe("dock and veil refreshes on a phone (URL bar resize mid-scroll)", () => {
-  it("touch: a poster resize during a touch scroll waits for the scroll to settle", async () => {
+  it("touch: simulating an address-bar toggle does not refresh ScrollTrigger", async () => {
+    const env = installDock({ coarse: true });
+    const { acquireComingSoonDock } = await import("@/lib/coming-soon-dock");
+    const dock = acquireComingSoonDock();
+    expect(dock).not.toBeNull();
+    h.refresh.mockClear();
+
+    const observer = env.posterObserver();
+    expect(observer).toBeDefined();
+    const win = env.win as { innerHeight: number };
+    win.innerHeight = 664;
+    observer!.fire(390, 844);
+    win.innerHeight = 744;
+    env.dispatch("touchstart");
+    // With svh-sized .cs, the poster height stays 844 when the URL bar toggles.
+    vi.advanceTimersByTime(200);
+    expect(h.refresh).not.toHaveBeenCalled();
+    env.dispatch("touchend");
+    vi.advanceTimersByTime(160);
+    expect(h.refresh).not.toHaveBeenCalled();
+    dock!.release();
+  });
+
+  it("touch: a real poster resize during a touch scroll still waits for the scroll to settle", async () => {
     const env = installDock({ coarse: true });
     const { acquireComingSoonDock } = await import("@/lib/coming-soon-dock");
     const dock = acquireComingSoonDock();
@@ -335,7 +358,7 @@ describe("dock and veil refreshes on a phone (URL bar resize mid-scroll)", () =>
     expect(observer).toBeDefined();
     observer!.fire(390, 844);
     env.dispatch("touchstart");
-    observer!.fire(390, 904); // URL bar collapses: 100dvh grows by 60px
+    observer!.fire(390, 904); // orientation or a real layout height change
     expect(h.refresh).toHaveBeenCalledTimes(1);
     env.dispatch("touchend");
     env.dispatch("scroll");
