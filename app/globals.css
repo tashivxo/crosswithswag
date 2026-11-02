@@ -2034,6 +2034,10 @@ button:focus-visible {
    below the large viewport, so the URL bar cannot clear the canvas.
    Desktop stays inset: 0 with no extra min-height. */
 @media (pointer: coarse) {
+  .cs {
+    min-height: 100svh;
+    --cs-vh: 100svh;
+  }
   .cs-veil {
     min-height: max(100%, 100vh);
   }
