@@ -2,6 +2,10 @@ import { readFileSync } from "node:fs";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import {
+  posterHeightAfterAddressBarToggle,
+  touchComingSoonHomeUsesSvh,
+} from "./coming-soon-touch-css";
 
 /*
  * Mobile scroll on the coming-soon home (flag on). Two measured causes of
@@ -333,11 +337,18 @@ describe("dock and veil refreshes on a phone (URL bar resize mid-scroll)", () =>
     const observer = env.posterObserver();
     expect(observer).toBeDefined();
     const win = env.win as { innerHeight: number };
-    win.innerHeight = 664;
-    observer!.fire(390, 844);
-    win.innerHeight = 744;
+    const homeUsesSvh = touchComingSoonHomeUsesSvh();
+    const barShown = 664;
+    const barHidden = 744;
+    win.innerHeight = barShown;
+    const heightBefore = posterHeightAfterAddressBarToggle(barShown, homeUsesSvh);
+    observer!.fire(390, heightBefore);
+    win.innerHeight = barHidden;
     env.dispatch("touchstart");
-    // With svh-sized .cs, the poster height stays 844 when the URL bar toggles.
+    const heightAfter = posterHeightAfterAddressBarToggle(barHidden, homeUsesSvh);
+    if (heightAfter !== heightBefore) {
+      observer!.fire(390, heightAfter);
+    }
     vi.advanceTimersByTime(200);
     expect(h.refresh).not.toHaveBeenCalled();
     env.dispatch("touchend");

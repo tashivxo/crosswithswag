@@ -1,41 +1,10 @@
-import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-
-const css = readFileSync(
-  new URL("../app/globals.css", import.meta.url),
-  "utf8",
-);
-
-/** Slice from the coming-soon poster block through the short-screen dock rules. */
-function comingSoonCss() {
-  const start = css.indexOf("Coming soon poster");
-  expect(start).toBeGreaterThan(0);
-  const end = css.indexOf("/* end docked: short screen */");
-  expect(end).toBeGreaterThan(start);
-  return css.slice(start, end + "/* end docked: short screen */".length);
-}
-
-function coarsePointerBlocks(source: string) {
-  const blocks: string[] = [];
-  const re = /@media\s*\(\s*pointer:\s*coarse\s*\)\s*\{/g;
-  let match: RegExpExecArray | null;
-  while ((match = re.exec(source)) !== null) {
-    let depth = 1;
-    let i = match.index + match[0].length;
-    const start = i;
-    while (i < source.length && depth > 0) {
-      if (source[i] === "{") depth += 1;
-      else if (source[i] === "}") depth -= 1;
-      i += 1;
-    }
-    blocks.push(source.slice(start, i - 1));
-  }
-  return blocks;
-}
-
-function coarseComingSoonRules() {
-  return coarsePointerBlocks(comingSoonCss()).join("\n");
-}
+import {
+  coarseComingSoonRules,
+  comingSoonCss,
+  globalsCss,
+  touchComingSoonHomeUsesSvh,
+} from "./coming-soon-touch-css";
 
 function stripVeilRules(block: string) {
   return block.replace(/\.cs-veil[\s\S]*?\}/g, "");
@@ -55,6 +24,36 @@ describe("coming-soon touch viewport (coarse pointer)", () => {
     expect(coarse).not.toMatch(/\dvh/);
     expect(coarse).not.toMatch(/--cs-vh:\s*100vh\s*;/);
     expect(coarse).not.toMatch(/min-height:\s*100vh\s*;/);
+  });
+
+  it("sizes pinned #home in coming-soon mode with min-height 100svh, not dvh or vh", () => {
+    const coarse = coarseComingSoonRules();
+    expect(coarse).toMatch(
+      /html:has\(\.cs\)\s*#home\s*\{[^}]*min-height:\s*100svh\s*;/,
+    );
+    expect(coarse).not.toMatch(
+      /html:has\(\.cs\)\s*#home\s*\{[^}]*min-height:\s*100dvh/,
+    );
+    expect(coarse).not.toMatch(
+      /html:has\(\.cs\)\s*#home\s*\{[^}]*min-height:\s*100vh\s*;/,
+    );
+  });
+
+  it("matches #home and .cs min-height on touch (both 100svh)", () => {
+    const coarse = coarseComingSoonRules();
+    const cs = coarse.match(/\.cs\s*\{[^}]*min-height:\s*(100svh)\s*;/);
+    const home = coarse.match(
+      /html:has\(\.cs\)\s*#home\s*\{[^}]*min-height:\s*(100svh)\s*;/,
+    );
+    expect(cs?.[1]).toBe("100svh");
+    expect(home?.[1]).toBe(cs?.[1]);
+  });
+
+  it("leaves the global .section-shell rule on 100dvh for other gallery sections", () => {
+    expect(globalsCss).toMatch(/\.section-shell\s*\{[^}]*min-height:\s*100dvh\s*;/);
+    expect(globalsCss).not.toMatch(
+      /\.section-shell\s*\{[^}]*min-height:\s*100svh\s*;/,
+    );
   });
 
   it("leaves .cs-veil lvh/vh sizing untouched on touch", () => {
