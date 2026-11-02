@@ -43,6 +43,13 @@ export {
 /** Pin length as a share of the viewport height. */
 export const COMING_SOON_PIN_VH = 0.6;
 
+/** Hidden probe on \`html\`; its offsetHeight tracks 100lvh for pin sizing. */
+export const COMING_SOON_LVH_PROBE_ATTR = "data-cs-lvh-probe";
+
+export function comingSoonPinScrollPx(lvhHeightPx: number): number {
+  return Math.round(lvhHeightPx * COMING_SOON_PIN_VH);
+}
+
 /**
  * Visible glyph width as a share of the header `.wordmark` box. The header mask
  * is `contain` inside a 1.4267 box, the SVG is 9088x6968 and the glyph spans
@@ -75,8 +82,11 @@ type Shared = {
   home: HTMLElement;
   refs: number;
   observer: ResizeObserver | null;
+  lvhObserver: ResizeObserver | null;
+  lvhProbe: HTMLElement;
   refreshQueued: boolean;
   refreshListeners: Set<() => void>;
+  disableTouchPin: () => void;
 };
 
 let shared: Shared | null = null;
@@ -86,7 +96,48 @@ function prefersReducedMotion() {
 }
 
 function dockScrub() {
-  return window.matchMedia("(pointer: coarse)").matches ? 0.25 : true;
+  // 1:1 with scroll on every pointer. A numeric scrub (was 0.25 on touch)
+  // interpolates on the ticker, which iOS starves mid-gesture, so the mark
+  // stepped and trailed the finger while the pinned copy stayed put.
+  return true;
+}
+
+function enableTouchPin() {
+  ScrollTrigger.config({ ignoreMobileResize: true });
+  return () => {};
+}
+
+function createLvhProbe(): HTMLElement {
+  const probe = document.createElement("div");
+  probe.setAttribute("aria-hidden", "true");
+  probe.setAttribute(COMING_SOON_LVH_PROBE_ATTR, "");
+  Object.assign(probe.style, {
+    position: "fixed",
+    left: "0",
+    top: "0",
+    width: "0",
+    height: "100lvh",
+    visibility: "hidden",
+    pointerEvents: "none",
+    overflow: "hidden",
+  });
+  document.documentElement.appendChild(probe);
+  return probe;
+}
+
+function observeLvhProbe(state: Shared) {
+  if (typeof ResizeObserver === "undefined") return null;
+
+  let height = -1;
+  const observer = new ResizeObserver((entries) => {
+    const box = entries[entries.length - 1]?.contentRect;
+    if (!box) return;
+    const changed = height >= 0 && box.height !== height;
+    height = box.height;
+    if (changed) queueRefresh(state);
+  });
+  observer.observe(state.lvhProbe);
+  return observer;
 }
 
 function setFlightState(state: FlightState | null) {
@@ -139,9 +190,12 @@ function observeResize(state: Shared) {
 
 function teardown(state: Shared) {
   state.observer?.disconnect();
+  state.lvhObserver?.disconnect();
+  state.lvhProbe.remove();
   state.refreshListeners.clear();
   state.timeline.scrollTrigger?.kill(true);
   state.timeline.kill();
+  state.disableTouchPin();
   setFlightState(null);
   if (shared === state) shared = null;
 }
@@ -166,13 +220,15 @@ export function acquireComingSoonDock(): ComingSoonDock | null {
       return null;
     }
 
+    const lvhProbe = createLvhProbe();
+
     const timeline = gsap.timeline({
       defaults: { ease: "none" },
       scrollTrigger: {
         id: "coming-soon-dock",
         trigger: home,
         start: "top top",
-        end: () => `+=${Math.round(window.innerHeight * COMING_SOON_PIN_VH)}`,
+        end: () => `+=${comingSoonPinScrollPx(lvhProbe.offsetHeight)}`,
         pin: true,
         pinSpacing: true,
         anticipatePin: 1,
@@ -193,12 +249,16 @@ export function acquireComingSoonDock(): ComingSoonDock | null {
       home,
       refs: 0,
       observer: null,
+      lvhObserver: null,
+      lvhProbe,
       refreshQueued: false,
       refreshListeners: new Set(),
+      disableTouchPin: enableTouchPin(),
     };
     shared = state;
     setFlightState("idle");
     state.observer = observeResize(state);
+    state.lvhObserver = observeLvhProbe(state);
     queueRefresh(state);
   }
 

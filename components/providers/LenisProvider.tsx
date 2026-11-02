@@ -19,6 +19,9 @@ export function LenisProvider({ children }: { children: ReactNode }) {
     ScrollTrigger.config({ ignoreMobileResize: true });
 
     if (reduceMotion || coarsePointer) {
+      // Same as the Lenis path: do not let ticker catch-up jumps step the
+      // scrubbed mark when iOS starves rAF mid-scroll. Lenis stays off.
+      gsap.ticker.lagSmoothing(0);
       requestAnimationFrame(() => ScrollTrigger.refresh());
       return;
     }

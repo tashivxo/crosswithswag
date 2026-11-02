@@ -2028,6 +2028,28 @@ button:focus-visible {
   z-index: 0;
   pointer-events: none;
 }
+
+/* Touch: keep inset: 0 so the veil stretches with a section taller than
+   the viewport (landscape). min-height max(100%, 100lvh) also cannot shrink
+   below the large viewport, so the URL bar cannot clear the canvas.
+   Desktop stays inset: 0 with no extra min-height. */
+@media (pointer: coarse) {
+  .cs {
+    min-height: 100svh;
+    --cs-vh: 100svh;
+  }
+  html:has(.cs) #home {
+    min-height: 100svh;
+  }
+  .cs-veil {
+    min-height: max(100%, 100vh);
+  }
+  @supports (height: 100lvh) {
+    .cs-veil {
+      min-height: max(100%, 100lvh);
+    }
+  }
+}
 .cs > *:not(.cs-veil) {
   position: relative;
   z-index: 1;

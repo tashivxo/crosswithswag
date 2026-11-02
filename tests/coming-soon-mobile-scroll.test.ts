@@ -2,6 +2,10 @@ import { readFileSync } from "node:fs";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import {
+  posterHeightAfterAddressBarToggle,
+  touchComingSoonHomeUsesSvh,
+} from "./coming-soon-touch-css";
 
 /*
  * Mobile scroll on the coming-soon home (flag on). Two measured causes of
@@ -23,6 +27,7 @@ const h = vi.hoisted(() => {
     refresh,
     update: vi.fn(),
     config: vi.fn(),
+    normalizeScroll: vi.fn(),
     create: vi.fn(() => ({ kill: vi.fn() })),
   };
   const timeline = vi.fn((vars?: { scrollTrigger?: Record<string, unknown> }) => {
@@ -134,10 +139,22 @@ function installDock({ coarse }: { coarse: boolean }) {
   };
   const attrs = new Map<string, string>([["data-cs-short", "0"]]);
   vi.stubGlobal("document", {
+    createElement: (tag: string) => {
+      void tag;
+      return {
+        style: {} as Record<string, string>,
+        offsetHeight: 844,
+        setAttribute: vi.fn(),
+        getAttribute: vi.fn(() => null),
+        remove: vi.fn(),
+      };
+    },
     documentElement: {
       setAttribute: (k: string, v: string) => attrs.set(k, v),
       removeAttribute: (k: string) => attrs.delete(k),
       getAttribute: (k: string) => attrs.get(k) ?? null,
+      appendChild: vi.fn(),
+      removeChild: vi.fn(),
     },
     getElementById: (id: string) => (id === "home" ? home : null),
   });
@@ -310,7 +327,37 @@ describe("requestScrollSafeRefresh (shared gate)", () => {
 });
 
 describe("dock and veil refreshes on a phone (URL bar resize mid-scroll)", () => {
-  it("touch: a poster resize during a touch scroll waits for the scroll to settle", async () => {
+  it("touch: simulating an address-bar toggle does not refresh ScrollTrigger", async () => {
+    const env = installDock({ coarse: true });
+    const { acquireComingSoonDock } = await import("@/lib/coming-soon-dock");
+    const dock = acquireComingSoonDock();
+    expect(dock).not.toBeNull();
+    h.refresh.mockClear();
+
+    const observer = env.posterObserver();
+    expect(observer).toBeDefined();
+    const win = env.win as { innerHeight: number };
+    const homeUsesSvh = touchComingSoonHomeUsesSvh();
+    const barShown = 664;
+    const barHidden = 744;
+    win.innerHeight = barShown;
+    const heightBefore = posterHeightAfterAddressBarToggle(barShown, homeUsesSvh);
+    observer!.fire(390, heightBefore);
+    win.innerHeight = barHidden;
+    env.dispatch("touchstart");
+    const heightAfter = posterHeightAfterAddressBarToggle(barHidden, homeUsesSvh);
+    if (heightAfter !== heightBefore) {
+      observer!.fire(390, heightAfter);
+    }
+    vi.advanceTimersByTime(200);
+    expect(h.refresh).not.toHaveBeenCalled();
+    env.dispatch("touchend");
+    vi.advanceTimersByTime(160);
+    expect(h.refresh).not.toHaveBeenCalled();
+    dock!.release();
+  });
+
+  it("touch: a real poster resize during a touch scroll still waits for the scroll to settle", async () => {
     const env = installDock({ coarse: true });
     const { acquireComingSoonDock } = await import("@/lib/coming-soon-dock");
     const dock = acquireComingSoonDock();
@@ -322,7 +369,7 @@ describe("dock and veil refreshes on a phone (URL bar resize mid-scroll)", () =>
     expect(observer).toBeDefined();
     observer!.fire(390, 844);
     env.dispatch("touchstart");
-    observer!.fire(390, 904); // URL bar collapses: 100dvh grows by 60px
+    observer!.fire(390, 904); // orientation or a real layout height change
     expect(h.refresh).toHaveBeenCalledTimes(1);
     env.dispatch("touchend");
     env.dispatch("scroll");
@@ -497,6 +544,52 @@ describe("veil field target", () => {
     );
     expect(source).toContain("createFieldTarget");
     expect(source).not.toContain("texStorage2D");
+  });
+});
+
+describe("veil redraw vs ScrollTrigger settle gate", () => {
+  it("a veil redraw runs on the next frame even while a touch scroll is settling", async () => {
+    const { scheduleVeilRedraw, requestScrollSafeRefresh } = await import(
+      "@/lib/scroll-refresh-gate"
+    );
+    const fw = fakeWindow({ coarse: true });
+    vi.stubGlobal("window", fw.win);
+    const draw = vi.fn();
+    const refresh = vi.fn();
+    // Install the shared gate, then start a gesture.
+    expect(requestScrollSafeRefresh("st", refresh)).toBe(true);
+    fw.dispatch("touchstart");
+    expect(requestScrollSafeRefresh("st", refresh)).toBe(false);
+    expect(refresh).toHaveBeenCalledTimes(1);
+
+    const queued: FrameRequestCallback[] = [];
+    scheduleVeilRedraw(draw, (cb) => {
+      queued.push(cb);
+      return 1;
+    });
+    expect(draw).not.toHaveBeenCalled();
+    queued[0](0);
+    expect(draw).toHaveBeenCalledTimes(1);
+    expect(refresh).toHaveBeenCalledTimes(1);
+  });
+
+  it("DarkVeil never imports the settle gate, and a real resize redraws next frame", () => {
+    const source = readFileSync(
+      new URL("../components/v3/DarkVeil.jsx", import.meta.url),
+      "utf8",
+    );
+    expect(source).toContain("nextVeilCanvasSize");
+    expect(source).toContain("scheduleVeilRedraw");
+    expect(source).not.toContain("requestScrollSafeRefresh");
+  });
+
+  it("DarkVeil restores the context if iOS drops it", () => {
+    const source = readFileSync(
+      new URL("../components/v3/DarkVeil.jsx", import.meta.url),
+      "utf8",
+    );
+    expect(source).toContain("webglcontextlost");
+    expect(source).toContain("webglcontextrestored");
   });
 });
 

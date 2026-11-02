@@ -98,6 +98,21 @@ describe("veil layer", () => {
     );
   });
 
+  it("on coarse pointers is sized in lvh so the URL bar cannot shrink the WebGL layer", () => {
+    expect(css).toMatch(
+      /@media\s*\(pointer:\s*coarse\)[\s\S]*?\.cs-veil\s*\{[\s\S]*?100lvh/,
+    );
+  });
+
+  it("on coarse pointers covers the full section when the section is taller than the viewport, for example in landscape", () => {
+    // 844x390 landscape: .cs can be ~645px while 100lvh is ~390px. A veil
+    // locked to 100lvh leaves the form on plain black. max(100%, 100lvh)
+    // covers the section and still cannot shrink below the large viewport.
+    expect(css).toMatch(
+      /@media\s*\(pointer:\s*coarse\)[\s\S]*?\.cs-veil\s*\{[\s\S]*?max\(\s*100%\s*,\s*100lvh\s*\)/,
+    );
+  });
+
   it("leaves header backgrounds to the dock code", () => {
     const rules = css.match(/[^{}]+\{[^{}]*\}/g) ?? [];
     const veilHeaderBackground = rules.filter((rule) => {

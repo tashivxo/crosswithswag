@@ -1,8 +1,9 @@
 'use client';
 
-import { useEffect, useLayoutEffect, useRef } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 import { createFieldTarget } from '@/lib/veil-field-target';
+import { nextVeilCanvasSize, scheduleVeilRedraw } from '@/lib/veil-canvas-size';
 
 import './DarkVeil.css';
 
@@ -251,6 +252,7 @@ export const DarkVeil = ({
   const containerRef = useRef(null);
   const canvasRef = useRef(null);
   const wakeRef = useRef(null);
+  const [glEpoch, setGlEpoch] = useState(0);
   const settings = {
     color: String(color),
     speed,
@@ -325,7 +327,7 @@ export const DarkVeil = ({
       return rgb;
     };
 
-    const view = { width: 1, height: 1, fieldWidth: 1, fieldHeight: 1 };
+    const view = { width: 0, height: 0, fieldWidth: 1, fieldHeight: 1 };
     const pointer = { x: 0, y: 0, inside: false };
     const state = {
       clock: 0,
@@ -343,6 +345,7 @@ export const DarkVeil = ({
     let raf = 0;
     let last = 0;
     let visible = true;
+    let rebuilt = false;
 
     const render = () => {
       const s = settingsRef.current;
@@ -458,19 +461,30 @@ export const DarkVeil = ({
       const s = settingsRef.current;
       const width = Math.max(1, container.clientWidth);
       const height = Math.max(1, container.clientHeight);
+      const coarse = window.matchMedia?.('(pointer: coarse)').matches ?? false;
+      const next = nextVeilCanvasSize({
+        coarsePointer: coarse,
+        prevWidth: view.width,
+        prevHeight: view.height,
+        nextWidth: width,
+        nextHeight: height
+      });
+      if (!next.resizeBuffer) return;
       const ratio = Math.min(s.dpr || window.devicePixelRatio || 1, 2);
-      view.width = width;
-      view.height = height;
-      canvas.width = Math.max(1, Math.round(width * ratio));
-      canvas.height = Math.max(1, Math.round(height * ratio));
+      view.width = next.width;
+      view.height = next.height;
+      canvas.width = Math.max(1, Math.round(next.width * ratio));
+      canvas.height = Math.max(1, Math.round(next.height * ratio));
       let fieldScale = s.quality;
-      if (width * height * fieldScale * fieldScale > MAX_FIELD_PIXELS) {
-        fieldScale = Math.sqrt(MAX_FIELD_PIXELS / (width * height));
+      if (next.width * next.height * fieldScale * fieldScale > MAX_FIELD_PIXELS) {
+        fieldScale = Math.sqrt(MAX_FIELD_PIXELS / (next.width * next.height));
       }
-      view.fieldWidth = Math.max(1, Math.round(width * fieldScale));
-      view.fieldHeight = Math.max(1, Math.round(height * fieldScale));
-      if (!raf) render();
-      wake();
+      view.fieldWidth = Math.max(1, Math.round(next.width * fieldScale));
+      view.fieldHeight = Math.max(1, Math.round(next.height * fieldScale));
+      scheduleVeilRedraw(() => {
+        if (!raf) render();
+        wake();
+      });
     };
 
     const onPointerMove = event => {
@@ -491,6 +505,17 @@ export const DarkVeil = ({
       wake();
     };
 
+    const onContextLost = event => {
+      event.preventDefault();
+      cancelAnimationFrame(raf);
+      raf = 0;
+    };
+
+    const onContextRestored = () => {
+      rebuilt = true;
+      setGlEpoch(n => n + 1);
+    };
+
     const resizeObserver = new ResizeObserver(resize);
     resizeObserver.observe(container);
     const intersection = new IntersectionObserver(entries => {
@@ -504,6 +529,8 @@ export const DarkVeil = ({
     window.addEventListener('pointermove', onPointerMove, { passive: true });
     document.documentElement.addEventListener('pointerleave', onPointerLeave);
     document.addEventListener('visibilitychange', onVisibility);
+    canvas.addEventListener('webglcontextlost', onContextLost);
+    canvas.addEventListener('webglcontextrestored', onContextRestored);
     resize();
 
     let lastQuality = settingsRef.current.quality;
@@ -528,14 +555,16 @@ export const DarkVeil = ({
       window.removeEventListener('pointermove', onPointerMove);
       document.documentElement.removeEventListener('pointerleave', onPointerLeave);
       document.removeEventListener('visibilitychange', onVisibility);
+      canvas.removeEventListener('webglcontextlost', onContextLost);
+      canvas.removeEventListener('webglcontextrestored', onContextRestored);
       target.dispose();
       gl.deleteProgram(fieldProgram.program);
       gl.deleteProgram(compositeProgram.program);
       gl.deleteBuffer(buffer);
       gl.deleteVertexArray(vao);
-      gl.getExtension('WEBGL_lose_context')?.loseContext();
+      if (!rebuilt) gl.getExtension('WEBGL_lose_context')?.loseContext();
     };
-  }, []);
+  }, [glEpoch]);
 
   useEffect(() => {
     wakeRef.current?.();
