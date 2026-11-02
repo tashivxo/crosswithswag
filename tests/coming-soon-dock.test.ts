@@ -260,7 +260,7 @@ function installDom(
   domProbeNodes = [];
 
   vi.stubGlobal("document", {
-    createElement: (_tag: string) => {
+    createElement: () => {
       const attrs = new Map<string, string>();
       const node: ProbeNode = {
         attrs,
@@ -1270,7 +1270,7 @@ describe("cleanup on unmount", () => {
     const { flight, chrome } = mountBoth(env);
     flight?.();
     chrome?.();
-    expect(disconnect).toHaveBeenCalledTimes(1);
+    expect(disconnect).toHaveBeenCalledTimes(2);
   });
 });
 

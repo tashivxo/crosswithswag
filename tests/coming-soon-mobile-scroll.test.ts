@@ -135,10 +135,22 @@ function installDock({ coarse }: { coarse: boolean }) {
   };
   const attrs = new Map<string, string>([["data-cs-short", "0"]]);
   vi.stubGlobal("document", {
+    createElement: (tag: string) => {
+      void tag;
+      return {
+        style: {} as Record<string, string>,
+        offsetHeight: 844,
+        setAttribute: vi.fn(),
+        getAttribute: vi.fn(() => null),
+        remove: vi.fn(),
+      };
+    },
     documentElement: {
       setAttribute: (k: string, v: string) => attrs.set(k, v),
       removeAttribute: (k: string) => attrs.delete(k),
       getAttribute: (k: string) => attrs.get(k) ?? null,
+      appendChild: vi.fn(),
+      removeChild: vi.fn(),
     },
     getElementById: (id: string) => (id === "home" ? home : null),
   });
