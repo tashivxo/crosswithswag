@@ -2038,6 +2038,9 @@ button:focus-visible {
     min-height: 100svh;
     --cs-vh: 100svh;
   }
+  html:has(.cs) #home {
+    min-height: 100svh;
+  }
   .cs-veil {
     min-height: max(100%, 100vh);
   }
