@@ -98,6 +98,7 @@ vi.mock("gsap/ScrollTrigger", () => ({ ScrollTrigger: h.ScrollTrigger }));
 
 import {
   COMING_SOON_DOCK_ATTR,
+  COMING_SOON_PIN_VH,
   HEADER_GLYPH_FRACTION,
   LABEL_FADE_LENGTH,
   SHORT_SCREEN_MAX_HEIGHT,
@@ -164,6 +165,8 @@ const slotBox = rect(56, 4, 120, 84);
 
 type Geometry = {
   viewport: { width: number; height: number };
+  /** Stable large viewport (100lvh) height; defaults to viewport.height. */
+  lvhHeight?: number;
   poster: ReturnType<typeof rect>;
   slot: ReturnType<typeof rect>;
   label: ReturnType<typeof rect>;
@@ -212,6 +215,20 @@ const phone: Geometry = {
   layerWidth: 240,
 };
 
+const COMING_SOON_LVH_PROBE_ATTR = "data-cs-lvh-probe";
+
+function pinEndOffset(lvhPx: number) {
+  return `+=${Math.round(lvhPx * COMING_SOON_PIN_VH)}`;
+}
+
+type ProbeNode = {
+  attrs: Map<string, string>;
+  style: Record<string, string>;
+  offsetHeight: number;
+};
+
+let domProbeNodes: ProbeNode[] = [];
+
 type Env = {
   home: ReturnType<typeof fakeElement>;
   poster: ReturnType<typeof fakeElement>;
@@ -240,12 +257,28 @@ function installDom(
     }),
   });
   const rootAttrs = new Map<string, string>();
+  domProbeNodes = [];
 
   vi.stubGlobal("document", {
+    createElement: () => {
+      const attrs = new Map<string, string>();
+      const node: ProbeNode = {
+        attrs,
+        style: {} as Record<string, string>,
+        offsetHeight: geo.lvhHeight ?? geo.viewport.height,
+        setAttribute: (k: string, v: string) => attrs.set(k, v),
+        getAttribute: (k: string) => attrs.get(k) ?? null,
+        remove: vi.fn(),
+      };
+      domProbeNodes.push(node);
+      return node;
+    },
     documentElement: {
       setAttribute: (k: string, v: string) => rootAttrs.set(k, v),
       removeAttribute: (k: string) => rootAttrs.delete(k),
       getAttribute: (k: string) => rootAttrs.get(k) ?? null,
+      appendChild: (node: ProbeNode) => node,
+      removeChild: (node: ProbeNode) => node,
     },
     getElementById: (id: string) => (id === "home" ? home : null),
   });
@@ -615,12 +648,13 @@ describe("pin shared between the poster mark and the header", () => {
     dock?.release();
   });
 
-  it("touch: turns on normalizeScroll for the pin, and restores native scroll on release", () => {
+  it("touch: does not call ScrollTrigger.normalizeScroll (keeps native iOS momentum)", () => {
     installDom(false, true, phone);
+    h.ScrollTrigger.normalizeScroll.mockClear();
     const dock = acquire();
-    expect(h.ScrollTrigger.normalizeScroll).toHaveBeenCalledWith(true);
+    expect(h.ScrollTrigger.normalizeScroll).not.toHaveBeenCalled();
     dock?.release();
-    expect(h.ScrollTrigger.normalizeScroll).toHaveBeenCalledWith(false);
+    expect(h.ScrollTrigger.normalizeScroll).not.toHaveBeenCalled();
   });
 
   it("desktop: never calls normalizeScroll (Lenis owns that scroller)", () => {
@@ -659,12 +693,37 @@ describe("pin shared between the poster mark and the header", () => {
     chrome?.();
   });
 
-  it("scales the pin length with the viewport and re-reads it on refresh", () => {
+  it("sizes the pin end from the hidden 100lvh probe, not window.innerHeight", () => {
+    const lvh = 844;
+    const layout = 664;
+    installDom(false, true, {
+      ...phone,
+      viewport: { ...phone.viewport, height: layout },
+      lvhHeight: lvh,
+    });
+    const dock = acquire();
+    const end = pinConfigs()[0].end as () => string;
+    expect(end()).toBe(pinEndOffset(lvh));
+
+    const win = window as unknown as { innerHeight: number };
+    win.innerHeight = 744;
+    expect(end()).toBe(pinEndOffset(lvh));
+
+    const probe = domProbeNodes.find((node) =>
+      node.attrs.has(COMING_SOON_LVH_PROBE_ATTR),
+    );
+    expect(probe?.style.height).toBe("100lvh");
+    probe!.offsetHeight = 780;
+    expect(end()).toBe(pinEndOffset(780));
+    dock?.release();
+  });
+
+  it("desktop: pin end still follows the lvh probe height", () => {
     const env = installDom(false);
     const { flight, chrome } = mountBoth(env);
     const config = pinConfigs()[0];
     expect(typeof config.end).toBe("function");
-    expect((config.end as () => string)()).toBe("+=600");
+    expect((config.end as () => string)()).toBe(pinEndOffset(desktop.viewport.height));
     flight?.();
     chrome?.();
   });
@@ -1211,7 +1270,7 @@ describe("cleanup on unmount", () => {
     const { flight, chrome } = mountBoth(env);
     flight?.();
     chrome?.();
-    expect(disconnect).toHaveBeenCalledTimes(1);
+    expect(disconnect).toHaveBeenCalledTimes(2);
   });
 });
 
