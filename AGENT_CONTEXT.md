@@ -11,6 +11,10 @@ This is the live production site for `swag.`, a scroll-driven single-page brand 
 - **Production (`main`)** — V3.1 six-route gallery. Live at `https://crosswithswag.co.za` and `https://crosswithswag.vercel.app`. Marcus signed off this cutover (August 2026). Do not attach another custom domain.
 - **`aug-2026-website-update`** — branch that shipped V3.1; merged to `main` at `0d84e8f`. Keep for history; production is `main`.
 - **`v2-production-freeze`** — frozen snapshot of the pre-cutover V2 Canva whiteboard build (eight poster sections, commit `c18a1c5`). Reference-only for mining layouts, motion, and copy. Not production. Preview: `https://crosswithswag-git-v2-production-freeze-tashivxos-projects.vercel.app`.
+- **`v3-production-freeze`** — frozen snapshot of live V3.1 on `main` (same tip as production at freeze time). Reference-only; not production. Preview: `https://crosswithswag-git-v3-production-freeze-tashivxos-projects.vercel.app`.
+- **`SIT`** — integration line branched from `main`; receives promotion from `DEV` before production cutover.
+- **`DEV`** — development line branched from `SIT`. Previous `origin/DEV` history preserved on **`DEV-legacy`**.
+- **`V4_branch`** — Marcus CROSSWITHSWAG V4.1 rebuild (Figma file `lcZqp5HNaFCPBcWgPzAwUU`, section `21:23`). Branched from `DEV`. Not production until Marcus sign-off and promotion `V4_branch` → `DEV` → `SIT` → `main`.
 - **`swag_V3_new_branch`** — retained git history of the V3 rebuild. It is not a live preview line; production is `main`.
 
 Marcus V3 sources live in `cursor.md/v3/` (`swag-site.html`, `SWAG-engineering-handoff.md`). Figma file `5w6qUwhO5sLBhxJHsqfC0u` is view-only for `tashivxo@gmail.com` — build follows HTML + handoff.
@@ -241,6 +245,8 @@ Current Vercel project (personal account `tashivxo`, team `tashivxos-projects`, 
 - Dashboard: `https://vercel.com/tashivxos-projects/crosswithswag`
 - Inspect: `https://vercel.com/tashivxos-projects/crosswithswag/CjUfoZ46aAePpPkFnj7eQpMdEZpy`
 - Frozen V2 preview (`v2-production-freeze`): `https://crosswithswag-git-v2-production-freeze-tashivxos-projects.vercel.app`
+- Frozen V3 preview (`v3-production-freeze`): `https://crosswithswag-git-v3-production-freeze-tashivxos-projects.vercel.app`
+- V4 preview (`V4_branch`): `https://crosswithswag-git-v4-branch-tashivxos-projects.vercel.app` (after first deploy)
 
 Custom domain `crosswithswag.co.za` (and `www`) is already attached to this project. Do not change DNS. Do not buy or attach another domain.
 
@@ -262,8 +268,9 @@ Vercel Authentication is disabled so public URLs are viewable. Leave that as-is 
 | **V3.2.0** | ✅ SHIPPED | Mobile wordmark dock smoothness (cached metrics, compositor hints, header line via `::after`) + footer version label `V3.2.0`. Five-route V3.1 architecture unchanged. |
 | **V3.2.2** | ✅ PRODUCTION | Current intake / Home mobile spacing, MENU overlay navigation reliability, Home MENU/wordmark lands on `#home-hero` (CROSS WITH SWAG) after the intro has been seen; `#home-intro` remains reverse-scroll only; footer label `V3.2.2`. |
 | **V3.3.0** | ✅ SHIPPED | Sixth route `/playlists`. Spotify embeds, curator credits, local covers. No OAuth / Web Playback SDK / secrets. Footer `V3.3.0`. |
-| **V3.3.1** | ✅ SHIPPED | Current intake scoped poster CTA: larger Clay order control, shortened helper, new-tab cue. Home `.btn`s and MENU `order` unchanged. Footer `V3.3.1`. |
-| **V3.3.3** | 🛠 THIS BRANCH | Footer version label `V3.3.3`. |
+| **V3.3.1** | ✅ ON `main` | Gallery on production; footer `V3.3.1`. |
+| **V3.3.3** | ✅ SHIPPED | Footer version label `V3.3.3` (on `main` tip at freeze). |
+| **V4.1 rebuild** | 🛠 `V4_branch` | Marcus Figma CROSSWITHSWAG (`lcZqp5HNaFCPBcWgPzAwUU`). Landing+shop at `/`, gallery at `/space`, inline nav + cart. Filled buttons and shop UI override V3 `design.md` on this branch only. Checkout UI only until Yoco/PayFast signed. |
 
 ## Open Questions for Marcus
 

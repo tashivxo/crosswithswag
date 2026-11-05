@@ -52,6 +52,7 @@ npm run lint
 - Do not re-run `create-next-app` over the existing app.
 - Production is `main` (V3.1), live at `https://crosswithswag.co.za` and `https://crosswithswag.vercel.app`.
 - Frozen V2 lives on `v2-production-freeze` for design mining only. Do not promote it back to production.
+- Frozen V3 lives on `v3-production-freeze` for design mining only. V4 work happens on `V4_branch` (from `DEV` ← `SIT` ← `main`). Do not change production DNS or Vercel production branch.
 - Do not add analytics until the provider is chosen.
 - Custom domain `crosswithswag.co.za` is already attached. Do not change DNS or attach another domain.
 
