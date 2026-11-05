@@ -2962,6 +2962,10 @@ button.v4-nav__link {
   display: none;
 }
 
+.v4-cart-page .v4-cart-head--mobile {
+  display: none;
+}
+
 @media (max-width: 899px) {
   body:has(.v4-cart-page) .v4-header,
   body:has(.v4-cart-page) .v4-footer,
@@ -2996,7 +3000,6 @@ button.v4-nav__link {
 }
 
 .v4-cart-sheet__head {
-  display: flex;
   justify-content: space-between;
   align-items: baseline;
   gap: 16px;

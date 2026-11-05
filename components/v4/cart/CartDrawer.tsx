@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 import { useCart } from "@/lib/v4/cart/CartProvider";
 import {
   CartEmptyState,
@@ -18,6 +19,7 @@ export function CartDrawer() {
     removeLine,
     setQuantity,
   } = useCart();
+  const pathname = usePathname();
   const panelRef = useRef<HTMLDivElement>(null);
   const closeBtnRef = useRef<HTMLButtonElement>(null);
   const [reducedMotion, setReducedMotion] = useState(false);
@@ -29,6 +31,10 @@ export function CartDrawer() {
     mq.addEventListener("change", update);
     return () => mq.removeEventListener("change", update);
   }, []);
+
+  useEffect(() => {
+    closeDrawer();
+  }, [pathname, closeDrawer]);
 
   const onKeyDown = useCallback(
     (event: KeyboardEvent) => {

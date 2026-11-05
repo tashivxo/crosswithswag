@@ -30,7 +30,7 @@ export function V4OutlineClayButton({
     .join(" ");
   if (href && !disabled) {
     return (
-      <Link href={href} className={cls}>
+      <Link href={href} className={cls} onClick={onClick}>
         {children}
       </Link>
     );
@@ -57,7 +57,7 @@ export function V4FilledButton({
   const cls = ["v4-btn", className].filter(Boolean).join(" ");
   if (href) {
     return (
-      <Link href={href} className={cls}>
+      <Link href={href} className={cls} onClick={onClick}>
         {children}
       </Link>
     );
