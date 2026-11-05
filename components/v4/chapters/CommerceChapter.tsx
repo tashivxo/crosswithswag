@@ -11,21 +11,18 @@ import {
 } from "@/components/v4/cart/CartUi";
 import { deliveryOptions, formatPrice } from "@/lib/v4/products";
 
-type CartChapterProps = {
-  /** Mobile /cart route: full-viewport sheet without site chrome. */
-  sheet?: boolean;
-};
-
-export function CartChapter({ sheet = false }: CartChapterProps) {
+export function CartChapter() {
   const router = useRouter();
   const { lines, count, subtotalCents, removeLine, setQuantity } = useCart();
 
-  const rootClass = sheet ? "v4-cart-sheet" : "v4-cart-page section-shell";
+  return (
+    <section className="v4-cart-page section-shell">
+      <div className="v4-cart-page__inner wrap">
+        <div className="v4-cart-head--desktop">
+          <CartPageLabelRow count={count} />
+        </div>
 
-  const inner = (
-    <>
-      {sheet ? (
-        <header className="v4-cart-sheet__head">
+        <header className="v4-cart-sheet__head v4-cart-head--mobile">
           <p className="lbl">[ CART — {count} ]</p>
           <button
             type="button"
@@ -35,67 +32,39 @@ export function CartChapter({ sheet = false }: CartChapterProps) {
             CLOSE ✕
           </button>
         </header>
-      ) : (
-        <CartPageLabelRow count={count} />
-      )}
 
-      {!sheet && lines.length > 0 ? (
         <h1 className="v4-cart-page__title">SELECTED OBJECTS.</h1>
-      ) : null}
 
-      {lines.length === 0 ? (
-        <>
-          {!sheet ? (
-            <h1 className="v4-cart-page__title">SELECTED OBJECTS.</h1>
-          ) : null}
-          <CartEmptyState variant={sheet ? "sheet" : "page"} />
-        </>
-      ) : (
-        <>
-          <div
-            className={
-              sheet ? "v4-cart-sheet__body" : "v4-cart-page__layout"
-            }
-          >
-            <div className={sheet ? undefined : "v4-cart-page__lines"}>
+        {lines.length === 0 ? (
+          <CartEmptyState variant="page" />
+        ) : (
+          <div className="v4-cart-page__layout">
+            <div className="v4-cart-page__lines">
               <CartLineList
                 lines={lines}
-                variant={sheet ? "drawer" : "page"}
+                variant="route"
                 onRemove={removeLine}
                 onSetQuantity={setQuantity}
               />
             </div>
-            {sheet ? (
-              <>
-                <hr className="v4-cart-rule" />
-                <CartTotalsBlock
-                  subtotalCents={subtotalCents}
-                  variant="drawer"
-                />
-                <button
-                  type="button"
-                  className="v4-cart-text-link v4-cart-keep-shopping"
-                  onClick={() => router.back()}
-                >
-                  KEEP SHOPPING
-                </button>
-              </>
-            ) : (
-              <CartTotalsBlock
-                subtotalCents={subtotalCents}
-                variant="page"
-              />
-            )}
-          </div>
-        </>
-      )}
-    </>
-  );
 
-  return (
-    <section className={rootClass}>
-      <div className={sheet ? "v4-cart-sheet__inner" : "v4-cart-page__inner wrap"}>
-        {inner}
+            <div className="v4-cart-totals--desktop">
+              <CartTotalsBlock subtotalCents={subtotalCents} variant="page" />
+            </div>
+
+            <div className="v4-cart-totals--mobile">
+              <hr className="v4-cart-rule" />
+              <CartTotalsBlock subtotalCents={subtotalCents} variant="drawer" />
+              <button
+                type="button"
+                className="v4-cart-text-link v4-cart-keep-shopping"
+                onClick={() => router.back()}
+              >
+                KEEP SHOPPING
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );

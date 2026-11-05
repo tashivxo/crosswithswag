@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Wordmark } from "@/components/ui/Wordmark";
 import { useCart } from "@/lib/v4/cart/CartProvider";
-import { useMediaQuery } from "@/lib/v4/useMediaQuery";
 import { v4NavItems } from "@/lib/v4/sections.config";
 import { V4MobileMenu } from "@/components/v4/V4MobileMenu";
 
@@ -21,7 +20,6 @@ function navLabel(
 export function V4Header() {
   const pathname = usePathname();
   const { count, openDrawer } = useCart();
-  const isDesktop = useMediaQuery("(min-width: 900px)");
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
@@ -45,7 +43,7 @@ export function V4Header() {
                   : pathname.startsWith(item.href);
               const label = navLabel(item.label, item.showCartCount, count);
 
-              if (item.id === "cart" && isDesktop) {
+              if (item.id === "cart") {
                 return (
                   <button
                     key={item.id}

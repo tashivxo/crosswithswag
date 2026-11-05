@@ -12,7 +12,7 @@ import {
 
 type CartLineListProps = {
   lines: CartLine[];
-  variant: "page" | "drawer";
+  variant: "page" | "drawer" | "route";
   onRemove: (lineId: string) => void;
   onSetQuantity: (lineId: string, quantity: number) => void;
 };
@@ -24,9 +24,11 @@ export function CartLineList({
   onSetQuantity,
 }: CartLineListProps) {
   const thumbClass =
-    variant === "page"
-      ? "v4-cart-line__thumb v4-cart-line__thumb--page"
-      : "v4-cart-line__thumb v4-cart-line__thumb--drawer";
+    variant === "drawer"
+      ? "v4-cart-line__thumb v4-cart-line__thumb--drawer"
+      : variant === "route"
+        ? "v4-cart-line__thumb v4-cart-line__thumb--route"
+        : "v4-cart-line__thumb v4-cart-line__thumb--page";
 
   return (
     <ul className="v4-cart-line-list">
@@ -43,17 +45,36 @@ export function CartLineList({
                 <Image
                   src={line.imageSrc}
                   alt=""
-                  width={variant === "page" ? 120 : 84}
-                  height={variant === "page" ? 150 : 105}
+                  width={
+                    variant === "drawer"
+                      ? 84
+                      : variant === "route"
+                        ? 120
+                        : 120
+                  }
+                  height={
+                    variant === "drawer"
+                      ? 105
+                      : variant === "route"
+                        ? 150
+                        : 150
+                  }
                   className="v4-cart-line__img"
                 />
               ) : null}
             </div>
             <div className="v4-cart-line__meta">
               <p className="v4-cart-line__name">
-                {variant === "page"
-                  ? `T-SHIRT - ${line.title}`
-                  : line.title}
+                {variant === "page" ? (
+                  `T-SHIRT - ${line.title}`
+                ) : variant === "route" ? (
+                  <>
+                    <span className="v4-cart-line__name-prefix">T-SHIRT - </span>
+                    {line.title}
+                  </>
+                ) : (
+                  line.title
+                )}
               </p>
               <p className="v4-cart-line__detail">
                 standard edition · {line.colourway} · size {line.size}
