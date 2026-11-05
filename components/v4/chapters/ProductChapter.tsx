@@ -10,7 +10,9 @@ import {
   STANDARD_EDITION_TOTAL,
   colourwaySiblings,
   formatPrice,
-  gallerySlides,
+  galleryDesktopMain,
+  galleryDesktopThumbs,
+  galleryMobileSlides,
   isSizeSoldOut,
   productBySlug,
   productMakeTable,
@@ -33,13 +35,10 @@ function GalleryImage({
   alt,
   priority,
 }: {
-  src: string | null;
+  src: string;
   alt: string;
   priority?: boolean;
 }) {
-  if (!src) {
-    return <div className="v4-product-gallery__placeholder" aria-hidden />;
-  }
   return (
     <Image
       src={src}
@@ -52,64 +51,91 @@ function GalleryImage({
   );
 }
 
-function ProductGallery({
-  product,
-}: {
-  product: StandardProduct;
-}) {
-  const slides = useMemo(() => gallerySlides(product), [product]);
+function GalleryPlaceholder() {
+  return <div className="v4-product-gallery__placeholder" aria-hidden />;
+}
+
+function ProductGallery({ product }: { product: StandardProduct }) {
+  const mainSrc = galleryDesktopMain(product);
+  const thumbs = useMemo(
+    () => galleryDesktopThumbs(product),
+    [product],
+  );
+  const mobileSlides = useMemo(
+    () => galleryMobileSlides(product),
+    [product],
+  );
   const [index, setIndex] = useState(0);
 
   const go = useCallback(
     (delta: number) => {
-      setIndex((i) => (i + delta + slides.length) % slides.length);
+      if (mobileSlides.length <= 1) return;
+      setIndex((i) => (i + delta + mobileSlides.length) % mobileSlides.length);
     },
-    [slides.length],
+    [mobileSlides.length],
   );
 
-  const mainSrc = slides[0];
-  const thumbA = slides[1];
-  const thumbB = slides[2];
+  const mobileSrc = mobileSlides[index] ?? mobileSlides[0];
 
   return (
     <div className="v4-product-gallery">
       <div className="v4-product-gallery__desktop">
         <div className="v4-product-gallery__main">
-          <GalleryImage
-            src={mainSrc}
-            alt={`${product.colourwayName} — front`}
-            priority
-          />
+          {mainSrc ? (
+            <GalleryImage
+              src={mainSrc}
+              alt={`${product.colourwayName} — front`}
+              priority
+            />
+          ) : (
+            <GalleryPlaceholder />
+          )}
         </div>
-        <div className="v4-product-gallery__thumbs">
-          <div className="v4-product-gallery__thumb">
-            <GalleryImage src={thumbA} alt={`${product.colourwayName} — back`} />
+        {thumbs.length > 0 ? (
+          <div
+            className={[
+              "v4-product-gallery__thumbs",
+              thumbs.length === 1 ? "v4-product-gallery__thumbs--one" : "",
+            ]
+              .filter(Boolean)
+              .join(" ")}
+          >
+            {thumbs.map((src, thumbIndex) => (
+              <div key={src + thumbIndex} className="v4-product-gallery__thumb">
+                <GalleryImage
+                  src={src}
+                  alt={`${product.colourwayName} — view ${thumbIndex + 2}`}
+                />
+              </div>
+            ))}
           </div>
-          <div className="v4-product-gallery__thumb">
-            <GalleryImage src={thumbB} alt={`${product.colourwayName} — detail`} />
-          </div>
-        </div>
+        ) : null}
       </div>
 
       <div className="v4-product-gallery__mobile">
-        <div className="v4-product-gallery__pager">
-          <GalleryImage
-            src={slides[index]}
-            alt={`${product.colourwayName} — view ${index + 1}`}
-            priority
-          />
-          <span className="v4-product-gallery__pager-label">
-            {index + 1}/{slides.length}
-          </span>
-        </div>
-        <div className="v4-product-gallery__pager-controls">
-          <button type="button" onClick={() => go(-1)} aria-label="Previous image">
-            ←
+        {mobileSrc ? (
+          <button
+            type="button"
+            className="v4-product-gallery__pager"
+            onClick={() => go(1)}
+            aria-label={`Product image ${index + 1} of ${mobileSlides.length}`}
+          >
+            <GalleryImage
+              src={mobileSrc}
+              alt={`${product.colourwayName} — view ${index + 1}`}
+              priority
+            />
+            {mobileSlides.length > 1 ? (
+              <span className="v4-product-gallery__pager-label">
+                {index + 1} / {mobileSlides.length}
+              </span>
+            ) : null}
           </button>
-          <button type="button" onClick={() => go(1)} aria-label="Next image">
-            →
-          </button>
-        </div>
+        ) : (
+          <div className="v4-product-gallery__pager">
+            <GalleryPlaceholder />
+          </div>
+        )}
       </div>
     </div>
   );
@@ -158,28 +184,30 @@ function SoldOutNotify({
   onNotify,
 }: {
   size: ProductSize;
-  onNotify: (email: string) => void;
+  onNotify: (email: string) => Promise<boolean>;
 }) {
   const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<"idle" | "sent" | "error">("idle");
+  const [status, setStatus] = useState<
+    "idle" | "sent" | "invalid" | "unavailable"
+  >("idle");
 
   return (
     <div className="v4-product-soldout">
       <p className="v4-product-soldout__help">
-        {size} is sold out. leave your email and we will tell you when it is
-        back.
+        {size.toLowerCase()} is sold out. leave your email and we will tell you
+        when it is back.
       </p>
       <form
         className="v4-product-soldout__form"
-        onSubmit={(e) => {
+        onSubmit={async (e) => {
           e.preventDefault();
           const trimmed = email.trim();
           if (!trimmed.includes("@")) {
-            setStatus("error");
+            setStatus("invalid");
             return;
           }
-          onNotify(trimmed);
-          setStatus("sent");
+          const ok = await onNotify(trimmed);
+          setStatus(ok ? "sent" : "unavailable");
         }}
       >
         <label className="sr-only" htmlFor="v4-notify-email">
@@ -189,7 +217,7 @@ function SoldOutNotify({
           id="v4-notify-email"
           type="email"
           autoComplete="email"
-          placeholder="email@address.com"
+          placeholder="your email"
           value={email}
           onChange={(e) => {
             setEmail(e.target.value);
@@ -197,13 +225,22 @@ function SoldOutNotify({
           }}
           className="v4-product-soldout__input"
         />
-        <V4OutlineClayButton type="submit">NOTIFY ME →</V4OutlineClayButton>
+        <V4OutlineClayButton type="submit" className="v4-product-soldout__submit">
+          NOTIFY ME →
+        </V4OutlineClayButton>
       </form>
       {status === "sent" ? (
-        <p className="v4-product-soldout__thanks">received — we will be in touch.</p>
+        <p className="v4-product-soldout__thanks">
+          received — we will be in touch.
+        </p>
       ) : null}
-      {status === "error" ? (
+      {status === "invalid" ? (
         <p className="v4-product-soldout__thanks">enter a valid email.</p>
+      ) : null}
+      {status === "unavailable" ? (
+        <p className="v4-product-soldout__thanks">
+          notify unavailable — try again later.
+        </p>
       ) : null}
     </div>
   );
@@ -212,6 +249,7 @@ function SoldOutNotify({
 function RelatedCard({ product }: { product: StandardProduct }) {
   const { addLine } = useCart();
   const [size, setSize] = useState<ProductSize>("M");
+  const hasCardImage = Boolean(product.images.card);
 
   return (
     <article className="v4-product-related-card">
@@ -220,13 +258,17 @@ function RelatedCard({ product }: { product: StandardProduct }) {
         className="v4-product-related-card__link"
       >
         <div className="v4-product-related-card__media">
-          <Image
-            src={product.images.card}
-            alt={product.colourwayName}
-            fill
-            sizes="280px"
-            className="v4-product-gallery__img"
-          />
+          {hasCardImage ? (
+            <Image
+              src={product.images.card}
+              alt={product.colourwayName}
+              fill
+              sizes="280px"
+              className="v4-product-gallery__img"
+            />
+          ) : (
+            <div className="v4-product-gallery__placeholder" aria-hidden />
+          )}
         </div>
         <p className="lbl v4-product-related-card__name">{product.shirtName}</p>
         <p className="v4-product-related-card__price">
@@ -253,11 +295,7 @@ function RelatedCard({ product }: { product: StandardProduct }) {
   );
 }
 
-function ProductPurchasePanel({
-  product,
-}: {
-  product: StandardProduct;
-}) {
+function ProductPurchasePanel({ product }: { product: StandardProduct }) {
   const router = useRouter();
   const { addLine } = useCart();
   const [selectedSize, setSelectedSize] = useState<ProductSize>("M");
@@ -270,13 +308,14 @@ function ProductPurchasePanel({
 
   const handleNotify = useCallback(async (email: string) => {
     try {
-      await fetch("/api/waitlist", {
+      const res = await fetch("/api/waitlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, consent: true }),
       });
+      return res.ok;
     } catch {
-      /* client-only fallback — no API required */
+      return false;
     }
   }, []);
 
@@ -381,7 +420,7 @@ function ProductPurchasePanel({
       <div className="v4-product-sticky" aria-hidden={false}>
         <div className="v4-product-sticky__meta">
           <span>{formatPrice(product.priceCents)}</span>
-          <span>
+          <span className="v4-product-sticky__variant">
             {product.colourwayName} · {selectedSize}
           </span>
         </div>
@@ -410,33 +449,54 @@ export function ProductChapter() {
     );
   }
 
-  const related = relatedProducts(product.slug);
+  const related = relatedProducts();
 
   return (
     <div className="v4-product-page">
       <section className="v4-product-main wrap">
-        <div className="v4-product-main__crumb">
-          <Link href="/#shop">← ALL SHIRTS</Link>
-          <span aria-hidden> / </span>
-          <span>{product.shirtName}</span>
-          <span aria-hidden> / </span>
-          <span>{product.colourwayName.toUpperCase()}</span>
+        <div className="v4-product-main__label-row">
+          <div className="v4-product-main__crumb">
+            <Link href="/#shop">← ALL SHIRTS</Link>
+            <span aria-hidden> / </span>
+            <span>{product.shirtName}</span>
+            <span className="v4-product-main__crumb-colour" aria-hidden>
+              {" "}
+              /{" "}
+            </span>
+            <span className="v4-product-main__crumb-colour">
+              {product.colourwayName.toUpperCase()}
+            </span>
+          </div>
+          <span className="v4-badge v4-badge--studio v4-product-main__badge">
+            OPEN YEAR ROUND
+          </span>
         </div>
-        <span className="v4-badge v4-badge--studio">OPEN YEAR ROUND</span>
 
         <div className="v4-product__layout">
-          <ProductGallery key={product.slug} product={product} />
-          <ProductPurchasePanel key={product.slug} product={product} />
+          <ProductGallery
+            key={`gallery-${product.slug}`}
+            product={product}
+          />
+          <ProductPurchasePanel
+            key={`panel-${product.slug}`}
+            product={product}
+          />
         </div>
       </section>
 
       <section className="v4-product-more wrap">
-        <div className="v4-product-more__head">
+        <div className="v4-product-more__head v4-product-more__head--desktop">
           <p className="lbl">[ 02 — MORE FROM THE STANDARD EDITION ]</p>
           <div className="v4-product-more__links">
             <span>ALL NINE</span>
             <Link href="/">→ SHOP →</Link>
           </div>
+        </div>
+        <div className="v4-product-more__head v4-product-more__head--mobile">
+          <p className="lbl">[ MORE FROM THE STANDARD EDITION ]</p>
+          <Link href="/" className="v4-product-more__all-nine">
+            ALL NINE →
+          </Link>
         </div>
         <div className="v4-product-related-grid">
           {related.map((item) => (
@@ -446,16 +506,23 @@ export function ProductChapter() {
       </section>
 
       <section className="v4-product-spec wrap">
-        <p className="lbl">[ 03 — SPECIFICATION ]</p>
-        <h2 className="v4-product-make">THE MAKE.</h2>
-        <dl className="v4-product-make-table">
-          {productMakeTable.map((row) => (
-            <div key={row.label} className="v4-product-make-table__row">
-              <dt>{row.label}</dt>
-              <dd>{row.value}</dd>
-            </div>
-          ))}
-        </dl>
+        <div className="v4-product-spec__layout">
+          <div className="v4-product-spec__poster">
+            <p className="lbl">[ 03 — SPECIFICATION ]</p>
+            <h2 className="v4-product-make">
+              <span>THE</span>
+              <span>MAKE.</span>
+            </h2>
+          </div>
+          <dl className="v4-product-make-table">
+            {productMakeTable.map((row) => (
+              <div key={row.label} className="v4-product-make-table__row">
+                <dt>{row.label}</dt>
+                <dd>{row.value}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
       </section>
 
       <section className="v4-product-director wrap">
@@ -465,7 +532,10 @@ export function ProductChapter() {
             [ director note — written per edition, signed. frozen on the archive
             record once the edition closes. ]
           </p>
-          <footer>— the.director / standard edition</footer>
+          <footer className="v4-product-director__signoff">
+            <span className="v4-product-director__name">— the.director</span>
+            <span className="v4-product-director__edition">standard edition</span>
+          </footer>
         </blockquote>
       </section>
     </div>

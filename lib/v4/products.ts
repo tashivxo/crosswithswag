@@ -3,8 +3,10 @@ export type ProductFamily = "express" | "halo" | "super" | "daily";
 export type ProductSize = "S" | "M" | "L" | "XL" | "2XL" | "3XL";
 
 const SHOP_ASSET = "/assets/v4/shop";
+const DISPATCH_BLACK_CROSS = `${SHOP_ASSET}/dispatch-black-cross-print.png`;
 
 export type ProductImages = {
+  /** Empty string = no photo (placeholder block in UI). */
   main: string;
   thumbs: [string | null, string | null];
   mobileMain?: string;
@@ -50,7 +52,7 @@ export const standardProducts: StandardProduct[] = [
     soldOutSizes: ["3XL"],
     images: {
       main: `${SHOP_ASSET}/dispatch-black-cross-print.png`,
-      thumbs: [`${SHOP_ASSET}/dispatch-black-shirt.png`, null],
+      thumbs: [null, null],
       mobileMain: `${SHOP_ASSET}/dispatch-black-shirt.png`,
       card: `${SHOP_ASSET}/dispatch-black-shirt.png`,
     },
@@ -109,9 +111,9 @@ export const standardProducts: StandardProduct[] = [
     priceCents: STANDARD_EDITION_PRICE_CENTS,
     shirtIndex: 5,
     images: {
-      main: `${SHOP_ASSET}/orbit-pink-shirt.png`,
+      main: "",
       thumbs: [null, null],
-      card: `${SHOP_ASSET}/orbit-pink-shirt.png`,
+      card: "",
     },
   },
   {
@@ -123,9 +125,9 @@ export const standardProducts: StandardProduct[] = [
     priceCents: STANDARD_EDITION_PRICE_CENTS,
     shirtIndex: 6,
     images: {
-      main: `${SHOP_ASSET}/dispatch-white-shirt.png`,
+      main: "",
       thumbs: [null, null],
-      card: `${SHOP_ASSET}/dispatch-white-shirt.png`,
+      card: "",
     },
   },
 ];
@@ -155,10 +157,54 @@ const RELATED_SLUGS = [
   "product-halo-orbit-black",
 ] as const;
 
-export function relatedProducts(currentSlug: string): StandardProduct[] {
-  return RELATED_SLUGS.filter((slug) => slug !== currentSlug)
-    .map((slug) => productBySlug(slug))
-    .filter((p): p is StandardProduct => Boolean(p));
+export function relatedProducts(): StandardProduct[] {
+  return RELATED_SLUGS.map((slug) => productBySlug(slug)).filter(
+    (p): p is StandardProduct => Boolean(p),
+  );
+}
+
+function resolveThumbSrc(
+  product: StandardProduct,
+  thumb: string | null,
+): string | null {
+  if (thumb) return thumb;
+  if (product.slug === "product-express-dispatch-black") {
+    return DISPATCH_BLACK_CROSS;
+  }
+  return null;
+}
+
+export function galleryDesktopMain(product: StandardProduct): string | null {
+  return product.images.main || null;
+}
+
+export function galleryDesktopThumbs(product: StandardProduct): string[] {
+  return product.images.thumbs
+    .map((thumb) => resolveThumbSrc(product, thumb))
+    .filter((src): src is string => Boolean(src));
+}
+
+export function galleryMobileSlides(product: StandardProduct): string[] {
+  const slides: string[] = [];
+  const first = product.images.mobileMain || product.images.main;
+  if (first) slides.push(first);
+
+  for (const raw of product.images.thumbs) {
+    const resolved = resolveThumbSrc(product, raw);
+    if (resolved && !slides.includes(resolved)) {
+      slides.push(resolved);
+    }
+  }
+
+  if (
+    product.images.main &&
+    product.images.main !== first &&
+    !slides.includes(product.images.main)
+  ) {
+    slides.push(product.images.main);
+  }
+
+  return slides;
 }
 
 export function isSizeSoldOut(
@@ -166,10 +212,6 @@ export function isSizeSoldOut(
   size: ProductSize,
 ): boolean {
   return product.soldOutSizes?.includes(size) ?? false;
-}
-
-export function gallerySlides(product: StandardProduct): (string | null)[] {
-  return [product.images.main, ...product.images.thumbs];
 }
 
 export const deliveryOptions = [

@@ -52,15 +52,22 @@ export function V4Header() {
               );
             })}
           </nav>
-          <button
-            type="button"
-            className="v4-nav__menu-toggle"
-            aria-expanded={menuOpen}
-            aria-controls="v4-mobile-menu"
-            onClick={() => setMenuOpen((o) => !o)}
-          >
-            {menuOpen ? "CLOSE" : "MENU"}
-          </button>
+          <div className="v4-header__mobile-actions">
+            {pathname.startsWith("/current") ? (
+              <Link href="/cart" className="v4-header__cart-mobile">
+                CART ({count})
+              </Link>
+            ) : null}
+            <button
+              type="button"
+              className="v4-nav__menu-toggle"
+              aria-expanded={menuOpen}
+              aria-controls="v4-mobile-menu"
+              onClick={() => setMenuOpen((o) => !o)}
+            >
+              {menuOpen ? "CLOSE" : "MENU"}
+            </button>
+          </div>
         </div>
       </header>
       <V4MobileMenu open={menuOpen} onClose={() => setMenuOpen(false)} />
