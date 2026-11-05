@@ -1,9 +1,9 @@
-import { SiteChrome } from "@/components/v3/SiteChrome";
+import { V4SiteChrome } from "@/components/v4/V4SiteChrome";
 
 export default function GalleryLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <SiteChrome>{children}</SiteChrome>;
+  return <V4SiteChrome>{children}</V4SiteChrome>;
 }

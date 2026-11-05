@@ -127,6 +127,14 @@ Confirmed colour sequence:
 - One horizontal marquee max per page (kloofstreetnights title in edition section).
 - All new motion must respect `prefers-reduced-motion`.
 
+## Current Implementation Files (V4.1 on `V4_branch`)
+
+- `components/v4/*` — inline nav chrome, shop cards, filled CTAs (Figma exception vs V3 `design.md`)
+- `lib/v4/sections.config.ts` — SHOP / SPACE / ARCHIVE / MANIFESTO / CONTACT / CART nav
+- `lib/v4/products.ts` — standard edition catalog (R350 placeholder)
+- `lib/v4/cart/CartProvider.tsx` — client cart state (no payment)
+- `app/(gallery)/*` — `/` landing+shop, `/space` gallery, commerce routes, V3 editorial chapters retained under V4 chrome until re-skinned per Figma frame
+
 ## Current Implementation Files (V3 production on `main`)
 
 - `app/(gallery)/*` — six-route gallery (Home, Current, Archive, Manifesto, Playlists, Contact)

@@ -1,5 +1,5 @@
-import { HomeChapter } from "@/components/v3/chapters/HomeChapter";
+import { LandingShopChapter } from "@/components/v4/chapters/LandingShopChapter";
 
 export default function HomePage() {
-  return <HomeChapter />;
+  return <LandingShopChapter />;
 }

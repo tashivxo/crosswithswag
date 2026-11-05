@@ -1,10 +1,15 @@
 import type { Metadata } from "next";
-import { CurrentChapter } from "@/components/v3/chapters/CurrentChapter";
+import { Suspense } from "react";
+import { ProductChapter } from "@/components/v4/chapters/ProductChapter";
 
 export const metadata: Metadata = {
-  title: "kloofstreetnights",
+  title: "standard edition",
 };
 
 export default function CurrentPage() {
-  return <CurrentChapter />;
+  return (
+    <Suspense fallback={null}>
+      <ProductChapter />
+    </Suspense>
+  );
 }
