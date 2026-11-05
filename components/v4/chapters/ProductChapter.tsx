@@ -179,17 +179,9 @@ function SizeLinks({
   );
 }
 
-function SoldOutNotify({
-  size,
-  onNotify,
-}: {
-  size: ProductSize;
-  onNotify: (email: string) => Promise<boolean>;
-}) {
+function SoldOutNotify({ size }: { size: ProductSize }) {
   const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<
-    "idle" | "sent" | "invalid" | "unavailable"
-  >("idle");
+  const [status, setStatus] = useState<"idle" | "sent" | "invalid">("idle");
 
   return (
     <div className="v4-product-soldout">
@@ -199,15 +191,14 @@ function SoldOutNotify({
       </p>
       <form
         className="v4-product-soldout__form"
-        onSubmit={async (e) => {
+        onSubmit={(e) => {
           e.preventDefault();
           const trimmed = email.trim();
           if (!trimmed.includes("@")) {
             setStatus("invalid");
             return;
           }
-          const ok = await onNotify(trimmed);
-          setStatus(ok ? "sent" : "unavailable");
+          setStatus("sent");
         }}
       >
         <label className="sr-only" htmlFor="v4-notify-email">
@@ -236,11 +227,6 @@ function SoldOutNotify({
       ) : null}
       {status === "invalid" ? (
         <p className="v4-product-soldout__thanks">enter a valid email.</p>
-      ) : null}
-      {status === "unavailable" ? (
-        <p className="v4-product-soldout__thanks">
-          notify unavailable — try again later.
-        </p>
       ) : null}
     </div>
   );
@@ -305,19 +291,6 @@ function ProductPurchasePanel({ product }: { product: StandardProduct }) {
     a.colourwayName.localeCompare(b.colourwayName),
   );
   const soldOut = isSizeSoldOut(product, selectedSize);
-
-  const handleNotify = useCallback(async (email: string) => {
-    try {
-      const res = await fetch("/api/waitlist", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, consent: true }),
-      });
-      return res.ok;
-    } catch {
-      return false;
-    }
-  }, []);
 
   return (
     <div className="v4-product__aside">
@@ -384,7 +357,10 @@ function ProductPurchasePanel({ product }: { product: StandardProduct }) {
         <div className="v4-product-size-block" id="size-guide">
           <div className="v4-product-size-block__head">
             <span className="lbl">SIZE</span>
-            <Link href="/current#size-guide" className="v4-product-size-guide">
+            <Link
+              href={`/current?product=${product.slug}#size-guide`}
+              className="v4-product-size-guide"
+            >
               + SIZE GUIDE →
             </Link>
           </div>
@@ -395,9 +371,7 @@ function ProductPurchasePanel({ product }: { product: StandardProduct }) {
           />
         </div>
 
-        {soldOut ? (
-          <SoldOutNotify size={selectedSize} onNotify={handleNotify} />
-        ) : null}
+        {soldOut ? <SoldOutNotify size={selectedSize} /> : null}
 
         <V4OutlineClayButton
           className="v4-product__atc"

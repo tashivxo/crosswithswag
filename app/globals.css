@@ -2947,7 +2947,7 @@ html.v4-route-current {
   position: relative;
   aspect-ratio: 4 / 5;
   overflow: hidden;
-  background: #0a0a0a;
+  background: var(--void);
 }
 
 .v4-product-gallery__thumbs {
@@ -2968,7 +2968,7 @@ html.v4-route-current {
 .v4-product-gallery__placeholder {
   position: absolute;
   inset: 0;
-  background: #0a0a0a;
+  background: var(--void);
 }
 
 .v4-product-gallery__pager-label {
@@ -3282,7 +3282,7 @@ html.v4-route-current {
 .v4-product-related-card__media {
   position: relative;
   aspect-ratio: 3 / 4;
-  background: #0a0a0a;
+  background: var(--void);
   margin-bottom: 8px;
 }
 

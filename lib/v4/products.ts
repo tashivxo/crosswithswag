@@ -3,7 +3,6 @@ export type ProductFamily = "express" | "halo" | "super" | "daily";
 export type ProductSize = "S" | "M" | "L" | "XL" | "2XL" | "3XL";
 
 const SHOP_ASSET = "/assets/v4/shop";
-const DISPATCH_BLACK_CROSS = `${SHOP_ASSET}/dispatch-black-cross-print.png`;
 
 export type ProductImages = {
   /** Empty string = no photo (placeholder block in UI). */
@@ -52,7 +51,7 @@ export const standardProducts: StandardProduct[] = [
     soldOutSizes: ["3XL"],
     images: {
       main: `${SHOP_ASSET}/dispatch-black-cross-print.png`,
-      thumbs: [null, null],
+      thumbs: [`${SHOP_ASSET}/dispatch-black-shirt.png`, null],
       mobileMain: `${SHOP_ASSET}/dispatch-black-shirt.png`,
       card: `${SHOP_ASSET}/dispatch-black-shirt.png`,
     },
@@ -164,14 +163,10 @@ export function relatedProducts(): StandardProduct[] {
 }
 
 function resolveThumbSrc(
-  product: StandardProduct,
+  _product: StandardProduct,
   thumb: string | null,
 ): string | null {
-  if (thumb) return thumb;
-  if (product.slug === "product-express-dispatch-black") {
-    return DISPATCH_BLACK_CROSS;
-  }
-  return null;
+  return thumb || null;
 }
 
 export function galleryDesktopMain(product: StandardProduct): string | null {
