@@ -135,6 +135,14 @@ export function productBySlug(slug: string): StandardProduct | undefined {
   return standardProducts.find((p) => p.slug === slug);
 }
 
+export function productById(id: string): StandardProduct | undefined {
+  return standardProducts.find((p) => p.id === id);
+}
+
+export function productCardImage(product: StandardProduct): string {
+  return product.images.card || product.images.main;
+}
+
 export function formatPrice(cents: number): string {
   return `R${Math.round(cents / 100)}`;
 }

@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Wordmark } from "@/components/ui/Wordmark";
 import { useCart } from "@/lib/v4/cart/CartProvider";
+import { useMediaQuery } from "@/lib/v4/useMediaQuery";
 import { v4NavItems } from "@/lib/v4/sections.config";
 import { V4MobileMenu } from "@/components/v4/V4MobileMenu";
 
@@ -19,14 +20,15 @@ function navLabel(
 
 export function V4Header() {
   const pathname = usePathname();
-  const { count } = useCart();
+  const { count, openDrawer } = useCart();
+  const isDesktop = useMediaQuery("(min-width: 900px)");
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <>
       <header
         className={
-          pathname.startsWith("/current")
+          pathname.startsWith("/current") || pathname.startsWith("/cart")
             ? "v4-header v4-header--studio"
             : "v4-header"
         }
@@ -41,13 +43,30 @@ export function V4Header() {
                 item.id === "shop"
                   ? pathname === "/" || pathname.startsWith("/current")
                   : pathname.startsWith(item.href);
+              const label = navLabel(item.label, item.showCartCount, count);
+
+              if (item.id === "cart" && isDesktop) {
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    className={
+                      active ? "v4-nav__link is-active" : "v4-nav__link"
+                    }
+                    onClick={openDrawer}
+                  >
+                    {label}
+                  </button>
+                );
+              }
+
               return (
                 <Link
                   key={item.id}
                   href={item.href}
                   className={active ? "v4-nav__link is-active" : "v4-nav__link"}
                 >
-                  {navLabel(item.label, item.showCartCount, count)}
+                  {label}
                 </Link>
               );
             })}

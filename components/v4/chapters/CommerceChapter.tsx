@@ -1,47 +1,102 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { V4FilledButton } from "@/components/v4/V4Shop";
 import { useCart } from "@/lib/v4/cart/CartProvider";
+import {
+  CartEmptyState,
+  CartLineList,
+  CartPageLabelRow,
+  CartTotalsBlock,
+} from "@/components/v4/cart/CartUi";
 import { deliveryOptions, formatPrice } from "@/lib/v4/products";
 
-export function CartChapter() {
-  const { lines, subtotalCents, removeLine } = useCart();
+type CartChapterProps = {
+  /** Mobile /cart route: full-viewport sheet without site chrome. */
+  sheet?: boolean;
+};
 
-  if (lines.length === 0) {
-    return (
-      <section className="section-shell v4-cart">
-        <h1>CART</h1>
-        <p>Your cart is empty.</p>
-        <V4FilledButton href="/">SHOP THE STANDARD EDITION →</V4FilledButton>
-      </section>
-    );
-  }
+export function CartChapter({ sheet = false }: CartChapterProps) {
+  const router = useRouter();
+  const { lines, count, subtotalCents, removeLine, setQuantity } = useCart();
+
+  const rootClass = sheet ? "v4-cart-sheet" : "v4-cart-page section-shell";
+
+  const inner = (
+    <>
+      {sheet ? (
+        <header className="v4-cart-sheet__head">
+          <p className="lbl">[ CART — {count} ]</p>
+          <button
+            type="button"
+            className="v4-cart-drawer__close"
+            onClick={() => router.back()}
+          >
+            CLOSE ✕
+          </button>
+        </header>
+      ) : (
+        <CartPageLabelRow count={count} />
+      )}
+
+      {!sheet && lines.length > 0 ? (
+        <h1 className="v4-cart-page__title">SELECTED OBJECTS.</h1>
+      ) : null}
+
+      {lines.length === 0 ? (
+        <>
+          {!sheet ? (
+            <h1 className="v4-cart-page__title">SELECTED OBJECTS.</h1>
+          ) : null}
+          <CartEmptyState variant={sheet ? "sheet" : "page"} />
+        </>
+      ) : (
+        <>
+          <div
+            className={
+              sheet ? "v4-cart-sheet__body" : "v4-cart-page__layout"
+            }
+          >
+            <div className={sheet ? undefined : "v4-cart-page__lines"}>
+              <CartLineList
+                lines={lines}
+                variant={sheet ? "drawer" : "page"}
+                onRemove={removeLine}
+                onSetQuantity={setQuantity}
+              />
+            </div>
+            {sheet ? (
+              <>
+                <hr className="v4-cart-rule" />
+                <CartTotalsBlock
+                  subtotalCents={subtotalCents}
+                  variant="drawer"
+                />
+                <button
+                  type="button"
+                  className="v4-cart-text-link v4-cart-keep-shopping"
+                  onClick={() => router.back()}
+                >
+                  KEEP SHOPPING
+                </button>
+              </>
+            ) : (
+              <CartTotalsBlock
+                subtotalCents={subtotalCents}
+                variant="page"
+              />
+            )}
+          </div>
+        </>
+      )}
+    </>
+  );
 
   return (
-    <section className="section-shell v4-cart">
-      <h1>CART</h1>
-      <ul className="v4-cart__lines">
-        {lines.map((line) => (
-          <li key={line.lineId} className="v4-cart__line">
-            <div>
-              <p className="lbl">{line.title}</p>
-              <p>
-                {line.colourway} · size {line.size}
-              </p>
-            </div>
-            <p>{formatPrice(line.unitPriceCents * line.quantity)}</p>
-            <button
-              type="button"
-              className="text-link"
-              onClick={() => removeLine(line.lineId)}
-            >
-              remove
-            </button>
-          </li>
-        ))}
-      </ul>
-      <p className="v4-cart__total">Subtotal {formatPrice(subtotalCents)}</p>
-      <V4FilledButton href="/checkout">CHECKOUT →</V4FilledButton>
+    <section className={rootClass}>
+      <div className={sheet ? "v4-cart-sheet__inner" : "v4-cart-page__inner wrap"}>
+        {inner}
+      </div>
     </section>
   );
 }
