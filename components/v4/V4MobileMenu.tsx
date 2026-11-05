@@ -24,8 +24,8 @@ export function V4MobileMenu({ open, onClose }: V4MobileMenuProps) {
             ? `${item.label} (${count})`
             : item.label;
           const active =
-            item.href === "/"
-              ? pathname === "/"
+            item.id === "shop"
+              ? pathname === "/" || pathname.startsWith("/current")
               : pathname.startsWith(item.href);
           return (
             <Link

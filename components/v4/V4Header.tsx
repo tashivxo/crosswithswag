@@ -24,7 +24,13 @@ export function V4Header() {
 
   return (
     <>
-      <header className="v4-header">
+      <header
+        className={
+          pathname.startsWith("/current")
+            ? "v4-header v4-header--studio"
+            : "v4-header"
+        }
+      >
         <div className="v4-header__inner wrap">
           <Link href="/" className="v4-header__logo" aria-label="swag. home">
             <Wordmark className="wordmark--v4-nav" />
@@ -32,8 +38,8 @@ export function V4Header() {
           <nav className="v4-nav v4-nav--desktop" aria-label="Primary">
             {v4NavItems.map((item) => {
               const active =
-                item.href === "/"
-                  ? pathname === "/"
+                item.id === "shop"
+                  ? pathname === "/" || pathname.startsWith("/current")
                   : pathname.startsWith(item.href);
               return (
                 <Link

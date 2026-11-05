@@ -17,6 +17,36 @@ type V4FilledButtonProps = {
   type?: "button" | "submit";
 };
 
+export function V4OutlineClayButton({
+  href,
+  children,
+  className,
+  onClick,
+  type = "button",
+  disabled,
+}: V4FilledButtonProps & { disabled?: boolean }) {
+  const cls = ["v4-btn", "v4-btn--outline-clay", className]
+    .filter(Boolean)
+    .join(" ");
+  if (href && !disabled) {
+    return (
+      <Link href={href} className={cls}>
+        {children}
+      </Link>
+    );
+  }
+  return (
+    <button
+      type={type}
+      className={cls}
+      onClick={onClick}
+      disabled={disabled}
+    >
+      {children}
+    </button>
+  );
+}
+
 export function V4FilledButton({
   href,
   children,
