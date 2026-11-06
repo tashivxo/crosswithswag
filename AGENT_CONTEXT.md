@@ -129,13 +129,13 @@ Confirmed colour sequence:
 
 ## Current Implementation Files (V4.1 on `V4_branch`)
 
-- `components/v3/SiteChrome.tsx`, `SiteHeader.tsx`, `SiteFooter.tsx` — V3 shell is the base on `V4_branch` (preloader, docked wordmark, avatar menu). Header adds a `cart (n)` text control that opens the drawer; `lib/sections.config.ts` nav is shop / space / archive / manifesto / playlists / contact / cart.
-- `components/v3/chapters/ShopChapter.tsx` + `HomeChapter variant="shop"|"space"` — `/` is the V3 hero + ticker + standard-edition shop; `/space` is the V3 home sections under a docked page head.
+- `components/v3/SiteChrome.tsx`, `SiteHeader.tsx`, `SiteFooter.tsx` — V3 shell is the base on `V4_branch` (preloader, docked wordmark, Lenis/GSAP, MENU bounce + overlay hover-grow). Desktop ≥900px uses Marcus’s Figma inline nav (`SHOP / SPACE / ARCHIVE / MANIFESTO / CONTACT / CART`). Below 900px the production overlay MENU stays (shop / space / archive / manifesto / playlists / contact / cart). Do not revive parallel `.v4-*` chrome.
+- `components/v3/chapters/ShopChapter.tsx` + `HomeChapter variant="shop"|"space"` — `/` is the docked mark + Figma 21:277 landing labels/CTAs + the 3-up standard-edition shop (no ticker, no CROSS/WITH lockup, no closer); `/space` holds the two-line CROSS / WITH SWAG fold, ticker, V3 home sections, and the closer. Desktop SHOP on `/` scrolls to `#shop` (no route push). `CartDrawer` is always mounted, slides laterally via `.t-panel-slide` tokens, and stops Lenis + adds `body.locked` while open. Mobile header shows `cart (n)` beside MENU.
 - `components/v4/chapters/ProductChapter.tsx` — `/current` standard edition PDP built from V3 page-head, `frame`, `feature`/`spec` and `sig` patterns (`.pdp-*`). Cycle 4 behaviour kept (query-preserving size guide, notify-only sold-out, 3-card related row).
-- `components/v4/cart/*` + `components/v4/chapters/CommerceChapter.tsx` — cart drawer, `/cart`, `/checkout`, `/order/confirmed` restyled as V3 typographic posters (`.cart-*`, UI only). CTAs are V3 `.btn` outlines; no filled-button exception remains.
+- `components/v4/cart/*` + `components/v4/chapters/CommerceChapter.tsx` — cart drawer, `/cart`, `/checkout`, `/order/confirmed` restyled as V3 typographic posters (`.cart-*`, UI only). CTAs are V3 `.btn` outlines; filled Sand VIEW only on shop cards; chrome/landing/cart stay `.btn` outlines.
 - `lib/v4/products.ts` — standard edition catalog (R350 placeholder; dispatch-black gallery is cross print + shirt still)
 - `lib/v4/cart/CartProvider.tsx` — client cart state (no payment)
-- `app/(gallery)/*` — `/` landing+shop, `/space` gallery, `/current` product, commerce routes, V3 editorial chapters retained under V4 chrome until re-skinned per Figma frame
+- `app/(gallery)/*` — `/` shop, `/space`, `/current` product, commerce routes, and V3 editorial chapters, all under the V3 `SiteChrome` with `CartProvider` + `CartDrawer` in `app/(gallery)/layout.tsx`
 
 ## Current Implementation Files (V3 production on `main`)
 

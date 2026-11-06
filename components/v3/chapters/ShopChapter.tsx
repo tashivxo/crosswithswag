@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Reveal } from "@/components/v3/Reveal";
+import { CartCountLink } from "@/components/v4/cart/CartCountLink";
 import {
   formatPrice,
   productFamilies,
@@ -15,29 +16,36 @@ const FAMILIES: ProductFamily[] = ["express", "halo", "super", "daily"];
 
 function ShopTile({ product }: { product: StandardProduct }) {
   const src = productCardImage(product);
+  const href = `/current?product=${product.slug}`;
   return (
-    <Link
-      href={`/current?product=${product.slug}`}
-      className="shop-tile"
-      aria-label={`${product.shirtName.toLowerCase()} — ${product.colourwayName}`}
-    >
-      <div className="frame shop-tile__frame">
-        {src ? (
-          <Image
-            src={src}
-            alt={`${product.shirtName.toLowerCase()} in ${product.colourwayName}`}
-            fill
-            sizes="(max-width: 768px) 50vw, 25vw"
-          />
-        ) : (
-          <span className="shop-tile__fill voice">{product.colourwayName}</span>
-        )}
-      </div>
-      <div className="shop-tile__meta">
-        <span className="lbl lbl--sand">{product.colourwayName}</span>
+    <article className="shop-card">
+      <Link
+        href={href}
+        className="shop-tile"
+        aria-label={`${product.shirtName.toLowerCase()} — ${product.colourwayName}`}
+      >
+        <div className="frame shop-tile__frame">
+          {src ? (
+            <Image
+              src={src}
+              alt={`${product.shirtName.toLowerCase()} in ${product.colourwayName}`}
+              fill
+              sizes="(max-width: 599px) 100vw, 33vw"
+            />
+          ) : (
+            <span className="shop-tile__fill voice">{product.colourwayName}</span>
+          )}
+        </div>
+      </Link>
+      <div className="shop-card__meta">
+        <span className="lbl">{product.shirtName.toLowerCase()}</span>
+        <span className="lbl lbl--clay">{product.colourwayName}</span>
         <span className="lbl">{formatPrice(product.priceCents)}</span>
       </div>
-    </Link>
+      <Link className="shop-card__btn" href={href}>
+        view →
+      </Link>
+    </article>
   );
 }
 
@@ -51,10 +59,13 @@ export function ShopChapter() {
         </span>
       </Reveal>
       <Reveal className="shop-intro">
-        <h2 className="display shop-title voice">standard edition</h2>
-        <p className="body-copy voice">
-          a homage to streetwear and the y2k era. always open. drops 13.11.
-        </p>
+        <div className="shop-intro__head">
+          <h2 className="display shop-title voice">standard edition</h2>
+          <p className="body-copy voice">
+            a homage to streetwear and the y2k era. always open. drops 13.11.
+          </p>
+        </div>
+        <span className="lbl lbl--sand">[ the shirt ]</span>
         <p className="lbl shop-spec">
           adult unisex — crew neck — short sleeve — sizes s to 3xl
         </p>
@@ -82,10 +93,11 @@ export function ShopChapter() {
         );
       })}
 
-      <Reveal className="cta-row shop-cta">
-        <Link className="btn btn--clay" href="/cart">
-          go to cart →
-        </Link>
+      <Reveal className="shop-cta">
+        <p className="lbl shop-path">pick a size → add → pay.</p>
+        <div className="cta-row shop-path">
+          <CartCountLink />
+        </div>
       </Reveal>
     </section>
   );

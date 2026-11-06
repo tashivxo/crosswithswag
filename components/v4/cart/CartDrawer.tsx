@@ -1,7 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
+import { getLenis } from "@/lib/lenis";
 import { useCart } from "@/lib/v4/cart/CartProvider";
 import {
   CartEmptyState,
@@ -22,16 +23,6 @@ export function CartDrawer() {
   const pathname = usePathname();
   const panelRef = useRef<HTMLDivElement>(null);
   const closeBtnRef = useRef<HTMLButtonElement>(null);
-  const [reducedMotion, setReducedMotion] = useState(false);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const update = () => setReducedMotion(mq.matches);
-    update();
-    mq.addEventListener("change", update);
-    return () => mq.removeEventListener("change", update);
-  }, []);
-
   useEffect(() => {
     closeDrawer();
   }, [pathname, closeDrawer]);
@@ -68,36 +59,40 @@ export function CartDrawer() {
 
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+    getLenis()?.stop();
+    document.body.classList.add("locked");
     closeBtnRef.current?.focus();
     document.addEventListener("keydown", onKeyDown);
 
     return () => {
       document.body.style.overflow = prevOverflow;
+      getLenis()?.start();
+      document.body.classList.remove("locked");
       document.removeEventListener("keydown", onKeyDown);
     };
   }, [drawerOpen, onKeyDown]);
 
-  if (!drawerOpen) return null;
-
-  const panelClass = [
-    "cart-drawer__panel",
-    reducedMotion ? "cart-drawer__panel--instant" : "",
-    "is-open",
-  ]
-    .filter(Boolean)
-    .join(" ");
-
   return (
-    <div className="cart-drawer is-open" role="presentation">
+    <div
+      className="cart-drawer t-panel-slide"
+      role="presentation"
+      data-open={drawerOpen ? "true" : "false"}
+      aria-hidden={!drawerOpen}
+      inert={!drawerOpen}
+      data-lenis-prevent
+    >
       <button
         type="button"
         className="cart-drawer__scrim"
         aria-label="Close cart"
+        tabIndex={drawerOpen ? 0 : -1}
         onClick={closeDrawer}
       />
       <div
         ref={panelRef}
-        className={panelClass}
+        className="cart-drawer__panel t-panel-slide"
+        data-open={drawerOpen ? "true" : "false"}
+        data-lenis-prevent
         role="dialog"
         aria-modal="true"
         aria-labelledby="cart-drawer-title"
@@ -112,7 +107,7 @@ export function CartDrawer() {
             className="cart-drawer__close"
             onClick={closeDrawer}
           >
-            close
+            <span className="nav-label">close</span>
           </button>
         </header>
 

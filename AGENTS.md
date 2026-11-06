@@ -69,7 +69,7 @@ npm run lint
 
 - `app/layout.tsx` - metadata shell and Lenis provider.
 - `app/(gallery)/*` - V3.1 six-route gallery (production on `main`; `/playlists` added).
-- `components/v3/SiteChrome.tsx` - shared client chrome (preloader, header, footer, scroll reset).
+- `components/v3/SiteChrome.tsx` - shared client chrome (preloader, header, footer, scroll reset). Desktop uses Figma inline nav; mobile uses the V3 overlay MENU.
 - `app/globals.css` - CSS variables and section composition styles.
 - `components/providers/LenisProvider.tsx` - Lenis smooth scroll.
 - `components/v3/*` - V3 chapters, chrome, motion (production on `main`).

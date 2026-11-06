@@ -17,8 +17,15 @@ import {
   isHomeIntroSeen,
   queueRouteScroll,
   scrollToHomeLanding,
+  scrollToShop,
 } from "@/lib/home-scroll";
-import { navItems, normalizePath } from "@/lib/sections.config";
+import {
+  DESKTOP_NAV_QUERY,
+  desktopNavItems,
+  isDesktopNavCurrent,
+  navItems,
+  normalizePath,
+} from "@/lib/sections.config";
 import { useCart } from "@/lib/v4/cart/CartProvider";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -96,6 +103,16 @@ export function SiteHeader({
   const openMenu = () => setMenuOpen(true);
 
   const currentPath = normalizePath(pathname);
+
+  useEffect(() => {
+    const media = window.matchMedia(DESKTOP_NAV_QUERY);
+    const sync = () => {
+      if (media.matches) setMenuOpen(false);
+    };
+    sync();
+    media.addEventListener("change", sync);
+    return () => media.removeEventListener("change", sync);
+  }, []);
 
   useEffect(() => {
     document.body.classList.toggle("locked", menuOpen);
@@ -277,27 +294,88 @@ export function SiteHeader({
             className="site-header__chrome"
             aria-hidden={!ready}
           >
-            <div className="site-header__actions">
-              <button
-                type="button"
-                className="burger site-header__cart"
-                tabIndex={ready ? 0 : -1}
-                onClick={openDrawer}
-              >
-                <span className="nav-label">cart ({count})</span>
-              </button>
-              <button
-                ref={burgerRef}
-                type="button"
-                className="burger"
-                tabIndex={ready ? 0 : -1}
-                aria-expanded={menuOpen}
-                aria-controls="menu"
-                onClick={openMenu}
-              >
-                <span className="nav-label">menu</span>
-              </button>
-            </div>
+            <nav className="site-nav" aria-label="Primary">
+              {desktopNavItems.map((item) => {
+                const current = isDesktopNavCurrent(item, currentPath);
+                const className = current
+                  ? "site-nav__link is-current"
+                  : "site-nav__link";
+                const label =
+                  item.action === "cart"
+                    ? `${item.navLabel} (${count})`
+                    : item.navLabel;
+
+                if (item.action === "cart") {
+                  return (
+                    <button
+                      key={item.id}
+                      type="button"
+                      className={className}
+                      tabIndex={ready ? 0 : -1}
+                      onClick={openDrawer}
+                    >
+                      <span className="nav-label">{label}</span>
+                    </button>
+                  );
+                }
+
+                return (
+                  <Link
+                    key={item.id}
+                    className={className}
+                    href={item.href}
+                    tabIndex={ready ? 0 : -1}
+                    aria-current={current ? "page" : undefined}
+                    onAuxClick={() => {
+                      /* native <a href> handles middle-click */
+                    }}
+                    onClick={(event) => {
+                      if (
+                        event.metaKey ||
+                        event.ctrlKey ||
+                        event.shiftKey ||
+                        event.altKey ||
+                        event.button === 1
+                      ) {
+                        return;
+                      }
+                      event.preventDefault();
+                      const chapterPath = normalizePath(item.href);
+                      if (item.id === "home" && currentPath === "/") {
+                        scrollToShop();
+                        return;
+                      }
+                      if (chapterPath !== currentPath) {
+                        router.push(item.href, { scroll: true });
+                      }
+                      queueRouteScroll(chapterPath);
+                    }}
+                  >
+                    <span className="nav-label">{label}</span>
+                  </Link>
+                );
+              })}
+            </nav>
+            <button
+              type="button"
+              className="burger site-header__cart"
+              tabIndex={ready ? 0 : -1}
+              onClick={openDrawer}
+              aria-label={`Cart (${count})`}
+            >
+              <span className="nav-label">cart ({count})</span>
+            </button>
+            <button
+              ref={burgerRef}
+              type="button"
+              className="burger site-header__menu-btn"
+              tabIndex={ready ? 0 : -1}
+              aria-expanded={menuOpen}
+              aria-controls="menu"
+              onClick={openMenu}
+            >
+              <span className="nav-label">menu</span>
+            </button>
           </div>
         </div>
       </header>

@@ -37,12 +37,17 @@ export function HomeChapter({
             <span className="lbl lbl--sand">[ the space ]</span>
             <span className="lbl">{home.est}</span>
           </div>
-          <h1 className="display space-title">
-            <span>{crossLine.text}</span>{" "}
-            <span className={withLine.clay ? "hero-mark__clay" : undefined}>
-              {withLine.text}
-            </span>{" "}
-            <span>{swagLine.text}</span>
+          <h1 className="hero-mark">
+            <span>
+              {crossLine.text}
+              <br />
+            </span>
+            <span className="hero-mark__lockup">
+              <span className={withLine.clay ? "hero-mark__clay" : undefined}>
+                {withLine.text}
+              </span>{" "}
+              {swagLine.text}
+            </span>
           </h1>
           <div className="hero-bottom">
             <div>
@@ -83,38 +88,23 @@ export function HomeChapter({
         <div className="section-inner">
           <div id="home-hero" className="hero-content" tabIndex={-1}>
             <div>
+              <h1 className="sr-only">swag.</h1>
               <div className="hero-top">
                 <span className="lbl lbl--sand">[ standard edition — drops 13.11 ]</span>
                 <span className="lbl">{home.est}</span>
               </div>
-
-              <h1 className="hero-mark">
-                <span>
-                  {crossLine.text}
-                  <br />
-                </span>
-                <span className="hero-mark__lockup">
-                  <span className={withLine.clay ? "hero-mark__clay" : undefined}>
-                    {withLine.text}
-                  </span>{" "}
-                  {swagLine.text}
-                </span>
-              </h1>
             </div>
 
             <div className="hero-bottom">
               <div>
-                <span className="lbl lbl--clay">{home.wearableLabel}</span>
-                <p className="body-copy voice" style={{ marginTop: 16 }}>
-                  {home.intro}
-                </p>
+                <span className="lbl lbl--clay">wearable editions + a space</span>
               </div>
               <div className="cta-row">
                 <Link className="btn btn--clay" href="#shop">
-                  shop the standard edition
+                  shop the standard edition ↓
                 </Link>
                 <Link className="btn" href="/space">
-                  enter the space
+                  enter the site →
                 </Link>
               </div>
             </div>
@@ -124,25 +114,10 @@ export function HomeChapter({
       </section>
       )}
 
-      <Ticker />
+      {!isShop && <Ticker />}
 
       {isShop ? (
-        <>
-          <ShopChapter />
-          <section className="closer">
-            <div className="wrap">
-              <span className="lbl">{home.closer.label}</span>
-              <Reveal className="big">
-                {home.closer.display.map((line) => (
-                  <span key={line}>
-                    {line}
-                    <br />
-                  </span>
-                ))}
-              </Reveal>
-            </div>
-          </section>
-        </>
+        <ShopChapter />
       ) : (
       <>
       <section className="wrap pad">

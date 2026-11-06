@@ -111,6 +111,7 @@ export const hashRoutes: Record<string, string> = Object.fromEntries(
   chapters.map((chapter) => [`#${chapter.id}`, chapter.path]),
 );
 
+/** Overlay MENU (mobile): production V3 engine, plus cart. Playlists stays here. */
 export const navItems: NavItem[] = [
   ...chapters
     .filter((chapter) => chapter.id !== "current")
@@ -121,6 +122,48 @@ export const navItems: NavItem[] = [
     })),
   { id: "cart", navLabel: "cart", href: "/cart", action: "cart" },
 ];
+
+/** Figma V4.1 inline header (desktop ≥900px): SHOP / SPACE / ARCHIVE / MANIFESTO / CONTACT / CART. */
+export const DESKTOP_NAV_MIN_WIDTH = 900;
+export const DESKTOP_NAV_QUERY = `(min-width: ${DESKTOP_NAV_MIN_WIDTH}px)`;
+
+const desktopChapterIds = [
+  "home",
+  "space",
+  "archive",
+  "manifesto",
+  "contact",
+] as const;
+
+export const desktopNavItems: NavItem[] = [
+  ...desktopChapterIds.map((id) => {
+    const chapter = chapters.find((entry) => entry.id === id);
+    if (!chapter) {
+      throw new Error(`Missing desktop nav chapter: ${id}`);
+    }
+    return {
+      id: chapter.id,
+      navLabel: chapter.navLabel,
+      href: chapter.path,
+    };
+  }),
+  { id: "cart", navLabel: "cart", href: "/cart", action: "cart" },
+];
+
+export function isDesktopNavCurrent(item: NavItem, path: string): boolean {
+  const normalized = normalizePath(path);
+  if (item.action === "cart") {
+    return (
+      normalized === "/cart" ||
+      normalized.startsWith("/checkout") ||
+      normalized.startsWith("/order")
+    );
+  }
+  if (item.href === "/") {
+    return normalized === "/" || normalized.startsWith("/current");
+  }
+  return normalized === item.href;
+}
 
 export function chapterByPath(path: string): ChapterConfig | undefined {
   const normalized = normalizePath(path);
