@@ -1037,6 +1037,11 @@ button:focus-visible {
   margin-top: 16px;
 }
 
+.foot a.foot-handle {
+  display: inline-block;
+  margin-top: 8px;
+}
+
 [data-route="docked"] .site-header__chrome {
   opacity: 1;
   visibility: visible;

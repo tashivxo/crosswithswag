@@ -21,7 +21,7 @@ import {
 } from "@/lib/home-scroll";
 import {
   DESKTOP_NAV_QUERY,
-  desktopNavItems,
+  getDesktopNavItems,
   isDesktopNavCurrent,
   navItems,
   normalizePath,
@@ -295,7 +295,7 @@ export function SiteHeader({
             aria-hidden={!ready}
           >
             <nav className="site-nav" aria-label="Primary">
-              {desktopNavItems.map((item) => {
+              {getDesktopNavItems(currentPath).map((item) => {
                 const current = isDesktopNavCurrent(item, currentPath);
                 const className = current
                   ? "site-nav__link is-current"

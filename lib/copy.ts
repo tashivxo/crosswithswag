@@ -270,22 +270,18 @@ export const playlistsPage = {
 
 export const footer = {
   tagline: "CROSS WITH SWAG",
+  handle: { label: site.handle, href: site.instagramUrl },
   editions: [
-    { label: "standard edition", href: "/#shop" },
-    { label: "the space", href: "/space" },
+    { label: "shop — standard edition", href: "/#shop" },
     { label: "archive", href: "/archive" },
-    { label: "cart", href: "/cart" },
   ],
   info: [
     { label: "manifesto", href: "/manifesto" },
-    { label: "playlists", href: "/playlists" },
     { label: "contact", href: "/contact" },
-    { label: site.handle, href: site.instagramUrl, external: true },
   ],
   meta: [
-    "WEARABLE EDITIONS — CAPE TOWN",
+    "WEARABLE EDITIONS + A SPACE — CAPE TOWN",
     "GRISEUS REGIUS (PTY) LTD 2026",
-    "V4.1 DRAFT",
   ],
 };
 

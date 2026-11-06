@@ -135,20 +135,39 @@ const desktopChapterIds = [
   "contact",
 ] as const;
 
+function desktopChapterItem(id: ChapterId): NavItem {
+  const chapter = chapters.find((entry) => entry.id === id);
+  if (!chapter) {
+    throw new Error(`Missing desktop nav chapter: ${id}`);
+  }
+  return {
+    id: chapter.id,
+    navLabel: chapter.navLabel,
+    href: chapter.path,
+  };
+}
+
+const cartNavItem: NavItem = {
+  id: "cart",
+  navLabel: "cart",
+  href: "/cart",
+  action: "cart",
+};
+
 export const desktopNavItems: NavItem[] = [
-  ...desktopChapterIds.map((id) => {
-    const chapter = chapters.find((entry) => entry.id === id);
-    if (!chapter) {
-      throw new Error(`Missing desktop nav chapter: ${id}`);
-    }
-    return {
-      id: chapter.id,
-      navLabel: chapter.navLabel,
-      href: chapter.path,
-    };
-  }),
-  { id: "cart", navLabel: "cart", href: "/cart", action: "cart" },
+  ...desktopChapterIds.map(desktopChapterItem),
+  cartNavItem,
 ];
+
+/** Figma nav, plus PLAYLISTS (before CART) only while on /playlists. */
+export function getDesktopNavItems(path: string): NavItem[] {
+  if (normalizePath(path) !== "/playlists") return desktopNavItems;
+  return [
+    ...desktopChapterIds.map(desktopChapterItem),
+    desktopChapterItem("playlists"),
+    cartNavItem,
+  ];
+}
 
 export function isDesktopNavCurrent(item: NavItem, path: string): boolean {
   const normalized = normalizePath(path);
