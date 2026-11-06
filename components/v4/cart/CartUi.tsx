@@ -2,17 +2,12 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { V4FilledButton } from "@/components/v4/V4Shop";
 import type { CartLine } from "@/lib/v4/cart/CartProvider";
-import {
-  formatPrice,
-  isSizeSoldOut,
-  productById,
-} from "@/lib/v4/products";
+import { formatPrice, isSizeSoldOut, productById } from "@/lib/v4/products";
 
 type CartLineListProps = {
   lines: CartLine[];
-  variant: "page" | "drawer" | "route";
+  variant: "page" | "drawer";
   onRemove: (lineId: string) => void;
   onSetQuantity: (lineId: string, quantity: number) => void;
 };
@@ -23,80 +18,42 @@ export function CartLineList({
   onRemove,
   onSetQuantity,
 }: CartLineListProps) {
-  const thumbClass =
-    variant === "drawer"
-      ? "v4-cart-line__thumb v4-cart-line__thumb--drawer"
-      : variant === "route"
-        ? "v4-cart-line__thumb v4-cart-line__thumb--route"
-        : "v4-cart-line__thumb v4-cart-line__thumb--page";
-
   return (
-    <ul className="v4-cart-line-list">
+    <ul className={`cart-lines cart-lines--${variant}`}>
       {lines.map((line) => {
         const product = productById(line.productId);
-        const soldOut =
-          product != null && isSizeSoldOut(product, line.size);
-        const lineTotal = line.unitPriceCents * line.quantity;
+        const soldOut = product != null && isSizeSoldOut(product, line.size);
 
         return (
-          <li key={line.lineId} className="v4-cart-line">
-            <div className={thumbClass}>
+          <li key={line.lineId} className="cart-line">
+            <div className="frame cart-line__thumb">
               {line.imageSrc ? (
-                <Image
-                  src={line.imageSrc}
-                  alt=""
-                  width={
-                    variant === "drawer"
-                      ? 84
-                      : variant === "route"
-                        ? 120
-                        : 120
-                  }
-                  height={
-                    variant === "drawer"
-                      ? 105
-                      : variant === "route"
-                        ? 150
-                        : 150
-                  }
-                  className="v4-cart-line__img"
-                />
+                <Image src={line.imageSrc} alt="" fill sizes="120px" />
               ) : null}
             </div>
-            <div className="v4-cart-line__meta">
-              <p className="v4-cart-line__name">
-                {variant === "page" ? (
-                  `T-SHIRT - ${line.title}`
-                ) : variant === "route" ? (
-                  <>
-                    <span className="v4-cart-line__name-prefix">T-SHIRT - </span>
-                    {line.title}
-                  </>
-                ) : (
-                  line.title
-                )}
-              </p>
-              <p className="v4-cart-line__detail">
+            <div className="cart-line__meta">
+              <p className="lbl lbl--sand">{line.title.toLowerCase()}</p>
+              <p className="cart-line__detail voice">
                 standard edition · {line.colourway} · size {line.size}
               </p>
               {soldOut ? (
-                <p className="v4-cart-line__sold-out">
+                <p className="lbl lbl--clay">
                   sold out in {line.size} — still in your cart
                 </p>
               ) : null}
-              <div className="v4-cart-line__qty">
+              <div className="cart-qty">
                 <button
                   type="button"
-                  className="v4-cart-qty-btn"
+                  className="cart-qty__btn"
                   aria-label={`Decrease quantity for ${line.title}`}
                   onClick={() => onSetQuantity(line.lineId, line.quantity - 1)}
                 >
                   −
                 </button>
-                <span className="v4-cart-qty-btn__value">{line.quantity}</span>
+                <span className="cart-qty__value">{line.quantity}</span>
                 <button
                   type="button"
-                  className="v4-cart-qty-btn"
+                  className="cart-qty__btn"
                   aria-label={`Increase quantity for ${line.title}`}
                   onClick={() => onSetQuantity(line.lineId, line.quantity + 1)}
                 >
@@ -104,11 +61,13 @@ export function CartLineList({
                 </button>
               </div>
             </div>
-            <div className="v4-cart-line__aside">
-              <p className="v4-cart-line__price">{formatPrice(lineTotal)}</p>
+            <div className="cart-line__aside">
+              <p className="cart-line__price">
+                {formatPrice(line.unitPriceCents * line.quantity)}
+              </p>
               <button
                 type="button"
-                className="v4-cart-text-link"
+                className="lbl cart-link"
                 onClick={() => onRemove(line.lineId)}
               >
                 remove
@@ -121,106 +80,50 @@ export function CartLineList({
   );
 }
 
-type CartEmptyProps = {
-  variant: "page" | "drawer" | "sheet";
-  onShop?: () => void;
-};
-
-export function CartEmptyState({ variant, onShop }: CartEmptyProps) {
-  const shopHref = "/#shop";
-  const shopButton =
-    variant === "drawer" ? (
-      <V4FilledButton
-        href={shopHref}
-        className="v4-btn--studio"
-        onClick={onShop}
-      >
-        SHOP THE STANDARD EDITION →
-      </V4FilledButton>
-    ) : (
-      <V4FilledButton href={shopHref} className="v4-btn--studio" onClick={onShop}>
-        SHOP THE STANDARD EDITION →
-      </V4FilledButton>
-    );
-
+export function CartEmptyState({ onShop }: { onShop?: () => void }) {
   return (
-    <div className="v4-cart-empty">
-      <p className="v4-cart-empty__lead">nothing in here yet.</p>
-      <p className="v4-cart-empty__note">the standard edition is always open.</p>
-      {shopButton}
+    <div className="cart-empty">
+      <p className="cart-empty__lead voice">nothing in here yet.</p>
+      <p className="body-copy voice">the standard edition is always open.</p>
+      <div className="cta-row">
+        <Link className="btn btn--clay" href="/#shop" onClick={onShop}>
+          shop the standard edition →
+        </Link>
+      </div>
     </div>
   );
 }
-
-type CartTotalsProps = {
-  subtotalCents: number;
-  variant: "page" | "drawer";
-  onCheckoutNavigate?: () => void;
-};
 
 export function CartTotalsBlock({
   subtotalCents,
-  variant,
   onCheckoutNavigate,
-}: CartTotalsProps) {
-  if (variant === "page") {
-    return (
-      <aside className="v4-cart-totals v4-cart-totals--page">
-        <div className="v4-cart-totals__rows">
-          <div className="v4-cart-totals__row">
-            <span>subtotal</span>
-            <span>{formatPrice(subtotalCents)}</span>
-          </div>
-          <div className="v4-cart-totals__row v4-cart-totals__row--muted">
-            <span>delivery</span>
-            <span>chosen at checkout — paxi</span>
-          </div>
-        </div>
-        <hr className="v4-cart-rule" />
-        <Link href="/checkout" className="v4-cart-text-link v4-cart-text-link--cta">
-          continue to checkout →
-        </Link>
-        <p className="v4-cart-totals__footnote">
-          the standard edition is always open. a closed edition cannot be added.
-        </p>
-      </aside>
-    );
-  }
-
+}: {
+  subtotalCents: number;
+  onCheckoutNavigate?: () => void;
+}) {
   return (
-    <div className="v4-cart-totals v4-cart-totals--drawer">
-      <div className="v4-cart-totals__rows">
-        <div className="v4-cart-totals__row">
-          <span>subtotal</span>
-          <span>{formatPrice(subtotalCents)}</span>
-        </div>
-        <div className="v4-cart-totals__row v4-cart-totals__row--muted">
-          <span>delivery</span>
-          <span>chosen at checkout — paxi</span>
-        </div>
+    <div className="cart-totals">
+      <div className="cart-totals__row">
+        <span className="lbl lbl--sand">subtotal</span>
+        <span className="cart-totals__value">{formatPrice(subtotalCents)}</span>
       </div>
-      <p className="v4-cart-totals__delivery-note">
+      <div className="cart-totals__row">
+        <span className="lbl">delivery</span>
+        <span className="lbl">chosen at checkout — paxi</span>
+      </div>
+      <p className="lbl cart-totals__note">
         item prices exclude delivery. paxi economy R60 · speed R110 ·
         door-to-door R120.
       </p>
-      <V4FilledButton
-        href="/checkout"
-        className="v4-btn--studio v4-cart-totals__checkout-btn"
-        onClick={onCheckoutNavigate}
-      >
-        CONTINUE TO CHECKOUT →
-      </V4FilledButton>
-    </div>
-  );
-}
-
-export function CartPageLabelRow({ count }: { count: number }) {
-  return (
-    <div className="v4-cart-page__label-row">
-      <p className="lbl">[ CART ]</p>
-      <p className="lbl">
-        STANDARD EDITION — {count} SHIRT{count === 1 ? "" : "S"}
-      </p>
+      <div className="cta-row">
+        <Link
+          className="btn btn--clay"
+          href="/checkout"
+          onClick={onCheckoutNavigate}
+        >
+          continue to checkout →
+        </Link>
+      </div>
     </div>
   );
 }

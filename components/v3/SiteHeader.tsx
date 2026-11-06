@@ -19,6 +19,7 @@ import {
   scrollToHomeLanding,
 } from "@/lib/home-scroll";
 import { navItems, normalizePath } from "@/lib/sections.config";
+import { useCart } from "@/lib/v4/cart/CartProvider";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -84,6 +85,7 @@ export function SiteHeader({
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const shortScreen = useShortScreen();
+  const { count, openDrawer } = useCart();
   const burgerRef = useRef<HTMLButtonElement>(null);
   const chromeRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLElement>(null);
@@ -275,17 +277,27 @@ export function SiteHeader({
             className="site-header__chrome"
             aria-hidden={!ready}
           >
-            <button
-              ref={burgerRef}
-              type="button"
-              className="burger"
-              tabIndex={ready ? 0 : -1}
-              aria-expanded={menuOpen}
-              aria-controls="menu"
-              onClick={openMenu}
-            >
-              <span className="nav-label">menu</span>
-            </button>
+            <div className="site-header__actions">
+              <button
+                type="button"
+                className="burger site-header__cart"
+                tabIndex={ready ? 0 : -1}
+                onClick={openDrawer}
+              >
+                <span className="nav-label">cart ({count})</span>
+              </button>
+              <button
+                ref={burgerRef}
+                type="button"
+                className="burger"
+                tabIndex={ready ? 0 : -1}
+                aria-expanded={menuOpen}
+                aria-controls="menu"
+                onClick={openMenu}
+              >
+                <span className="nav-label">menu</span>
+              </button>
+            </div>
           </div>
         </div>
       </header>
@@ -336,7 +348,20 @@ export function SiteHeader({
                 }}
               >
                 <div className="t-avatar menu-grow">
-                  {item.external ? (
+                  {item.action === "cart" ? (
+                    <button
+                      type="button"
+                      className="mi"
+                      tabIndex={menuOpen ? 0 : -1}
+                      onClick={() => {
+                        document.body.classList.remove("locked");
+                        closeMenu();
+                        openDrawer();
+                      }}
+                    >
+                      {item.navLabel} ({count})
+                    </button>
+                  ) : item.external ? (
                     <a
                       className="mi"
                       href={item.href}

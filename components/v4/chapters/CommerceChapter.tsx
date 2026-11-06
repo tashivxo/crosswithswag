@@ -1,12 +1,11 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { V4FilledButton } from "@/components/v4/V4Shop";
 import { useCart } from "@/lib/v4/cart/CartProvider";
 import {
   CartEmptyState,
   CartLineList,
-  CartPageLabelRow,
   CartTotalsBlock,
 } from "@/components/v4/cart/CartUi";
 import { deliveryOptions, formatPrice } from "@/lib/v4/products";
@@ -16,53 +15,38 @@ export function CartChapter() {
   const { lines, count, subtotalCents, removeLine, setQuantity } = useCart();
 
   return (
-    <section className="v4-cart-page section-shell">
-      <div className="v4-cart-page__inner wrap">
-        <div className="v4-cart-head--desktop">
-          <CartPageLabelRow count={count} />
+    <section id="cart" className="chapter">
+      <div className="wrap page-head cart-head" tabIndex={-1}>
+        <div className="hero-top">
+          <span className="lbl lbl--sand">[ cart ]</span>
+          <span className="lbl">
+            standard edition — {count} shirt{count === 1 ? "" : "s"}
+          </span>
         </div>
+        <h1 className="display voice cart-title">selected objects.</h1>
+      </div>
 
-        <header className="v4-cart-sheet__head v4-cart-head--mobile">
-          <p className="lbl">[ CART — {count} ]</p>
-          <button
-            type="button"
-            className="v4-cart-drawer__close"
-            onClick={() => router.back()}
-          >
-            CLOSE ✕
-          </button>
-        </header>
-
-        <h1 className="v4-cart-page__title">SELECTED OBJECTS.</h1>
-
+      <div className="wrap pad-sm">
         {lines.length === 0 ? (
-          <CartEmptyState variant="page" />
+          <CartEmptyState />
         ) : (
-          <div className="v4-cart-page__layout">
-            <div className="v4-cart-page__lines">
-              <CartLineList
-                lines={lines}
-                variant="route"
-                onRemove={removeLine}
-                onSetQuantity={setQuantity}
-              />
-            </div>
-
-            <div className="v4-cart-totals--desktop">
-              <CartTotalsBlock subtotalCents={subtotalCents} variant="page" />
-            </div>
-
-            <div className="v4-cart-totals--mobile">
-              <hr className="v4-cart-rule" />
-              <CartTotalsBlock subtotalCents={subtotalCents} variant="drawer" />
+          <div className="cart-page">
+            <CartLineList
+              lines={lines}
+              variant="page"
+              onRemove={removeLine}
+              onSetQuantity={setQuantity}
+            />
+            <aside className="cart-page__totals">
+              <CartTotalsBlock subtotalCents={subtotalCents} />
               <button
                 type="button"
-                className="v4-cart-text-link v4-cart-keep-shopping"
+                className="lbl cart-link"
                 onClick={() => router.back()}
               >
-                KEEP SHOPPING
+                keep shopping
               </button>
-            </div>
+            </aside>
           </div>
         )}
       </div>
@@ -76,39 +60,73 @@ export function CheckoutChapter() {
   const total = subtotalCents + delivery;
 
   return (
-    <section className="section-shell v4-checkout">
-      <h1>CHECKOUT</h1>
-      <p className="lbl">[ 01 — CONTACT ]</p>
-      <p>Email and phone fields — UI only until Marcus signs checkout copy.</p>
-      <p className="lbl">[ 02 — DELIVERY — PAXI ]</p>
-      <ul>
-        {deliveryOptions.map((opt) => (
-          <li key={opt.id}>
-            {opt.label} · {formatPrice(opt.priceCents)}
-          </li>
-        ))}
-      </ul>
-      <p className="lbl">[ 03 — PAYMENT ]</p>
-      <p>● card — yoco (hosted checkout)</p>
-      <p>○ instant eft — payfast</p>
-      <p className="v4-checkout__note">
-        card details never touch this site. an order is marked paid by the
-        processor, not by the redirect.
-      </p>
-      <p className="v4-cart__total">
-        Pay {formatPrice(total)} → (not wired)
-      </p>
-      <p className="lbl">{lines.length} items · delivery extra</p>
+    <section id="checkout" className="chapter">
+      <div className="wrap page-head cart-head" tabIndex={-1}>
+        <div className="hero-top">
+          <span className="lbl lbl--sand">[ checkout ]</span>
+          <span className="lbl">guest checkout — no account needed</span>
+        </div>
+        <h1 className="display voice cart-title">checkout.</h1>
+      </div>
+
+      <div className="wrap pad-sm checkout">
+        <div className="checkout__block">
+          <span className="lbl">[ 01 — contact ]</span>
+          <p className="body-copy voice">
+            email and phone fields — ui only until marcus signs checkout copy.
+          </p>
+        </div>
+        <div className="checkout__block">
+          <span className="lbl">[ 02 — delivery — paxi ]</span>
+          <ul className="dense">
+            {deliveryOptions.map((opt, index) => (
+              <li key={opt.id} data-n={String(index + 1).padStart(2, "0")}>
+                {opt.label} · {formatPrice(opt.priceCents)}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="checkout__block">
+          <span className="lbl">[ 03 — payment ]</span>
+          <p className="body-copy voice">● card — yoco (hosted checkout)</p>
+          <p className="body-copy voice">○ instant eft — payfast</p>
+          <p className="lbl checkout__note">
+            card details never touch this site. an order is marked paid by the
+            processor, not by the redirect.
+          </p>
+        </div>
+        <div className="checkout__block">
+          <span className="lbl">
+            {lines.length} item{lines.length === 1 ? "" : "s"} · delivery extra
+          </span>
+          <p className="cart-totals__value">{formatPrice(total)}</p>
+          <p className="lbl">pay → (not wired)</p>
+        </div>
+      </div>
     </section>
   );
 }
 
 export function OrderConfirmedChapter() {
   return (
-    <section className="section-shell v4-order-confirmed">
-      <h1>ORDER RECEIVED</h1>
-      <p>Thank you. This is a static confirmation screen on V4_branch.</p>
-      <V4FilledButton href="/">BACK TO THE SHOP →</V4FilledButton>
+    <section id="order-confirmed" className="chapter">
+      <div className="wrap page-head cart-head" tabIndex={-1}>
+        <div className="hero-top">
+          <span className="lbl lbl--sand">[ order ]</span>
+          <span className="state state--live">received</span>
+        </div>
+        <h1 className="display voice cart-title">order received.</h1>
+        <div className="hero-bottom">
+          <p className="body-copy voice">
+            thank you. this is a static confirmation screen on v4_branch.
+          </p>
+          <div className="cta-row">
+            <Link className="btn btn--clay" href="/#shop">
+              back to the shop →
+            </Link>
+          </div>
+        </div>
+      </div>
     </section>
   );
 }

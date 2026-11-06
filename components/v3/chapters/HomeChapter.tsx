@@ -10,17 +10,59 @@ import { comingSoonEnabled } from "@/lib/coming-soon";
 import { home } from "@/lib/copy";
 import { clothesArtboards, editions } from "@/lib/editions";
 import { chapterById } from "@/lib/sections.config";
+import { ShopChapter } from "@/components/v3/chapters/ShopChapter";
 
 const homeChapter = chapterById("home");
-const currentPath = chapterById("current").path;
+const currentPath = "/#shop";
 const archivePath = chapterById("archive").path;
 const manifestoPath = chapterById("manifesto").path;
 const [crossLine, withLine, swagLine] = home.heroMark;
 
-export function HomeChapter() {
-  const comingSoon = comingSoonEnabled();
+export function HomeChapter({
+  variant = "shop",
+}: {
+  variant?: "shop" | "space";
+}) {
+  const isShop = variant === "shop";
+  const comingSoon = isShop && comingSoonEnabled();
   return (
     <>
+      {!isShop && (
+        <section
+          id="space-head"
+          className="wrap page-head space-head"
+          tabIndex={-1}
+        >
+          <div className="hero-top">
+            <span className="lbl lbl--sand">[ the space ]</span>
+            <span className="lbl">{home.est}</span>
+          </div>
+          <h1 className="display space-title">
+            <span>{crossLine.text}</span>{" "}
+            <span className={withLine.clay ? "hero-mark__clay" : undefined}>
+              {withLine.text}
+            </span>{" "}
+            <span>{swagLine.text}</span>
+          </h1>
+          <div className="hero-bottom">
+            <div>
+              <span className="lbl lbl--clay">{home.wearableLabel}</span>
+              <p className="body-copy voice" style={{ marginTop: 16 }}>
+                {home.intro}
+              </p>
+            </div>
+            <div className="cta-row">
+              <Link className="btn btn--clay" href="/#shop">
+                the standard edition
+              </Link>
+              <Link className="btn" href={archivePath}>
+                the archive
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
+      {isShop && (
       <section
         id="home"
         className="chapter section-shell hero-section"
@@ -42,7 +84,7 @@ export function HomeChapter() {
           <div id="home-hero" className="hero-content" tabIndex={-1}>
             <div>
               <div className="hero-top">
-                <span className="lbl lbl--sand">{home.editionLabel}</span>
+                <span className="lbl lbl--sand">[ standard edition — drops 13.11 ]</span>
                 <span className="lbl">{home.est}</span>
               </div>
 
@@ -68,11 +110,11 @@ export function HomeChapter() {
                 </p>
               </div>
               <div className="cta-row">
-                <Link className="btn btn--clay" href={currentPath}>
-                  the current edition
+                <Link className="btn btn--clay" href="#shop">
+                  shop the standard edition
                 </Link>
-                <Link className="btn" href={archivePath}>
-                  the archive
+                <Link className="btn" href="/space">
+                  enter the space
                 </Link>
               </div>
             </div>
@@ -80,9 +122,29 @@ export function HomeChapter() {
         </div>
         )}
       </section>
+      )}
 
       <Ticker />
 
+      {isShop ? (
+        <>
+          <ShopChapter />
+          <section className="closer">
+            <div className="wrap">
+              <span className="lbl">{home.closer.label}</span>
+              <Reveal className="big">
+                {home.closer.display.map((line) => (
+                  <span key={line}>
+                    {line}
+                    <br />
+                  </span>
+                ))}
+              </Reveal>
+            </div>
+          </section>
+        </>
+      ) : (
+      <>
       <section className="wrap pad">
         <Reveal className="sect-head">
           <span className="lbl">[ 01 — current edition ]</span>
@@ -276,6 +338,8 @@ export function HomeChapter() {
           </Reveal>
         </div>
       </section>
+      </>
+      )}
     </>
   );
 }

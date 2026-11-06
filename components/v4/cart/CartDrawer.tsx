@@ -80,18 +80,18 @@ export function CartDrawer() {
   if (!drawerOpen) return null;
 
   const panelClass = [
-    "v4-cart-drawer__panel",
-    reducedMotion ? "v4-cart-drawer__panel--instant" : "",
+    "cart-drawer__panel",
+    reducedMotion ? "cart-drawer__panel--instant" : "",
     "is-open",
   ]
     .filter(Boolean)
     .join(" ");
 
   return (
-    <div className="v4-cart-drawer is-open" role="presentation">
+    <div className="cart-drawer is-open" role="presentation">
       <button
         type="button"
-        className="v4-cart-drawer__scrim"
+        className="cart-drawer__scrim"
         aria-label="Close cart"
         onClick={closeDrawer}
       />
@@ -100,24 +100,24 @@ export function CartDrawer() {
         className={panelClass}
         role="dialog"
         aria-modal="true"
-        aria-labelledby="v4-cart-drawer-title"
+        aria-labelledby="cart-drawer-title"
       >
-        <header className="v4-cart-drawer__head">
-          <p id="v4-cart-drawer-title" className="lbl">
-            [ CART — {count} ]
+        <header className="cart-drawer__head">
+          <p id="cart-drawer-title" className="lbl lbl--sand">
+            [ cart — {count} ]
           </p>
           <button
             ref={closeBtnRef}
             type="button"
-            className="v4-cart-drawer__close"
+            className="cart-drawer__close"
             onClick={closeDrawer}
           >
-            CLOSE ✕
+            close
           </button>
         </header>
 
         {lines.length === 0 ? (
-          <CartEmptyState variant="drawer" onShop={closeDrawer} />
+          <CartEmptyState onShop={closeDrawer} />
         ) : (
           <>
             <CartLineList
@@ -126,18 +126,16 @@ export function CartDrawer() {
               onRemove={removeLine}
               onSetQuantity={setQuantity}
             />
-            <hr className="v4-cart-rule" />
             <CartTotalsBlock
               subtotalCents={subtotalCents}
-              variant="drawer"
               onCheckoutNavigate={closeDrawer}
             />
             <button
               type="button"
-              className="v4-cart-text-link v4-cart-keep-shopping"
+              className="lbl cart-link"
               onClick={closeDrawer}
             >
-              KEEP SHOPPING
+              keep shopping
             </button>
           </>
         )}

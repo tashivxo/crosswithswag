@@ -129,10 +129,10 @@ Confirmed colour sequence:
 
 ## Current Implementation Files (V4.1 on `V4_branch`)
 
-- `components/v4/*` — inline nav chrome, shop cards, filled CTAs (Figma exception vs V3 `design.md`)
-- `components/v4/chapters/ProductChapter.tsx` — `/current` studio PDP (Figma `21:829` / `21:1411` / `21:1218`). SDD cycle 4 signed off at `775b67e`.
-- `components/v4/cart/*` — cart drawer + `/cart` page/sheet (Figma `21:359` / `21:1121` / `21:1183` / `21:1519`). SDD cycle 5 signed off at `227fb1c`.
-- `lib/v4/sections.config.ts` — SHOP / SPACE / ARCHIVE / MANIFESTO / CONTACT / CART nav
+- `components/v3/SiteChrome.tsx`, `SiteHeader.tsx`, `SiteFooter.tsx` — V3 shell is the base on `V4_branch` (preloader, docked wordmark, avatar menu). Header adds a `cart (n)` text control that opens the drawer; `lib/sections.config.ts` nav is shop / space / archive / manifesto / playlists / contact / cart.
+- `components/v3/chapters/ShopChapter.tsx` + `HomeChapter variant="shop"|"space"` — `/` is the V3 hero + ticker + standard-edition shop; `/space` is the V3 home sections under a docked page head.
+- `components/v4/chapters/ProductChapter.tsx` — `/current` standard edition PDP built from V3 page-head, `frame`, `feature`/`spec` and `sig` patterns (`.pdp-*`). Cycle 4 behaviour kept (query-preserving size guide, notify-only sold-out, 3-card related row).
+- `components/v4/cart/*` + `components/v4/chapters/CommerceChapter.tsx` — cart drawer, `/cart`, `/checkout`, `/order/confirmed` restyled as V3 typographic posters (`.cart-*`, UI only). CTAs are V3 `.btn` outlines; no filled-button exception remains.
 - `lib/v4/products.ts` — standard edition catalog (R350 placeholder; dispatch-black gallery is cross print + shirt still)
 - `lib/v4/cart/CartProvider.tsx` — client cart state (no payment)
 - `app/(gallery)/*` — `/` landing+shop, `/space` gallery, `/current` product, commerce routes, V3 editorial chapters retained under V4 chrome until re-skinned per Figma frame
@@ -280,7 +280,7 @@ Vercel Authentication is disabled so public URLs are viewable. Leave that as-is 
 | **V3.3.0** | ✅ SHIPPED | Sixth route `/playlists`. Spotify embeds, curator credits, local covers. No OAuth / Web Playback SDK / secrets. Footer `V3.3.0`. |
 | **V3.3.1** | ✅ ON `main` | Gallery on production; footer `V3.3.1`. |
 | **V3.3.3** | ✅ SHIPPED | Footer version label `V3.3.3` (on `main` tip at freeze). |
-| **V4.1 rebuild** | 🛠 `V4_branch` | Marcus Figma CROSSWITHSWAG (`lcZqp5HNaFCPBcWgPzAwUU`). Landing+shop at `/`, gallery at `/space`, `/current` (cycle 4) and cart drawer+`/cart` (cycle 5) signed off. Next: archive, manifesto, contact, playlists. Filled buttons and shop UI override V3 `design.md` on this branch only. Checkout UI only until Yoco/PayFast signed. |
+| **V4.1 rebuild** | 🛠 `V4_branch` | Reworked V3: V3 shell/motion/type restored, V4.1 commerce (shop `/`, `/space`, `/current` PDP, cart drawer, `/cart`, checkout UI) ported in as V3-style chapters. Archive, manifesto, contact, playlists are the production V3 chapters unchanged. Checkout UI only until Yoco/PayFast signed. |
 
 ## Open Questions for Marcus
 

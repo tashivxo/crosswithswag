@@ -73,8 +73,8 @@ npm run lint
 - `app/globals.css` - CSS variables and section composition styles.
 - `components/providers/LenisProvider.tsx` - Lenis smooth scroll.
 - `components/v3/*` - V3 chapters, chrome, motion (production on `main`).
-- `components/v4/*` - V4 chrome, shop, and chapters on `V4_branch` (not production).
-- `components/v4/chapters/ProductChapter.tsx` - V4.1 `/current` studio PDP.
+- `components/v4/*` - V4.1 PDP and cart components on `V4_branch`, rendered inside the V3 shell (not production).
+- `components/v3/chapters/ShopChapter.tsx` - V4.1 standard-edition shop on `/`.
 - `components/ui/*` - shared primitives (wordmark, watermark, CTA).
 - `lib/copy.ts` - V3 copy source of truth.
 - `lib/editions.ts` - edition / campaign data.

@@ -271,8 +271,10 @@ export const playlistsPage = {
 export const footer = {
   tagline: "CROSS WITH SWAG",
   editions: [
-    { label: "current — kloofstreetnights", href: "/current" },
+    { label: "standard edition", href: "/#shop" },
+    { label: "the space", href: "/space" },
     { label: "archive", href: "/archive" },
+    { label: "cart", href: "/cart" },
   ],
   info: [
     { label: "manifesto", href: "/manifesto" },
@@ -283,7 +285,7 @@ export const footer = {
   meta: [
     "WEARABLE EDITIONS — CAPE TOWN",
     "GRISEUS REGIUS (PTY) LTD 2026",
-    "V3.3.3",
+    "V4.1 DRAFT",
   ],
 };
 
