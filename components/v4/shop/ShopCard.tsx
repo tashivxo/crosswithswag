@@ -6,8 +6,8 @@ import Link from "next/link";
 import { useCart } from "@/lib/v4/cart/CartProvider";
 import {
   formatPrice,
-  isSizeSoldOut,
   productCardImage,
+  sizeButtonState,
   type ProductSize,
   type StandardProduct,
 } from "@/lib/v4/products";
@@ -88,16 +88,18 @@ export function ShopCard({ product }: { product: StandardProduct }) {
         data-need={state === "need-size" ? "true" : undefined}
       >
         {SIZES.map((s) => {
-          const out = isSizeSoldOut(product, s);
+          const { soldOut, selectable, label } = sizeButtonState(product, s);
           return (
             <button
               key={s}
               type="button"
               className="land-size"
               aria-pressed={size === s}
-              disabled={out}
-              title={out ? "sold out" : undefined}
-              onClick={() => setSize(s)}
+              aria-disabled={soldOut || undefined}
+              aria-label={soldOut ? label : undefined}
+              onClick={() => {
+                if (selectable) setSize(s);
+              }}
             >
               {s}
             </button>

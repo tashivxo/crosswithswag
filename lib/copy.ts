@@ -125,6 +125,7 @@ export const productPage = {
   selectSize: "select a size",
   pickSize: "pick a size",
   sizeHint: "choose a size to add this shirt to your cart.",
+  soldOutSuffix: "sold out",
 };
 
 export const current = {

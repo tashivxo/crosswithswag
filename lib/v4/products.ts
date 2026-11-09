@@ -1,3 +1,5 @@
+import { productPage } from "@/lib/copy";
+
 export type ProductFamily = "express" | "halo" | "super" | "daily";
 
 export type ProductSize = "S" | "M" | "L" | "XL" | "2XL" | "3XL";
@@ -259,6 +261,25 @@ export function isSizeSoldOut(
   size: ProductSize,
 ): boolean {
   return product.soldOutSizes?.includes(size) ?? false;
+}
+
+export type SizeButtonState = {
+  soldOut: boolean;
+  selectable: boolean;
+  /** Accessible name: the size, plus the sold-out suffix from lib/copy.ts when unavailable. */
+  label: string;
+};
+
+export function sizeButtonState(
+  product: StandardProduct,
+  size: ProductSize,
+): SizeButtonState {
+  const soldOut = isSizeSoldOut(product, size);
+  return {
+    soldOut,
+    selectable: !soldOut,
+    label: soldOut ? `${size} ${productPage.soldOutSuffix}` : size,
+  };
 }
 
 /** Size to keep when switching colourway: the same size if it is on sale in the new one, otherwise none. */

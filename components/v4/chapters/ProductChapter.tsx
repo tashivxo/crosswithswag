@@ -19,6 +19,7 @@ import {
   productCardImage,
   productMakeTable,
   productSpecRows,
+  sizeButtonState,
   relatedProducts,
   sizeAfterColourwaySwitch,
   type ProductSize,
@@ -95,7 +96,7 @@ function SizeLinks({
   return (
     <div className="pdp-sizes" role="group" aria-label="Size">
       {SIZES.map((size) => {
-        const soldOut = isSizeSoldOut(product, size);
+        const { soldOut, selectable, label } = sizeButtonState(product, size);
         const isSelected = selected === size;
         return (
           <button
@@ -109,7 +110,11 @@ function SizeLinks({
               .filter(Boolean)
               .join(" ")}
             aria-pressed={isSelected}
-            onClick={() => onSelect(size)}
+            aria-disabled={soldOut || undefined}
+            aria-label={soldOut ? label : undefined}
+            onClick={() => {
+              if (selectable) onSelect(size);
+            }}
           >
             {size}
           </button>

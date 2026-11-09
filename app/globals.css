@@ -2889,7 +2889,7 @@ html[data-cs-short="1"]:has(.cs) .site-header::after {
     border-color 0.25s var(--ease);
 }
 
-.land-size:hover:not(:disabled),
+.land-size:hover:not([aria-disabled="true"]),
 .land-size[aria-pressed="true"] {
   color: var(--sand);
 }
@@ -2898,10 +2898,10 @@ html[data-cs-short="1"]:has(.cs) .site-header::after {
   border-bottom-color: var(--clay);
 }
 
-.land-size:disabled {
+/* Sold out stays focusable and fully legible: struck through, no fade. */
+.land-size[aria-disabled="true"] {
   cursor: not-allowed;
   text-decoration: line-through;
-  opacity: 0.45;
 }
 
 .land-size:focus-visible,
@@ -2910,7 +2910,7 @@ html[data-cs-short="1"]:has(.cs) .site-header::after {
   outline-offset: 3px;
 }
 
-.land-sizes[data-need="true"] .land-size:not(:disabled) {
+.land-sizes[data-need="true"] .land-size:not([aria-disabled="true"]) {
   color: var(--clay);
 }
 
@@ -3143,6 +3143,7 @@ html[data-cs-short="1"]:has(.cs) .site-header::after {
 
 .pdp-size.is-sold-out {
   text-decoration: line-through;
+  cursor: not-allowed;
 }
 
 /* Colourway buttons: Sand text, the selected one carries the same 1px Clay underline as the nav current page. */
