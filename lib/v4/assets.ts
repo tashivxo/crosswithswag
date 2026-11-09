@@ -11,7 +11,18 @@ export type AssetSlot = {
 
 const V4 = "/assets/v4";
 
-/** Target Figma filename vs current served file (rename when Drive pack lands). */
+/**
+ * Shop files in /assets/v4/shop (curated from Marcus's v41-products.zip, resized to 1600w).
+ * Naming: product-{family}_{colourway}[ _view].jpg
+ *   product-X.jpg          card (Figma front + back composite)
+ *   product-X_front.jpg    Front / Full
+ *   product-X_front-detail.jpg, product-X_back.jpg, product-X_back-detail.jpg
+ *
+ * DRAFT: confirm with Marcus. The zip folders are Dispatch, Orbit, Grey Department,
+ * Royal Department, Pulse, Rush. There is no Super or Daily folder, so the family
+ * grouping below (SUPER = rush + pulse, DAILY = grey department + royal department)
+ * is inferred from the Figma landing frame 21:277 card labels, not from the zip.
+ */
 export const shopFileNames = {
   expressDispatchBlack: "product-express_dispatch-black.jpg",
   expressDispatchWhite: "product-express_dispatch-white.jpg",
@@ -19,19 +30,30 @@ export const shopFileNames = {
   haloOrbitBlack: "product-halo_orbit-black.jpg",
   haloOrbitWhite: "product-halo_orbit-white.jpg",
   superRush: "product-super_rush.jpg",
-  superSecond: "product-super_speed.jpg", // draft-missing — VERIFY Figma export name for SUPER #2
+  superPulse: "product-super_pulse.jpg",
   dailyGreyDepartment: "product-daily_grey-department.jpg",
   dailyRoyalDepartment: "product-daily_royal-department.jpg",
 } as const;
 
+/** Zip folder (Marcus) to catalog product. Inferred rows are DRAFT. */
+export const shopZipMapping = [
+  { zip: "Dispatch / Black tee", product: "express-dispatch-black" },
+  { zip: "Dispatch / White tee", product: "express-dispatch-white" },
+  { zip: "Orbit / White tee – Pink print", product: "halo-orbit-pink" },
+  { zip: "Orbit / Black tee – White print", product: "halo-orbit-black" },
+  { zip: "Orbit / White tee – Black print", product: "halo-orbit-white" },
+  { zip: "Rush / White tee – Lime print", product: "super-rush", draft: "family SUPER inferred from Figma" },
+  { zip: "Pulse / White tee – Pink print", product: "super-pulse", draft: "family SUPER inferred from Figma; replaces placeholder 'speed'" },
+  { zip: "Grey Department / Black tee – Grey print", product: "daily-grey-department", draft: "family DAILY inferred from Figma" },
+  { zip: "Royal Department / White tee – Blue print", product: "daily-royal-department", draft: "family DAILY inferred from Figma" },
+] as const;
+
 export const draftMissingAssets = {
   shop: [
-    shopFileNames.haloOrbitWhite,
-    shopFileNames.superRush,
-    shopFileNames.superSecond,
-    shopFileNames.dailyGreyDepartment,
-    shopFileNames.dailyRoyalDepartment,
-    `${shopFileNames.expressDispatchBlack} (PDP cross print)`,
+    `${shopFileNames.haloOrbitWhite} (front + back card composite; card uses single front shot)`,
+    `${shopFileNames.dailyGreyDepartment} (front + back card composite; card uses single front shot)`,
+    `${shopFileNames.dailyRoyalDepartment} (front + back card composite; card uses single front shot)`,
+    "back views: dispatch, orbit, grey department, royal department (zip has Front only)",
   ],
   archiveGallery: "12-frame kloofstreetnights gallery — Marcus Drive archive folder",
   space: "Campaign stills for /space sections 01–08",

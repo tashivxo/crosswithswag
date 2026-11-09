@@ -39,6 +39,28 @@ export const productFamilies: Record<
   daily: { title: "PRODUCT DAILY", copyLabel: "daily swag" },
 };
 
+function shopImages(
+  key: string,
+  opts: {
+    card?: "composite" | "front";
+    thumbs?: [string | null, string | null];
+  } = {},
+): ProductImages {
+  const base = `${SHOP_ASSET}/product-${key}`;
+  const front = `${base}_front.jpg`;
+  return {
+    main: front,
+    thumbs: opts.thumbs ?? [`${base}_front-detail.jpg`, null],
+    card: opts.card === "front" ? front : `${base}.jpg`,
+  };
+}
+
+/**
+ * Catalog order and family grouping follow Figma landing frame 21:277.
+ * DRAFT: confirm with Marcus. The products zip names Dispatch, Orbit, Rush, Pulse,
+ * Grey Department and Royal Department only. SUPER and DAILY family labels are
+ * inferred from Figma, not from the zip.
+ */
 export const standardProducts: StandardProduct[] = [
   {
     id: "express-dispatch-black",
@@ -49,12 +71,12 @@ export const standardProducts: StandardProduct[] = [
     priceCents: STANDARD_EDITION_PRICE_CENTS,
     shirtIndex: 1,
     soldOutSizes: ["3XL"],
-    images: {
-      main: `${SHOP_ASSET}/dispatch-black-cross-print.png`,
-      thumbs: [`${SHOP_ASSET}/dispatch-black-shirt.png`, null],
-      mobileMain: `${SHOP_ASSET}/dispatch-black-shirt.png`,
-      card: `${SHOP_ASSET}/dispatch-black-shirt.png`,
-    },
+    images: shopImages("express_dispatch-black", {
+      thumbs: [
+        `${SHOP_ASSET}/product-express_dispatch-black_front-detail.jpg`,
+        `${SHOP_ASSET}/dispatch-black-cross-print.png`,
+      ],
+    }),
   },
   {
     id: "express-dispatch-white",
@@ -64,12 +86,7 @@ export const standardProducts: StandardProduct[] = [
     colourwayName: "dispatch white",
     priceCents: STANDARD_EDITION_PRICE_CENTS,
     shirtIndex: 2,
-    images: {
-      main: `${SHOP_ASSET}/dispatch-white-shirt.png`,
-      thumbs: [null, null],
-      mobileMain: `${SHOP_ASSET}/dispatch-white-shirt-mobile.png`,
-      card: `${SHOP_ASSET}/dispatch-white-shirt.png`,
-    },
+    images: shopImages("express_dispatch-white"),
   },
   {
     id: "halo-orbit-pink",
@@ -79,12 +96,7 @@ export const standardProducts: StandardProduct[] = [
     colourwayName: "orbit pink",
     priceCents: STANDARD_EDITION_PRICE_CENTS,
     shirtIndex: 3,
-    images: {
-      main: `${SHOP_ASSET}/orbit-pink-shirt.png`,
-      thumbs: [null, null],
-      mobileMain: `${SHOP_ASSET}/orbit-pink-shirt-mobile.png`,
-      card: `${SHOP_ASSET}/orbit-pink-shirt.png`,
-    },
+    images: shopImages("halo_orbit-pink"),
   },
   {
     id: "halo-orbit-black",
@@ -94,12 +106,7 @@ export const standardProducts: StandardProduct[] = [
     colourwayName: "orbit black",
     priceCents: STANDARD_EDITION_PRICE_CENTS,
     shirtIndex: 4,
-    images: {
-      main: `${SHOP_ASSET}/orbit-black-shirt.png`,
-      thumbs: [null, null],
-      mobileMain: `${SHOP_ASSET}/orbit-black-shirt-mobile.png`,
-      card: `${SHOP_ASSET}/orbit-black-shirt.png`,
-    },
+    images: shopImages("halo_orbit-black"),
   },
   {
     id: "halo-orbit-white",
@@ -109,68 +116,63 @@ export const standardProducts: StandardProduct[] = [
     colourwayName: "orbit white",
     priceCents: STANDARD_EDITION_PRICE_CENTS,
     shirtIndex: 5,
-    images: {
-      main: "",
-      thumbs: [null, null],
-      card: "",
-    },
+    // DRAFT: zip folder is "White tee - Black print"; the Figma card is a front + back composite we do not have.
+    images: shopImages("halo_orbit-white", { card: "front" }),
   },
   {
     id: "super-rush",
     slug: "product-super-rush",
+    // DRAFT: confirm with Marcus. Zip folder is "Rush"; SUPER family inferred from Figma.
     family: "super",
     shirtName: "PRODUCT SUPER",
     colourwayName: "rush",
     priceCents: STANDARD_EDITION_PRICE_CENTS,
     shirtIndex: 6,
-    images: {
-      main: "",
-      thumbs: [null, null],
-      card: "",
-    },
+    images: shopImages("super_rush", {
+      thumbs: [
+        `${SHOP_ASSET}/product-super_rush_front-detail.jpg`,
+        `${SHOP_ASSET}/product-super_rush_back.jpg`,
+      ],
+    }),
   },
   {
-    id: "super-speed",
-    slug: "product-super-speed",
+    id: "super-pulse",
+    slug: "product-super-pulse",
+    // DRAFT: confirm with Marcus. Zip folder is "Pulse" (replaces the old placeholder "speed");
+    // SUPER family inferred from Figma.
     family: "super",
     shirtName: "PRODUCT SUPER",
-    /** draft — VERIFY label against Figma copy deck (SUPER colourway #2). */
-    colourwayName: "speed",
+    colourwayName: "pulse",
     priceCents: STANDARD_EDITION_PRICE_CENTS,
     shirtIndex: 7,
-    images: {
-      main: "",
-      thumbs: [null, null],
-      card: "",
-    },
+    images: shopImages("super_pulse", {
+      thumbs: [
+        `${SHOP_ASSET}/product-super_pulse_front-detail.jpg`,
+        `${SHOP_ASSET}/product-super_pulse_back.jpg`,
+      ],
+    }),
   },
   {
     id: "daily-grey-department",
     slug: "product-daily-grey-department",
+    // DRAFT: confirm with Marcus. Zip folder is "Grey Department"; DAILY family inferred from Figma.
     family: "daily",
     shirtName: "PRODUCT DAILY",
     colourwayName: "grey department",
     priceCents: STANDARD_EDITION_PRICE_CENTS,
     shirtIndex: 8,
-    images: {
-      main: "",
-      thumbs: [null, null],
-      card: "",
-    },
+    images: shopImages("daily_grey-department", { card: "front" }),
   },
   {
     id: "daily-royal-department",
     slug: "product-daily-royal-department",
+    // DRAFT: confirm with Marcus. Zip folder is "Royal Department"; DAILY family inferred from Figma.
     family: "daily",
     shirtName: "PRODUCT DAILY",
     colourwayName: "royal department",
     priceCents: STANDARD_EDITION_PRICE_CENTS,
     shirtIndex: 9,
-    images: {
-      main: "",
-      thumbs: [null, null],
-      card: "",
-    },
+    images: shopImages("daily_royal-department", { card: "front" }),
   },
 ];
 
