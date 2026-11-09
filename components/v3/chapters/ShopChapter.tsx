@@ -1,103 +1,75 @@
-import Image from "next/image";
-import Link from "next/link";
 import { Reveal } from "@/components/v3/Reveal";
 import { CartCountLink } from "@/components/v4/cart/CartCountLink";
+import { ShopCard } from "@/components/v4/shop/ShopCard";
 import {
-  formatPrice,
   productFamilies,
-  productCardImage,
   standardProducts,
   STANDARD_EDITION_TOTAL,
   type ProductFamily,
-  type StandardProduct,
 } from "@/lib/v4/products";
 
+// Figma 21:277 order: EXPRESS x2, HALO x3, SUPER x2, DAILY x2 (one grid row per family).
 const FAMILIES: ProductFamily[] = ["express", "halo", "super", "daily"];
 
-function ShopTile({ product }: { product: StandardProduct }) {
-  const src = productCardImage(product);
-  const href = `/current?product=${product.slug}`;
-  return (
-    <article className="shop-card">
-      <Link
-        href={href}
-        className="shop-tile"
-        aria-label={`${product.shirtName.toLowerCase()} — ${product.colourwayName}`}
-      >
-        <div className="frame shop-tile__frame">
-          {src ? (
-            <Image
-              src={src}
-              alt={`${product.shirtName.toLowerCase()} in ${product.colourwayName}`}
-              fill
-              sizes="(max-width: 599px) 100vw, 33vw"
-            />
-          ) : (
-            <span className="shop-tile__fill voice">{product.colourwayName}</span>
-          )}
-        </div>
-      </Link>
-      <div className="shop-card__meta">
-        <span className="lbl">{product.shirtName.toLowerCase()}</span>
-        <span className="lbl lbl--clay">{product.colourwayName}</span>
-        <span className="lbl">{formatPrice(product.priceCents)}</span>
-      </div>
-      <Link className="shop-card__btn" href={href}>
-        view →
-      </Link>
-    </article>
-  );
-}
-
+// DRAFT: pricing, 3XL and range copy below stay draft until Marcus signs off.
 export function ShopChapter() {
   return (
-    <section id="shop" className="wrap pad shop" tabIndex={-1}>
-      <Reveal className="sect-head">
+    <section id="shop" className="wrap land-shop" tabIndex={-1}>
+      <Reveal className="land-shop__bar">
         <span className="lbl">[ 01 — shop ]</span>
-        <span className="lbl">
+        <span className="lbl lbl--clay">
           standard edition — {STANDARD_EDITION_TOTAL} shirts — drops 13.11
         </span>
       </Reveal>
-      <Reveal className="shop-intro">
-        <div className="shop-intro__head">
-          <h2 className="display shop-title voice">standard edition</h2>
-          <p className="body-copy voice">
-            a homage to streetwear and the y2k era. always open. drops 13.11.
-          </p>
-        </div>
-        <span className="lbl lbl--sand">[ the shirt ]</span>
-        <p className="lbl shop-spec">
-          adult unisex — crew neck — short sleeve — sizes s to 3xl
+
+      <Reveal className="land-shop__intro">
+        <h2 className="land-shop__title">standard edition</h2>
+        <p className="land-shop__lede">
+          nine shirts, 220gsm, 100% cotton. a homage to streetwear and the y2k
+          era. always open.
         </p>
       </Reveal>
 
-      {FAMILIES.map((family) => {
-        const items = standardProducts.filter((p) => p.family === family);
-        if (items.length === 0) return null;
-        return (
-          <div key={family} className="shop-row">
-            <Reveal className="sect-head shop-row__head">
-              <span className="lbl lbl--clay">
-                {productFamilies[family].title.toLowerCase()}
-              </span>
-              <span className="lbl">
-                {items.length} colourway{items.length === 1 ? "" : "s"}
-              </span>
-            </Reveal>
-            <Reveal className="shop-row__grid">
-              {items.map((product) => (
-                <ShopTile key={product.id} product={product} />
-              ))}
-            </Reveal>
-          </div>
-        );
-      })}
+      <Reveal className="land-shop__spec">
+        <span className="lbl">[ the shirt ]</span>
+        <p className="land-shop__spec-copy">
+          <span>adult unisex, crew neck, short sleeve.</span>
+          <span className="land-shop__sizes-note">sizes s to 3xl.</span>
+        </p>
+      </Reveal>
 
-      <Reveal className="shop-cta">
-        <p className="lbl shop-path">pick a size → add → pay.</p>
-        <div className="cta-row shop-path">
-          <CartCountLink />
+      <div className="land-families">
+        {FAMILIES.map((family) => {
+          const items = standardProducts.filter((p) => p.family === family);
+          if (items.length === 0) return null;
+          return (
+            <Reveal key={family}>
+              <div
+                className="land-family"
+                role="group"
+                aria-label={productFamilies[family].title.toLowerCase()}
+              >
+                {items.map((product) => (
+                  <ShopCard key={product.id} product={product} />
+                ))}
+              </div>
+            </Reveal>
+          );
+        })}
+      </div>
+
+      <Reveal className="land-close">
+        <div className="land-close__copy">
+          <p className="land-close__steps">
+            pick a size → add → pay. no account needed.
+          </p>
+          {/* DRAFT: delivery note copy mirrors the PDP notes until the Figma line is confirmed. */}
+          <p className="land-close__note">
+            item price excludes delivery. paxi economy R60 · speed R110 ·
+            door-to-door R120, chosen at checkout.
+          </p>
         </div>
+        <CartCountLink />
       </Reveal>
     </section>
   );

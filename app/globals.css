@@ -2520,21 +2520,6 @@ html[data-cs-short="1"]:has(.cs) .site-header::after {
   margin-top: clamp(32px, 6vw, 80px);
 }
 
-.shop-intro {
-  margin-top: clamp(24px, 4vw, 48px);
-  display: grid;
-  gap: 20px;
-}
-
-.shop-title {
-  font-size: clamp(28px, 6vw, 88px);
-  white-space: nowrap;
-}
-
-.shop-spec {
-  color: var(--stone);
-}
-
 .shop-row {
   margin-top: clamp(40px, 6vw, 88px);
 }
@@ -2557,52 +2542,6 @@ html[data-cs-short="1"]:has(.cs) .site-header::after {
 .shop-tile__frame img {
   object-fit: cover;
   background: var(--void);
-}
-
-.shop-card {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.shop-card__meta {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 8px 12px;
-}
-
-.shop-card__btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  align-self: flex-start;
-  min-height: 44px;
-  padding: 0 20px;
-  border-radius: 0;
-  background: var(--sand);
-  color: var(--void);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-}
-
-.shop-card__btn:hover {
-  background: var(--clay);
-  color: var(--sand);
-}
-
-.shop-intro__head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 16px 48px;
-}
-
-.shop-path {
-  margin-top: 16px;
 }
 
 .shop-tile__fill {
@@ -2630,10 +2569,6 @@ html[data-cs-short="1"]:has(.cs) .site-header::after {
   color: var(--clay);
 }
 
-.shop-cta {
-  margin-top: clamp(40px, 6vw, 88px);
-}
-
 @media (max-width: 599px) {
   .shop-row__grid {
     grid-template-columns: 1fr;
@@ -2645,6 +2580,400 @@ html[data-cs-short="1"]:has(.cs) .site-header::after {
     gap: 24px;
   }
 }
+/* ===== V4.1 landing / (Figma 21:277) ===== */
+:root {
+  --landing-mark-width: clamp(240px, 45.3vw, 653px);
+  --landing-gut: clamp(18px, 3.9vw, 56px);
+}
+
+/* text-link CTAs (no button containers) */
+.tlink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  border: 0;
+  border-bottom: 1px solid var(--line-strong);
+  background: none;
+  color: var(--sand);
+  cursor: pointer;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  transition:
+    color 0.3s var(--ease),
+    border-color 0.3s var(--ease);
+}
+
+.tlink--clay {
+  border-bottom-color: var(--clay);
+}
+
+.tlink:hover {
+  color: var(--clay);
+  border-bottom-color: var(--clay);
+}
+
+.tlink:focus-visible {
+  outline: 1px solid var(--clay);
+  outline-offset: 4px;
+}
+
+/* first viewport: the mark + CTAs, no dock spacer */
+.landing-hero {
+  position: relative;
+  z-index: 2;
+  width: min(100%, 1500px);
+  margin: 0 auto;
+  padding-inline: var(--landing-gut);
+}
+
+.landing-hero__body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100dvh;
+  padding-top: var(--header-height);
+  padding-bottom: clamp(24px, 6.4vh, 58px);
+}
+
+.landing-hero__stage {
+  position: relative;
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Glyph box of SWAG_mark_fill.svg (692 x 254 inside the 909 x 697 art) so the mark is sized by the visible glyph, as in Figma. */
+.landing-mark {
+  position: relative;
+  width: var(--landing-mark-width);
+  aspect-ratio: 692 / 254;
+  overflow: hidden;
+  color: var(--sand);
+}
+
+.landing-mark .wordmark {
+  width: 131.35%;
+  margin-left: -15.61%;
+  margin-top: -31.94%;
+  aspect-ratio: 909 / 697;
+  mask-size: 100% 100%;
+  -webkit-mask-size: 100% 100%;
+}
+
+.landing-hero__below {
+  position: absolute;
+  top: calc(50% + var(--landing-mark-width) * 0.1865 + clamp(28px, 4.1vw, 59px));
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(18px, 3.6vw, 36px);
+  text-align: center;
+}
+
+.landing-cta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px clamp(24px, 3.4vw, 40px);
+}
+
+.landing-hero__meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+/* shop */
+.land-shop {
+  --land-gap: 24px;
+  padding-top: clamp(64px, 6.2vw, 90px);
+  padding-bottom: clamp(48px, 5vw, 72px);
+  scroll-margin-top: var(--header-height);
+}
+
+.land-shop__bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px 24px;
+  flex-wrap: wrap;
+}
+
+.land-shop__intro {
+  display: grid;
+  grid-template-columns: 1fr minmax(0, 28.5rem);
+  align-items: end;
+  gap: 24px clamp(24px, 4vw, 64px);
+  margin-top: clamp(20px, 2.6vw, 36px);
+  padding-bottom: clamp(24px, 3vw, 44px);
+  border-bottom: 1px solid var(--line);
+}
+
+.land-shop__title {
+  font-size: clamp(40px, 7.64vw, 110px);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: -0.045em;
+  text-transform: lowercase;
+  white-space: nowrap;
+  color: var(--sand);
+}
+
+.land-shop__lede {
+  font-size: 14px;
+  line-height: 1.5;
+  text-transform: lowercase;
+  color: var(--body-muted);
+}
+
+.land-shop__spec {
+  display: grid;
+  grid-template-columns: 1fr minmax(0, 20rem);
+  gap: 12px clamp(24px, 4vw, 64px);
+  align-items: start;
+  margin-top: 20px;
+  margin-bottom: clamp(32px, 4.6vw, 64px);
+}
+
+.land-shop__spec-copy {
+  display: grid;
+  gap: 4px;
+  font-size: 14px;
+  line-height: 1.4;
+  text-transform: lowercase;
+  color: var(--body-muted);
+}
+
+.land-shop__sizes-note {
+  font-size: 11px;
+  color: var(--body-soft);
+}
+
+.land-families {
+  display: grid;
+  gap: clamp(36px, 2.9vw, 42px);
+}
+
+.land-family {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--land-gap);
+  align-items: start;
+}
+
+.land-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.land-card__media {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: #fff;
+}
+
+.land-card__media img {
+  object-fit: cover;
+}
+
+.land-card__missing {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  border: 1px dashed var(--stone);
+  background: var(--void);
+  text-align: center;
+  text-transform: none;
+}
+
+.land-card__meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin-top: 14px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sand);
+}
+
+.land-card__cw {
+  margin-top: 6px;
+  font-size: 12px;
+  text-transform: lowercase;
+  color: var(--body-soft);
+}
+
+.land-sizes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 14px;
+  margin-top: 12px;
+}
+
+.land-size {
+  min-width: 18px;
+  padding: 4px 0;
+  border: 0;
+  border-bottom: 1px solid transparent;
+  background: none;
+  color: var(--body-soft);
+  cursor: pointer;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition:
+    color 0.25s var(--ease),
+    border-color 0.25s var(--ease);
+}
+
+.land-size:hover:not(:disabled),
+.land-size[aria-pressed="true"] {
+  color: var(--sand);
+}
+
+.land-size[aria-pressed="true"] {
+  border-bottom-color: var(--clay);
+}
+
+.land-size:disabled {
+  cursor: not-allowed;
+  text-decoration: line-through;
+  opacity: 0.45;
+}
+
+.land-size:focus-visible,
+.land-atc:focus-visible {
+  outline: 1px solid var(--clay);
+  outline-offset: 3px;
+}
+
+.land-sizes[data-need="true"] .land-size:not(:disabled) {
+  color: var(--clay);
+}
+
+.land-atc {
+  align-self: flex-start;
+  margin-top: 10px;
+  padding: 4px 0;
+  border: 0;
+  background: none;
+  color: var(--sand);
+  cursor: pointer;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: color 0.25s var(--ease);
+}
+
+.land-atc:hover,
+.land-atc[data-state="need-size"] {
+  color: var(--clay);
+}
+
+.land-atc__label {
+  display: inline-block;
+  transform-origin: left center;
+  transition: transform var(--avatar-dur) var(--avatar-ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .land-atc:hover .land-atc__label {
+    transform: scale(1.06) translateY(-1px);
+  }
+}
+
+.land-close {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px 32px;
+  flex-wrap: wrap;
+  margin-top: clamp(40px, 4.4vw, 64px);
+  padding-top: clamp(20px, 2.4vw, 32px);
+  border-top: 1px solid var(--line);
+}
+
+.land-close__steps {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sand);
+}
+
+.land-close__note {
+  margin-top: 6px;
+  max-width: 62ch;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--body-soft);
+}
+
+@media (min-width: 600px) and (max-width: 899px) {
+  .land-family {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .land-shop__intro,
+  .land-shop__spec {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 599px) {
+  .land-family {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .land-families {
+    gap: 40px;
+  }
+
+  .land-shop__intro,
+  .land-shop__spec {
+    grid-template-columns: 1fr;
+  }
+
+  .land-shop__title {
+    white-space: normal;
+  }
+
+  .landing-hero__body {
+    padding-top: calc(var(--header-height) + 8px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .land-atc__label,
+  .tlink,
+  .land-size {
+    transition: none !important;
+    transform: none !important;
+  }
+}
+
 /* ===== V4.1 on V3 — product page (R3) ===== */
 .pdp-title {
   white-space: nowrap;

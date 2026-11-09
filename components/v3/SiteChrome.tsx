@@ -13,6 +13,7 @@ import {
   queueRouteScroll,
   restoreRouteScroll,
 } from "@/lib/home-scroll";
+import { comingSoonEnabled } from "@/lib/coming-soon";
 import { hashRoutes, normalizePath } from "@/lib/sections.config";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -80,7 +81,10 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
     router.replace(target, { scroll: false });
   }, [pathname, router]);
 
-  const mode = normalizePath(pathname) === "/" ? "hero" : "docked";
+  // Figma 21:277 landing: header mark is docked from first paint (the big mark is page content).
+  // Only the coming-soon poster still needs the hero flight.
+  const mode =
+    normalizePath(pathname) === "/" && comingSoonEnabled() ? "hero" : "docked";
 
   return (
     <main className="page-shell">

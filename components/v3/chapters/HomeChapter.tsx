@@ -11,6 +11,8 @@ import { home } from "@/lib/copy";
 import { clothesArtboards, editions } from "@/lib/editions";
 import { chapterById } from "@/lib/sections.config";
 import { ShopChapter } from "@/components/v3/chapters/ShopChapter";
+import { ShopAnchor } from "@/components/v3/ShopAnchor";
+import { Wordmark } from "@/components/ui/Wordmark";
 
 const homeChapter = chapterById("home");
 const currentPath = "/#shop";
@@ -81,35 +83,34 @@ export function HomeChapter({
         {comingSoon ? (
           <ComingSoonChapter id="home-intro" />
         ) : (
-          <div id="home-intro" className="home-intro" aria-hidden="true" />
-        )}
-        {/* Coming-soon poster replaces the old CROSS WITH SWAG hero. */}
-        {!comingSoon && (
-        <div className="section-inner">
-          <div id="home-hero" className="hero-content" tabIndex={-1}>
-            <div>
+          /* Figma 21:277: the mark sits in the first viewport; the header mark is already docked, so there is no #home-intro scroll spacer. */
+          <div className="landing-hero">
+            <div id="home-hero" className="landing-hero__body" tabIndex={-1}>
               <h1 className="sr-only">swag.</h1>
-              <div className="hero-top">
-                <span className="lbl lbl--sand">[ standard edition — drops 13.11 ]</span>
+              <div className="landing-hero__stage">
+                <div className="landing-mark" aria-hidden="true">
+                  <Wordmark />
+                </div>
+                <div className="landing-hero__below">
+                  <span className="lbl lbl--clay">
+                    standard edition — drops 13.11
+                  </span>
+                  <div className="landing-cta">
+                    <ShopAnchor className="tlink tlink--clay">
+                      shop the standard edition ↓
+                    </ShopAnchor>
+                    <Link className="tlink" href="/space">
+                      enter the site →
+                    </Link>
+                  </div>
+                </div>
+              </div>
+              <div className="landing-hero__meta">
                 <span className="lbl">{home.est}</span>
-              </div>
-            </div>
-
-            <div className="hero-bottom">
-              <div>
-                <span className="lbl lbl--clay">wearable editions + a space</span>
-              </div>
-              <div className="cta-row">
-                <Link className="btn btn--clay" href="#shop">
-                  shop the standard edition ↓
-                </Link>
-                <Link className="btn" href="/space">
-                  enter the site →
-                </Link>
+                <span className="lbl">wearable editions + a space</span>
               </div>
             </div>
           </div>
-        </div>
         )}
       </section>
       )}
