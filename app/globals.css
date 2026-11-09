@@ -3031,13 +3031,15 @@ html[data-cs-short="1"]:has(.cs) .site-header::after {
 }
 
 .pdp-crumb {
+  position: relative;
+  top: -5px;
   color: var(--ink);
 }
 
 .pdp-crumb ol {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px 10px;
+  gap: 4px 6px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -3045,7 +3047,7 @@ html[data-cs-short="1"]:has(.cs) .site-header::after {
 
 .pdp-crumb li + li::before {
   content: "/";
-  margin-right: 10px;
+  margin-right: 6px;
   color: var(--stone);
 }
 
@@ -3059,13 +3061,13 @@ html[data-cs-short="1"]:has(.cs) .site-header::after {
 /* Boxed badge: 1px Clay box, Clay text, tracked like the nav. */
 .pdp-badge {
   display: inline-block;
-  padding: 7px 9px;
+  padding: 7px;
   border: 1px solid var(--clay);
   color: var(--clay);
   font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.16em;
-  line-height: 1.2;
+  letter-spacing: 0.14em;
+  line-height: 16px;
   text-transform: uppercase;
   white-space: nowrap;
 }
@@ -3095,8 +3097,8 @@ html[data-cs-short="1"]:has(.cs) .site-header::after {
 .pdp-gallery__thumbs {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
-  margin-top: 14px;
+  gap: 18px;
+  margin-top: 18px;
 }
 
 .pdp-thumb {
@@ -3118,12 +3120,14 @@ html[data-cs-short="1"]:has(.cs) .site-header::after {
   padding: 6%;
 }
 
-.pdp-thumb--print {
-  background: var(--surface-page);
+/* Figma gallery tile: #141414 with the CROSS print bleeding to the edges. */
+.pdp-tile--print {
+  background: #141414;
+  border-color: #141414;
 }
 
-.pdp-thumb--print img {
-  padding: 12%;
+.pdp-tile--print img {
+  padding: 0;
 }
 
 .pdp-panel {
@@ -3149,6 +3153,7 @@ html[data-cs-short="1"]:has(.cs) .site-header::after {
 .pdp-colourway-name {
   margin-top: 25px;
   font-size: 20px;
+  letter-spacing: 0.04em;
   line-height: 1.2;
   color: var(--clay);
 }
@@ -3171,7 +3176,7 @@ html[data-cs-short="1"]:has(.cs) .site-header::after {
 .pdp-desc {
   margin-top: 29px;
   font-size: 16px;
-  line-height: 27px;
+  line-height: 32px;
   color: var(--stone);
 }
 
@@ -3230,12 +3235,12 @@ html[data-cs-short="1"]:has(.cs) .site-header::after {
 }
 
 .pdp-links {
-  gap: 0 30px;
+  gap: 0 40px;
 }
 
 .pdp-sizes {
-  gap: 0 20px;
-  margin-left: -10px;
+  gap: 0 16px;
+  margin-left: -8px;
 }
 
 .pdp-link,
@@ -3261,7 +3266,15 @@ html[data-cs-short="1"]:has(.cs) .site-header::after {
 }
 
 .pdp-size {
-  padding-inline: 10px;
+  padding-inline: 8px;
+}
+
+/* Colourway names read as plain lowercase words, not tracked caps. */
+.pdp-link {
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
 }
 
 .pdp-link:hover,
@@ -3291,7 +3304,7 @@ html[data-cs-short="1"]:has(.cs) .site-header::after {
 
 .pdp-atc {
   width: 100%;
-  min-height: 53px;
+  min-height: 57px;
   margin-top: 18px;
   justify-content: center;
   padding: 0 22px;
@@ -3307,7 +3320,7 @@ html[data-cs-short="1"]:has(.cs) .site-header::after {
 }
 
 .pdp-notes {
-  margin-top: 27px;
+  margin-top: 21px;
 }
 
 .pdp-notes p {
@@ -3320,20 +3333,18 @@ html[data-cs-short="1"]:has(.cs) .site-header::after {
 }
 
 .pdp-notes__body {
-  margin-top: 18px;
-  font-size: 12px;
-  line-height: 20px;
+  font-size: 13px;
+  line-height: 23px;
   color: var(--stone);
 }
 
 .pdp-notes__guest {
-  margin-top: 10px;
   font-weight: 700;
   color: var(--ink);
 }
 
 .pdp-related-head {
-  padding: 0 0 32px;
+  padding: 0 0 39px;
 }
 
 .pdp-related {
@@ -3346,12 +3357,33 @@ html[data-cs-short="1"]:has(.cs) .site-header::after {
 }
 
 #current .current-spec__title {
-  font-size: clamp(56px, 12.4vw, 178px);
+  font-size: clamp(56px, 13.4vw, 193px);
+  letter-spacing: -0.042em;
   line-height: 0.96;
 }
 
 #current .spec td {
   padding: 19px 0;
+}
+
+#current .spec td:first-child {
+  width: 40%;
+}
+
+@media (min-width: 900px) {
+  .pdp-make {
+    padding-top: 31px;
+    padding-bottom: 44px;
+  }
+  .pdp-make .current-spec > div:first-child {
+    margin-top: -10px;
+  }
+  #current .pdp-make .current-spec__title {
+    margin-top: 6px;
+  }
+  .pdp-director {
+    padding-top: 110px;
+  }
 }
 
 @media (max-width: 899px) {
@@ -3463,6 +3495,18 @@ html[data-cs-short="1"]:has(.cs) .site-header::after {
     background: var(--void);
     border-top: 1px solid var(--line);
     transition: opacity 0.25s var(--ease), visibility 0.25s;
+  }
+  .pdp-sticky__label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .pdp-sticky__atc {
+    flex: none;
+    min-width: 150px;
+    justify-content: center;
+    white-space: nowrap;
   }
   .pdp-sticky[data-hidden] {
     opacity: 0;

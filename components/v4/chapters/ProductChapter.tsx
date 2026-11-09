@@ -39,11 +39,16 @@ function pad(n: number): string {
 function galleryImages(product: StandardProduct): string[] {
   const main = galleryDesktopMain(product);
   const all = [
+    ...(product.images.printClose ? [product.images.printClose] : []),
     ...(main ? [main] : []),
     ...galleryDesktopThumbs(product),
     ...galleryMobileSlides(product),
   ];
   return Array.from(new Set(all));
+}
+
+function isPrint(src: string | undefined): boolean {
+  return Boolean(src && src.includes("print"));
 }
 
 function ProductGallery({ product }: { product: StandardProduct }) {
@@ -53,7 +58,9 @@ function ProductGallery({ product }: { product: StandardProduct }) {
 
   return (
     <div className="pdp-gallery">
-      <div className="frame pdp-gallery__main">
+      <div
+        className={`frame pdp-gallery__main${isPrint(active) ? " pdp-tile--print" : ""}`}
+      >
         {active ? (
           <Image
             src={active}
@@ -73,7 +80,7 @@ function ProductGallery({ product }: { product: StandardProduct }) {
             <button
               key={src}
               type="button"
-              className={src.includes("print") ? "pdp-thumb pdp-thumb--print" : "pdp-thumb"}
+              className={`pdp-thumb${isPrint(src) ? " pdp-tile--print" : ""}`}
               aria-label={`Show image ${i + 1} of ${images.length}`}
               onClick={() => setIndex(i)}
             >
@@ -134,8 +141,7 @@ function SoldOutNotify({ size }: { size: ProductSize }) {
   return (
     <div className="pdp-notify">
       <p className="body-copy voice">
-        {size.toLowerCase()} is sold out. leave your email and we will tell you
-        when it is back.
+        {productPage.notify.body(size.toLowerCase())}
       </p>
       <form
         className="pdp-notify__form"
@@ -149,13 +155,13 @@ function SoldOutNotify({ size }: { size: ProductSize }) {
         }}
       >
         <label className="sr-only" htmlFor="pdp-notify-email">
-          Email for restock notification
+          {productPage.notify.emailLabel}
         </label>
         <input
           id="pdp-notify-email"
           type="email"
           autoComplete="email"
-          placeholder="your email"
+          placeholder={productPage.notify.placeholder}
           value={email}
           onChange={(e) => {
             setEmail(e.target.value);
@@ -164,13 +170,13 @@ function SoldOutNotify({ size }: { size: ProductSize }) {
           className="pdp-notify__input"
         />
         <button type="submit" className="btn btn--clay">
-          notify me →
+          {productPage.notify.submit}
         </button>
       </form>
       {status === "sent" ? (
-        <p className="lbl lbl--clay">received — we will be in touch.</p>
+        <p className="lbl lbl--clay">{productPage.notify.sent}</p>
       ) : null}
-      {status === "invalid" ? <p className="lbl">enter a valid email.</p> : null}
+      {status === "invalid" ? <p className="lbl">{productPage.notify.invalid}</p> : null}
     </div>
   );
 }
@@ -205,13 +211,13 @@ function PurchasePanel({
   const atcLabel = !selectedSize
     ? productPage.selectSize
     : soldOut
-      ? `sold out in ${selectedSize}`
-      : "add to cart →";
+      ? productPage.soldOutIn(selectedSize)
+      : productPage.addToCart;
 
   return (
     <div className="pdp-panel">
       <span className="lbl pdp-kicker">
-        [ shirt {pad(product.shirtIndex)} of {pad(STANDARD_EDITION_TOTAL)} ]
+        {productPage.kicker(pad(product.shirtIndex), pad(STANDARD_EDITION_TOTAL))}
       </span>
       <h1 className="pdp-title voice">{product.shirtName.toLowerCase()}</h1>
       <p className="pdp-colourway-name voice">{product.colourwayName}</p>
@@ -296,8 +302,9 @@ function PurchasePanel({
 
       <div className="pdp-sticky" data-hidden={isStickyBarHidden(mainAtcInView) || undefined}>
         <span className="lbl pdp-sticky__label">
-          {formatPrice(product.priceCents)} · {product.colourwayName} ·{" "}
-          {selectedSize ?? productPage.pickSize}
+          {[formatPrice(product.priceCents), product.colourwayName, selectedSize]
+            .filter(Boolean)
+            .join(" · ")}
         </span>
         <button
           type="button"
@@ -355,7 +362,7 @@ export function ProductChapter() {
   if (!product) {
     return (
       <section className="wrap pad">
-        <p className="body-copy voice">product not found.</p>
+        <p className="body-copy voice">{productPage.notFound}</p>
       </section>
     );
   }
@@ -401,14 +408,14 @@ export function ProductChapter() {
         </Reveal>
       </section>
 
-      <section className="wrap pad-sm">
+      <section className="wrap pad-sm pdp-make">
         <Reveal className="feature current-spec">
           <div>
-            <span className="lbl">[ 03 — specification ]</span>
+            <span className="lbl">{productPage.make.label}</span>
             <h2 className="sect current-spec__title">
-              THE
+              {productPage.make.title[0]}
               <br />
-              MAKE.
+              {productPage.make.title[1]}
             </h2>
           </div>
           <table className="spec">
@@ -424,17 +431,14 @@ export function ProductChapter() {
         </Reveal>
       </section>
 
-      <section className="wrap pad">
+      <section className="wrap pad pdp-director">
         <Reveal className="sig current-sig">
-          <span className="lbl">[ a message from the director ]</span>
+          <span className="lbl">{productPage.director.label}</span>
           <div className="body-copy voice current-sig__copy">
-            <p>
-              [ director note — written per edition, signed. frozen on the
-              archive record once the edition closes. ]
-            </p>
+            <p>{productPage.director.note}</p>
           </div>
-          <div className="sig-name voice">— the.director</div>
-          <div className="sig-ed voice">standard edition</div>
+          <div className="sig-name voice">{productPage.director.name}</div>
+          <div className="sig-ed voice">{productPage.director.edition}</div>
         </Reveal>
       </section>
     </section>

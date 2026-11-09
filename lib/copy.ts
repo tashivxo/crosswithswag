@@ -123,15 +123,18 @@ export const landing = {
 
 export const productPage = {
   selectSize: "select a size",
-  pickSize: "pick a size",
   sizeHint: "choose a size to add this shirt to your cart.",
   soldOutSuffix: "sold out",
+  soldOutIn: (size: string) => `sold out in ${size}`,
+  addToCart: "add to cart →",
+  notFound: "product not found.",
+  kicker: (index: string, total: string) => `[ shirt ${index} of ${total} ]`,
   badge: "open year round",
   crumbAll: "all shirts",
   priceNote: "prices in zar — delivery extra",
   description:
-    "a homage to streetwear and the y2k era. printed to order, packed by hand.",
-  colourwayLabel: "[ colourway ]",
+    "a homage to streetwear and the y2k era. printed to order, packed\u00a0by\u00a0hand.",
+  colourwayLabel: "colourway",
   sizeLabel: "[ size ]",
   sizeGuide: "size guide →",
   notes: {
@@ -142,6 +145,25 @@ export const productPage = {
   },
   relatedLabel: "[ 02 — more from the standard edition ]",
   relatedAll: "all nine →",
+  notify: {
+    body: (size: string) =>
+      `${size} is sold out. leave your email and we will tell you when it is back.`,
+    emailLabel: "Email for restock notification",
+    placeholder: "your email",
+    submit: "notify me →",
+    sent: "received — we will be in touch.",
+    invalid: "enter a valid email.",
+  },
+  make: {
+    label: "[ 03 — specification ]",
+    title: ["THE", "MAKE."],
+  },
+  director: {
+    label: "[ a message from the director ]",
+    note: "[ director note — written per edition, signed. frozen on the archive record once the edition closes. ]",
+    name: "— the.director",
+    edition: "standard edition",
+  },
 };
 
 export const current = {

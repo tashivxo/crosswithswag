@@ -12,6 +12,8 @@ export type ProductImages = {
   thumbs: [string | null, string | null];
   mobileMain?: string;
   card: string;
+  /** Print close-up shown first on the PDP (Figma black tile). Only dispatch black has one. */
+  printClose?: string;
 };
 
 export type StandardProduct = {
@@ -73,12 +75,10 @@ export const standardProducts: StandardProduct[] = [
     priceCents: STANDARD_EDITION_PRICE_CENTS,
     shirtIndex: 1,
     soldOutSizes: ["3XL"],
-    images: shopImages("express_dispatch-black", {
-      thumbs: [
-        `${SHOP_ASSET}/product-express_dispatch-black_front-detail.jpg`,
-        `${SHOP_ASSET}/dispatch-black-cross-print.png`,
-      ],
-    }),
+    images: {
+      ...shopImages("express_dispatch-black"),
+      printClose: `${SHOP_ASSET}/dispatch-black-cross-print.png`,
+    },
   },
   {
     id: "express-dispatch-white",
