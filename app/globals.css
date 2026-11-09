@@ -3146,7 +3146,16 @@ html[data-cs-short="1"]:has(.cs) .site-header::after {
     position: static;
     padding-bottom: 88px;
   }
+  :root {
+    --pdp-sticky-h: 72px;
+  }
+  /* The fixed ADD TO CART bar must never cover the footer legal line. */
+  body:has(.pdp-sticky) .site-footer {
+    padding-bottom: calc(36px + var(--pdp-sticky-h) + env(safe-area-inset-bottom, 0px));
+  }
   .pdp-sticky {
+    box-sizing: border-box;
+    height: calc(var(--pdp-sticky-h) + env(safe-area-inset-bottom, 0px));
     position: fixed;
     left: 0;
     right: 0;
@@ -3157,6 +3166,7 @@ html[data-cs-short="1"]:has(.cs) .site-header::after {
     justify-content: space-between;
     gap: 12px;
     padding: 12px var(--gut);
+    padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
     background: var(--void);
     border-top: 1px solid var(--line);
   }

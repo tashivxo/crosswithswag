@@ -410,7 +410,8 @@ export function SiteHeader({
           onMouseLeave={() => setMenuShifts(groupRef.current, null, "out")}
         >
           {navItems.map((item, index) => {
-            const isCurrent = !item.external && item.href === currentPath;
+            const isCurrent =
+              !item.external && isDesktopNavCurrent(item, currentPath);
 
             return (
               <div
@@ -429,7 +430,8 @@ export function SiteHeader({
                   {item.action === "cart" ? (
                     <button
                       type="button"
-                      className="mi"
+                      className={isCurrent ? "mi mi--current" : "mi"}
+                      aria-current={isCurrent ? "page" : undefined}
                       tabIndex={menuOpen ? 0 : -1}
                       onClick={() => {
                         document.body.classList.remove("locked");
