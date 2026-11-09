@@ -7,9 +7,11 @@ export function SiteFooter() {
     <footer className="wrap site-footer">
       <div className="foot">
         <div>
-          <Wordmark className="wordmark--footer" />
+          <div className="foot-mark">
+            <Wordmark />
+          </div>
           {footer.tagline ? (
-            <p className="lbl foot-tagline">{footer.tagline}</p>
+            <p className="foot-tagline">{footer.tagline}</p>
           ) : null}
           <a
             className="foot-handle"

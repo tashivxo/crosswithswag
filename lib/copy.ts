@@ -298,8 +298,8 @@ export const playlistsPage = {
 };
 
 export const footer = {
-  /** V4 Figma footer: wordmark + @handle only (no separate tagline under mark). */
-  tagline: "",
+  /** Figma 21:23 footer: tagline sits under the mark. */
+  tagline: "CROSS WITH SWAG",
   handle: { label: site.handle, href: site.instagramUrl },
   editions: [
     { label: "shop — standard edition", href: "/#shop" },

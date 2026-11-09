@@ -1043,13 +1043,33 @@ button:focus-visible {
   -webkit-mask: url("/assets/SWAG_mark_fill.svg") center / contain no-repeat;
 }
 
-.wordmark--footer {
-  width: clamp(160px, 22vw, 280px);
+/* Footer mark sized by its visible glyph box (same crop as .landing-mark): about 443px at 1440 (Figma 21:23). */
+.foot-mark {
+  position: relative;
+  width: clamp(220px, 30.8vw, 443px);
+  aspect-ratio: 692 / 254;
+  overflow: hidden;
   color: var(--sand);
 }
 
+.foot-mark .wordmark {
+  width: 131.35%;
+  margin-left: -15.61%;
+  margin-top: -31.94%;
+  aspect-ratio: 909 / 697;
+  mask-size: 100% 100%;
+  -webkit-mask-size: 100% 100%;
+}
+
+/* Figma: bold caps under the mark, indented from the mark's left edge, same colour as the mark. */
 .foot-tagline {
-  margin-top: 16px;
+  margin: 14px 0 0 clamp(26px, 3.75vw, 54px);
+  font-size: clamp(11px, 1.32vw, 19px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--sand);
 }
 
 .foot a.foot-handle {
