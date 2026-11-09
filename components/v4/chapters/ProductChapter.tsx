@@ -3,10 +3,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Reveal } from "@/components/v3/Reveal";
 import { productPage } from "@/lib/copy";
 import { useCart } from "@/lib/v4/cart/CartProvider";
+import { INITIAL_SIZE, pdpPath, stripSizeParam } from "@/lib/v4/pdp-url";
 import {
   STANDARD_EDITION_TOTAL,
   colourwaySiblings,
@@ -329,7 +330,15 @@ export function ProductChapter() {
   const urlSlug = params.get("product") ?? DEFAULT_SLUG;
   const [slug, setSlug] = useState(urlSlug);
   const [seenUrlSlug, setSeenUrlSlug] = useState(urlSlug);
-  const [selectedSize, setSelectedSize] = useState<ProductSize | null>("M");
+  const [selectedSize, setSelectedSize] = useState<ProductSize | null>(INITIAL_SIZE);
+
+  // Shared URLs carry the colourway only: never read a size, and drop one if a link brought it.
+  useEffect(() => {
+    const { pathname, search, hash } = window.location;
+    const cleaned = stripSizeParam(search);
+    if (cleaned === null) return;
+    window.history.replaceState(window.history.state, "", `${pathname}${cleaned}${hash}`);
+  }, [params]);
 
   // Back/forward, shared links and shop-card links change the URL: follow it.
   if (urlSlug !== seenUrlSlug) {
@@ -350,7 +359,7 @@ export function ProductChapter() {
     window.history.replaceState(
       window.history.state,
       "",
-      `${pathname}?product=${nextSlug}${hash}`,
+      pdpPath(pathname, nextSlug, hash),
     );
   };
 
