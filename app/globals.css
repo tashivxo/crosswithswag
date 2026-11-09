@@ -13,6 +13,7 @@
   --surface-tile: #ffffff;
   --ink-line: rgba(45, 45, 45, 0.14);
   --ink-line-strong: rgba(45, 45, 45, 0.28);
+  --tile-edge: rgba(45, 45, 45, 0.08);
   --line: rgba(214, 209, 196, 0.14);
   --line-strong: rgba(214, 209, 196, 0.28);
   --raise: rgba(214, 209, 196, 0.035);
@@ -3586,6 +3587,11 @@ html:has(.page-shell[data-surface="cream"]) .cart-drawer__scrim {
   background: rgba(45, 45, 45, 0.72);
 }
 
+/* White tiles are 1.11:1 against cream; Figma has no hairline, so this edge is a QA addition. */
+.page-shell[data-surface="cream"] .land-card__media {
+  border: 1px solid var(--tile-edge);
+}
+
 /* Production dark tokens for the mobile overlay MENU (unchanged). */
 .page-shell[data-surface="cream"] #menu {
   --void: #0a0a0a;
@@ -3600,7 +3606,7 @@ html:has(.page-shell[data-surface="cream"]) .cart-drawer__scrim {
   color: var(--sand);
 }
 
-/* Header chrome: Stone links, the current page in Clay text with no underline (Figma). */
+/* Header chrome: Stone links, the current page in Clay text (underline comes from the base rule). */
 .page-shell[data-surface="cream"] .site-header::after {
   background: var(--line);
 }
@@ -3619,8 +3625,15 @@ html:has(.page-shell[data-surface="cream"]) .cart-drawer__scrim {
   color: var(--clay);
 }
 
-.page-shell[data-surface="cream"] .site-nav__link[aria-current="page"] .nav-label {
-  text-decoration: none;
+/* Hover on a non-current link: 1px Stone underline at a 4px offset, like the colourway links. */
+.page-shell[data-surface="cream"]
+  .site-nav__link:not([aria-current="page"]):hover
+  .nav-label {
+  text-decoration-line: underline;
+  text-decoration-style: solid;
+  text-decoration-color: var(--stone);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
 }
 
 /* Footer text follows Figma: Stone headings, ink links and legal line. */
