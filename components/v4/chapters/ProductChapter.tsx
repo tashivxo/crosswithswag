@@ -3,12 +3,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Reveal } from "@/components/v3/Reveal";
 import { productPage } from "@/lib/copy";
 import { ShopCard } from "@/components/v4/shop/ShopCard";
 import { useCart } from "@/lib/v4/cart/CartProvider";
 import { INITIAL_SIZE, pdpPath, stripSizeParam } from "@/lib/v4/pdp-url";
+import { isStickyBarHidden } from "@/lib/v4/pdp-sticky";
 import {
   STANDARD_EDITION_TOTAL,
   colourwaySiblings,
@@ -72,7 +73,7 @@ function ProductGallery({ product }: { product: StandardProduct }) {
             <button
               key={src}
               type="button"
-              className="pdp-thumb"
+              className={src.includes("print") ? "pdp-thumb pdp-thumb--print" : "pdp-thumb"}
               aria-label={`Show image ${i + 1} of ${images.length}`}
               onClick={() => setIndex(i)}
             >
@@ -186,6 +187,15 @@ function PurchasePanel({
   onSelectColourway: (slug: string) => void;
 }) {
   const { addLine } = useCart();
+  const mainAtcRef = useRef<HTMLButtonElement>(null);
+  const [mainAtcInView, setMainAtcInView] = useState<boolean | null>(null);
+  useEffect(() => {
+    const el = mainAtcRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+    const io = new IntersectionObserver(([entry]) => setMainAtcInView(entry.isIntersecting));
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
   const allColourways = [product, ...colourwaySiblings(product)].sort((a, b) =>
     a.colourwayName.localeCompare(b.colourwayName),
   );
@@ -268,6 +278,7 @@ function PurchasePanel({
 
       <button
         type="button"
+        ref={mainAtcRef}
         className="btn btn--clay pdp-atc"
         disabled={soldOut}
         aria-disabled={needsSize || undefined}
@@ -283,7 +294,7 @@ function PurchasePanel({
         <p className="lbl pdp-notes__guest">{productPage.notes.guest}</p>
       </div>
 
-      <div className="pdp-sticky">
+      <div className="pdp-sticky" data-hidden={isStickyBarHidden(mainAtcInView) || undefined}>
         <span className="lbl pdp-sticky__label">
           {formatPrice(product.priceCents)} · {product.colourwayName} ·{" "}
           {selectedSize ?? productPage.pickSize}

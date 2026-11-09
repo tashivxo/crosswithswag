@@ -869,7 +869,8 @@ button:focus-visible {
   border-bottom: 1px solid var(--line);
 }
 
-#menu .mi--current {
+#menu .mi--current,
+#menu button.mi--current {
   color: var(--clay);
 }
 
@@ -3117,6 +3118,14 @@ html[data-cs-short="1"]:has(.cs) .site-header::after {
   padding: 6%;
 }
 
+.pdp-thumb--print {
+  background: var(--surface-page);
+}
+
+.pdp-thumb--print img {
+  padding: 12%;
+}
+
 .pdp-panel {
   display: flex;
   flex-direction: column;
@@ -3453,6 +3462,20 @@ html[data-cs-short="1"]:has(.cs) .site-header::after {
     padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
     background: var(--void);
     border-top: 1px solid var(--line);
+    transition: opacity 0.25s var(--ease), visibility 0.25s;
+  }
+  .pdp-sticky[data-hidden] {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+  html:has(.pdp-sticky) {
+    scroll-padding-bottom: calc(var(--pdp-sticky-h) + env(safe-area-inset-bottom, 0px));
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pdp-sticky {
+      transition: none;
+    }
   }
 }
 /* ===== V4.1 on V3 — cart, drawer, checkout (R4) ===== */
