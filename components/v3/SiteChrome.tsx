@@ -14,7 +14,11 @@ import {
   restoreRouteScroll,
 } from "@/lib/home-scroll";
 import { comingSoonEnabled } from "@/lib/coming-soon";
-import { hashRoutes, normalizePath } from "@/lib/sections.config";
+import {
+  hashRoutes,
+  isCreamSurface,
+  normalizePath,
+} from "@/lib/sections.config";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -86,8 +90,12 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
   const mode =
     normalizePath(pathname) === "/" && comingSoonEnabled() ? "hero" : "docked";
 
+  // The coming-soon poster on / is its own dark composition.
+  const surface =
+    isCreamSurface(pathname) && mode !== "hero" ? "cream" : "dark";
+
   return (
-    <main className="page-shell">
+    <main className="page-shell" data-surface={surface}>
       <a href="#content" className="skip-link">
         skip to content
       </a>

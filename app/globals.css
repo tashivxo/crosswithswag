@@ -7,6 +7,12 @@
   --sand: #d6d1c4;
   --studio-white: #f5f3e7;
   --studio-gray: #2d2d2d;
+  /* Cream surface (Figma 21:277 / 21:23). --studio-white and --studio-gray are the page and ink values. */
+  --surface-page: var(--studio-white);
+  --ink: var(--studio-gray);
+  --surface-tile: #ffffff;
+  --ink-line: rgba(45, 45, 45, 0.14);
+  --ink-line-strong: rgba(45, 45, 45, 0.28);
   --line: rgba(214, 209, 196, 0.14);
   --line-strong: rgba(214, 209, 196, 0.28);
   --raise: rgba(214, 209, 196, 0.035);
@@ -2611,14 +2617,13 @@ html[data-cs-short="1"]:has(.cs) .site-header::after {
   --landing-gut: clamp(18px, 3.9vw, 56px);
 }
 
-/* text-link CTAs (no button containers) */
+/* Landing CTAs: thin outlined boxes (Figma 21:277 overrides the text-link-only rule). */
 .tlink {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 6px 0;
-  border: 0;
-  border-bottom: 1px solid var(--line-strong);
+  padding: 18px 26px;
+  border: 1px solid var(--clay);
   background: none;
   color: var(--sand);
   cursor: pointer;
@@ -2626,24 +2631,34 @@ html[data-cs-short="1"]:has(.cs) .site-header::after {
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.16em;
+  line-height: 1;
   text-transform: uppercase;
+  transform-origin: center;
   transition:
     color 0.3s var(--ease),
-    border-color 0.3s var(--ease);
+    transform var(--avatar-dur) var(--avatar-ease-out);
 }
 
-.tlink--clay {
-  border-bottom-color: var(--clay);
+@media (hover: hover) and (pointer: fine) {
+  .tlink:hover {
+    transform: scale(1.04) translateY(-2px);
+  }
 }
 
 .tlink:hover {
   color: var(--clay);
-  border-bottom-color: var(--clay);
 }
 
 .tlink:focus-visible {
   outline: 1px solid var(--clay);
   outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tlink {
+    transition: none;
+    transform: none !important;
+  }
 }
 
 /* first viewport: the mark + CTAs, no dock spacer */
@@ -2692,21 +2707,25 @@ html[data-cs-short="1"]:has(.cs) .site-header::after {
 
 .landing-hero__below {
   position: absolute;
-  top: calc(50% + var(--landing-mark-width) * 0.1865 + clamp(28px, 4.1vw, 59px));
+  top: calc(50% + var(--landing-mark-width) * 0.1865 + clamp(24px, 3.3vw, 47px));
   left: 0;
   right: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(18px, 3.6vw, 36px);
+  gap: 24px;
   text-align: center;
+}
+
+.landing-hero__below .lbl {
+  line-height: 1.2;
 }
 
 .landing-cta {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 12px clamp(24px, 3.4vw, 40px);
+  gap: 12px 14px;
 }
 
 .landing-hero__meta {
@@ -2805,7 +2824,7 @@ html[data-cs-short="1"]:has(.cs) .site-header::after {
   display: block;
   aspect-ratio: 4 / 5;
   overflow: hidden;
-  background: #fff;
+  background: var(--surface-tile);
 }
 
 .land-card__media img {
@@ -3526,4 +3545,92 @@ html[data-cs-short="1"]:has(.cs) .site-header::after {
   .cart-title {
     white-space: normal;
   }
+}
+
+/* ===== Cream surface scope (Figma 21:277 / 21:23) =====
+   Set on <main> by SiteChrome for routes in creamSurfaceRoutes. The Void/Sand tokens are remapped to
+   cream/ink inside the scope, so existing rules follow without per-component edits. The cart drawer
+   lives outside <main>, so it follows the route via :has(). The mobile overlay MENU is re-pinned to
+   the production dark tokens below. */
+.page-shell[data-surface="cream"],
+html:has(.page-shell[data-surface="cream"]) .cart-drawer {
+  --void: var(--surface-page);
+  --sand: var(--ink);
+  --line: var(--ink-line);
+  --line-strong: var(--ink-line-strong);
+  --raise: rgba(45, 45, 45, 0.035);
+  --body-muted: var(--stone);
+  --body-soft: var(--stone);
+  --body-strong: var(--ink);
+  --lbl: var(--stone);
+}
+
+.page-shell[data-surface="cream"] {
+  background: var(--surface-page);
+  color: var(--ink);
+}
+
+/* No black behind overscroll, Lenis, the preloader fade or view transitions. */
+html:has(.page-shell[data-surface="cream"]),
+html:has(.page-shell[data-surface="cream"]) body {
+  background: var(--surface-page);
+}
+
+html:has(.page-shell[data-surface="cream"]) ::selection {
+  background: var(--clay);
+  color: var(--surface-page);
+}
+
+html:has(.page-shell[data-surface="cream"]) .cart-drawer__scrim {
+  background: rgba(45, 45, 45, 0.72);
+}
+
+/* Production dark tokens for the mobile overlay MENU (unchanged). */
+.page-shell[data-surface="cream"] #menu {
+  --void: #0a0a0a;
+  --sand: #d6d1c4;
+  --line: rgba(214, 209, 196, 0.14);
+  --line-strong: rgba(214, 209, 196, 0.28);
+  --raise: rgba(214, 209, 196, 0.035);
+  --body-muted: rgba(214, 209, 196, 0.74);
+  --body-soft: rgba(214, 209, 196, 0.6);
+  --body-strong: rgba(214, 209, 196, 0.82);
+  --lbl: rgba(214, 209, 196, 0.74);
+  color: var(--sand);
+}
+
+/* Header chrome: Stone links, the current page in Clay text with no underline (Figma). */
+.page-shell[data-surface="cream"] .site-header::after {
+  background: var(--line);
+}
+
+.page-shell[data-surface="cream"] .site-nav__link,
+.page-shell[data-surface="cream"] .site-header__cart,
+.page-shell[data-surface="cream"] .site-header__menu-btn {
+  color: var(--stone);
+}
+
+.page-shell[data-surface="cream"] .site-nav__link:hover {
+  color: var(--ink);
+}
+
+.page-shell[data-surface="cream"] .site-nav__link[aria-current="page"] {
+  color: var(--clay);
+}
+
+.page-shell[data-surface="cream"] .site-nav__link[aria-current="page"] .nav-label {
+  text-decoration: none;
+}
+
+/* Footer text follows Figma: Stone headings, ink links and legal line. */
+.page-shell[data-surface="cream"] .foot a {
+  color: var(--ink);
+}
+
+.page-shell[data-surface="cream"] .foot a:hover {
+  color: var(--clay);
+}
+
+.page-shell[data-surface="cream"] .foot-base span {
+  color: var(--ink);
 }

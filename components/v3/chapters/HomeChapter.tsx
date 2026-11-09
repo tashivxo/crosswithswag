@@ -74,10 +74,12 @@ export function HomeChapter({
         id="home"
         className="chapter section-shell hero-section"
         style={
-          {
-            "--section-bg": homeChapter.background,
-            "--section-fg": homeChapter.foreground,
-          } as CSSProperties
+          comingSoon
+            ? ({
+                "--section-bg": homeChapter.background,
+                "--section-fg": homeChapter.foreground,
+              } as CSSProperties)
+            : undefined
         }
       >
         {comingSoon ? (
