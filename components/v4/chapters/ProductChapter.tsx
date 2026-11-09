@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 import { Reveal } from "@/components/v3/Reveal";
+import { productPage } from "@/lib/copy";
 import { useCart } from "@/lib/v4/cart/CartProvider";
 import {
   STANDARD_EDITION_TOTAL,
@@ -26,6 +27,7 @@ import {
 
 const SIZES: ProductSize[] = ["S", "M", "L", "XL", "2XL", "3XL"];
 const DEFAULT_SLUG = "product-express-dispatch-black";
+const SIZE_HINT_ID = "pdp-size-hint";
 
 function pad(n: number): string {
   return String(n).padStart(2, "0");
@@ -181,9 +183,10 @@ function PurchasePanel({
     a.colourwayName.localeCompare(b.colourwayName),
   );
   const soldOut = selectedSize ? isSizeSoldOut(product, selectedSize) : false;
+  const needsSize = selectedSize === null;
   const canAdd = selectedSize !== null && !soldOut;
   const atcLabel = !selectedSize
-    ? "select a size"
+    ? productPage.selectSize
     : soldOut
       ? `sold out in ${selectedSize}`
       : "add to cart →";
@@ -242,12 +245,20 @@ function PurchasePanel({
 
       {soldOut && selectedSize ? <SoldOutNotify size={selectedSize} /> : null}
 
+      {needsSize ? (
+        <span id={SIZE_HINT_ID} className="sr-only">
+          {productPage.sizeHint}
+        </span>
+      ) : null}
+
       <div className="cta-row">
         <button
           type="button"
           className="btn btn--clay pdp-atc"
-          disabled={!canAdd}
-          onClick={() => selectedSize && addLine(product, selectedSize)}
+          disabled={soldOut}
+          aria-disabled={needsSize || undefined}
+          aria-describedby={needsSize ? SIZE_HINT_ID : undefined}
+          onClick={() => canAdd && selectedSize && addLine(product, selectedSize)}
         >
           {atcLabel}
         </button>
@@ -265,13 +276,15 @@ function PurchasePanel({
       <div className="pdp-sticky">
         <span className="lbl lbl--sand">
           {formatPrice(product.priceCents)} · {product.colourwayName} ·{" "}
-          {selectedSize ?? "pick a size"}
+          {selectedSize ?? productPage.pickSize}
         </span>
         <button
           type="button"
           className="btn btn--clay"
-          disabled={!canAdd}
-          onClick={() => selectedSize && addLine(product, selectedSize)}
+          disabled={soldOut}
+          aria-disabled={needsSize || undefined}
+          aria-describedby={needsSize ? SIZE_HINT_ID : undefined}
+          onClick={() => canAdd && selectedSize && addLine(product, selectedSize)}
         >
           {atcLabel}
         </button>

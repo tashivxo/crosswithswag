@@ -1,4 +1,5 @@
 import { Reveal } from "@/components/v3/Reveal";
+import { landing } from "@/lib/copy";
 import { CartCountLink } from "@/components/v4/cart/CartCountLink";
 import { ShopCard } from "@/components/v4/shop/ShopCard";
 import {
@@ -16,25 +17,22 @@ export function ShopChapter() {
   return (
     <section id="shop" className="wrap land-shop" tabIndex={-1}>
       <Reveal className="land-shop__bar">
-        <span className="lbl">[ 01 — shop ]</span>
+        <span className="lbl">{landing.shop.barLabel}</span>
         <span className="lbl lbl--clay">
-          standard edition — {STANDARD_EDITION_TOTAL} shirts — drops 13.11
+          {landing.shop.barStatus(STANDARD_EDITION_TOTAL)}
         </span>
       </Reveal>
 
       <Reveal className="land-shop__intro">
-        <h2 className="land-shop__title">standard edition</h2>
-        <p className="land-shop__lede">
-          nine shirts, 220gsm, 100% cotton. a homage to streetwear and the y2k
-          era. always open.
-        </p>
+        <h2 className="land-shop__title">{landing.shop.title}</h2>
+        <p className="land-shop__lede">{landing.shop.lede}</p>
       </Reveal>
 
       <Reveal className="land-shop__spec">
-        <span className="lbl">[ the shirt ]</span>
+        <span className="lbl">{landing.shop.specLabel}</span>
         <p className="land-shop__spec-copy">
-          <span>adult unisex, crew neck, short sleeve.</span>
-          <span className="land-shop__sizes-note">sizes s to 3xl.</span>
+          <span>{landing.shop.specCopy}</span>
+          <span className="land-shop__sizes-note">{landing.shop.sizesNote}</span>
         </p>
       </Reveal>
 
@@ -60,14 +58,9 @@ export function ShopChapter() {
 
       <Reveal className="land-close">
         <div className="land-close__copy">
-          <p className="land-close__steps">
-            pick a size → add → pay. no account needed.
-          </p>
+          <p className="land-close__steps">{landing.shop.steps}</p>
           {/* DRAFT: delivery note copy mirrors the PDP notes until the Figma line is confirmed. */}
-          <p className="land-close__note">
-            item price excludes delivery. paxi economy R60 · speed R110 ·
-            door-to-door R120, chosen at checkout.
-          </p>
+          <p className="land-close__note">{landing.shop.deliveryNote}</p>
         </div>
         <CartCountLink />
       </Reveal>

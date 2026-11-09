@@ -3117,7 +3117,7 @@ html[data-cs-short="1"]:has(.cs) .site-header::after {
 }
 
 .pdp-link:hover {
-  text-decoration-color: var(--stone);
+  text-decoration-color: var(--sand);
 }
 
 .pdp-link[aria-pressed="true"] {
@@ -3170,6 +3170,17 @@ html[data-cs-short="1"]:has(.cs) .site-header::after {
 .btn:disabled {
   opacity: 0.4;
   cursor: not-allowed;
+}
+
+/* Needs-a-size state: stays focusable and fully legible (Sand, no fade); the click is blocked in the handler. */
+.btn[aria-disabled="true"] {
+  cursor: not-allowed;
+}
+
+.btn[aria-disabled="true"]:hover {
+  background: transparent;
+  color: var(--sand);
+  border-color: var(--clay);
 }
 
 .pdp-notes {

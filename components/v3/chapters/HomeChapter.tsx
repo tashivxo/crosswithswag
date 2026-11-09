@@ -7,7 +7,7 @@ import { CampaignFrame, ImageGrid } from "@/components/v3/ImageGrid";
 import { EditionRow } from "@/components/v3/EditionRow";
 import { ComingSoonChapter } from "@/components/v3/chapters/ComingSoonChapter";
 import { comingSoonEnabled } from "@/lib/coming-soon";
-import { home } from "@/lib/copy";
+import { home, landing } from "@/lib/copy";
 import { clothesArtboards, editions } from "@/lib/editions";
 import { chapterById } from "@/lib/sections.config";
 import { ShopChapter } from "@/components/v3/chapters/ShopChapter";
@@ -86,28 +86,28 @@ export function HomeChapter({
           /* Figma 21:277: the mark sits in the first viewport; the header mark is already docked, so there is no #home-intro scroll spacer. */
           <div className="landing-hero">
             <div id="home-hero" className="landing-hero__body" tabIndex={-1}>
-              <h1 className="sr-only">swag.</h1>
+              <h1 className="sr-only">{landing.hero.srTitle}</h1>
               <div className="landing-hero__stage">
                 <div className="landing-mark" aria-hidden="true">
                   <Wordmark />
                 </div>
                 <div className="landing-hero__below">
                   <span className="lbl lbl--clay">
-                    standard edition — drops 13.11
+                    {landing.hero.standardLabel}
                   </span>
                   <div className="landing-cta">
                     <ShopAnchor className="tlink tlink--clay">
-                      shop the standard edition ↓
+                      {landing.hero.shopCta}
                     </ShopAnchor>
                     <Link className="tlink" href="/space">
-                      enter the site →
+                      {landing.hero.enterCta}
                     </Link>
                   </div>
                 </div>
               </div>
               <div className="landing-hero__meta">
                 <span className="lbl">{home.est}</span>
-                <span className="lbl">wearable editions + a space</span>
+                <span className="lbl">{landing.hero.meta}</span>
               </div>
             </div>
           </div>

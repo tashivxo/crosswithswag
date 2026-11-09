@@ -98,6 +98,35 @@ export const home = {
   },
 };
 
+export const landing = {
+  hero: {
+    srTitle: "swag.",
+    standardLabel: "standard edition — drops 13.11",
+    shopCta: "shop the standard edition ↓",
+    enterCta: "enter the site →",
+    meta: "wearable editions + a space",
+  },
+  shop: {
+    barLabel: "[ 01 — shop ]",
+    barStatus: (total: number) =>
+      `standard edition — ${total} shirts — drops 13.11`,
+    title: "standard edition",
+    lede: "nine shirts, 220gsm, 100% cotton. a homage to streetwear and the y2k era. always open.",
+    specLabel: "[ the shirt ]",
+    specCopy: "adult unisex, crew neck, short sleeve.",
+    sizesNote: "sizes s to 3xl.",
+    steps: "pick a size → add → pay. no account needed.",
+    deliveryNote:
+      "item price excludes delivery. paxi economy R60 · speed R110 · door-to-door R120, chosen at checkout.",
+  },
+};
+
+export const productPage = {
+  selectSize: "select a size",
+  pickSize: "pick a size",
+  sizeHint: "choose a size to add this shirt to your cart.",
+};
+
 export const current = {
   editionLabel: "[ edition 001 ]",
   title: "kloofstreetnights",
