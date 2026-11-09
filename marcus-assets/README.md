@@ -7,6 +7,7 @@ Figma / export masters for `swag.` — **not** served by Next.js.
 | `svg/` | Clean wordmark / frame SVGs from Marcus |
 | `winter-drop/` | kloofstreetnights campaign stills (source JPGs) |
 | `figma-aug-2026/` | August 2026 WEBSITE page exports (1440-wide PNG frames + wordmark). Not served. |
+| `figma-v4/` | V4.1 CROSSWITHSWAG masters (Drive + Figma MCP notes). Not served. See `figma-v4/README.md`. |
 
 Web-served copies live in `public/assets/` (`*_clean.svg`, `SWAG_mark_fill.svg`, `winter-drop/`). Edit masters here, then copy into `public/assets/` when shipping a new export.
 
