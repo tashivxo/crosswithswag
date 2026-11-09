@@ -811,7 +811,7 @@ button:focus-visible {
   padding: 0;
   border: 0;
   background: none;
-  color: var(--sand);
+  color: var(--stone);
   cursor: pointer;
   font-family: inherit;
   font-size: 11px;
@@ -825,6 +825,16 @@ button:focus-visible {
 }
 
 @media (min-width: 900px) {
+  :root {
+  --wordmark-dock-width: 72px;
+  --header-height: 78.485px;
+  }
+
+  .hdr-in {
+    box-sizing: border-box;
+    min-height: var(--header-height);
+  }
+
   .site-nav {
     display: flex;
   }

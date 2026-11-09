@@ -8,7 +8,9 @@ export function SiteFooter() {
       <div className="foot">
         <div>
           <Wordmark className="wordmark--footer" />
-          <p className="lbl foot-tagline">{footer.tagline}</p>
+          {footer.tagline ? (
+            <p className="lbl foot-tagline">{footer.tagline}</p>
+          ) : null}
           <a
             className="foot-handle"
             href={footer.handle.href}
