@@ -3106,6 +3106,46 @@ html[data-cs-short="1"]:has(.cs) .site-header::after {
   text-decoration: line-through;
 }
 
+/* Colourway buttons: Sand text, the selected one carries the same 1px Clay underline as the nav current page. */
+.pdp-link {
+  color: var(--sand);
+  text-decoration-line: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  transition: text-decoration-color 0.2s var(--ease);
+}
+
+.pdp-link:hover {
+  text-decoration-color: var(--stone);
+}
+
+.pdp-link[aria-pressed="true"] {
+  text-decoration-color: var(--clay);
+}
+
+.pdp-gallery__main {
+  animation: pdp-image-in 200ms ease-out;
+}
+
+@keyframes pdp-image-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pdp-gallery__main {
+    animation: none;
+  }
+  .pdp-link {
+    transition: none;
+  }
+}
+
 .pdp-notify {
   display: grid;
   gap: 12px;

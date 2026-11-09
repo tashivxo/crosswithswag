@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 import { Reveal } from "@/components/v3/Reveal";
 import { useCart } from "@/lib/v4/cart/CartProvider";
@@ -19,6 +19,7 @@ import {
   productMakeTable,
   productSpecRows,
   relatedProducts,
+  sizeAfterColourwaySwitch,
   type ProductSize,
   type StandardProduct,
 } from "@/lib/v4/products";
@@ -86,7 +87,7 @@ function SizeLinks({
   onSelect,
 }: {
   product: StandardProduct;
-  selected: ProductSize;
+  selected: ProductSize | null;
   onSelect: (size: ProductSize) => void;
 }) {
   return (
@@ -164,15 +165,28 @@ function SoldOutNotify({ size }: { size: ProductSize }) {
   );
 }
 
-function PurchasePanel({ product }: { product: StandardProduct }) {
-  const router = useRouter();
+function PurchasePanel({
+  product,
+  selectedSize,
+  onSelectSize,
+  onSelectColourway,
+}: {
+  product: StandardProduct;
+  selectedSize: ProductSize | null;
+  onSelectSize: (size: ProductSize) => void;
+  onSelectColourway: (slug: string) => void;
+}) {
   const { addLine } = useCart();
-  const [selectedSize, setSelectedSize] = useState<ProductSize>("M");
   const allColourways = [product, ...colourwaySiblings(product)].sort((a, b) =>
     a.colourwayName.localeCompare(b.colourwayName),
   );
-  const soldOut = isSizeSoldOut(product, selectedSize);
-  const atcLabel = soldOut ? `sold out in ${selectedSize}` : "add to cart →";
+  const soldOut = selectedSize ? isSizeSoldOut(product, selectedSize) : false;
+  const canAdd = selectedSize !== null && !soldOut;
+  const atcLabel = !selectedSize
+    ? "select a size"
+    : soldOut
+      ? `sold out in ${selectedSize}`
+      : "add to cart →";
 
   return (
     <div className="pdp-panel">
@@ -198,12 +212,9 @@ function PurchasePanel({ product }: { product: StandardProduct }) {
               <button
                 key={cw.slug}
                 type="button"
-                className={
-                  cw.slug === product.slug ? "pdp-link is-selected" : "pdp-link"
-                }
-                onClick={() =>
-                  router.push(`/current?product=${cw.slug}`, { scroll: false })
-                }
+                className="pdp-link"
+                aria-pressed={cw.slug === product.slug}
+                onClick={() => onSelectColourway(cw.slug)}
               >
                 {cw.colourwayName}
               </button>
@@ -225,18 +236,18 @@ function PurchasePanel({ product }: { product: StandardProduct }) {
         <SizeLinks
           product={product}
           selected={selectedSize}
-          onSelect={setSelectedSize}
+          onSelect={onSelectSize}
         />
       </div>
 
-      {soldOut ? <SoldOutNotify size={selectedSize} /> : null}
+      {soldOut && selectedSize ? <SoldOutNotify size={selectedSize} /> : null}
 
       <div className="cta-row">
         <button
           type="button"
           className="btn btn--clay pdp-atc"
-          disabled={soldOut}
-          onClick={() => addLine(product, selectedSize)}
+          disabled={!canAdd}
+          onClick={() => selectedSize && addLine(product, selectedSize)}
         >
           {atcLabel}
         </button>
@@ -254,13 +265,13 @@ function PurchasePanel({ product }: { product: StandardProduct }) {
       <div className="pdp-sticky">
         <span className="lbl lbl--sand">
           {formatPrice(product.priceCents)} · {product.colourwayName} ·{" "}
-          {selectedSize}
+          {selectedSize ?? "pick a size"}
         </span>
         <button
           type="button"
           className="btn btn--clay"
-          disabled={soldOut}
-          onClick={() => addLine(product, selectedSize)}
+          disabled={!canAdd}
+          onClick={() => selectedSize && addLine(product, selectedSize)}
         >
           {atcLabel}
         </button>
@@ -297,8 +308,33 @@ function RelatedTile({ product }: { product: StandardProduct }) {
 
 export function ProductChapter() {
   const params = useSearchParams();
-  const slug = params.get("product") ?? DEFAULT_SLUG;
+  const urlSlug = params.get("product") ?? DEFAULT_SLUG;
+  const [slug, setSlug] = useState(urlSlug);
+  const [seenUrlSlug, setSeenUrlSlug] = useState(urlSlug);
+  const [selectedSize, setSelectedSize] = useState<ProductSize | null>("M");
+
+  // Back/forward, shared links and shop-card links change the URL: follow it.
+  if (urlSlug !== seenUrlSlug) {
+    setSeenUrlSlug(urlSlug);
+    setSlug(urlSlug);
+  }
+
   const product = productBySlug(slug) ?? productBySlug(DEFAULT_SLUG);
+
+  // The visible shirt is local state so a colourway click never waits on a navigation.
+  // The URL is mirrored with replaceState (no history entry, no scroll jump).
+  const selectColourway = (nextSlug: string) => {
+    const next = productBySlug(nextSlug);
+    if (!next || nextSlug === slug) return;
+    setSlug(nextSlug);
+    setSelectedSize((size) => sizeAfterColourwaySwitch(next, size));
+    const { pathname, hash } = window.location;
+    window.history.replaceState(
+      window.history.state,
+      "",
+      `${pathname}?product=${nextSlug}${hash}`,
+    );
+  };
 
   if (!product) {
     return (
@@ -339,7 +375,12 @@ export function ProductChapter() {
 
       <section className="wrap pad-sm pdp-main">
         <ProductGallery key={`gallery-${product.slug}`} product={product} />
-        <PurchasePanel key={`panel-${product.slug}`} product={product} />
+        <PurchasePanel
+          product={product}
+          selectedSize={selectedSize}
+          onSelectSize={setSelectedSize}
+          onSelectColourway={selectColourway}
+        />
       </section>
 
       <section className="wrap pad-sm">

@@ -261,6 +261,14 @@ export function isSizeSoldOut(
   return product.soldOutSizes?.includes(size) ?? false;
 }
 
+/** Size to keep when switching colourway: the same size if it is on sale in the new one, otherwise none. */
+export function sizeAfterColourwaySwitch(
+  next: StandardProduct,
+  size: ProductSize | null,
+): ProductSize | null {
+  return size && !isSizeSoldOut(next, size) ? size : null;
+}
+
 export const deliveryOptions = [
   { id: "paxi-economy", label: "economy — 7 to 9 business days", priceCents: 6000 },
   { id: "paxi-speed", label: "speed — 3 to 5 business days", priceCents: 11000 },
