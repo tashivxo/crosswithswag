@@ -297,9 +297,7 @@ export function SiteHeader({
             <nav className="site-nav" aria-label="Primary">
               {getDesktopNavItems(currentPath).map((item) => {
                 const current = isDesktopNavCurrent(item, currentPath);
-                const className = current
-                  ? "site-nav__link is-current"
-                  : "site-nav__link";
+                const className = "site-nav__link";
                 const label =
                   item.action === "cart"
                     ? `${item.navLabel} (${count})`
@@ -312,6 +310,7 @@ export function SiteHeader({
                       type="button"
                       className={className}
                       tabIndex={ready ? 0 : -1}
+                      aria-current={current ? "page" : undefined}
                       onClick={openDrawer}
                     >
                       <span className="nav-label">{label}</span>

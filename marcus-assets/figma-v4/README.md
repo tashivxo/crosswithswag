@@ -42,3 +42,17 @@ Resized by `node scripts/optimize-archive.mjs` (long edge 2400px, WebP, metadata
 ## Products (v41-products.zip)
 
 Raw in the gitignored `products/`. Curated 1600w JPGs in `public/assets/v4/shop/`; mapping table in `lib/v4/assets.ts` (`shopZipMapping`).
+
+
+### Product mapping (zip folder to catalog)
+
+Confirmed by Marcus (WhatsApp, 9 Nov 2026, 23:17 SAST) for SUPER and DAILY.
+
+| Zip folder | Family | Colourway | Status |
+|---|---|---|---|
+| Pulse | SUPER | pink | confirmed |
+| Rush | SUPER | lime | confirmed |
+| Royal Department | DAILY | blue | confirmed |
+| Grey Department | DAILY | black | confirmed |
+| Dispatch | EXPRESS | black, white | DRAFT: confirm with Marcus |
+| Orbit | HALO | pink, black, white | DRAFT: confirm with Marcus |

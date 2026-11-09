@@ -811,7 +811,7 @@ button:focus-visible {
   padding: 0;
   border: 0;
   background: none;
-  color: var(--stone);
+  color: var(--sand);
   cursor: pointer;
   font-family: inherit;
   font-size: 11px;
@@ -820,8 +820,13 @@ button:focus-visible {
   text-transform: uppercase;
 }
 
-.site-nav__link.is-current {
-  color: var(--clay);
+/* The underline sits on the inline-block label: text-decoration does not propagate into it from the link. */
+.site-nav__link[aria-current="page"] .nav-label {
+  text-decoration-line: underline;
+  text-decoration-style: solid;
+  text-decoration-color: var(--clay);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
 }
 
 @media (min-width: 900px) {

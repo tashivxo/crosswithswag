@@ -23,10 +23,10 @@ const V4 = "/assets/v4";
  *   product-X_front.jpg    Front / Full
  *   product-X_front-detail.jpg, product-X_back.jpg, product-X_back-detail.jpg
  *
- * DRAFT: confirm with Marcus. The zip folders are Dispatch, Orbit, Grey Department,
- * Royal Department, Pulse, Rush. There is no Super or Daily folder, so the family
- * grouping below (SUPER = rush + pulse, DAILY = grey department + royal department)
- * is inferred from the Figma landing frame 21:277 card labels, not from the zip.
+ * The zip folders are Dispatch, Orbit, Grey Department, Royal Department, Pulse, Rush.
+ * Confirmed by Marcus (9 Nov 23:17 SAST): SUPER = Pulse (pink) + Rush (lime);
+ * DAILY = Royal Department (blue) + Grey Department (black).
+ * DRAFT: confirm with Marcus. Dispatch and Orbit placement (EXPRESS / HALO) and colourways.
  */
 export const shopFileNames = {
   expressDispatchBlack: "product-express_dispatch-black.jpg",
@@ -40,17 +40,17 @@ export const shopFileNames = {
   dailyRoyalDepartment: "product-daily_royal-department.jpg",
 } as const;
 
-/** Zip folder (Marcus) to catalog product. Inferred rows are DRAFT. */
+/** Zip folder (Marcus) to catalog product. Dispatch and Orbit rows are DRAFT. */
 export const shopZipMapping = [
   { zip: "Dispatch / Black tee", product: "express-dispatch-black" },
   { zip: "Dispatch / White tee", product: "express-dispatch-white" },
   { zip: "Orbit / White tee – Pink print", product: "halo-orbit-pink" },
   { zip: "Orbit / Black tee – White print", product: "halo-orbit-black" },
   { zip: "Orbit / White tee – Black print", product: "halo-orbit-white" },
-  { zip: "Rush / White tee – Lime print", product: "super-rush", draft: "family SUPER inferred from Figma" },
-  { zip: "Pulse / White tee – Pink print", product: "super-pulse", draft: "family SUPER inferred from Figma; replaces placeholder 'speed'" },
-  { zip: "Grey Department / Black tee – Grey print", product: "daily-grey-department", draft: "family DAILY inferred from Figma" },
-  { zip: "Royal Department / White tee – Blue print", product: "daily-royal-department", draft: "family DAILY inferred from Figma" },
+  { zip: "Rush / White tee – Lime print", product: "super-rush" },
+  { zip: "Pulse / White tee – Pink print", product: "super-pulse" },
+  { zip: "Grey Department / Black tee – Grey print", product: "daily-grey-department" },
+  { zip: "Royal Department / White tee – Blue print", product: "daily-royal-department" },
 ] as const;
 
 export const draftMissingAssets = {

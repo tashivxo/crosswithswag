@@ -57,9 +57,9 @@ function shopImages(
 
 /**
  * Catalog order and family grouping follow Figma landing frame 21:277.
- * DRAFT: confirm with Marcus. The products zip names Dispatch, Orbit, Rush, Pulse,
- * Grey Department and Royal Department only. SUPER and DAILY family labels are
- * inferred from Figma, not from the zip.
+ * Confirmed by Marcus (WhatsApp, 9 Nov 23:17 SAST): SUPER = Pulse (pink) + Rush (lime);
+ * DAILY = Royal Department (blue) + Grey Department (black).
+ * DRAFT: confirm with Marcus. Dispatch (EXPRESS) and Orbit (HALO) placement and colourways.
  */
 export const standardProducts: StandardProduct[] = [
   {
@@ -122,7 +122,7 @@ export const standardProducts: StandardProduct[] = [
   {
     id: "super-rush",
     slug: "product-super-rush",
-    // DRAFT: confirm with Marcus. Zip folder is "Rush"; SUPER family inferred from Figma.
+    // Confirmed: SUPER, Rush (lime).
     family: "super",
     shirtName: "PRODUCT SUPER",
     colourwayName: "rush",
@@ -138,8 +138,7 @@ export const standardProducts: StandardProduct[] = [
   {
     id: "super-pulse",
     slug: "product-super-pulse",
-    // DRAFT: confirm with Marcus. Zip folder is "Pulse" (replaces the old placeholder "speed");
-    // SUPER family inferred from Figma.
+    // Confirmed: SUPER, Pulse (pink). Replaces the old placeholder "speed".
     family: "super",
     shirtName: "PRODUCT SUPER",
     colourwayName: "pulse",
@@ -155,7 +154,7 @@ export const standardProducts: StandardProduct[] = [
   {
     id: "daily-grey-department",
     slug: "product-daily-grey-department",
-    // DRAFT: confirm with Marcus. Zip folder is "Grey Department"; DAILY family inferred from Figma.
+    // Confirmed: DAILY, Grey Department (black).
     family: "daily",
     shirtName: "PRODUCT DAILY",
     colourwayName: "grey department",
@@ -166,7 +165,7 @@ export const standardProducts: StandardProduct[] = [
   {
     id: "daily-royal-department",
     slug: "product-daily-royal-department",
-    // DRAFT: confirm with Marcus. Zip folder is "Royal Department"; DAILY family inferred from Figma.
+    // Confirmed: DAILY, Royal Department (blue).
     family: "daily",
     shirtName: "PRODUCT DAILY",
     colourwayName: "royal department",
