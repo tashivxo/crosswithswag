@@ -126,6 +126,22 @@ export const productPage = {
   pickSize: "pick a size",
   sizeHint: "choose a size to add this shirt to your cart.",
   soldOutSuffix: "sold out",
+  badge: "open year round",
+  crumbAll: "all shirts",
+  priceNote: "prices in zar — delivery extra",
+  description:
+    "a homage to streetwear and the y2k era. printed to order, packed by hand.",
+  colourwayLabel: "[ colourway ]",
+  sizeLabel: "[ size ]",
+  sizeGuide: "size guide →",
+  notes: {
+    open: "open year round — drops friday 13 november",
+    delivery:
+      "item price excludes delivery. paxi economy R60 · speed R110 · door-to-door R120, chosen at checkout.",
+    guest: "guest checkout — no account needed",
+  },
+  relatedLabel: "[ 02 — more from the standard edition ]",
+  relatedAll: "all nine →",
 };
 
 export const current = {

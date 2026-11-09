@@ -3019,32 +3019,67 @@ html[data-cs-short="1"]:has(.cs) .site-header::after {
   }
 }
 
-/* ===== V4.1 on V3 — product page (R3) ===== */
-.pdp-title {
-  white-space: nowrap;
-  font-size: clamp(44px, 11vw, 168px);
+/* ===== V4.1 product page (Figma 21:23 PDP frame, cream surface) ===== */
+.pdp-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding-top: calc(var(--header-height) + 46px);
 }
 
 .pdp-crumb {
-  margin-top: 24px;
+  color: var(--ink);
 }
 
-.pdp-colourway {
-  margin-top: 20px;
+.pdp-crumb ol {
   display: flex;
-  align-items: baseline;
-  gap: 24px;
   flex-wrap: wrap;
-  font-size: clamp(22px, 3vw, 40px);
-  font-weight: 700;
-  letter-spacing: -0.03em;
+  gap: 4px 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pdp-crumb li + li::before {
+  content: "/";
+  margin-right: 10px;
+  color: var(--stone);
+}
+
+.pdp-crumb a:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--stone);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+
+/* Boxed badge: 1px Clay box, Clay text, tracked like the nav. */
+.pdp-badge {
+  display: inline-block;
+  padding: 7px 9px;
+  border: 1px solid var(--clay);
+  color: var(--clay);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .pdp-main {
   display: grid;
-  grid-template-columns: 1.05fr 0.95fr;
-  gap: clamp(24px, 4vw, 64px);
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: clamp(24px, 4.4vw, 64px);
   align-items: start;
+  padding-top: 41px;
+}
+
+.pdp-gallery__main {
+  background: var(--surface-tile);
+  border: 1px solid var(--tile-edge);
 }
 
 .pdp-gallery__main::after {
@@ -3054,51 +3089,113 @@ html[data-cs-short="1"]:has(.cs) .site-header::after {
 .pdp-gallery__main img {
   object-fit: contain;
   padding: 6%;
-  background: var(--void);
 }
 
 .pdp-gallery__thumbs {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(72px, 96px));
-  gap: 12px;
-  margin-top: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 14px;
 }
 
 .pdp-thumb {
   position: relative;
-  aspect-ratio: 1;
-  border: 1px solid var(--line);
-  background: var(--void);
+  aspect-ratio: 4 / 5;
+  padding: 0;
+  border: 1px solid var(--tile-edge);
+  background: var(--surface-tile);
   cursor: pointer;
   overflow: hidden;
 }
 
-.pdp-thumb img {
-  object-fit: contain;
+.pdp-thumb:hover {
+  border-color: var(--stone);
 }
 
-.pdp-thumb.is-active {
-  border-color: var(--clay);
+.pdp-thumb img {
+  object-fit: contain;
+  padding: 6%;
 }
 
 .pdp-panel {
-  display: grid;
-  gap: clamp(20px, 2.4vw, 32px);
+  display: flex;
+  flex-direction: column;
   position: sticky;
   top: calc(var(--header-height) + 24px);
 }
 
-.pdp-spec-inline {
+.pdp-kicker {
+  line-height: 1.5;
+}
+
+.pdp-title {
+  margin-top: 24px;
+  font-size: clamp(36px, 4.6vw, 66px);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.045em;
+  color: var(--ink);
+}
+
+.pdp-colourway-name {
+  margin-top: 25px;
+  font-size: 20px;
+  line-height: 1.2;
+  color: var(--clay);
+}
+
+.pdp-price {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 4px 16px;
+  flex-wrap: wrap;
+  margin-top: 30px;
+}
+
+.pdp-price__amount {
+  font-size: 28px;
+  line-height: 1.2;
+  color: var(--ink);
+}
+
+.pdp-desc {
+  margin-top: 29px;
+  font-size: 16px;
+  line-height: 27px;
+  color: var(--stone);
+}
+
+.pdp-spec {
+  margin-top: 36px;
+  border-bottom: 1px solid var(--line-strong);
+}
+
+.pdp-spec__row {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 16px;
-  border-top: 1px solid var(--line);
-  padding-top: 16px;
+  grid-template-columns: 140px minmax(0, 1fr);
+  align-items: baseline;
+  padding: 14px 0;
+  border-top: 1px solid var(--line-strong);
+}
+
+.pdp-spec__row dd {
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--ink);
 }
 
 .pdp-field {
   display: grid;
-  gap: 12px;
+  gap: 2px;
+}
+
+.pdp-field--colourway {
+  margin-top: 28px;
+}
+
+.pdp-field + .pdp-field {
+  margin-top: 17px;
 }
 
 .pdp-field__head {
@@ -3106,63 +3203,159 @@ html[data-cs-short="1"]:has(.cs) .site-header::after {
   justify-content: space-between;
 }
 
+.pdp-size-guide {
+  color: var(--ink);
+}
+
+.pdp-size-guide:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--stone);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+
 .pdp-links,
 .pdp-sizes {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px 20px;
+}
+
+.pdp-links {
+  gap: 0 30px;
+}
+
+.pdp-sizes {
+  gap: 0 20px;
+  margin-left: -10px;
 }
 
 .pdp-link,
 .pdp-size {
   background: none;
   border: 0;
-  border-bottom: 1px solid transparent;
   padding: 8px 0;
   min-height: 44px;
-  min-width: 44px;
   color: var(--stone);
   font: inherit;
   font-size: 13px;
   font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  cursor: pointer;
-  transition: color 0.3s var(--ease), border-color 0.3s;
-}
-
-.pdp-link:hover,
-.pdp-size:hover {
-  color: var(--sand);
-}
-
-.pdp-link.is-selected,
-.pdp-size.is-selected {
-  color: var(--sand);
-  border-bottom-color: var(--clay);
-}
-
-.pdp-size.is-sold-out {
-  text-decoration: line-through;
-  cursor: not-allowed;
-}
-
-/* Colourway buttons: Sand text, the selected one carries the same 1px Clay underline as the nav current page. */
-.pdp-link {
-  color: var(--sand);
   text-decoration-line: underline;
   text-decoration-color: transparent;
   text-decoration-thickness: 1px;
   text-underline-offset: 4px;
-  transition: text-decoration-color 0.2s var(--ease);
+  cursor: pointer;
+  transition:
+    color 0.3s var(--ease),
+    text-decoration-color 0.2s var(--ease);
 }
 
-.pdp-link:hover {
-  text-decoration-color: var(--sand);
+.pdp-size {
+  padding-inline: 10px;
 }
 
-.pdp-link[aria-pressed="true"] {
+.pdp-link:hover,
+.pdp-size:hover {
+  color: var(--ink);
+  text-decoration-color: var(--stone);
+}
+
+.pdp-link[aria-pressed="true"],
+.pdp-size.is-selected {
+  color: var(--ink);
   text-decoration-color: var(--clay);
+}
+
+.pdp-link.is-selected {
+  color: var(--ink);
+}
+
+/* Sold out: Stone with a strikethrough, still focusable. */
+.pdp-size.is-sold-out,
+.pdp-size.is-sold-out:hover {
+  color: var(--stone);
+  text-decoration-line: line-through;
+  text-decoration-color: currentColor;
+  cursor: not-allowed;
+}
+
+.pdp-atc {
+  width: 100%;
+  min-height: 53px;
+  margin-top: 18px;
+  justify-content: center;
+  padding: 0 22px;
+  border-color: var(--clay);
+  color: var(--ink);
+}
+
+.btn.pdp-atc:hover,
+.pdp-sticky .btn:hover {
+  background: none;
+  color: var(--clay);
+  border-color: var(--clay);
+}
+
+.pdp-notes {
+  margin-top: 27px;
+}
+
+.pdp-notes p {
+  margin: 0;
+}
+
+.pdp-notes__open {
+  color: var(--clay);
+  line-height: 1.5;
+}
+
+.pdp-notes__body {
+  margin-top: 18px;
+  font-size: 12px;
+  line-height: 20px;
+  color: var(--stone);
+}
+
+.pdp-notes__guest {
+  margin-top: 10px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.pdp-related-head {
+  padding: 0 0 32px;
+}
+
+.pdp-related {
+  --land-gap: 24px;
+}
+
+#current .current-spec {
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: 0;
+}
+
+#current .current-spec__title {
+  font-size: clamp(56px, 12.4vw, 178px);
+  line-height: 0.96;
+}
+
+#current .spec td {
+  padding: 19px 0;
+}
+
+@media (max-width: 899px) {
+  #current .current-spec {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .pdp-size {
+    min-width: 44px;
+  }
+  .pdp-title {
+    white-space: normal;
+  }
 }
 
 .pdp-gallery__main {
@@ -3182,7 +3375,8 @@ html[data-cs-short="1"]:has(.cs) .site-header::after {
   .pdp-gallery__main {
     animation: none;
   }
-  .pdp-link {
+  .pdp-link,
+  .pdp-size {
     transition: none;
   }
 }
@@ -3222,13 +3416,6 @@ html[data-cs-short="1"]:has(.cs) .site-header::after {
   background: transparent;
   color: var(--sand);
   border-color: var(--clay);
-}
-
-.pdp-notes {
-  display: grid;
-  gap: 8px;
-  color: var(--stone);
-  letter-spacing: 0.08em;
 }
 
 .pdp-sticky {

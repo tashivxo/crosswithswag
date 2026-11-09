@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { Reveal } from "@/components/v3/Reveal";
 import { productPage } from "@/lib/copy";
+import { ShopCard } from "@/components/v4/shop/ShopCard";
 import { useCart } from "@/lib/v4/cart/CartProvider";
 import { INITIAL_SIZE, pdpPath, stripSizeParam } from "@/lib/v4/pdp-url";
 import {
@@ -17,7 +18,6 @@ import {
   galleryMobileSlides,
   isSizeSoldOut,
   productBySlug,
-  productCardImage,
   productMakeTable,
   productSpecRows,
   sizeButtonState,
@@ -67,18 +67,19 @@ function ProductGallery({ product }: { product: StandardProduct }) {
       </div>
       {images.length > 1 ? (
         <div className="pdp-gallery__thumbs">
-          {images.map((src, i) => (
+          {images.map((src, i) =>
+            i === index ? null : (
             <button
               key={src}
               type="button"
-              className={i === index ? "pdp-thumb is-active" : "pdp-thumb"}
+              className="pdp-thumb"
               aria-label={`Show image ${i + 1} of ${images.length}`}
-              aria-pressed={i === index}
               onClick={() => setIndex(i)}
             >
-              <Image src={src} alt="" fill sizes="120px" />
+              <Image src={src} alt="" fill sizes="(max-width: 899px) 50vw, 25vw" />
             </button>
-          ))}
+            ),
+          )}
         </div>
       ) : null}
     </div>
@@ -199,14 +200,22 @@ function PurchasePanel({
 
   return (
     <div className="pdp-panel">
-      <p className="body-copy voice">
-        a homage to streetwear and the y2k era. printed to order, packed by
-        hand.
-      </p>
+      <span className="lbl pdp-kicker">
+        [ shirt {pad(product.shirtIndex)} of {pad(STANDARD_EDITION_TOTAL)} ]
+      </span>
+      <h1 className="pdp-title voice">{product.shirtName.toLowerCase()}</h1>
+      <p className="pdp-colourway-name voice">{product.colourwayName}</p>
+      <div className="pdp-price">
+        <span className="pdp-price__amount">
+          {formatPrice(product.priceCents)}
+        </span>
+        <span className="lbl">{productPage.priceNote}</span>
+      </div>
+      <p className="pdp-desc voice">{productPage.description}</p>
 
-      <dl className="pdp-spec-inline">
+      <dl className="pdp-spec">
         {productSpecRows.map((row) => (
-          <div key={row.label}>
+          <div key={row.label} className="pdp-spec__row">
             <dt className="lbl">{row.label}</dt>
             <dd className="voice">{row.value}</dd>
           </div>
@@ -214,8 +223,8 @@ function PurchasePanel({
       </dl>
 
       {allColourways.length > 1 ? (
-        <div className="pdp-field">
-          <span className="lbl">[ colourway ]</span>
+        <div className="pdp-field pdp-field--colourway">
+          <span className="lbl">{productPage.colourwayLabel}</span>
           <div className="pdp-links">
             {allColourways.map((cw) => (
               <button
@@ -234,12 +243,12 @@ function PurchasePanel({
 
       <div className="pdp-field" id="size-guide">
         <div className="pdp-field__head">
-          <span className="lbl">[ size ]</span>
+          <span className="lbl">{productPage.sizeLabel}</span>
           <Link
             href={`/current?product=${product.slug}#size-guide`}
-            className="lbl lbl--clay"
+            className="lbl pdp-size-guide"
           >
-            size guide →
+            {productPage.sizeGuide}
           </Link>
         </div>
         <SizeLinks
@@ -257,36 +266,31 @@ function PurchasePanel({
         </span>
       ) : null}
 
-      <div className="cta-row">
-        <button
-          type="button"
-          className="btn btn--clay pdp-atc"
-          disabled={soldOut}
-          aria-disabled={needsSize || undefined}
-          aria-describedby={needsSize ? SIZE_HINT_ID : undefined}
-          onClick={() => canAdd && selectedSize && addLine(product, selectedSize)}
-        >
-          {atcLabel}
-        </button>
-      </div>
+      <button
+        type="button"
+        className="btn btn--clay pdp-atc"
+        disabled={soldOut}
+        aria-disabled={needsSize || undefined}
+        aria-describedby={needsSize ? SIZE_HINT_ID : undefined}
+        onClick={() => canAdd && selectedSize && addLine(product, selectedSize)}
+      >
+        {atcLabel}
+      </button>
 
-      <div className="pdp-notes lbl">
-        <p>open year round — drops friday 13 november</p>
-        <p>
-          item price excludes delivery. paxi economy R60 · speed R110 ·
-          door-to-door R120, chosen at checkout.
-        </p>
-        <p>guest checkout — no account needed</p>
+      <div className="pdp-notes">
+        <p className="lbl pdp-notes__open">{productPage.notes.open}</p>
+        <p className="pdp-notes__body">{productPage.notes.delivery}</p>
+        <p className="lbl pdp-notes__guest">{productPage.notes.guest}</p>
       </div>
 
       <div className="pdp-sticky">
-        <span className="lbl lbl--sand">
+        <span className="lbl pdp-sticky__label">
           {formatPrice(product.priceCents)} · {product.colourwayName} ·{" "}
           {selectedSize ?? productPage.pickSize}
         </span>
         <button
           type="button"
-          className="btn btn--clay"
+          className="btn btn--clay pdp-sticky__atc"
           disabled={soldOut}
           aria-disabled={needsSize || undefined}
           aria-describedby={needsSize ? SIZE_HINT_ID : undefined}
@@ -296,32 +300,6 @@ function PurchasePanel({
         </button>
       </div>
     </div>
-  );
-}
-
-function RelatedTile({ product }: { product: StandardProduct }) {
-  const src = productCardImage(product);
-  return (
-    <Link href={`/current?product=${product.slug}`} className="shop-tile">
-      <div className="frame shop-tile__frame">
-        {src ? (
-          <Image
-            src={src}
-            alt={`${product.shirtName.toLowerCase()} in ${product.colourwayName}`}
-            fill
-            sizes="(max-width: 768px) 50vw, 25vw"
-          />
-        ) : (
-          <span className="shop-tile__fill voice">{product.colourwayName}</span>
-        )}
-      </div>
-      <div className="shop-tile__meta">
-        <span className="lbl lbl--sand">
-          {product.shirtName.toLowerCase()} — {product.colourwayName}
-        </span>
-        <span className="lbl">{formatPrice(product.priceCents)}</span>
-      </div>
-    </Link>
   );
 }
 
@@ -375,30 +353,18 @@ export function ProductChapter() {
 
   return (
     <section id="current" className="chapter pdp">
-      <section
-        id="current-head"
-        className="wrap page-head pdp-head"
-        tabIndex={-1}
-      >
-        <div className="hero-top">
-          <span className="lbl lbl--sand">
-            [ shirt {pad(product.shirtIndex)} of {pad(STANDARD_EDITION_TOTAL)} ]
-          </span>
-          <span className="state state--live">open year round</span>
-        </div>
+      <div id="current-head" className="wrap pdp-top" tabIndex={-1}>
         <nav className="lbl pdp-crumb" aria-label="Breadcrumb">
-          <Link href="/#shop">← all shirts</Link>
+          <ol>
+            <li>
+              <Link href="/#shop">← {productPage.crumbAll}</Link>
+            </li>
+            <li>{product.shirtName.toLowerCase()}</li>
+            <li aria-current="page">{product.colourwayName}</li>
+          </ol>
         </nav>
-        <h1 className="display pdp-title voice">
-          {product.shirtName.toLowerCase()}
-        </h1>
-        <p className="pdp-colourway">
-          <span className="hero-mark__clay voice">{product.colourwayName}</span>
-          <span className="lbl">
-            {formatPrice(product.priceCents)} + delivery
-          </span>
-        </p>
-      </section>
+        <span className="pdp-badge">{productPage.badge}</span>
+      </div>
 
       <section className="wrap pad-sm pdp-main">
         <ProductGallery key={`gallery-${product.slug}`} product={product} />
@@ -411,15 +377,15 @@ export function ProductChapter() {
       </section>
 
       <section className="wrap pad-sm">
-        <Reveal className="sect-head">
-          <span className="lbl">[ 02 — more from the standard edition ]</span>
+        <Reveal className="sect-head pdp-related-head">
+          <span className="lbl">{productPage.relatedLabel}</span>
           <Link className="lbl lbl--clay" href="/#shop">
-            all nine →
+            {productPage.relatedAll}
           </Link>
         </Reveal>
-        <Reveal className="shop-row__grid pdp-related">
+        <Reveal className="land-family pdp-related">
           {related.map((item) => (
-            <RelatedTile key={item.id} product={item} />
+            <ShopCard key={item.id} product={item} />
           ))}
         </Reveal>
       </section>
