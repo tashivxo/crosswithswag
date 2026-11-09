@@ -3498,9 +3498,18 @@ html[data-cs-short="1"]:has(.cs) .site-header::after {
   }
   .pdp-sticky__label {
     min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    line-height: 1.4;
+  }
+  /* Below 375px the price alone fits; the colourway stays in the accessible name. */
+  @media (max-width: 374px) {
+    .pdp-sticky__cw {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
   }
   .pdp-sticky__atc {
     flex: none;

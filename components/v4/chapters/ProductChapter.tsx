@@ -302,9 +302,9 @@ function PurchasePanel({
 
       <div className="pdp-sticky" data-hidden={isStickyBarHidden(mainAtcInView) || undefined}>
         <span className="lbl pdp-sticky__label">
-          {[formatPrice(product.priceCents), product.colourwayName, selectedSize]
-            .filter(Boolean)
-            .join(" · ")}
+          {formatPrice(product.priceCents)}
+          <span className="pdp-sticky__cw"> · {product.colourwayName}</span>
+          {selectedSize ? ` · ${selectedSize}` : null}
         </span>
         <button
           type="button"
