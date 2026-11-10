@@ -188,11 +188,8 @@ export function getDesktopNavItems(path: string): NavItem[] {
 export function isDesktopNavCurrent(item: NavItem, path: string): boolean {
   const normalized = normalizePath(path);
   if (item.action === "cart") {
-    return (
-      normalized === "/cart" ||
-      normalized.startsWith("/checkout") ||
-      normalized.startsWith("/order")
-    );
+    // /order/confirmed is the end of the flow: nothing in the nav is current there.
+    return normalized === "/cart" || normalized.startsWith("/checkout");
   }
   if (item.href === "/") {
     return normalized === "/" || normalized.startsWith("/current");

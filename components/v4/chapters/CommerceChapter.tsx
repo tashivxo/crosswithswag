@@ -34,8 +34,7 @@ import {
 } from "@/lib/v4/checkout";
 import {
   STUB_ORDER_STORAGE_KEY,
-  STUB_PROCESSING_MS,
-  createStubOrder,
+  createPaymentStub,
   parseStubOrder,
   serialiseStubOrder,
 } from "@/lib/v4/order";
@@ -169,15 +168,32 @@ export function CheckoutChapter() {
     checkoutCopy.paymentOptions[0].id,
   );
   const [pending, setPending] = useState(false);
-  const timer = useRef<number | null>(null);
   const radioGroup = useId();
 
-  useEffect(
-    () => () => {
-      if (timer.current !== null) window.clearTimeout(timer.current);
-    },
-    [],
+  const [payment] = useState(() =>
+    createPaymentStub({
+      schedule: (run, ms) => {
+        const id = window.setTimeout(run, ms);
+        return () => window.clearTimeout(id);
+      },
+      save: (order) => {
+        try {
+          window.sessionStorage.setItem(
+            STUB_ORDER_STORAGE_KEY,
+            serialiseStubOrder(order),
+          );
+        } catch {
+          // Storage can be blocked; the confirmed page then simply has no reference to show.
+        }
+      },
+      onConfirmed: () => {
+        clear();
+        router.push("/order/confirmed");
+      },
+    }),
   );
+
+  useEffect(() => () => payment.cancel(), [payment]);
 
   const delivery =
     deliveryOptions.find((o) => o.id === deliveryId) ?? deliveryOptions[0];
@@ -196,27 +212,14 @@ export function CheckoutChapter() {
 
   const onSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (pending) return;
+    if (payment.isInFlight()) return;
     const found = validateCheckout(values);
     // Render the errors (and their aria-describedby links) before focus moves, so the
     // first invalid field is announced together with its message.
     flushSync(() => setErrors(found));
     if (focusFirstInvalid(found, (id) => document.getElementById(id))) return;
 
-    setPending(true);
-    timer.current = window.setTimeout(() => {
-      const order = createStubOrder({ itemCount: count, totalCents: total });
-      try {
-        window.sessionStorage.setItem(
-          STUB_ORDER_STORAGE_KEY,
-          serialiseStubOrder(order),
-        );
-      } catch {
-        // Storage can be blocked; the confirmed page then simply has no reference to show.
-      }
-      clear();
-      router.push("/order/confirmed");
-    }, STUB_PROCESSING_MS);
+    if (payment.submit({ itemCount: count, totalCents: total })) setPending(true);
   };
 
   const showForm = lines.length > 0 || pending;
