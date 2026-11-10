@@ -16,6 +16,9 @@
   /* Form control boundary: 3.9:1 on white, 3.5:1 on cream (WCAG 1.4.11). */
   --ink-line-field: rgba(45, 45, 45, 0.6);
   --tile-edge: rgba(45, 45, 45, 0.08);
+  /* Shared outline CTA: Clay wipe, cream label (4.9:1). */
+  --cta-fill: var(--clay);
+  --cta-on-fill: var(--studio-white);
   --line: rgba(214, 209, 196, 0.14);
   --line-strong: rgba(214, 209, 196, 0.28);
   --raise: rgba(214, 209, 196, 0.035);
@@ -4199,4 +4202,116 @@ html:has(.page-shell[data-surface="cream"]) .cart-drawer__scrim {
 
 .page-shell[data-surface="cream"] .foot-base span {
   color: var(--ink);
+}
+
+/* ===== Shared outline CTA (.tlink, .btn, .btn--clay) =====
+   One hover/focus treatment: a Clay fill wipes in from the left, the label flips to cream and a second
+   hairline ring settles 3px inside the box. Under reduced motion the same end state applies instantly. */
+.tlink,
+.btn {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: 44px;
+  transform: none;
+  transition:
+    color 0.35s var(--ease),
+    border-color 0.35s var(--ease);
+}
+
+.tlink::before,
+.btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--cta-fill);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.5s var(--ease);
+}
+
+.tlink::after,
+.btn::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  z-index: -1;
+  border: 1px solid var(--cta-on-fill);
+  opacity: 0;
+  transform: scale(1.06);
+  transition:
+    opacity 0.4s var(--ease) 0.08s,
+    transform 0.5s var(--ease) 0.08s;
+  pointer-events: none;
+}
+
+.tlink:not([aria-disabled="true"]):not(:disabled):hover,
+.btn:not([aria-disabled="true"]):not(:disabled):hover,
+.tlink:not([aria-disabled="true"]):not(:disabled):focus-visible,
+.btn:not([aria-disabled="true"]):not(:disabled):focus-visible {
+  background: none;
+  color: var(--cta-on-fill);
+  border-color: var(--cta-fill);
+  transform: none;
+}
+
+.tlink:not([aria-disabled="true"]):not(:disabled):hover::before,
+.btn:not([aria-disabled="true"]):not(:disabled):hover::before,
+.tlink:not([aria-disabled="true"]):not(:disabled):focus-visible::before,
+.btn:not([aria-disabled="true"]):not(:disabled):focus-visible::before {
+  transform: scaleX(1);
+}
+
+.tlink:not([aria-disabled="true"]):not(:disabled):hover::after,
+.btn:not([aria-disabled="true"]):not(:disabled):hover::after,
+.tlink:not([aria-disabled="true"]):not(:disabled):focus-visible::after,
+.btn:not([aria-disabled="true"]):not(:disabled):focus-visible::after {
+  opacity: 0.55;
+  transform: scale(1);
+}
+
+.tlink:focus-visible,
+.btn:focus-visible {
+  outline: 1px solid var(--clay);
+  outline-offset: 2px;
+}
+
+.tlink:active:not([aria-disabled="true"]):not(:disabled),
+.btn:active:not([aria-disabled="true"]):not(:disabled) {
+  transform: scale(0.985);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tlink,
+  .btn,
+  .tlink::before,
+  .btn::before,
+  .tlink::after,
+  .btn::after {
+    transition: none !important;
+  }
+
+  .tlink::before,
+  .btn::before {
+    transform: scaleX(1);
+    opacity: 0;
+  }
+
+  .tlink:not([aria-disabled="true"]):not(:disabled):hover::before,
+  .btn:not([aria-disabled="true"]):not(:disabled):hover::before,
+  .tlink:not([aria-disabled="true"]):not(:disabled):focus-visible::before,
+  .btn:not([aria-disabled="true"]):not(:disabled):focus-visible::before {
+    opacity: 1;
+  }
+
+  .tlink::after,
+  .btn::after {
+    transform: none;
+  }
+
+  .tlink:active,
+  .btn:active {
+    transform: none !important;
+  }
 }
