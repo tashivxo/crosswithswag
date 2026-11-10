@@ -38,7 +38,13 @@ export function normalizePath(path: string): string {
  * Routes converted to the Figma cream surface (21:277 / 21:23). Chrome and content follow the
  * route; every other route keeps the Void surface until its own phase converts it.
  */
-export const creamSurfaceRoutes: readonly string[] = ["/", "/current"];
+export const creamSurfaceRoutes: readonly string[] = [
+  "/",
+  "/current",
+  "/cart",
+  "/checkout",
+  "/order/confirmed",
+];
 
 export function isCreamSurface(path: string): boolean {
   return creamSurfaceRoutes.includes(normalizePath(path));

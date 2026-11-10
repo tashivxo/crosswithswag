@@ -7,8 +7,10 @@ import { useCart } from "@/lib/v4/cart/CartProvider";
 import {
   CartEmptyState,
   CartLineList,
+  CartLiveRegion,
   CartTotalsBlock,
 } from "@/components/v4/cart/CartUi";
+import { cartCopy } from "@/lib/copy";
 
 export function CartDrawer() {
   const {
@@ -84,7 +86,7 @@ export function CartDrawer() {
       <button
         type="button"
         className="cart-drawer__scrim"
-        aria-label="Close cart"
+        aria-label={cartCopy.drawer.closeLabel}
         tabIndex={drawerOpen ? 0 : -1}
         onClick={closeDrawer}
       />
@@ -99,7 +101,7 @@ export function CartDrawer() {
       >
         <header className="cart-drawer__head">
           <p id="cart-drawer-title" className="lbl lbl--sand">
-            [ cart — {count} ]
+            {cartCopy.drawer.title(count)}
           </p>
           <button
             ref={closeBtnRef}
@@ -107,12 +109,14 @@ export function CartDrawer() {
             className="cart-drawer__close"
             onClick={closeDrawer}
           >
-            <span className="nav-label">close</span>
+            <span className="nav-label">{cartCopy.drawer.close}</span>
           </button>
         </header>
 
+        <CartLiveRegion scope="drawer" />
+
         {lines.length === 0 ? (
-          <CartEmptyState onShop={closeDrawer} />
+          <CartEmptyState variant="drawer" onShop={closeDrawer} />
         ) : (
           <>
             <CartLineList
@@ -127,10 +131,10 @@ export function CartDrawer() {
             />
             <button
               type="button"
-              className="lbl cart-link"
+              className="cart-link"
               onClick={closeDrawer}
             >
-              keep shopping
+              {cartCopy.keepShopping}
             </button>
           </>
         )}

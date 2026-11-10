@@ -2,12 +2,40 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import type { CartLine } from "@/lib/v4/cart/CartProvider";
+import { useRef } from "react";
+import { cartCopy } from "@/lib/copy";
+import { focusTargetAfterRemoval } from "@/lib/v4/cart/announce";
+import { useCart, type CartLine } from "@/lib/v4/cart/CartProvider";
 import { formatPrice, isSizeSoldOut, productById } from "@/lib/v4/products";
+
+type Variant = "page" | "drawer";
+
+const emptyLeadId = (variant: Variant) => `cart-${variant}-empty`;
+
+/**
+ * Polite live region for removals and quantity changes. One lives in the page and one inside the
+ * drawer dialog (a modal dialog hides everything outside it from assistive tech); only the one
+ * for the surface that is showing carries the message.
+ */
+export function CartLiveRegion({ scope }: { scope: Variant }) {
+  const { announcement, drawerOpen } = useCart();
+  const active = (scope === "drawer") === drawerOpen;
+  return (
+    <div
+      className="sr-only"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+      data-cart-live={scope}
+    >
+      {active ? announcement : ""}
+    </div>
+  );
+}
 
 type CartLineListProps = {
   lines: CartLine[];
-  variant: "page" | "drawer";
+  variant: Variant;
   onRemove: (lineId: string) => void;
   onSetQuantity: (lineId: string, quantity: number) => void;
 };
@@ -18,11 +46,43 @@ export function CartLineList({
   onRemove,
   onSetQuantity,
 }: CartLineListProps) {
+  const listRef = useRef<HTMLUListElement>(null);
+
+  // Remove/minus-at-one delete the focused control, so hand focus to the neighbour
+  // (or the empty state) instead of dropping it onto <body>.
+  const moveFocusAfterRemoval = (id: string) => {
+    const target = focusTargetAfterRemoval(
+      lines.map((l) => l.lineId),
+      id,
+    );
+    if (!target) return;
+    requestAnimationFrame(() => {
+      if (target.kind === "empty") {
+        document.getElementById(emptyLeadId(variant))?.focus();
+        return;
+      }
+      listRef.current
+        ?.querySelector<HTMLElement>(`[data-remove="${CSS.escape(target.lineId)}"]`)
+        ?.focus();
+    });
+  };
+
+  const remove = (id: string) => {
+    moveFocusAfterRemoval(id);
+    onRemove(id);
+  };
+
+  const setQuantity = (id: string, quantity: number) => {
+    if (quantity <= 0) moveFocusAfterRemoval(id);
+    onSetQuantity(id, quantity);
+  };
+
   return (
-    <ul className={`cart-lines cart-lines--${variant}`}>
+    <ul ref={listRef} className={`cart-lines cart-lines--${variant}`}>
       {lines.map((line) => {
         const product = productById(line.productId);
         const soldOut = product != null && isSizeSoldOut(product, line.size);
+        const who = [line.title, line.colourway, line.size] as const;
 
         return (
           <li key={line.lineId} className="cart-line">
@@ -34,28 +94,28 @@ export function CartLineList({
             <div className="cart-line__meta">
               <p className="lbl lbl--sand">{line.title.toLowerCase()}</p>
               <p className="cart-line__detail voice">
-                standard edition · {line.colourway} · size {line.size}
+                {cartCopy.lineDetail(line.colourway, line.size)}
               </p>
               {soldOut ? (
-                <p className="lbl lbl--clay">
-                  sold out in {line.size} — still in your cart
-                </p>
+                <p className="lbl lbl--clay">{cartCopy.soldOutLine(line.size)}</p>
               ) : null}
-              <div className="cart-qty">
+              <div className="cart-qty" role="group" aria-label={cartCopy.a11y.quantity(line.quantity)}>
                 <button
                   type="button"
                   className="cart-qty__btn"
-                  aria-label={`Decrease quantity for ${line.title}`}
-                  onClick={() => onSetQuantity(line.lineId, line.quantity - 1)}
+                  aria-label={cartCopy.a11y.decrease(...who)}
+                  onClick={() => setQuantity(line.lineId, line.quantity - 1)}
                 >
                   −
                 </button>
-                <span className="cart-qty__value">{line.quantity}</span>
+                <span className="cart-qty__value" aria-hidden="true">
+                  {line.quantity}
+                </span>
                 <button
                   type="button"
                   className="cart-qty__btn"
-                  aria-label={`Increase quantity for ${line.title}`}
-                  onClick={() => onSetQuantity(line.lineId, line.quantity + 1)}
+                  aria-label={cartCopy.a11y.increase(...who)}
+                  onClick={() => setQuantity(line.lineId, line.quantity + 1)}
                 >
                   +
                 </button>
@@ -67,10 +127,12 @@ export function CartLineList({
               </p>
               <button
                 type="button"
-                className="lbl cart-link"
-                onClick={() => onRemove(line.lineId)}
+                className="cart-link cart-link--remove"
+                data-remove={line.lineId}
+                aria-label={cartCopy.a11y.removeLabel(...who)}
+                onClick={() => remove(line.lineId)}
               >
-                remove
+                {cartCopy.remove}
               </button>
             </div>
           </li>
@@ -80,14 +142,22 @@ export function CartLineList({
   );
 }
 
-export function CartEmptyState({ onShop }: { onShop?: () => void }) {
+export function CartEmptyState({
+  variant = "page",
+  onShop,
+}: {
+  variant?: Variant;
+  onShop?: () => void;
+}) {
   return (
     <div className="cart-empty">
-      <p className="cart-empty__lead voice">nothing in here yet.</p>
-      <p className="body-copy voice">the standard edition is always open.</p>
+      <p id={emptyLeadId(variant)} tabIndex={-1} className="cart-empty__lead voice">
+        {cartCopy.empty.lead}
+      </p>
+      <p className="body-copy voice">{cartCopy.empty.body}</p>
       <div className="cta-row">
-        <Link className="btn btn--clay" href="/#shop" onClick={onShop}>
-          shop the standard edition →
+        <Link className="btn btn--clay cm-cta cm-cta--auto" href="/#shop" onClick={onShop}>
+          {cartCopy.empty.cta}
         </Link>
       </div>
     </div>
@@ -104,26 +174,21 @@ export function CartTotalsBlock({
   return (
     <div className="cart-totals">
       <div className="cart-totals__row">
-        <span className="lbl lbl--sand">subtotal</span>
+        <span className="lbl lbl--sand">{cartCopy.subtotal}</span>
         <span className="cart-totals__value">{formatPrice(subtotalCents)}</span>
       </div>
       <div className="cart-totals__row">
-        <span className="lbl">delivery</span>
-        <span className="lbl">chosen at checkout — paxi</span>
+        <span className="lbl">{cartCopy.delivery}</span>
+        <span className="lbl">{cartCopy.deliveryNote}</span>
       </div>
-      <p className="lbl cart-totals__note">
-        item prices exclude delivery. paxi economy R60 · speed R110 ·
-        door-to-door R120.
-      </p>
-      <div className="cta-row">
-        <Link
-          className="btn btn--clay"
-          href="/checkout"
-          onClick={onCheckoutNavigate}
-        >
-          continue to checkout →
-        </Link>
-      </div>
+      <p className="lbl cart-totals__note">{cartCopy.note}</p>
+      <Link
+        className="btn btn--clay cm-cta"
+        href="/checkout"
+        onClick={onCheckoutNavigate}
+      >
+        {cartCopy.checkout}
+      </Link>
     </div>
   );
 }

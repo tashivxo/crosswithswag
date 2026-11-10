@@ -4,33 +4,38 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
 import {
-  productCardImage,
-  type ProductSize,
-  type StandardProduct,
-} from "@/lib/v4/products";
+  createAnnouncer,
+  quantityMessage,
+  removalMessage,
+} from "@/lib/v4/cart/announce";
+import {
+  addToLines,
+  cartCount,
+  cartSubtotalCents,
+  removeFromLines,
+  setLineQuantity,
+  type CartLine,
+} from "@/lib/v4/cart/cart-math";
+import type { ProductSize, StandardProduct } from "@/lib/v4/products";
 
-export type CartLine = {
-  lineId: string;
-  productId: string;
-  slug: string;
-  title: string;
-  colourway: string;
-  size: ProductSize;
-  unitPriceCents: number;
-  quantity: number;
-  imageSrc: string;
-};
+export type { CartLine };
+
+const ANNOUNCE_DELAY_MS = 60;
 
 type CartContextValue = {
   lines: CartLine[];
   count: number;
   subtotalCents: number;
   drawerOpen: boolean;
+  /** Latest polite live-region message (removals and quantity changes). */
+  announcement: string;
   openDrawer: () => void;
   closeDrawer: () => void;
   addLine: (product: StandardProduct, size: ProductSize) => void;
@@ -41,93 +46,100 @@ type CartContextValue = {
 
 const CartContext = createContext<CartContextValue | null>(null);
 
-function lineId(productId: string, size: ProductSize) {
-  return `${productId}:${size}`;
-}
-
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [lines, setLines] = useState<CartLine[]>([]);
+  const [lines, setLinesState] = useState<CartLine[]>([]);
+  const linesRef = useRef<CartLine[]>([]);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [announcement, setAnnouncement] = useState("");
 
-  const openDrawer = useCallback(() => setDrawerOpen(true), []);
-  const closeDrawer = useCallback(() => setDrawerOpen(false), []);
+  const announcer = useMemo(
+    () =>
+      createAnnouncer(setAnnouncement, (run) => {
+        const timer = window.setTimeout(run, ANNOUNCE_DELAY_MS);
+        return () => window.clearTimeout(timer);
+      }),
+    [],
+  );
+  useEffect(() => () => announcer.cancel(), [announcer]);
 
-  const addLine = useCallback((product: StandardProduct, size: ProductSize) => {
-    const id = lineId(product.id, size);
-    const imageSrc = productCardImage(product);
-    setLines((prev) => {
-      const existing = prev.find((l) => l.lineId === id);
-      if (existing) {
-        return prev.map((l) =>
-          l.lineId === id ? { ...l, quantity: l.quantity + 1 } : l,
-        );
-      }
-      return [
-        ...prev,
-        {
-          lineId: id,
-          productId: product.id,
-          slug: product.slug,
-          title: product.shirtName,
-          colourway: product.colourwayName,
-          size,
-          unitPriceCents: product.priceCents,
-          quantity: 1,
-          imageSrc,
-        },
-      ];
-    });
+  const commit = useCallback((next: CartLine[]) => {
+    linesRef.current = next;
+    setLinesState(next);
   }, []);
 
-  const removeLine = useCallback((id: string) => {
-    setLines((prev) => prev.filter((l) => l.lineId !== id));
-  }, []);
+  // The region that carries the message changes with the drawer, so drop any old text first;
+  // otherwise a stale message would be read out when the other region takes over.
+  const openDrawer = useCallback(() => {
+    announcer.cancel();
+    setAnnouncement("");
+    setDrawerOpen(true);
+  }, [announcer]);
+  const closeDrawer = useCallback(() => {
+    announcer.cancel();
+    setAnnouncement("");
+    setDrawerOpen(false);
+  }, [announcer]);
+
+  const addLine = useCallback(
+    (product: StandardProduct, size: ProductSize) => {
+      commit(addToLines(linesRef.current, product, size));
+    },
+    [commit],
+  );
+
+  const removeLine = useCallback(
+    (id: string) => {
+      const line = linesRef.current.find((l) => l.lineId === id);
+      if (!line) return;
+      const next = removeFromLines(linesRef.current, id);
+      commit(next);
+      announcer.announce(removalMessage(line, cartCount(next)));
+    },
+    [announcer, commit],
+  );
 
   const setQuantity = useCallback(
     (id: string, quantity: number) => {
+      const line = linesRef.current.find((l) => l.lineId === id);
+      if (!line) return;
       if (quantity <= 0) {
         removeLine(id);
         return;
       }
-      setLines((prev) =>
-        prev.map((l) =>
-          l.lineId === id ? { ...l, quantity: Math.max(1, quantity) } : l,
-        ),
-      );
+      commit(setLineQuantity(linesRef.current, id, quantity));
+      announcer.announce(quantityMessage(line, quantity));
     },
-    [removeLine],
+    [announcer, commit, removeLine],
   );
 
-  const clear = useCallback(() => setLines([]), []);
+  const clear = useCallback(() => commit([]), [commit]);
 
-  const value = useMemo(() => {
-    const count = lines.reduce((n, l) => n + l.quantity, 0);
-    const subtotalCents = lines.reduce(
-      (n, l) => n + l.unitPriceCents * l.quantity,
-      0,
-    );
-    return {
+  const value = useMemo(
+    () => ({
       lines,
-      count,
-      subtotalCents,
+      count: cartCount(lines),
+      subtotalCents: cartSubtotalCents(lines),
       drawerOpen,
+      announcement,
       openDrawer,
       closeDrawer,
       addLine,
       removeLine,
       setQuantity,
       clear,
-    };
-  }, [
-    lines,
-    drawerOpen,
-    openDrawer,
-    closeDrawer,
-    addLine,
-    removeLine,
-    setQuantity,
-    clear,
-  ]);
+    }),
+    [
+      lines,
+      drawerOpen,
+      announcement,
+      openDrawer,
+      closeDrawer,
+      addLine,
+      removeLine,
+      setQuantity,
+      clear,
+    ],
+  );
 
   return (
     <CartContext.Provider value={value}>{children}</CartContext.Provider>
