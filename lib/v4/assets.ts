@@ -10,6 +10,8 @@ export type AssetSlot = {
   /** Pixel size of the served web file, so layouts can pick object-fit per slot. */
   width?: number;
   height?: number;
+  /** Alt text for photographs (required for every registered photo; see tests/v4-assets.test.ts). */
+  alt?: string;
   /** Marcus's original filename (see marcus-assets/figma-v4/README.md). */
   original?: string;
 };
@@ -62,7 +64,7 @@ export const draftMissingAssets = {
   ],
   archiveGallery:
     "none missing: 22 photos wired. Slot order, record/hero choice and extras are DRAFT: confirm with Marcus",
-  space: "Campaign stills for /space sections 01–08",
+  space: "5 of 10 Space photos missing (Drive download cap): _DSC0448, _DSC0673, _DSC0677, KSN (35), KSN (39)",
   notFound: "21:9 empty-shoot frame for NOT HERE.",
 } as const;
 
@@ -73,7 +75,7 @@ export const draftMissingAssets = {
  * Most files are portrait (about 2:3) and only KSN (23) / KSN (27) are 3:2 landscape, so the Figma 21:9 / 4:5 /
  * 3:2 / 16:9 frame ratios are applied with object-fit: cover until the order is confirmed.
  */
-const archivePhotos: AssetSlot[] = [
+const archivePhotoSlots: AssetSlot[] = [
   { id: "archive-ed001-photo-01", original: "_DSC0355.jpg", path: `${V4}/archive/ed001-dsc0355.webp`, width: 1590, height: 2400 },
   { id: "archive-ed001-photo-02", original: "_DSC0403.jpg", path: `${V4}/archive/ed001-dsc0403.webp`, width: 1590, height: 2400 },
   { id: "archive-ed001-photo-03", original: "_DSC0422.jpg", path: `${V4}/archive/ed001-dsc0422.webp`, width: 1590, height: 2400 },
@@ -97,6 +99,12 @@ const archivePhotos: AssetSlot[] = [
   { id: "archive-ed001-photo-21", original: "KSN (28).jpg", path: `${V4}/archive/ed001-ksn-28.webp`, width: 1576, height: 2400 },
   { id: "archive-ed001-photo-22", original: "KSN (42).jpg", path: `${V4}/archive/ed001-ksn-42.webp`, width: 1590, height: 2400 },
 ];
+
+/** NEW: generic alt text until Marcus supplies captions (no per-photo descriptions exist yet). */
+const archivePhotos: AssetSlot[] = archivePhotoSlots.map((photo, i) => ({
+  ...photo,
+  alt: `kloofstreetnights, edition 001: campaign photograph ${i + 1} of ${archivePhotoSlots.length}`,
+}));
 
 const DRAFT_ORDER = "DRAFT: confirm with Marcus (filename order, not Figma order)";
 
@@ -122,13 +130,34 @@ export const archiveExtraPhotos: AssetSlot[] = archivePhotos.slice(13).map((phot
   note: "DRAFT: confirm with Marcus (no slot assigned)",
 }));
 
-export const spaceCampaignStills: AssetSlot[] = [
-  { id: "space-hero", path: "", note: "draft-missing — V4 main Drive pack" },
-  { id: "space-standard-edition", path: "", note: "draft-missing" },
-  { id: "space-bash", path: "", note: "draft-missing" },
-  { id: "space-boiler-room", path: "", note: "draft-missing" },
-  { id: "space-artist-spotlights", path: "", note: "draft-missing" },
+/**
+ * Space (no Figma frame): Marcus's Drive "Space" folder has 10 photos. Five are wired; _DSC0422, _DSC0631-3, _DSC0738
+ * and KSN (28) reuse the archive WebPs (same originals), KSN (18) is new (scripts/optimize-space.mjs).
+ * Missing (Drive download cap is 10 MiB): _DSC0448, _DSC0673, _DSC0677, KSN (35), KSN (39).
+ * Order and hero choice are DRAFT: the first three are the main section, the rest sit behind "open the set".
+ */
+export const spaceSet: AssetSlot[] = [
+  { id: "space-dsc0738", original: "_DSC0738.jpg", path: `${V4}/archive/ed001-dsc0738.webp`, width: 1590, height: 2400, alt: "A figure in a white tee standing on rocks above the sea at sunset" },
+  { id: "space-dsc0631-3", original: "_DSC0631-3.jpg", path: `${V4}/archive/ed001-dsc0631-3.webp`, width: 1445, height: 2400, alt: "A woman in sunglasses and an oversized black tee, leaning against a stone wall" },
+  { id: "space-ksn-28", original: "KSN (28).jpg", path: `${V4}/archive/ed001-ksn-28.webp`, width: 1576, height: 2400, alt: "A smiling woman in a black hoodie with white hair clips, hands clasped" },
+  { id: "space-ksn-18", original: "KSN (18).jpg", path: `${V4}/space/space-ksn-18.webp`, width: 1609, height: 2279, alt: "A woman in a black hoodie with white hair clips, looking down" },
+  { id: "space-dsc0422", original: "_DSC0422.jpg", path: `${V4}/archive/ed001-dsc0422.webp`, width: 1590, height: 2400, alt: "A woman in a white shirt seated at an outdoor bar table with an orange handbag" },
 ];
+
+export const spaceMissingPhotos = [
+  "_DSC0448.jpg",
+  "_DSC0673.jpg",
+  "_DSC0677.jpg",
+  "KSN (35).jpg",
+  "KSN (39).jpg",
+] as const;
+
+/** Manifesto: _DSC0586 and _DSC0587 reuse the archive WebPs (same originals). Figma 21:671 uses _DSC0587 for the backdrop and the frame. */
+export const manifestoPhotos: Record<"backdrop" | "frame" | "alternate", AssetSlot> = {
+  backdrop: { id: "manifesto-backdrop", original: "_DSC0587.jpg", path: `${V4}/archive/ed001-dsc0587.webp`, width: 1590, height: 2400, alt: "A woman crouching on granite boulders, one arm raised against the rock" },
+  frame: { id: "manifesto-frame", original: "_DSC0587.jpg", path: `${V4}/archive/ed001-dsc0587.webp`, width: 1590, height: 2400, alt: "A woman crouching on granite boulders in a black tee, one arm raised against the rock" },
+  alternate: { id: "manifesto-alternate", original: "_DSC0586.jpg", path: `${V4}/archive/ed001-dsc0586.webp`, width: 1590, height: 2400, alt: "A woman in a black tee crouching on granite boulders, looking out of frame" },
+};
 
 export const notFoundAsset: AssetSlot = {
   id: "404-empty-shoot",
