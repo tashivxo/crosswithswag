@@ -16,13 +16,21 @@ import {
 import { comingSoonEnabled } from "@/lib/coming-soon";
 import {
   hashRoutes,
-  isCreamSurface,
   normalizePath,
+  surfaceTone,
+  type SurfaceTone,
 } from "@/lib/sections.config";
 
 gsap.registerPlugin(ScrollTrigger);
 
-export function SiteChrome({ children }: { children: React.ReactNode }) {
+export function SiteChrome({
+  children,
+  tone,
+}: {
+  children: React.ReactNode;
+  /** Forces the surface (the 404 renders outside the gallery routes). */
+  tone?: SurfaceTone;
+}) {
   const pathname = usePathname();
   const router = useRouter();
   const [ready, setReady] = useState(false);
@@ -91,8 +99,7 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
     normalizePath(pathname) === "/" && comingSoonEnabled() ? "hero" : "docked";
 
   // The coming-soon poster on / is its own dark composition.
-  const surface =
-    isCreamSurface(pathname) && mode !== "hero" ? "cream" : "dark";
+  const surface = mode === "hero" ? "dark" : (tone ?? surfaceTone(pathname));
 
   return (
     <main className="page-shell" data-surface={surface}>

@@ -427,12 +427,66 @@ export const contact = {
   },
 };
 
+// NEW: /playlists copy from Figma 21:23 frame 265:262 (verbatim, dashes kept). Display type is uppercased in CSS.
 export const playlistsPage = {
   label: "[ playlists ]",
-  display: ["THE MIX."],
-  intro: "3 playlists. from our curators, 2 u",
-  curators: {
-    label: "[ curators ]",
+  display: ["SOUND", "COMES", "FIRST."],
+  intro:
+    "the playlists came before the clothes. three moments, three playlists. free to save, always open.",
+  channels: [
+    {
+      slug: "stepwithswag",
+      numeral: "[ 01 ]",
+      title: ["STEP.", "GOING OUT"],
+      body: "confident, pregame, hot club energy. amapiano, afrobeats, gqom, hip hop.",
+      jump: "JUMP TO STEP. ↓",
+    },
+    {
+      slug: "dalawithswag",
+      numeral: "[ 02 ]",
+      title: ["DALA.", "STUDY"],
+      body: "for the lock in sessions. hip hop, indie, lofi, 3 step, house, afrotech.",
+      jump: "JUMP TO DALA. ↓",
+    },
+    {
+      slug: "freefallwithswag",
+      numeral: "[ 03 ]",
+      title: ["FREEFALL.", "CHILL"],
+      body: "the drop. no plan, just the fall. neo-soul, r&b, soft amapiano, downtempo.",
+      jump: "JUMP TO FREEFALL. ↓",
+    },
+  ],
+  rows: {
+    stepwithswag: {
+      label: "[ 01 — GOING OUT ]",
+      display: "STEP.",
+      cover: ["step.", "with.", "swag."],
+      body: "confident, pregame vibes, hip hop, hot club energy. amapiano, afrobeats, gqom. sounds of south ah.",
+      tags: ["AMAPIANO", "AFROBEATS", "HIP HOP", "GQOM"],
+      open: "OPEN STEPWITHSWAG. IN SPOTIFY →",
+    },
+    dalawithswag: {
+      label: "[ 02 — STUDY ]",
+      display: "DALA.",
+      cover: ["dala.", "with.", "swag."],
+      body: "for the lock in sessions. hip hop, indie, lofi, 3 step, house, edm, afrotech.",
+      tags: ["HIP HOP", "INDIE", "LOFI", "3 STEP", "HOUSE", "AFROTECH"],
+      open: "OPEN DALAWITHSWAG. IN SPOTIFY →",
+    },
+    freefallwithswag: {
+      label: "[ 03 — CHILL ]",
+      display: "FREEFALL.",
+      cover: ["freefall.", "with.", "swag."],
+      body: "the drop. no plan, just the fall. chill. decompression, warmth. neo-soul, r&b, soft amapiano, downtempo.",
+      tags: ["NEO-SOUL", "R&B", "SOFT AMAPIANO", "DOWNTEMPO"],
+      open: "OPEN FREEFALLWITHSWAG. IN SPOTIFY →",
+    },
+  },
+  list: {
+    label: "[ the list ]",
+    title: ["FIRST", "ACCESS."],
+    body: "one message when an edition opens. nothing else. no paid advertising, no hype.",
+    note: "email + whatsapp waitlist",
   },
 };
 

@@ -1,16 +1,41 @@
 import { describe, expect, it } from "vitest";
-import { isCreamSurface } from "@/lib/sections.config";
+import { isCreamSurface, surfaceTone } from "@/lib/sections.config";
 
 describe("isCreamSurface", () => {
-  it("is on for the converted routes only (/, /current and the commerce routes)", () => {
-    expect(isCreamSurface("/")).toBe(true);
-    expect(isCreamSurface("/current")).toBe(true);
-    expect(isCreamSurface("/current/")).toBe(true);
-    expect(isCreamSurface("/cart")).toBe(true);
-    expect(isCreamSurface("/checkout/")).toBe(true);
-    expect(isCreamSurface("/order/confirmed")).toBe(true);
+  it("is on for the converted cream routes", () => {
+    for (const path of [
+      "/",
+      "/current",
+      "/current/",
+      "/cart",
+      "/checkout/",
+      "/order/confirmed",
+      "/playlists",
+      "/archive/",
+      "/space",
+      "/contact",
+    ]) {
+      expect(isCreamSurface(path), path).toBe(true);
+    }
     expect(isCreamSurface("/order")).toBe(false);
-    expect(isCreamSurface("/space")).toBe(false);
-    expect(isCreamSurface("/archive/")).toBe(false);
+  });
+
+  it("keeps the Figma photo (manifesto) and clay (404) frames off the cream list", () => {
+    expect(isCreamSurface("/manifesto")).toBe(false);
+    expect(isCreamSurface("/anything-else")).toBe(false);
+  });
+});
+
+describe("surfaceTone", () => {
+  it("maps each route to the surface its Figma frame uses", () => {
+    expect(surfaceTone("/contact")).toBe("cream");
+    expect(surfaceTone("/playlists/")).toBe("cream");
+    expect(surfaceTone("/manifesto")).toBe("photo");
+    expect(surfaceTone("/manifesto/")).toBe("photo");
+  });
+
+  it("falls back to clay for unknown paths (the 404 frame)", () => {
+    expect(surfaceTone("/not-a-page")).toBe("clay");
+    expect(surfaceTone("/cart/oops")).toBe("clay");
   });
 });

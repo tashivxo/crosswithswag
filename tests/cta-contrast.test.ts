@@ -63,3 +63,13 @@ describe("shared outline CTA (.tlink, .btn)", () => {
     expect(block).toMatch(/min-height:\s*44px/);
   });
 });
+
+describe("CTA on the Clay and photo surfaces", () => {
+  it("studio-white label on Clay passes AA small text", () => {
+    expect(contrast(hex(token("--studio-white")), hex(token("--clay")))).toBeGreaterThanOrEqual(4.5);
+  });
+
+  it("ink label on the studio-white hover fill passes AA on the photo surface", () => {
+    expect(contrast(hex(token("--ink")), hex(token("--studio-white")))).toBeGreaterThanOrEqual(4.5);
+  });
+});

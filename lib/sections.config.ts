@@ -44,7 +44,24 @@ export const creamSurfaceRoutes: readonly string[] = [
   "/cart",
   "/checkout",
   "/order/confirmed",
+  "/playlists",
+  "/archive",
+  "/space",
+  "/contact",
 ];
+
+export type SurfaceTone = "cream" | "photo" | "clay";
+
+/** Manifesto is a full-bleed photo with cream type (Figma 21:671). */
+export const photoSurfaceRoutes: readonly string[] = ["/manifesto"];
+
+/** Cream and photo routes by path; any other path is the Clay 404 frame (Figma 21:618). */
+export function surfaceTone(path: string): SurfaceTone {
+  const normalized = normalizePath(path);
+  if (creamSurfaceRoutes.includes(normalized)) return "cream";
+  if (photoSurfaceRoutes.includes(normalized)) return "photo";
+  return "clay";
+}
 
 export function isCreamSurface(path: string): boolean {
   return creamSurfaceRoutes.includes(normalizePath(path));
