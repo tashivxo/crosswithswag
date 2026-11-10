@@ -12,6 +12,10 @@ export type AssetSlot = {
   height?: number;
   /** Alt text for photographs (required for every registered photo; see tests/v4-assets.test.ts). */
   alt?: string;
+  /** Archive gallery frame kind (Figma 21:964 rows). */
+  frame?: "wide" | "pair" | "trio" | "wide-small" | "tall" | "hero";
+  /** object-position focal point used when the photo is cropped into its frame. */
+  focus?: string;
   /** Marcus's original filename (see marcus-assets/figma-v4/README.md). */
   original?: string;
 };
@@ -106,29 +110,45 @@ const archivePhotos: AssetSlot[] = archivePhotoSlots.map((photo, i) => ({
   alt: `kloofstreetnights, edition 001: campaign photograph ${i + 1} of ${archivePhotoSlots.length}`,
 }));
 
-const DRAFT_ORDER = "DRAFT: confirm with Marcus (filename order, not Figma order)";
+/**
+ * Edition 001 12-frame gallery, in Figma 21:964 row order: wide, pair, trio, wide + tall, hero, pair, wide.
+ * Figma names 7 of its photographs (KSN (23), _DSC0610, _DSC0681, _DSC0810, _DSC0355, KSN (27), KSN (42), _DSC0684);
+ * four Figma files are not in Marcus's archive pack (_DSC0724, _DSC0844, _DSC0631-2, _DSC0364), so those frames
+ * take the nearest photographs by orientation. DRAFT: confirm the order with Marcus.
+ */
+const galleryOrder: { original: string; frame: NonNullable<AssetSlot["frame"]>; focus: string }[] = [
+  { original: "KSN (23).jpg", frame: "wide", focus: "50% 40%" },
+  { original: "_DSC0632.jpg", frame: "pair", focus: "50% 35%" },
+  { original: "_DSC0610.jpg", frame: "pair", focus: "50% 35%" },
+  { original: "_DSC0681.jpg", frame: "trio", focus: "50% 35%" },
+  { original: "_DSC0810.jpg", frame: "trio", focus: "50% 35%" },
+  { original: "_DSC0355.jpg", frame: "trio", focus: "50% 30%" },
+  { original: "KSN (27).jpg", frame: "wide-small", focus: "50% 40%" },
+  { original: "KSN (42).jpg", frame: "tall", focus: "50% 35%" },
+  { original: "_DSC0836.jpg", frame: "hero", focus: "50% 35%" },
+  { original: "_DSC0684.jpg", frame: "pair", focus: "50% 35%" },
+  { original: "_DSC0631-3.jpg", frame: "pair", focus: "50% 35%" },
+  { original: "_DSC0699.jpg", frame: "wide", focus: "50% 35%" },
+];
 
-/** Edition 001 12-frame gallery (21:9 / 4:5 / 3:2 / 16:9 slots): photos 01-12. All 12 slots have a real file; the order is DRAFT. */
-export const archiveGalleryFrames: AssetSlot[] = archivePhotos
-  .slice(0, 12)
-  .map((photo, i) => ({
+const DRAFT_ORDER = "DRAFT: confirm with Marcus (Figma file names where the pack has them, orientation otherwise)";
+
+export const archiveGalleryFrames: AssetSlot[] = galleryOrder.map((entry, i) => {
+  const photo = archivePhotos.find((candidate) => candidate.original === entry.original);
+  if (!photo) throw new Error(`Missing archive photo ${entry.original}`);
+  return {
     ...photo,
     id: `archive-ed001-${String(i + 1).padStart(2, "0")}`,
+    frame: entry.frame,
+    focus: entry.focus,
     note: DRAFT_ORDER,
-  }));
+  };
+});
 
-/** Edition 001 record / hero slot. DRAFT: confirm with Marcus (photo 13 by filename order). */
-export const archiveRecordHero: AssetSlot = {
-  ...archivePhotos[12],
-  id: "archive-ed001-record",
-  note: DRAFT_ORDER,
-};
-
-/** Remaining photos (14-22) with no confirmed slot yet. DRAFT: confirm with Marcus. */
-export const archiveExtraPhotos: AssetSlot[] = archivePhotos.slice(13).map((photo) => ({
-  ...photo,
-  note: "DRAFT: confirm with Marcus (no slot assigned)",
-}));
+/** Photographs without a gallery frame: shown behind "open the set". DRAFT: confirm with Marcus. */
+export const archiveExtraPhotos: AssetSlot[] = archivePhotos
+  .filter((photo) => !galleryOrder.some((entry) => entry.original === photo.original))
+  .map((photo) => ({ ...photo, note: "DRAFT: confirm with Marcus (no frame assigned)" }));
 
 /**
  * Space (no Figma frame): Marcus's Drive "Space" folder has 10 photos. Five are wired; _DSC0422, _DSC0631-3, _DSC0738

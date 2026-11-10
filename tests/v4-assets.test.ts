@@ -5,7 +5,6 @@ import { describe, expect, it } from "vitest";
 import {
   archiveExtraPhotos,
   archiveGalleryFrames,
-  archiveRecordHero,
   manifestoPhotos,
   spaceSet,
   type AssetSlot,
@@ -14,7 +13,7 @@ import {
 const registered: Record<string, AssetSlot[]> = {
   space: spaceSet,
   manifesto: [manifestoPhotos.backdrop, manifestoPhotos.frame, manifestoPhotos.alternate],
-  archive: [...archiveGalleryFrames, archiveRecordHero, ...archiveExtraPhotos],
+  archive: [...archiveGalleryFrames, ...archiveExtraPhotos],
 };
 
 describe("registered v4 photos", () => {
@@ -43,6 +42,20 @@ describe("registered v4 photos", () => {
       });
     });
   }
+
+  it("places all 22 archive photos exactly once: 12 gallery frames, the rest behind the set", () => {
+    expect(archiveGalleryFrames).toHaveLength(12);
+    const paths = [...archiveGalleryFrames, ...archiveExtraPhotos].map((slot) => slot.path);
+    expect(paths).toHaveLength(22);
+    expect(new Set(paths).size).toBe(22);
+  });
+
+  it("gives every gallery frame a layout kind and focal point", () => {
+    for (const frame of archiveGalleryFrames) {
+      expect(frame.frame, frame.id).toBeTruthy();
+      expect(frame.focus, frame.id).toMatch(/^\d+% \d+%$/);
+    }
+  });
 
   it("uses unique ids inside the Space set", () => {
     const ids = spaceSet.map((slot) => slot.id);
