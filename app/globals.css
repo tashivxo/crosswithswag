@@ -13,6 +13,8 @@
   --surface-tile: #ffffff;
   --ink-line: rgba(45, 45, 45, 0.14);
   --ink-line-strong: rgba(45, 45, 45, 0.28);
+  /* Form control boundary: 3.9:1 on white, 3.5:1 on cream (WCAG 1.4.11). */
+  --ink-line-field: rgba(45, 45, 45, 0.6);
   --tile-edge: rgba(45, 45, 45, 0.08);
   --line: rgba(214, 209, 196, 0.14);
   --line-strong: rgba(214, 209, 196, 0.28);
@@ -3842,7 +3844,7 @@ html[data-cs-short="1"]:has(.cs) .site-header::after {
   width: 100%;
   min-height: 52px;
   padding: 0 14px;
-  border: 1px solid var(--ink-line-strong);
+  border: 1px solid var(--ink-line-field);
   border-radius: 0;
   background: var(--surface-tile);
   color: var(--ink);
@@ -3873,7 +3875,7 @@ html[data-cs-short="1"]:has(.cs) .site-header::after {
   gap: 14px;
   min-height: 56px;
   padding: 8px 16px;
-  border: 1px solid var(--ink-line-strong);
+  border: 1px solid var(--ink-line-field);
   background: var(--surface-tile);
   color: var(--ink);
   font-size: 16px;
