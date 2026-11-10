@@ -166,6 +166,106 @@ export const productPage = {
   },
 };
 
+/**
+ * Commerce routes (/cart, /checkout, /order/confirmed) and the cart drawer.
+ * Strings under "existing" were already live copy and are kept verbatim.
+ * Strings marked NEW were written for the V4.1 commerce phase and need Marcus's sign-off.
+ */
+export const cartCopy = {
+  label: "[ cart ]",
+  count: (n: number) => `standard edition — ${n} shirt${n === 1 ? "" : "s"}`,
+  title: "selected objects.",
+  lineDetail: (colourway: string, size: string) =>
+    `standard edition · ${colourway} · size ${size}`,
+  soldOutLine: (size: string) => `sold out in ${size} — still in your cart`,
+  remove: "remove",
+  keepShopping: "keep shopping",
+  subtotal: "subtotal",
+  delivery: "delivery",
+  deliveryNote: "chosen at checkout — paxi",
+  note: "item prices exclude delivery. paxi economy R60 · speed R110 · door-to-door R120.",
+  checkout: "continue to checkout →",
+  empty: {
+    lead: "nothing in here yet.",
+    body: "the standard edition is always open.",
+    cta: "shop the standard edition →",
+  },
+  drawer: {
+    title: (n: number) => `[ cart — ${n} ]`,
+    close: "close",
+    closeLabel: "Close cart",
+  },
+  /** NEW: accessible names and polite live-region announcements. */
+  a11y: {
+    decrease: (title: string, colourway: string, size: string) =>
+      `Decrease quantity for ${title}, ${colourway}, size ${size}`,
+    increase: (title: string, colourway: string, size: string) =>
+      `Increase quantity for ${title}, ${colourway}, size ${size}`,
+    removeLabel: (title: string, colourway: string, size: string) =>
+      `Remove ${title}, ${colourway}, size ${size} from cart`,
+    quantity: (n: number) => `Quantity ${n}`,
+    removed: (title: string, colourway: string, size: string, remaining: number) =>
+      `${title}, ${colourway}, size ${size} removed. ${
+        remaining === 0
+          ? "Your cart is empty."
+          : `${remaining} item${remaining === 1 ? "" : "s"} in your cart.`
+      }`,
+    quantityChanged: (title: string, size: string, quantity: number) =>
+      `${title}, size ${size}: quantity ${quantity}.`,
+  },
+};
+
+export const checkoutCopy = {
+  label: "[ checkout ]",
+  sub: "guest checkout — no account needed",
+  title: "checkout.",
+  contact: "[ 01 — contact ]",
+  delivery: "[ 02 — delivery — paxi ]",
+  payment: "[ 03 — payment ]",
+  paymentOptions: [
+    { id: "card", label: "card — yoco (hosted checkout)" },
+    { id: "eft", label: "instant eft — payfast" },
+  ],
+  paymentNote:
+    "card details never touch this site. an order is marked paid by the processor, not by the redirect.",
+  items: (n: number) => `${n} item${n === 1 ? "" : "s"} · delivery extra`,
+  /** NEW: stub payment CTA. The existing "pay → (not wired)" is split into label + note. */
+  pay: "pay →",
+  processing: "processing…",
+  stubNote: "payment is not wired yet — nothing is charged.",
+  summaryLabel: "[ your order ]",
+  deliveryRow: "delivery",
+  totalRow: "total",
+  /** NEW: form. */
+  fields: {
+    name: { label: "full name", autoComplete: "name" },
+    email: { label: "email", autoComplete: "email" },
+    phone: { label: "phone", autoComplete: "tel" },
+    address: {
+      label: "delivery address or paxi pick-up point",
+      autoComplete: "street-address",
+    },
+  },
+  deliveryLegend: "delivery option",
+  paymentLegend: "payment method",
+  errors: {
+    name: "enter your full name.",
+    email: "enter a valid email.",
+    phone: "enter a phone number with at least 10 digits.",
+    address: "enter a delivery address or paxi pick-up point.",
+  },
+};
+
+export const orderConfirmedCopy = {
+  label: "[ order ]",
+  state: "received",
+  title: "order received.",
+  body: "thank you. this is a static confirmation screen on v4_branch.",
+  cta: "back to the shop →",
+  /** NEW */
+  numberLabel: "order number",
+};
+
 export const current = {
   editionLabel: "[ edition 001 ]",
   title: "kloofstreetnights",
