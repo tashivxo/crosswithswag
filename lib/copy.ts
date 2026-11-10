@@ -299,31 +299,69 @@ export const current = {
   },
 };
 
+// NEW: /archive copy from Figma 21:964 (verbatim, dashes kept). The gallery head's right label in Figma reads
+// "12 FRAMES — UPLOAD IN ORDER", a designer note; it is shortened to "12 FRAMES". The director note is a
+// placeholder in Figma and stays one until Marcus writes it.
 export const archive = {
-  display: ["EVERY EDITION", "CLOSES."],
-  intro:
-    "the site is a living archive, not a storefront. each edition receives a permanent record. the body of work is the brand.",
-  note: "editions 002–006 are unreleased. names are locked; dates are not announced.",
-  rules: [
-    {
-      numeral: "[ rule i ]",
-      title: "no repeats",
-      body: "an edition closes the moment it opens. no restock, no reissue, no second run.",
-    },
-    {
-      numeral: "[ rule ii ]",
-      title: "three objects",
-      body: "garment, campaign image, framed print. every edition. non-negotiable.",
-    },
-    {
-      numeral: "[ rule iii ]",
-      title: "depth, not scale",
-      body: "scarcity here is structural. it is not manufactured for the sale.",
-    },
-  ],
-  closer: {
-    label: "[ the record ]",
-    display: ["NOTH-", "OWE", "ING."],
+  label: "[ archive ]",
+  labelRight: "EVERY EDITION CLOSES",
+  display: "THE ARCHIVE.",
+  index: {
+    head: { left: "[ 01 — the editions ]", right: "SIX NAMED — ONE CLOSED" },
+    rows: [
+      {
+        number: "001",
+        name: "kloofstreetnights",
+        desc: "two colourways, one night. after hours to first light.",
+        state: "CLOSED",
+        href: "#edition-001",
+      },
+      {
+        number: "002",
+        name: "crosswithswag — standard edition",
+        desc: "a homage to streetwear and the y2k era.",
+        state: "COMING SOON",
+        href: "/current",
+        current: true,
+      },
+      { number: "003", name: "atm", desc: "all that matters.", state: "IN DEVELOPMENT" },
+      { number: "004", name: "octane", desc: "—", state: "IN DEVELOPMENT" },
+      {
+        number: "005",
+        name: "mountain eater red",
+        desc: "second edition. red colourway.",
+        state: "IN DEVELOPMENT",
+      },
+      { number: "006", name: "courtside club culture", desc: "—", state: "IN DEVELOPMENT" },
+    ],
+    note: "edition 002 is the standard edition: always open, drops 13.11. editions 003–006 are unreleased. names are locked; dates are not announced.",
+  },
+  record: {
+    head: { left: "[ 02 — edition 001 ]", right: "CLOSED — NO REISSUE" },
+    title: "kloofstreetnights",
+    thesis: "two colourways, one night. after hours to first light.",
+    table: [
+      { label: "STATE", value: "closed — no reissue" },
+      { label: "COLOURWAYS", value: "two" },
+      { label: "OBJECTS", value: "garment · campaign image · framed print" },
+      { label: "GARMENTS", value: "hoodie / crewneck / t-shirt" },
+      { label: "RELEASED", value: "september 2026" },
+    ],
+  },
+  gallery: {
+    head: { left: "[ 03 — gallery · edition 001 ]", right: "12 FRAMES" },
+    setLabel: "more photographs from edition 001",
+  },
+  director: {
+    label: "[ a message from the director ]",
+    body: "[ director note — written per edition, signed. frozen on the archive record once the edition closes. ]",
+    signOff: "— the.director",
+    edition: "kloofstreetnights",
+  },
+  cta: {
+    body: "this edition is closed. the standard edition is always open.",
+    link: "SHOP THE STANDARD EDITION →",
+    href: "/#shop",
   },
 };
 
@@ -391,8 +429,51 @@ export const manifesto = {
   },
 };
 
+// NEW: /space. No /space frame exists. Intro and cards are verbatim from Figma 21:24 ("02 — The Space"), which
+// the file marks as draft copy. The h1 is derived from the section label and is NEW.
+export const spacePage = {
+  label: "[ 02 — the space ]",
+  display: ["THE", "SPACE."],
+  intro:
+    "swag is not just clothes. a standard edition, always open. parties. recorded sessions. artist spotlights. and editions that close once.",
+  head: { left: "[ 02 — the space ]", right: "PARTIES — SESSIONS — SPOTLIGHTS" },
+  objects: [
+    {
+      numeral: "[ I ]",
+      title: "SWAG.BASH",
+      body: "the parties. a room for people done performing. hosted by swag.",
+    },
+    {
+      numeral: "[ II ]",
+      title: "BOILER ROOM SESSIONS",
+      body: "recorded sessions, filmed in the room. the sound of the space, kept.",
+    },
+    {
+      numeral: "[ III ]",
+      title: "ARTIST SPOTLIGHTS",
+      body: "the artists we listen to, one at a time. given the room and the night.",
+    },
+  ],
+  photos: {
+    label: "[ the room ]",
+    setLabel: "more photographs from the space",
+  },
+  links: [
+    { label: "SHOP THE STANDARD EDITION →", href: "/#shop" },
+    { label: "THE ARCHIVE →", href: "/archive" },
+  ],
+};
+
+// NEW: "open the set" interaction (no Figma frame). Extra photographs sit behind it.
+export const imageSetCopy = {
+  open: "open the set",
+  close: "close the set",
+  region: "more photographs from the set",
+};
+
+// NEW (Figma 21:752): display breaks over three lines and the sign-off line is "@crosswithswag".
 export const contact = {
-  display: ["NO PERMISSION", "NEEDED."],
+  display: ["NO", "PERMISSION", "NEEDED."],
   intro:
     "one inbox. orders, collaborations, everything. we don't need a storefront to sell you something true.",
   cards: [
@@ -423,7 +504,7 @@ export const contact = {
       "so here is the invitation —",
     ],
     signOff: "— the.director",
-    edition: "kloofstreetnights",
+    edition: "@crosswithswag",
   },
 };
 
@@ -533,4 +614,19 @@ export const comingSoon = {
   failureFallback: "nothing was saved. try again in a moment.", // VERIFY
   footerLeft: "CAPE TOWN — 2026", // VERIFY
   footerRight: "CROSSWITHSWAG.CO.ZA", // VERIFY
+};
+
+// NEW: 404 copy from Figma 21:618 (verbatim, curly apostrophe kept). The optional 21:9 photograph slot is a
+// designer note in Figma and the Drive 404 folder is empty, so the page is type-only; `gap` is shown as a label.
+export const notFoundPage = {
+  label: "[ 404 ]",
+  labelRight: "NOTHING LIVES AT THIS ADDRESS",
+  display: ["NOT", "HERE."],
+  lines: ["some things close. some were never here.", "we don\u2019t explain the gap. we point you home."],
+  links: [
+    { label: "SHOP THE STANDARD EDITION →", href: "/#shop" },
+    { label: "THE ARCHIVE →", href: "/archive" },
+    { label: "THE MANIFESTO →", href: "/manifesto" },
+  ],
+  gap: "[ 404 photograph — not yet supplied ]",
 };

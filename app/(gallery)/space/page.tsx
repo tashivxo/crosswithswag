@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { HomeChapter } from "@/components/v3/chapters/HomeChapter";
+import { SpaceChapter } from "@/components/v3/chapters/SpaceChapter";
 
 export const metadata: Metadata = {
   title: "Space",
 };
 
 export default function SpacePage() {
-  return <HomeChapter variant="space" />;
+  return <SpaceChapter />;
 }

@@ -1,149 +1,130 @@
 import Image from "next/image";
-import { Reveal } from "@/components/v3/Reveal";
+import { ImageSet } from "@/components/v4/ImageSet";
 import { manifesto } from "@/lib/copy";
+import { manifestoPhotos } from "@/lib/v4/assets";
+
+function Lines({ lines }: { lines: string[] }) {
+  return (
+    <ul className="mf-dense">
+      {lines.map((line) => (
+        <li key={line}>{line}</li>
+      ))}
+    </ul>
+  );
+}
 
 export function ManifestoChapter() {
   return (
-    <section id="manifesto" className="chapter">
-      <section className="wrap page-head">
-        <span className="lbl">[ the manifesto ]</span>
-        <h1 className="display">
-          {manifesto.display.map((line) => (
-            <span key={line}>
-              {line}
-              <br />
+    <section id="manifesto" className="chapter fp mf">
+      <div
+        className="mf-backdrop"
+        aria-hidden="true"
+        style={{ backgroundImage: `url(${manifestoPhotos.backdrop.path})` }}
+      />
+      <h1 className="sr-only">the manifesto</h1>
+
+      <section className="mf-sec mf-sec--first" aria-labelledby="mf-home">
+        <div className="fp-in">
+          <div className="mf-head">
+            <span id="mf-home" className="lbl">
+              [ a home for individuals ]
             </span>
-          ))}
-        </h1>
+            <span className="lbl">{manifesto.homeForIndividuals.label}</span>
+          </div>
+          <Lines lines={manifesto.homeForIndividuals.dense} />
+          <p className="mf-closing">{manifesto.homeForIndividuals.closing}</p>
+        </div>
       </section>
 
-      <section className="wrap owe" style={{ borderTop: 0 }}>
-        {manifesto.lines.map((line, index) => (
-          <Reveal key={line}>
-            <p className="owe-body" style={{ marginTop: index === 0 ? 0 : undefined }}>
-              {line.split(/(owe nothing|stop explaining|stop convincing|start being)/i).map((part, i) =>
-                /owe nothing|stop explaining|stop convincing|start being/i.test(part)
-                  ? <b key={i}>{part}</b>
-                  : part,
-              )}
-            </p>
-          </Reveal>
-        ))}
-        <Reveal className="orb">
-          <p>
-            <b>swag.</b> {manifesto.orb.replace(/^swag\.\s*/i, "")}
-          </p>
-        </Reveal>
+      <section className="mf-sec mf-wound" aria-label="the wound">
+        <div className="fp-in mf-wound__grid">
+          <div className="mf-wound__left">
+            <div className="mf-sign">
+              <div className="mf-prose">
+                {manifesto.wound.lines.map((line) => (
+                  <p key={line}>{line}</p>
+                ))}
+              </div>
+              <div className="mf-signoff">
+                <span>{manifesto.wound.signOff}</span>
+                <span>{manifesto.wound.edition}</span>
+              </div>
+            </div>
+            <ImageSet
+              items={[manifestoPhotos.alternate]}
+              label="the other frame from the set"
+              ratio="2 / 3"
+              className="mf-set"
+            />
+          </div>
+          <figure className="mf-frame">
+            <Image
+              src={manifestoPhotos.frame.path}
+              alt={manifestoPhotos.frame.alt ?? ""}
+              fill
+              sizes="(max-width: 899px) 100vw, 560px"
+              priority
+            />
+            <figcaption className="mf-frame__tag">
+              [ {manifesto.wound.imageTag} ]
+            </figcaption>
+          </figure>
+        </div>
       </section>
 
-      <section className="wrap pad-sm">
-        <Reveal className="sect-head">
-          <span className="lbl">[ a home for individuals ]</span>
-          <span className="lbl">{manifesto.homeForIndividuals.label}</span>
-        </Reveal>
-        <Reveal>
-          <ul className="stack-lines">
-            {manifesto.homeForIndividuals.dense.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
-        </Reveal>
-        <Reveal>
-          <p className="body-copy" style={{ marginTop: 34 }}>
-            {manifesto.homeForIndividuals.closing}
-          </p>
-        </Reveal>
-      </section>
-
-      <section className="wrap pad">
-        <Reveal className="feature" style={{ alignItems: "start" }}>
-          <div className="sig">
-            <div className="body-copy voice">
-              {manifesto.wound.lines.map((line) => (
+      <section className="mf-sec" aria-labelledby="mf-auth-title">
+        <div className="fp-in">
+          <div className="mf-head">
+            <span className="lbl">[ authentic expression ]</span>
+            <span className="lbl">what is swag?</span>
+          </div>
+          <div className="fp-split mf-split">
+            <h2 id="mf-auth-title" className="fp-h2">
+              {manifesto.authenticExpression.display.map((line) => (
+                <span key={line}>{line}</span>
+              ))}
+            </h2>
+            <div className="mf-prose">
+              {manifesto.authenticExpression.lines.map((line) => (
                 <p key={line}>{line}</p>
               ))}
             </div>
-            <div className="sig-name voice">{manifesto.wound.signOff}</div>
-            <div className="sig-ed voice">{manifesto.wound.edition}</div>
           </div>
-          <div className="frame frame--sq">
-            <Image
-              src="/assets/winter-drop/Artboard3.jpg"
-              alt="kloofstreetnights campaign photography"
-              fill
-              sizes="(max-width: 768px) 100vw, 40vw"
-            />
-            <span className="tag">{manifesto.wound.imageTag}</span>
-          </div>
-        </Reveal>
+        </div>
       </section>
 
-      <section className="wrap pad-sm">
-        <Reveal className="sect-head">
-          <span className="lbl">[ authentic expression ]</span>
-          <span className="lbl">what is swag?</span>
-        </Reveal>
-        <Reveal className="feature" style={{ alignItems: "start" }}>
-          <h2 className="sect">
-            {manifesto.authenticExpression.display.map((line) => (
-              <span key={line}>
-                {line}
-                <br />
-              </span>
-            ))}
-          </h2>
-          <div className="body-copy voice">
-            {manifesto.authenticExpression.lines.map((line) => (
-              <p key={line}>{line}</p>
+      <section className="mf-sec mf-sec--open" aria-label="authority">
+        <div className="fp-in">
+          <div className="mf-head">
+            <span className="lbl">[ authority ]</span>
+            <span className="lbl">the daily practice</span>
+          </div>
+          <Lines lines={manifesto.authority.dense} />
+          <p className="mf-closing">{manifesto.authority.closing}</p>
+        </div>
+      </section>
+
+      <section className="mf-sec mf-full" aria-label="the full manifesto">
+        <div className="fp-in">
+          <span className="lbl">{manifesto.full.label}</span>
+          <div className="mf-prose mf-prose--full">
+            {manifesto.full.paragraphs.map((paragraph) => (
+              <p key={paragraph}>{paragraph}</p>
             ))}
           </div>
-        </Reveal>
+        </div>
       </section>
 
-      <section className="wrap pad-sm">
-        <Reveal className="sect-head">
-          <span className="lbl">[ authority ]</span>
-          <span className="lbl">the daily practice</span>
-        </Reveal>
-        <Reveal>
-          <ul className="stack-lines">
-            {manifesto.authority.dense.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
-        </Reveal>
-        <Reveal>
-          <p className="body-copy" style={{ marginTop: 34 }}>
-            {manifesto.authority.closing}
-          </p>
-        </Reveal>
-      </section>
-
-      <section className="wrap manifesto-full">
-        <span className="manifesto-full__label">{manifesto.full.label}</span>
-        {manifesto.full.paragraphs.map((paragraph, index) => (
-          <Reveal key={paragraph}>
-            <p
-              className="manifesto-full__body"
-              style={{ marginTop: index === 0 ? 29 : "1.25em" }}
-            >
-              {paragraph}
-            </p>
-          </Reveal>
-        ))}
-      </section>
-
-      <section className="closer">
-        <div className="wrap">
+      <section className="mf-sec mf-closer" aria-label="the wearer">
+        <div className="fp-in">
           <span className="lbl">{manifesto.closer.label}</span>
-          <Reveal className="big">
+          <p className="mf-closer__display" aria-label="silent warrior">
             {manifesto.closer.display.map((line) => (
-              <span key={line}>
+              <span key={line} aria-hidden="true">
                 {line}
-                <br />
               </span>
             ))}
-          </Reveal>
+          </p>
         </div>
       </section>
     </section>
