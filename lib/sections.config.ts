@@ -35,8 +35,8 @@ export function normalizePath(path: string): string {
 }
 
 /**
- * Routes converted to the Figma cream surface (21:277 / 21:23). Chrome and content follow the
- * route; every other route keeps the Void surface until its own phase converts it.
+ * Cream frames in V4.1 (landing, shop, space, archive, contact, playlists, commerce).
+ * Manifesto is the photo surface; unknown paths use the Clay 404.
  */
 export const creamSurfaceRoutes: readonly string[] = [
   "/",
@@ -156,13 +156,14 @@ export const navItems: NavItem[] = [
   { id: "cart", navLabel: "cart", href: "/cart", action: "cart" },
 ];
 
-/** Figma V4.1 inline header (desktop ≥900px): SHOP / SPACE / ARCHIVE / MANIFESTO / CONTACT / CART. */
+/** Figma V4.1 inline header (desktop ≥900px), with PLAYLISTS always present. */
 export const DESKTOP_NAV_MIN_WIDTH = 900;
 export const DESKTOP_NAV_QUERY = `(min-width: ${DESKTOP_NAV_MIN_WIDTH}px)`;
 
 const desktopChapterIds = [
   "home",
   "space",
+  "playlists",
   "archive",
   "manifesto",
   "contact",
@@ -192,14 +193,8 @@ export const desktopNavItems: NavItem[] = [
   cartNavItem,
 ];
 
-/** Figma nav, plus PLAYLISTS (before CART) only while on /playlists. */
-export function getDesktopNavItems(path: string): NavItem[] {
-  if (normalizePath(path) !== "/playlists") return desktopNavItems;
-  return [
-    ...desktopChapterIds.map(desktopChapterItem),
-    desktopChapterItem("playlists"),
-    cartNavItem,
-  ];
+export function getDesktopNavItems(_path?: string): NavItem[] {
+  return desktopNavItems;
 }
 
 export function isDesktopNavCurrent(item: NavItem, path: string): boolean {

@@ -8,7 +8,11 @@
     "start": "next start",
     "lint": "eslint .",
     "test": "vitest run",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "figma:set-token": "node scripts/figma-set-token.mjs",
+    "figma:whoami": "node scripts/figma-rest.mjs whoami",
+    "figma:file": "node scripts/figma-rest.mjs file",
+    "figma:nodes": "node scripts/figma-rest.mjs nodes"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.110.0",

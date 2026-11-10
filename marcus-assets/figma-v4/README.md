@@ -10,6 +10,10 @@ Masters for Marcus CROSSWITHSWAG V4.1 (`lcZqp5HNaFCPBcWgPzAwUU`, section `21:23`
 
 Web paths live in `public/assets/v4/*`. `lib/v4/assets.ts` lists served paths and `draft-missing` gaps.
 
+## REST export (local agents)
+
+When Figma MCP is rate-limited (View seat), agents use `FIGMA_TOKEN` in `.env.local` and `scripts/figma-rest.mjs` (see `AGENT_CONTEXT.md`). Frame PNGs for review go to `exports/` here (gitignored if added to `.gitignore` — prefer not committing large dumps).
+
 ## Archive photos: original to web mapping
 
 Resized by `node scripts/optimize-archive.mjs` (long edge 2400px, WebP, metadata stripped, each under 500 KB). Originals stay in the gitignored `marcus-assets/figma-v4/archive/`. Order is filename order, **DRAFT: confirm with Marcus**; slots are in `lib/v4/assets.ts` (photos 01-12 gallery, 13 record/hero, 14-22 extras).

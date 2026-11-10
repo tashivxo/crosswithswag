@@ -295,7 +295,7 @@ export function SiteHeader({
             aria-hidden={!ready}
           >
             <nav className="site-nav" aria-label="Primary">
-              {getDesktopNavItems(currentPath).map((item) => {
+              {getDesktopNavItems().map((item) => {
                 const current = isDesktopNavCurrent(item, currentPath);
                 const className = "site-nav__link";
                 const label =

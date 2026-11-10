@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { isCreamSurface, surfaceTone } from "@/lib/sections.config";
+import {
+  getDesktopNavItems,
+  isCreamSurface,
+  surfaceTone,
+} from "@/lib/sections.config";
 
 describe("isCreamSurface", () => {
   it("is on for the converted cream routes", () => {
@@ -37,5 +41,20 @@ describe("surfaceTone", () => {
   it("falls back to clay for unknown paths (the 404 frame)", () => {
     expect(surfaceTone("/not-a-page")).toBe("clay");
     expect(surfaceTone("/cart/oops")).toBe("clay");
+  });
+});
+
+describe("getDesktopNavItems", () => {
+  it("includes playlists on every route", () => {
+    const labels = getDesktopNavItems().map((item) => item.navLabel);
+    expect(labels).toEqual([
+      "shop",
+      "space",
+      "playlists",
+      "archive",
+      "manifesto",
+      "contact",
+      "cart",
+    ]);
   });
 });

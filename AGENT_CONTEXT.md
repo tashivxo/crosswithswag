@@ -15,6 +15,7 @@ This is the live production site for `swag.`, a scroll-driven single-page brand 
 - **`SIT`** — integration line branched from `main`; receives promotion from `DEV` before production cutover.
 - **`DEV`** — development line branched from `SIT`. Previous `origin/DEV` history preserved on **`DEV-legacy`**.
 - **`V4_branch`** — Marcus CROSSWITHSWAG V4.1 rebuild (Figma file `lcZqp5HNaFCPBcWgPzAwUU`, section `21:23`). Branched from `DEV`. Not production until Marcus sign-off and promotion `V4_branch` → `DEV` → `SIT` → `main`.
+  - **V4 source-of-truth rule (user, Nov 2026):** Figma V4.1 is the source of truth for desktop navigation, the landing page, and **every section/route**. The only V3 carry-over in layout is the **mobile nav (<900px): the production overlay MENU** (avatar hover-grow, `t-panel-slide`). Production V3.3.3 remains the reference for motion feel (Lenis, preloader, bounce, panel timing) — not for section layout. Where V3 section composition and Figma disagree, Figma wins.
 - **`swag_V3_new_branch`** — retained git history of the V3 rebuild. It is not a live preview line; production is `main`.
 
 Marcus V3 sources live in `cursor.md/v3/` (`swag-site.html`, `SWAG-engineering-handoff.md`). Figma file `5w6qUwhO5sLBhxJHsqfC0u` is view-only for `tashivxo@gmail.com` — build follows HTML + handoff.
@@ -129,8 +130,8 @@ Confirmed colour sequence:
 
 ## Current Implementation Files (V4.1 on `V4_branch`)
 
-- `components/v3/SiteChrome.tsx`, `SiteHeader.tsx`, `SiteFooter.tsx` — V3 shell is the base on `V4_branch` (preloader, docked wordmark, Lenis/GSAP, MENU bounce + overlay hover-grow). Desktop ≥900px uses Marcus’s Figma inline nav (`SHOP / SPACE / ARCHIVE / MANIFESTO / CONTACT / CART`). Below 900px the production overlay MENU stays (shop / space / archive / manifesto / playlists / contact / cart). Do not revive parallel `.v4-*` chrome.
-- `components/v3/chapters/ShopChapter.tsx` + `HomeChapter variant="shop"|"space"` — `/` is the docked mark + Figma 21:277 landing labels/CTAs + the 3-up standard-edition shop (no ticker, no CROSS/WITH lockup, no closer); `/space` holds the two-line CROSS / WITH SWAG fold, ticker, V3 home sections, and the closer. Desktop SHOP on `/` scrolls to `#shop` (no route push). `CartDrawer` is always mounted, slides laterally via `.t-panel-slide` tokens, and stops Lenis + adds `body.locked` while open. Mobile header shows `cart (n)` beside MENU.
+- `components/v3/SiteChrome.tsx`, `SiteHeader.tsx`, `SiteFooter.tsx` — V3 shell is the base on `V4_branch` (preloader, docked wordmark, Lenis/GSAP, MENU bounce + overlay hover-grow). Desktop ≥900px uses Marcus’s Figma inline nav (`SHOP / SPACE / PLAYLISTS / ARCHIVE / MANIFESTO / CONTACT / CART`). Below 900px the production overlay MENU stays (shop / space / archive / manifesto / playlists / contact / cart). Do not revive parallel `.v4-*` chrome.
+- `components/v3/chapters/ShopChapter.tsx` + `HomeChapter variant="shop"|"space"` — `/` is the docked mark + Figma 21:277 landing labels/CTAs + the 3-up standard-edition shop; `/space` is Figma 21:24 gallery home. Cream on shop, space, archive, contact, playlists, current, and commerce; manifesto is the photo surface. Desktop SHOP on `/` scrolls to `#shop`. `CartDrawer` is always mounted.
 - `components/v4/chapters/ProductChapter.tsx` — `/current` standard edition PDP built from V3 page-head, `frame`, `feature`/`spec` and `sig` patterns (`.pdp-*`). Cycle 4 behaviour kept (query-preserving size guide, notify-only sold-out, 3-card related row).
 - `components/v4/cart/*` + `components/v4/chapters/CommerceChapter.tsx` — cart drawer, `/cart`, `/checkout`, `/order/confirmed` restyled as V3 typographic posters (`.cart-*`, UI only). CTAs are V3 `.btn` outlines; filled Sand VIEW only on shop cards; chrome/landing/cart stay `.btn` outlines.
 - `lib/v4/products.ts` — standard edition catalog (R350 placeholder; dispatch-black gallery is cross print + shirt still)
@@ -215,6 +216,27 @@ Source: Canva `V1 Feedback Whiteboard` (`https://canva.link/4a0tv4obf1x8mfc`, de
 
 Stitch screens predate V2 feedback. Use live build + Canva whiteboard as current visual direction unless Marcus re-approves Stitch exports.
 
+## Figma access (V4.1 on `V4_branch`)
+
+Marcus file: `lcZqp5HNaFCPBcWgPzAwUU`, section `21:23`. Official **Figma MCP** in Cursor uses OAuth and counts against **seat rate limits** (View seat ≈ 20 read calls/month on Professional). When MCP is capped, use **Figma REST** instead.
+
+**Local PAT (preferred for agents when MCP is limited):**
+
+1. Same token as Cloud Agent secret `FIGMA_TOKEN` (Figma personal access token, file content scope).
+2. Persist it locally (Cursor often cannot save `.env.local`): copy the PAT, then `npm run figma:set-token`. That writes gitignored `.figma-token`. Do not commit the token or print it in chat.
+3. Run:
+
+```bash
+npm run figma:whoami
+npm run figma:file
+node scripts/figma-rest.mjs nodes --ids 21:23,21:277,21:964 --out marcus-assets/figma-v4/exports/v4-nodes.json
+node scripts/figma-rest.mjs images --ids 21:277,21:24,21:671,21:964,21:752,265:262 --out marcus-assets/figma-v4/exports
+```
+
+Exports land under `marcus-assets/figma-v4/exports/` (not served). Use node JSON for structure and PNGs for frame review; adapt layouts per `AGENT_CONTEXT` Figma-wins rule. Stop and report on 403/429; do not loop retries.
+
+Official MCP (`get_design_context`) remains useful when quota is available (Full/Dev seat or fresh month).
+
 ## Verification Commands
 
 Use npm.
@@ -280,7 +302,7 @@ Vercel Authentication is disabled so public URLs are viewable. Leave that as-is 
 | **V3.3.0** | ✅ SHIPPED | Sixth route `/playlists`. Spotify embeds, curator credits, local covers. No OAuth / Web Playback SDK / secrets. Footer `V3.3.0`. |
 | **V3.3.1** | ✅ ON `main` | Gallery on production; footer `V3.3.1`. |
 | **V3.3.3** | ✅ SHIPPED | Footer version label `V3.3.3` (on `main` tip at freeze). |
-| **V4.1 rebuild** | 🛠 `V4_branch` | Reworked V3: V3 shell/motion/type restored, V4.1 commerce (shop `/`, `/space`, `/current` PDP, cart drawer, `/cart`, checkout UI) ported in as V3-style chapters. Archive, manifesto, contact, playlists are the production V3 chapters unchanged. Checkout UI only until Yoco/PayFast signed. |
+| **V4.1 rebuild** | 🛠 `V4_branch` | V3 shell + Figma V4.1 screens: shop `/`, SPACE `/space`, PDP `/current`, cream editorial + commerce, photo manifesto, clay 404. Checkout UI only until Yoco/PayFast signed. |
 
 ## Open Questions for Marcus
 
