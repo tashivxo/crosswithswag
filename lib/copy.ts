@@ -98,6 +98,174 @@ export const home = {
   },
 };
 
+export const landing = {
+  hero: {
+    srTitle: "swag.",
+    standardLabel: "standard edition — drops 13.11",
+    shopCta: "shop the standard edition ↓",
+    enterCta: "enter the site →",
+    meta: "wearable editions + a space",
+  },
+  shop: {
+    barLabel: "[ 01 — shop ]",
+    barStatus: (total: number) =>
+      `standard edition — ${total} shirts — drops 13.11`,
+    title: "standard edition",
+    lede: "nine shirts, 220gsm, 100% cotton. a homage to streetwear and the y2k era. always open.",
+    specLabel: "[ the shirt ]",
+    specCopy: "adult unisex, crew neck, short sleeve.",
+    sizesNote: "sizes s to 3xl.",
+    steps: "pick a size → add → pay. no account needed.",
+    deliveryNote:
+      "item price excludes delivery. paxi economy R60 · speed R110 · door-to-door R120, chosen at checkout.",
+  },
+};
+
+export const productPage = {
+  selectSize: "select a size",
+  sizeHint: "choose a size to add this shirt to your cart.",
+  soldOutSuffix: "sold out",
+  soldOutIn: (size: string) => `sold out in ${size}`,
+  addToCart: "add to cart →",
+  notFound: "product not found.",
+  kicker: (index: string, total: string) => `[ shirt ${index} of ${total} ]`,
+  badge: "open year round",
+  crumbAll: "all shirts",
+  priceNote: "prices in zar — delivery extra",
+  description:
+    "a homage to streetwear and the y2k era. printed to order, packed\u00a0by\u00a0hand.",
+  colourwayLabel: "colourway",
+  sizeLabel: "[ size ]",
+  sizeGuide: "size guide →",
+  notes: {
+    open: "open year round — drops friday 13 november",
+    delivery:
+      "item price excludes delivery. paxi economy R60 · speed R110 · door-to-door R120, chosen at checkout.",
+    guest: "guest checkout — no account needed",
+  },
+  relatedLabel: "[ 02 — more from the standard edition ]",
+  relatedAll: "all nine →",
+  notify: {
+    body: (size: string) =>
+      `${size} is sold out. leave your email and we will tell you when it is back.`,
+    emailLabel: "Email for restock notification",
+    placeholder: "your email",
+    submit: "notify me →",
+    sent: "received — we will be in touch.",
+    invalid: "enter a valid email.",
+  },
+  make: {
+    label: "[ 03 — specification ]",
+    title: ["THE", "MAKE."],
+  },
+  director: {
+    label: "[ a message from the director ]",
+    note: "[ director note — written per edition, signed. frozen on the archive record once the edition closes. ]",
+    name: "— the.director",
+    edition: "standard edition",
+  },
+};
+
+/**
+ * Commerce routes (/cart, /checkout, /order/confirmed) and the cart drawer.
+ * Strings under "existing" were already live copy and are kept verbatim.
+ * Strings marked NEW were written for the V4.1 commerce phase and need Marcus's sign-off.
+ */
+export const cartCopy = {
+  label: "[ cart ]",
+  count: (n: number) => `standard edition — ${n} shirt${n === 1 ? "" : "s"}`,
+  title: "selected objects.",
+  lineDetail: (colourway: string, size: string) =>
+    `standard edition · ${colourway} · size ${size}`,
+  soldOutLine: (size: string) => `sold out in ${size} — still in your cart`,
+  remove: "remove",
+  keepShopping: "keep shopping",
+  subtotal: "subtotal",
+  delivery: "delivery",
+  deliveryNote: "chosen at checkout — paxi",
+  note: "item prices exclude delivery. paxi economy R60 · speed R110 · door-to-door R120.",
+  checkout: "continue to checkout →",
+  empty: {
+    lead: "nothing in here yet.",
+    body: "the standard edition is always open.",
+    cta: "shop the standard edition →",
+  },
+  drawer: {
+    title: (n: number) => `[ cart — ${n} ]`,
+    close: "close",
+    closeLabel: "Close cart",
+  },
+  /** NEW: accessible names and polite live-region announcements. */
+  a11y: {
+    decrease: (title: string, colourway: string, size: string) =>
+      `Decrease quantity for ${title}, ${colourway}, size ${size}`,
+    increase: (title: string, colourway: string, size: string) =>
+      `Increase quantity for ${title}, ${colourway}, size ${size}`,
+    removeLabel: (title: string, colourway: string, size: string) =>
+      `Remove ${title}, ${colourway}, size ${size} from cart`,
+    quantity: (n: number) => `Quantity ${n}`,
+    removed: (title: string, colourway: string, size: string, remaining: number) =>
+      `${title}, ${colourway}, size ${size} removed. ${
+        remaining === 0
+          ? "Your cart is empty."
+          : `${remaining} item${remaining === 1 ? "" : "s"} in your cart.`
+      }`,
+    quantityChanged: (title: string, size: string, quantity: number) =>
+      `${title}, size ${size}: quantity ${quantity}.`,
+  },
+};
+
+export const checkoutCopy = {
+  label: "[ checkout ]",
+  sub: "guest checkout — no account needed",
+  title: "checkout.",
+  contact: "[ 01 — contact ]",
+  delivery: "[ 02 — delivery — paxi ]",
+  payment: "[ 03 — payment ]",
+  paymentOptions: [
+    { id: "card", label: "card — yoco (hosted checkout)" },
+    { id: "eft", label: "instant eft — payfast" },
+  ],
+  paymentNote:
+    "card details never touch this site. an order is marked paid by the processor, not by the redirect.",
+  items: (n: number) => `${n} item${n === 1 ? "" : "s"} · delivery extra`,
+  /** NEW: stub payment CTA. The existing "pay → (not wired)" is split into label + note. */
+  pay: "pay →",
+  processing: "processing…",
+  stubNote: "payment is not wired yet — nothing is charged.",
+  summaryLabel: "[ your order ]",
+  deliveryRow: "delivery",
+  totalRow: "total",
+  /** NEW: form. */
+  fields: {
+    name: { label: "full name", autoComplete: "name" },
+    email: { label: "email", autoComplete: "email" },
+    phone: { label: "phone", autoComplete: "tel" },
+    address: {
+      label: "delivery address or paxi pick-up point",
+      autoComplete: "street-address",
+    },
+  },
+  deliveryLegend: "delivery option",
+  paymentLegend: "payment method",
+  errors: {
+    name: "enter your full name.",
+    email: "enter a valid email.",
+    phone: "enter a phone number with at least 10 digits.",
+    address: "enter a delivery address or paxi pick-up point.",
+  },
+};
+
+export const orderConfirmedCopy = {
+  label: "[ order ]",
+  state: "received",
+  title: "order received.",
+  body: "thank you. this is a static confirmation screen on v4_branch.",
+  cta: "back to the shop →",
+  /** NEW */
+  numberLabel: "order number",
+};
+
 export const current = {
   editionLabel: "[ edition 001 ]",
   title: "kloofstreetnights",
@@ -131,31 +299,69 @@ export const current = {
   },
 };
 
+// NEW: /archive copy from Figma 21:964 (verbatim, dashes kept). The gallery head's right label in Figma reads
+// "12 FRAMES — UPLOAD IN ORDER", a designer note; it is shortened to "12 FRAMES". The director note is a
+// placeholder in Figma and stays one until Marcus writes it.
 export const archive = {
-  display: ["EVERY EDITION", "CLOSES."],
-  intro:
-    "the site is a living archive, not a storefront. each edition receives a permanent record. the body of work is the brand.",
-  note: "editions 002–006 are unreleased. names are locked; dates are not announced.",
-  rules: [
-    {
-      numeral: "[ rule i ]",
-      title: "no repeats",
-      body: "an edition closes the moment it opens. no restock, no reissue, no second run.",
-    },
-    {
-      numeral: "[ rule ii ]",
-      title: "three objects",
-      body: "garment, campaign image, framed print. every edition. non-negotiable.",
-    },
-    {
-      numeral: "[ rule iii ]",
-      title: "depth, not scale",
-      body: "scarcity here is structural. it is not manufactured for the sale.",
-    },
-  ],
-  closer: {
-    label: "[ the record ]",
-    display: ["NOTH-", "OWE", "ING."],
+  label: "[ archive ]",
+  labelRight: "EVERY EDITION CLOSES",
+  display: "THE ARCHIVE.",
+  index: {
+    head: { left: "[ 01 — the editions ]", right: "SIX NAMED — ONE CLOSED" },
+    rows: [
+      {
+        number: "001",
+        name: "kloofstreetnights",
+        desc: "two colourways, one night. after hours to first light.",
+        state: "CLOSED",
+        href: "#edition-001",
+      },
+      {
+        number: "002",
+        name: "crosswithswag — standard edition",
+        desc: "a homage to streetwear and the y2k era.",
+        state: "COMING SOON",
+        href: "/current",
+        current: true,
+      },
+      { number: "003", name: "atm", desc: "all that matters.", state: "IN DEVELOPMENT" },
+      { number: "004", name: "octane", desc: "—", state: "IN DEVELOPMENT" },
+      {
+        number: "005",
+        name: "mountain eater red",
+        desc: "second edition. red colourway.",
+        state: "IN DEVELOPMENT",
+      },
+      { number: "006", name: "courtside club culture", desc: "—", state: "IN DEVELOPMENT" },
+    ],
+    note: "edition 002 is the standard edition: always open, drops 13.11. editions 003–006 are unreleased. names are locked; dates are not announced.",
+  },
+  record: {
+    head: { left: "[ 02 — edition 001 ]", right: "CLOSED — NO REISSUE" },
+    title: "kloofstreetnights",
+    thesis: "two colourways, one night. after hours to first light.",
+    table: [
+      { label: "STATE", value: "closed — no reissue" },
+      { label: "COLOURWAYS", value: "two" },
+      { label: "OBJECTS", value: "garment · campaign image · framed print" },
+      { label: "GARMENTS", value: "hoodie / crewneck / t-shirt" },
+      { label: "RELEASED", value: "september 2026" },
+    ],
+  },
+  gallery: {
+    head: { left: "[ 03 — gallery · edition 001 ]", right: "12 FRAMES" },
+    setLabel: "more photographs from edition 001",
+  },
+  director: {
+    label: "[ a message from the director ]",
+    body: "[ director note — written per edition, signed. frozen on the archive record once the edition closes. ]",
+    signOff: "— the.director",
+    edition: "kloofstreetnights",
+  },
+  cta: {
+    body: "this edition is closed. the standard edition is always open.",
+    link: "SHOP THE STANDARD EDITION →",
+    href: "/#shop",
   },
 };
 
@@ -223,8 +429,51 @@ export const manifesto = {
   },
 };
 
+// NEW: /space. No /space frame exists. Intro and cards are verbatim from Figma 21:24 ("02 — The Space"), which
+// the file marks as draft copy. The h1 is derived from the section label and is NEW.
+export const spacePage = {
+  label: "[ 02 — the space ]",
+  display: ["THE", "SPACE."],
+  intro:
+    "swag is not just clothes. a standard edition, always open. parties. recorded sessions. artist spotlights. and editions that close once.",
+  head: { left: "[ 02 — the space ]", right: "PARTIES — SESSIONS — SPOTLIGHTS" },
+  objects: [
+    {
+      numeral: "[ I ]",
+      title: "SWAG.BASH",
+      body: "the parties. a room for people done performing. hosted by swag.",
+    },
+    {
+      numeral: "[ II ]",
+      title: "BOILER ROOM SESSIONS",
+      body: "recorded sessions, filmed in the room. the sound of the space, kept.",
+    },
+    {
+      numeral: "[ III ]",
+      title: "ARTIST SPOTLIGHTS",
+      body: "the artists we listen to, one at a time. given the room and the night.",
+    },
+  ],
+  photos: {
+    label: "[ the room ]",
+    setLabel: "more photographs from the space",
+  },
+  links: [
+    { label: "SHOP THE STANDARD EDITION →", href: "/#shop" },
+    { label: "THE ARCHIVE →", href: "/archive" },
+  ],
+};
+
+// NEW: "open the set" interaction (no Figma frame). Extra photographs sit behind it.
+export const imageSetCopy = {
+  open: "open the set",
+  close: "close the set",
+  region: "more photographs from the set",
+};
+
+// NEW (Figma 21:752): display breaks over three lines and the sign-off line is "@crosswithswag".
 export const contact = {
-  display: ["NO PERMISSION", "NEEDED."],
+  display: ["NO", "PERMISSION", "NEEDED."],
   intro:
     "one inbox. orders, collaborations, everything. we don't need a storefront to sell you something true.",
   cards: [
@@ -255,35 +504,88 @@ export const contact = {
       "so here is the invitation —",
     ],
     signOff: "— the.director",
-    edition: "kloofstreetnights",
+    edition: "@crosswithswag",
   },
 };
 
+// NEW: /playlists copy from Figma 21:23 frame 265:262 (verbatim, dashes kept). Display type is uppercased in CSS.
 export const playlistsPage = {
   label: "[ playlists ]",
-  display: ["THE MIX."],
-  intro: "3 playlists. from our curators, 2 u",
-  curators: {
-    label: "[ curators ]",
+  display: ["SOUND", "COMES", "FIRST."],
+  intro:
+    "the playlists came before the clothes. three moments, three playlists. free to save, always open.",
+  channels: [
+    {
+      slug: "stepwithswag",
+      numeral: "[ 01 ]",
+      title: ["STEP.", "GOING OUT"],
+      body: "confident, pregame, hot club energy. amapiano, afrobeats, gqom, hip hop.",
+      jump: "JUMP TO STEP. ↓",
+    },
+    {
+      slug: "dalawithswag",
+      numeral: "[ 02 ]",
+      title: ["DALA.", "STUDY"],
+      body: "for the lock in sessions. hip hop, indie, lofi, 3 step, house, afrotech.",
+      jump: "JUMP TO DALA. ↓",
+    },
+    {
+      slug: "freefallwithswag",
+      numeral: "[ 03 ]",
+      title: ["FREEFALL.", "CHILL"],
+      body: "the drop. no plan, just the fall. neo-soul, r&b, soft amapiano, downtempo.",
+      jump: "JUMP TO FREEFALL. ↓",
+    },
+  ],
+  rows: {
+    stepwithswag: {
+      label: "[ 01 — GOING OUT ]",
+      display: "STEP.",
+      cover: ["step.", "with.", "swag."],
+      body: "confident, pregame vibes, hip hop, hot club energy. amapiano, afrobeats, gqom. sounds of south ah.",
+      tags: ["AMAPIANO", "AFROBEATS", "HIP HOP", "GQOM"],
+      open: "OPEN STEPWITHSWAG. IN SPOTIFY →",
+    },
+    dalawithswag: {
+      label: "[ 02 — STUDY ]",
+      display: "DALA.",
+      cover: ["dala.", "with.", "swag."],
+      body: "for the lock in sessions. hip hop, indie, lofi, 3 step, house, edm, afrotech.",
+      tags: ["HIP HOP", "INDIE", "LOFI", "3 STEP", "HOUSE", "AFROTECH"],
+      open: "OPEN DALAWITHSWAG. IN SPOTIFY →",
+    },
+    freefallwithswag: {
+      label: "[ 03 — CHILL ]",
+      display: "FREEFALL.",
+      cover: ["freefall.", "with.", "swag."],
+      body: "the drop. no plan, just the fall. chill. decompression, warmth. neo-soul, r&b, soft amapiano, downtempo.",
+      tags: ["NEO-SOUL", "R&B", "SOFT AMAPIANO", "DOWNTEMPO"],
+      open: "OPEN FREEFALLWITHSWAG. IN SPOTIFY →",
+    },
+  },
+  list: {
+    label: "[ the list ]",
+    title: ["FIRST", "ACCESS."],
+    body: "one message when an edition opens. nothing else. no paid advertising, no hype.",
+    note: "email + whatsapp waitlist",
   },
 };
 
 export const footer = {
+  /** Figma 21:23 footer: tagline sits under the mark. */
   tagline: "CROSS WITH SWAG",
+  handle: { label: site.handle, href: site.instagramUrl },
   editions: [
-    { label: "current — kloofstreetnights", href: "/current" },
+    { label: "shop — standard edition", href: "/#shop" },
     { label: "archive", href: "/archive" },
   ],
   info: [
     { label: "manifesto", href: "/manifesto" },
-    { label: "playlists", href: "/playlists" },
     { label: "contact", href: "/contact" },
-    { label: site.handle, href: site.instagramUrl, external: true },
   ],
   meta: [
-    "WEARABLE EDITIONS — CAPE TOWN",
+    "WEARABLE EDITIONS + A SPACE — CAPE TOWN",
     "GRISEUS REGIUS (PTY) LTD 2026",
-    "V3.3.3",
   ],
 };
 
@@ -312,4 +614,19 @@ export const comingSoon = {
   failureFallback: "nothing was saved. try again in a moment.", // VERIFY
   footerLeft: "CAPE TOWN — 2026", // VERIFY
   footerRight: "CROSSWITHSWAG.CO.ZA", // VERIFY
+};
+
+// NEW: 404 copy from Figma 21:618 (verbatim, curly apostrophe kept). The optional 21:9 photograph slot is a
+// designer note in Figma and the Drive 404 folder is empty, so the page is type-only; `gap` is shown as a label.
+export const notFoundPage = {
+  label: "[ 404 ]",
+  labelRight: "NOTHING LIVES AT THIS ADDRESS",
+  display: ["NOT", "HERE."],
+  lines: ["some things close. some were never here.", "we don\u2019t explain the gap. we point you home."],
+  links: [
+    { label: "SHOP THE STANDARD EDITION →", href: "/#shop" },
+    { label: "THE ARCHIVE →", href: "/archive" },
+    { label: "THE MANIFESTO →", href: "/manifesto" },
+  ],
+  gap: "[ 404 photograph — not yet supplied ]",
 };

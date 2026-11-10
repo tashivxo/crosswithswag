@@ -7,82 +7,122 @@ import { CampaignFrame, ImageGrid } from "@/components/v3/ImageGrid";
 import { EditionRow } from "@/components/v3/EditionRow";
 import { ComingSoonChapter } from "@/components/v3/chapters/ComingSoonChapter";
 import { comingSoonEnabled } from "@/lib/coming-soon";
-import { home } from "@/lib/copy";
+import { home, landing } from "@/lib/copy";
 import { clothesArtboards, editions } from "@/lib/editions";
 import { chapterById } from "@/lib/sections.config";
+import { ShopChapter } from "@/components/v3/chapters/ShopChapter";
+import { ShopAnchor } from "@/components/v3/ShopAnchor";
+import { Wordmark } from "@/components/ui/Wordmark";
 
 const homeChapter = chapterById("home");
-const currentPath = chapterById("current").path;
+const currentPath = "/#shop";
 const archivePath = chapterById("archive").path;
 const manifestoPath = chapterById("manifesto").path;
 const [crossLine, withLine, swagLine] = home.heroMark;
 
-export function HomeChapter() {
-  const comingSoon = comingSoonEnabled();
+export function HomeChapter({
+  variant = "shop",
+}: {
+  variant?: "shop" | "space";
+}) {
+  const isShop = variant === "shop";
+  const comingSoon = isShop && comingSoonEnabled();
   return (
     <>
+      {!isShop && (
+        <section
+          id="space-head"
+          className="wrap page-head space-head"
+          tabIndex={-1}
+        >
+          <div className="hero-top">
+            <span className="lbl lbl--sand">[ the space ]</span>
+            <span className="lbl">{home.est}</span>
+          </div>
+          <h1 className="hero-mark">
+            <span>
+              {crossLine.text}
+              <br />
+            </span>
+            <span className="hero-mark__lockup">
+              <span className={withLine.clay ? "hero-mark__clay" : undefined}>
+                {withLine.text}
+              </span>{" "}
+              {swagLine.text}
+            </span>
+          </h1>
+          <div className="hero-bottom">
+            <div>
+              <span className="lbl lbl--clay">{home.wearableLabel}</span>
+              <p className="body-copy voice" style={{ marginTop: 16 }}>
+                {home.intro}
+              </p>
+            </div>
+            <div className="cta-row">
+              <Link className="btn btn--clay" href="/#shop">
+                the standard edition
+              </Link>
+              <Link className="btn" href={archivePath}>
+                the archive
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
+      {isShop && (
       <section
         id="home"
         className="chapter section-shell hero-section"
         style={
-          {
-            "--section-bg": homeChapter.background,
-            "--section-fg": homeChapter.foreground,
-          } as CSSProperties
+          comingSoon
+            ? ({
+                "--section-bg": homeChapter.background,
+                "--section-fg": homeChapter.foreground,
+              } as CSSProperties)
+            : undefined
         }
       >
         {comingSoon ? (
           <ComingSoonChapter id="home-intro" />
         ) : (
-          <div id="home-intro" className="home-intro" aria-hidden="true" />
-        )}
-        {/* Coming-soon poster replaces the old CROSS WITH SWAG hero. */}
-        {!comingSoon && (
-        <div className="section-inner">
-          <div id="home-hero" className="hero-content" tabIndex={-1}>
-            <div>
-              <div className="hero-top">
-                <span className="lbl lbl--sand">{home.editionLabel}</span>
+          /* Figma 21:277: the mark sits in the first viewport; the header mark is already docked, so there is no #home-intro scroll spacer. */
+          <div className="landing-hero">
+            <div id="home-hero" className="landing-hero__body" tabIndex={-1}>
+              <h1 className="sr-only">{landing.hero.srTitle}</h1>
+              <div className="landing-hero__stage">
+                <div className="landing-mark" aria-hidden="true">
+                  <Wordmark />
+                </div>
+                <div className="landing-hero__below">
+                  <span className="lbl lbl--clay">
+                    {landing.hero.standardLabel}
+                  </span>
+                  <div className="landing-cta">
+                    <ShopAnchor className="tlink tlink--clay">
+                      {landing.hero.shopCta}
+                    </ShopAnchor>
+                    <Link className="tlink" href="/space">
+                      {landing.hero.enterCta}
+                    </Link>
+                  </div>
+                </div>
+              </div>
+              <div className="landing-hero__meta">
                 <span className="lbl">{home.est}</span>
-              </div>
-
-              <h1 className="hero-mark">
-                <span>
-                  {crossLine.text}
-                  <br />
-                </span>
-                <span className="hero-mark__lockup">
-                  <span className={withLine.clay ? "hero-mark__clay" : undefined}>
-                    {withLine.text}
-                  </span>{" "}
-                  {swagLine.text}
-                </span>
-              </h1>
-            </div>
-
-            <div className="hero-bottom">
-              <div>
-                <span className="lbl lbl--clay">{home.wearableLabel}</span>
-                <p className="body-copy voice" style={{ marginTop: 16 }}>
-                  {home.intro}
-                </p>
-              </div>
-              <div className="cta-row">
-                <Link className="btn btn--clay" href={currentPath}>
-                  the current edition
-                </Link>
-                <Link className="btn" href={archivePath}>
-                  the archive
-                </Link>
+                <span className="lbl">{landing.hero.meta}</span>
               </div>
             </div>
           </div>
-        </div>
         )}
       </section>
+      )}
 
-      <Ticker />
+      {!isShop && <Ticker />}
 
+      {isShop ? (
+        <ShopChapter />
+      ) : (
+      <>
       <section className="wrap pad">
         <Reveal className="sect-head">
           <span className="lbl">[ 01 — current edition ]</span>
@@ -276,6 +316,8 @@ export function HomeChapter() {
           </Reveal>
         </div>
       </section>
+      </>
+      )}
     </>
   );
 }

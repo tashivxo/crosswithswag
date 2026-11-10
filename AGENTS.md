@@ -52,6 +52,7 @@ npm run lint
 - Do not re-run `create-next-app` over the existing app.
 - Production is `main` (V3.1), live at `https://crosswithswag.co.za` and `https://crosswithswag.vercel.app`.
 - Frozen V2 lives on `v2-production-freeze` for design mining only. Do not promote it back to production.
+- Frozen V3 lives on `v3-production-freeze` for design mining only. V4 work happens on `V4_branch` (from `DEV` ← `SIT` ← `main`). Do not change production DNS or Vercel production branch.
 - Do not add analytics until the provider is chosen.
 - Custom domain `crosswithswag.co.za` is already attached. Do not change DNS or attach another domain.
 
@@ -68,10 +69,12 @@ npm run lint
 
 - `app/layout.tsx` - metadata shell and Lenis provider.
 - `app/(gallery)/*` - V3.1 six-route gallery (production on `main`; `/playlists` added).
-- `components/v3/SiteChrome.tsx` - shared client chrome (preloader, header, footer, scroll reset).
+- `components/v3/SiteChrome.tsx` - shared client chrome (preloader, header, footer, scroll reset). Desktop uses Figma inline nav; mobile uses the V3 overlay MENU.
 - `app/globals.css` - CSS variables and section composition styles.
 - `components/providers/LenisProvider.tsx` - Lenis smooth scroll.
 - `components/v3/*` - V3 chapters, chrome, motion (production on `main`).
+- `components/v4/*` - V4.1 PDP and cart components on `V4_branch`, rendered inside the V3 shell (not production).
+- `components/v3/chapters/ShopChapter.tsx` - V4.1 standard-edition shop on `/`.
 - `components/ui/*` - shared primitives (wordmark, watermark, CTA).
 - `lib/copy.ts` - V3 copy source of truth.
 - `lib/editions.ts` - edition / campaign data.

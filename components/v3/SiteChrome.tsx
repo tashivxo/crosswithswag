@@ -13,11 +13,24 @@ import {
   queueRouteScroll,
   restoreRouteScroll,
 } from "@/lib/home-scroll";
-import { hashRoutes, normalizePath } from "@/lib/sections.config";
+import { comingSoonEnabled } from "@/lib/coming-soon";
+import {
+  hashRoutes,
+  normalizePath,
+  surfaceTone,
+  type SurfaceTone,
+} from "@/lib/sections.config";
 
 gsap.registerPlugin(ScrollTrigger);
 
-export function SiteChrome({ children }: { children: React.ReactNode }) {
+export function SiteChrome({
+  children,
+  tone,
+}: {
+  children: React.ReactNode;
+  /** Forces the surface (the 404 renders outside the gallery routes). */
+  tone?: SurfaceTone;
+}) {
   const pathname = usePathname();
   const router = useRouter();
   const [ready, setReady] = useState(false);
@@ -80,10 +93,16 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
     router.replace(target, { scroll: false });
   }, [pathname, router]);
 
-  const mode = normalizePath(pathname) === "/" ? "hero" : "docked";
+  // Figma 21:277 landing: header mark is docked from first paint (the big mark is page content).
+  // Only the coming-soon poster still needs the hero flight.
+  const mode =
+    normalizePath(pathname) === "/" && comingSoonEnabled() ? "hero" : "docked";
+
+  // The coming-soon poster on / is its own dark composition.
+  const surface = mode === "hero" ? "dark" : (tone ?? surfaceTone(pathname));
 
   return (
-    <main className="page-shell">
+    <main className="page-shell" data-surface={surface}>
       <a href="#content" className="skip-link">
         skip to content
       </a>
