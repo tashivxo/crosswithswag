@@ -40,9 +40,7 @@ export function SpacePlaylistGate() {
     setDismissed(true);
   }, []);
 
-  if (!isClient) return null;
-
-  const open = !seenInSession && !dismissed;
+  const open = isClient && !seenInSession && !dismissed;
 
   return <PlaylistPopup open={open} onDismiss={dismiss} />;
 }

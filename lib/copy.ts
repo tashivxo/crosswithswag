@@ -450,12 +450,10 @@ export const spacePage = {
     body: "a homage to streetwear and the y2k era. always open. drops 13.11.",
     range: "SEE THE RANGE",
     shop: "SHOP THE STANDARD EDITION →",
-    tiles: [
-      { src: "/assets/Frame_2_clean.svg", alt: "standard edition logo tile one" },
-      { src: "/assets/Frame_3_clean.svg", alt: "standard edition logo tile two" },
-      { src: "/assets/Frame_4_clean.svg", alt: "standard edition logo tile three" },
-      { src: "/assets/Frame_5_clean.svg", alt: "standard edition logo tile four" },
-    ],
+    image: {
+      src: "/assets/v4/space/standard-edition-lockups.png",
+      alt: "standard edition lockups — cross, oval swag, stacked cross with swag, swag department",
+    },
   },
   space: {
     label: "[ 02 — THE SPACE ]",

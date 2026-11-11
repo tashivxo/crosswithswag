@@ -5181,24 +5181,13 @@ html:has(.mf) body {
 }
 
 .space-logo-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1px;
-  background: var(--line);
+  background: var(--void);
 }
 
-.space-logo-tile {
-  position: relative;
-  aspect-ratio: 1;
-  overflow: hidden;
-  background: var(--sand);
-}
-
-.space-logo-tile img {
+.space-logo-grid img {
+  display: block;
   width: 100%;
-  height: 100%;
-  object-fit: contain;
-  padding: 13%;
+  height: auto;
 }
 
 .space-standard__copy {

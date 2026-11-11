@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { EditionRow } from "@/components/v3/EditionRow";
 import { ImageGrid } from "@/components/v3/ImageGrid";
@@ -83,15 +84,15 @@ export function SpaceChapter() {
             </Link>
           </div>
           <div className="space-standard__feature">
-            <div className="space-logo-grid" aria-label="standard edition logo tiles">
-              {/* Cavendish placeholder: replace these four logo tiles when the shoot hero arrives. */}
-              {spacePage.standard.tiles.map((tile) => (
-                <div className="space-logo-tile" key={tile.src}>
-                  {/* SVG lockups — next/image does not optimize SVG. */}
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={tile.src} alt={tile.alt} />
-                </div>
-              ))}
+            <div className="space-logo-grid">
+              {/* Cavendish placeholder: Figma 398:1309 lockup grid until the shoot hero arrives. */}
+              <Image
+                src={spacePage.standard.image.src}
+                alt={spacePage.standard.image.alt}
+                width={1282}
+                height={1602}
+                sizes="(max-width: 899px) 92vw, 48vw"
+              />
             </div>
             <div className="space-standard__copy">
               <h2 id="space-standard-title">{spacePage.standard.title}</h2>
@@ -226,7 +227,9 @@ export function SpaceChapter() {
             <Reveal>
               <h2 id="space-edition-index-title" className="space-photo__display">
                 {spacePage.archive.display.map((line) => (
-                  <span key={line}>{line}</span>
+                  <span key={line} className={line === "CLOSES." ? "space-hero__clay" : undefined}>
+                    {line}
+                  </span>
                 ))}
               </h2>
             </Reveal>
