@@ -1095,6 +1095,15 @@ button:focus-visible {
   transform: none;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .site-header__chrome {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: none;
+  }
+}
+
 .wordmark-drift-layer {
   position: relative;
   flex: 0 0 auto;
@@ -2699,6 +2708,18 @@ html[data-cs-short="1"]:has(.cs) .site-header::after {
   aspect-ratio: 692 / 254;
   overflow: hidden;
   color: var(--sand);
+}
+
+/* One logo while the header mark flies the `#home` viewport. Reduced motion
+   keeps this in-page mark because the header mark is already docked. */
+[data-route="hero"] ~ #content .landing-mark {
+  visibility: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-route="hero"] ~ #content .landing-mark {
+    visibility: visible;
+  }
 }
 
 .landing-mark .wordmark {

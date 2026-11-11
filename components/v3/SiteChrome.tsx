@@ -92,9 +92,9 @@ export function SiteChrome({
     router.replace(target, { scroll: false });
   }, [pathname, router]);
 
-  // Figma 21:277: header mark is docked from first paint. V3.3.3 coming-soon
-  // hero flight is not used on V4_branch.
-  const mode = "docked" as const;
+  // V4 `/` reuses the WordmarkDriftDock + SiteHeader scrub against `#home`.
+  // Do not mount the Jotform coming-soon pin. Inner routes stay docked.
+  const mode = normalizePath(pathname) === "/" ? "hero" : "docked";
   const surface = tone ?? surfaceTone(pathname);
 
   return (

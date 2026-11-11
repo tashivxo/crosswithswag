@@ -66,7 +66,7 @@ export function HomeChapter({
       )}
       {isShop && (
       <section id="home" className="chapter section-shell hero-section">
-        {/* Figma 21:277: docked header mark + in-page landing mark. Not the V3.3.3 Jotform coming-soon poster. */}
+        {/* Figma 21:277: `#home` is the V4 hero-dock trigger. The in-page mark hides while the header mark flies. Not the V3.3.3 Jotform poster. */}
         <div className="landing-hero">
           <div id="home-hero" className="landing-hero__body" tabIndex={-1}>
             <h1 className="sr-only">{landing.hero.srTitle}</h1>

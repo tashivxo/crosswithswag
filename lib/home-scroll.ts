@@ -104,14 +104,11 @@ function chapterHeadElement(path: string): HTMLElement | null {
 
 export function restoreRouteScroll(path: string): void {
   const chapter = chapterByPath(path);
-  const reduceMotion = prefersReducedMotion();
 
   if (chapter?.id === "home") {
-    if (isHomeIntroSeen() || reduceMotion) {
-      scrollToHomeLanding({ immediate: true });
-    } else {
-      scrollPageTo(0, { immediate: true });
-    }
+    // V4 `/` hero is the landing viewport. Reload and client returns stay at
+    // the top (large mark, hidden bar) instead of skipping via session.
+    scrollPageTo(0, { immediate: true });
     return;
   }
 

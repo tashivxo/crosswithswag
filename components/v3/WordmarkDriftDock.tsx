@@ -4,13 +4,8 @@ import { useLayoutEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Wordmark } from "@/components/ui/Wordmark";
-import { mountComingSoonFlight } from "@/lib/coming-soon-dock";
 import { useShortScreen } from "@/lib/use-short-screen";
-import {
-  isHomeIntroSeen,
-  markHomeIntroSeen,
-  scrollToHomeLanding,
-} from "@/lib/home-scroll";
+import { markHomeIntroSeen } from "@/lib/home-scroll";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -20,9 +15,7 @@ export const WORDMARK_DOCK_SCROLL = {
 } as const;
 
 export function getWordmarkDockTrigger() {
-  return (
-    document.getElementById("home-intro") ?? document.getElementById("home")
-  );
+  return document.getElementById("home");
 }
 
 function viewportSize() {
@@ -75,12 +68,7 @@ export function WordmarkDriftDock({
 
     if (!slot) return;
 
-    if (mode === "hero") {
-      const cleanup = mountComingSoonFlight({ layer, slot });
-      if (cleanup) return cleanup;
-    }
-
-    if (mode === "docked" || reduceMotion) {
+    const dockNow = () => {
       gsap.set(layer, {
         x: 0,
         y: 0,
@@ -90,29 +78,20 @@ export function WordmarkDriftDock({
       return () => {
         gsap.set(layer, { clearProps: "transform" });
       };
+    };
+
+    if (mode === "docked" || reduceMotion) {
+      return dockNow();
     }
 
     const intro = getWordmarkDockTrigger();
     if (!intro) {
-      gsap.set(layer, {
-        x: 0,
-        y: 0,
-        scale: dockScale(slot, layer),
-        opacity: 1,
-      });
-      return () => {
-        gsap.set(layer, { clearProps: "transform" });
-      };
+      return dockNow();
     }
 
     let startX = 0;
     let startY = 0;
     let endScale = 1;
-    const introSeen = isHomeIntroSeen();
-
-    if (introSeen) {
-      scrollToHomeLanding({ immediate: true });
-    }
 
     const measure = () => {
       const from = heroOffset(slot);
@@ -125,9 +104,9 @@ export function WordmarkDriftDock({
       measure();
 
       gsap.set(layer, {
-        x: introSeen ? 0 : startX,
-        y: introSeen ? 0 : startY,
-        scale: introSeen ? endScale : 1,
+        x: startX,
+        y: startY,
+        scale: 1,
         opacity: 1,
         force3D: true,
       });
@@ -148,7 +127,7 @@ export function WordmarkDriftDock({
           opacity: 1,
           force3D: true,
           ease: "none",
-          immediateRender: !introSeen,
+          immediateRender: true,
           scrollTrigger: {
             trigger: intro,
             start: WORDMARK_DOCK_SCROLL.start,

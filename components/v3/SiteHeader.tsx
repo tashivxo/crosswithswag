@@ -11,10 +11,8 @@ import {
   getDockScrub,
   getWordmarkDockTrigger,
 } from "@/components/v3/WordmarkDriftDock";
-import { mountComingSoonChrome } from "@/lib/coming-soon-dock";
 import { useShortScreen } from "@/lib/use-short-screen";
 import {
-  isHomeIntroSeen,
   queueRouteScroll,
   scrollToHomeLanding,
   scrollToShop,
@@ -192,16 +190,10 @@ export function SiteHeader({
 
     const chrome = chromeRef.current;
     const header = headerRef.current;
-    if (mode === "hero") {
-      const cleanup = mountComingSoonChrome({ chrome, header });
-      if (cleanup) return cleanup;
-    }
-
     const intro = getWordmarkDockTrigger();
     const reduceMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
-    const introSeen = isHomeIntroSeen();
 
     const showChrome = () => {
       gsap.set(chrome, {
@@ -217,11 +209,6 @@ export function SiteHeader({
     if (mode === "docked" || !intro || reduceMotion) {
       showChrome();
       return;
-    }
-
-    if (introSeen) {
-      scrollToHomeLanding({ immediate: true });
-      showChrome();
     }
 
     const ctx = gsap.context(() => {
@@ -244,7 +231,7 @@ export function SiteHeader({
           y: 0,
           pointerEvents: "auto",
           ease: "none",
-          immediateRender: !introSeen,
+          immediateRender: true,
           scrollTrigger: dockScroll(),
         },
       );
@@ -256,7 +243,7 @@ export function SiteHeader({
           {
             "--header-line": 1,
             ease: "none",
-            immediateRender: !introSeen,
+            immediateRender: true,
             scrollTrigger: dockScroll(),
           },
         );

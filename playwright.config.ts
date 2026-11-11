@@ -19,7 +19,7 @@ export default defineConfig({
     timeout: 120_000,
     env: {
       ...process.env,
-    },
+    } as Record<string, string>,
   },
   projects: [
     {
