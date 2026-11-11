@@ -7,8 +7,6 @@
 - Production alias: https://crosswithswag.vercel.app
 - Vercel inspect (current production): https://vercel.com/tashivxos-projects/crosswithswag/CjUfoZ46aAePpPkFnj7eQpMdEZpy
 - Frozen V2 (design mining only): https://crosswithswag-git-v2-production-freeze-tashivxos-projects.vercel.app
-- Frozen V3 (design mining only): https://crosswithswag-git-v3-production-freeze-tashivxos-projects.vercel.app
-- V4 rebuild preview (when deployed): `V4_branch` on Vercel — same URL pattern as V2 freeze
 
 Vercel Authentication is currently off, so these URLs are publicly viewable. Do not treat a login screen as a build failure without checking Vercel.
 

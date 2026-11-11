@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-06T21:09:00.000Z",
+  "generatedAt": "2026-09-11T00:55:00.000Z",
   "title": "Design System: swag.",
   "extensions": {
     "colorMeta": {
@@ -113,17 +113,7 @@
       {
         "name": "panel-open",
         "value": "400ms cubic-bezier(0.22, 1, 0.36, 1)",
-        "purpose": "MENU overlay and cart drawer enter."
-      },
-      {
-        "name": "panel-close",
-        "value": "350ms cubic-bezier(0.22, 1, 0.36, 1)",
-        "purpose": "MENU overlay and cart drawer exit."
-      },
-      {
-        "name": "avatar-bounce",
-        "value": "320ms cubic-bezier(0.34, 3.85, 0.64, 1)",
-        "purpose": "MENU/CLOSE/nav-label hover bounce (V3 engine)."
+        "purpose": "MENU overlay enter."
       },
       {
         "name": "text-swap",
@@ -138,9 +128,7 @@
     ],
     "breakpoints": [
       { "name": "compact", "value": "560px" },
-      { "name": "shop-1up", "value": "599px" },
       { "name": "narrow", "value": "860px" },
-      { "name": "nav-desktop", "value": "900px" },
       { "name": "wide", "value": "1024px" }
     ]
   },
@@ -162,14 +150,6 @@
       "css": ".ds-btn-clay { display:inline-flex; border:1px solid #8C5E4A; padding:13px 22px; font-family:Instrument Sans,sans-serif; font-size:11px; font-weight:600; letter-spacing:0.16em; text-transform:uppercase; color:#D6D1C4; text-decoration:none; } .ds-btn-clay:hover { background:#8C5E4A; color:#D6D1C4; } .ds-btn-clay:active { transform:scale(0.97); }"
     },
     {
-      "name": "Shop card VIEW",
-      "kind": "button",
-      "refersTo": null,
-      "description": "V4.1 Figma exception: filled Sand VIEW on shop cards only. Chrome/landing/cart stay outline .btn.",
-      "html": "<a class=\"ds-shop-view\" href=\"/current?product=dispatch-black\">view →</a>",
-      "css": ".ds-shop-view { display:inline-flex; align-items:center; justify-content:center; min-height:44px; padding:13px 22px; background:#D6D1C4; color:#0A0A0A; border:0; border-radius:0; font-family:Instrument Sans,sans-serif; font-size:11px; font-weight:600; letter-spacing:0.16em; text-transform:uppercase; text-decoration:none; } .ds-shop-view:hover { background:#E8E4DA; } .ds-shop-view:focus-visible { outline:1px solid #8C5E4A; outline-offset:2px; }"
-    },
-    {
       "name": "Waitlist field",
       "kind": "input",
       "refersTo": "field-join",
@@ -181,17 +161,9 @@
       "name": "MENU",
       "kind": "nav",
       "refersTo": null,
-      "description": "Mobile &lt;900px: always-visible MENU opens V3 overlay (t-panel-slide + avatar hover-grow). Desktop ≥900px uses Figma inline nav instead.",
+      "description": "Always-visible header control. Overlay chapters: home, current, order, archive, manifesto, playlists, contact.",
       "html": "<button class=\"ds-menu\" type=\"button\">menu</button>",
       "css": ".ds-menu { background:none; border:0; color:#D6D1C4; font-family:Instrument Sans,sans-serif; font-size:11px; font-weight:600; letter-spacing:0.16em; text-transform:uppercase; min-height:44px; min-width:44px; } .ds-menu:hover { transform:scale(1.08) translateY(-2px); } .ds-menu:active { transform:scale(0.97); } .ds-menu:focus-visible { outline:1px solid #8C5E4A; outline-offset:2px; }"
-    },
-    {
-      "name": "Desktop inline nav",
-      "kind": "nav",
-      "refersTo": null,
-      "description": "Figma V4.1 header links ≥900px: SHOP / SPACE / ARCHIVE / MANIFESTO / CONTACT / CART. Clay current state; bounce hover via .nav-label.",
-      "html": "<nav class=\"ds-site-nav\" aria-label=\"Primary\"><a class=\"ds-site-nav__link is-current\" href=\"/\">shop</a><a class=\"ds-site-nav__link\" href=\"/space\">space</a><button class=\"ds-site-nav__link\" type=\"button\">cart (0)</button></nav>",
-      "css": ".ds-site-nav { display:flex; gap:18px; align-items:center; } .ds-site-nav__link { background:none; border:0; color:#D6D1C4; font-family:Instrument Sans,sans-serif; font-size:11px; font-weight:600; letter-spacing:0.16em; text-transform:uppercase; text-decoration:none; padding:8px 0; min-height:44px; } .ds-site-nav__link.is-current { color:#8C5E4A; } .ds-site-nav__link:hover { transform:scale(1.08) translateY(-2px); } .ds-site-nav__link:focus-visible { outline:1px solid #8C5E4A; outline-offset:2px; }"
     },
     {
       "name": "Edition state",

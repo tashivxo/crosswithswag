@@ -17,16 +17,8 @@ import {
   isHomeIntroSeen,
   queueRouteScroll,
   scrollToHomeLanding,
-  scrollToShop,
 } from "@/lib/home-scroll";
-import {
-  DESKTOP_NAV_QUERY,
-  getDesktopNavItems,
-  isDesktopNavCurrent,
-  navItems,
-  normalizePath,
-} from "@/lib/sections.config";
-import { useCart } from "@/lib/v4/cart/CartProvider";
+import { navItems, normalizePath } from "@/lib/sections.config";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -92,7 +84,6 @@ export function SiteHeader({
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const shortScreen = useShortScreen();
-  const { count, openDrawer } = useCart();
   const burgerRef = useRef<HTMLButtonElement>(null);
   const chromeRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLElement>(null);
@@ -103,16 +94,6 @@ export function SiteHeader({
   const openMenu = () => setMenuOpen(true);
 
   const currentPath = normalizePath(pathname);
-
-  useEffect(() => {
-    const media = window.matchMedia(DESKTOP_NAV_QUERY);
-    const sync = () => {
-      if (media.matches) setMenuOpen(false);
-    };
-    sync();
-    media.addEventListener("change", sync);
-    return () => media.removeEventListener("change", sync);
-  }, []);
 
   useEffect(() => {
     document.body.classList.toggle("locked", menuOpen);
@@ -294,80 +275,10 @@ export function SiteHeader({
             className="site-header__chrome"
             aria-hidden={!ready}
           >
-            <nav className="site-nav" aria-label="Primary">
-              {getDesktopNavItems(currentPath).map((item) => {
-                const current = isDesktopNavCurrent(item, currentPath);
-                const className = "site-nav__link";
-                const label =
-                  item.action === "cart"
-                    ? `${item.navLabel} (${count})`
-                    : item.navLabel;
-
-                if (item.action === "cart") {
-                  return (
-                    <button
-                      key={item.id}
-                      type="button"
-                      className={className}
-                      tabIndex={ready ? 0 : -1}
-                      aria-current={current ? "page" : undefined}
-                      onClick={openDrawer}
-                    >
-                      <span className="nav-label">{label}</span>
-                    </button>
-                  );
-                }
-
-                return (
-                  <Link
-                    key={item.id}
-                    className={className}
-                    href={item.href}
-                    tabIndex={ready ? 0 : -1}
-                    aria-current={current ? "page" : undefined}
-                    onAuxClick={() => {
-                      /* native <a href> handles middle-click */
-                    }}
-                    onClick={(event) => {
-                      if (
-                        event.metaKey ||
-                        event.ctrlKey ||
-                        event.shiftKey ||
-                        event.altKey ||
-                        event.button === 1
-                      ) {
-                        return;
-                      }
-                      event.preventDefault();
-                      const chapterPath = normalizePath(item.href);
-                      if (item.id === "home" && currentPath === "/") {
-                        scrollToShop();
-                        return;
-                      }
-                      if (chapterPath !== currentPath) {
-                        router.push(item.href, { scroll: true });
-                      }
-                      queueRouteScroll(chapterPath);
-                    }}
-                  >
-                    <span className="nav-label">{label}</span>
-                  </Link>
-                );
-              })}
-            </nav>
-            <button
-              type="button"
-              className="burger site-header__cart"
-              tabIndex={ready ? 0 : -1}
-              onClick={openDrawer}
-              aria-label={`Cart (${count})`}
-            >
-              <span className="nav-label">cart ({count})</span>
-            </button>
             <button
               ref={burgerRef}
               type="button"
-              className="burger site-header__menu-btn"
+              className="burger"
               tabIndex={ready ? 0 : -1}
               aria-expanded={menuOpen}
               aria-controls="menu"
@@ -409,8 +320,7 @@ export function SiteHeader({
           onMouseLeave={() => setMenuShifts(groupRef.current, null, "out")}
         >
           {navItems.map((item, index) => {
-            const isCurrent =
-              !item.external && isDesktopNavCurrent(item, currentPath);
+            const isCurrent = !item.external && item.href === currentPath;
 
             return (
               <div
@@ -426,21 +336,7 @@ export function SiteHeader({
                 }}
               >
                 <div className="t-avatar menu-grow">
-                  {item.action === "cart" ? (
-                    <button
-                      type="button"
-                      className={isCurrent ? "mi mi--current" : "mi"}
-                      aria-current={isCurrent ? "page" : undefined}
-                      tabIndex={menuOpen ? 0 : -1}
-                      onClick={() => {
-                        document.body.classList.remove("locked");
-                        closeMenu();
-                        openDrawer();
-                      }}
-                    >
-                      {item.navLabel} ({count})
-                    </button>
-                  ) : item.external ? (
+                  {item.external ? (
                     <a
                       className="mi"
                       href={item.href}

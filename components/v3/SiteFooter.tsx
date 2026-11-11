@@ -7,20 +7,8 @@ export function SiteFooter() {
     <footer className="wrap site-footer">
       <div className="foot">
         <div>
-          <div className="foot-mark">
-            <Wordmark />
-          </div>
-          {footer.tagline ? (
-            <p className="foot-tagline">{footer.tagline}</p>
-          ) : null}
-          <a
-            className="foot-handle"
-            href={footer.handle.href}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {footer.handle.label}
-          </a>
+          <Wordmark className="wordmark--footer" />
+          <p className="lbl foot-tagline">{footer.tagline}</p>
         </div>
         <div>
           <h5>editions</h5>
@@ -31,7 +19,14 @@ export function SiteFooter() {
         <div>
           <h5>info</h5>
           {footer.info.map((item) => (
-            <Link key={item.href} href={item.href}>{item.label}</Link>
+            <Link
+              key={item.href}
+              href={item.href}
+              target={item.external ? "_blank" : undefined}
+              rel={item.external ? "noopener noreferrer" : undefined}
+            >
+              {item.label}
+            </Link>
           ))}
         </div>
       </div>

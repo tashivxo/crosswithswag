@@ -1,9 +1,9 @@
-import { GalleryShell } from "@/components/v4/GalleryShell";
+import { SiteChrome } from "@/components/v3/SiteChrome";
 
 export default function GalleryLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <GalleryShell>{children}</GalleryShell>;
+  return <SiteChrome>{children}</SiteChrome>;
 }

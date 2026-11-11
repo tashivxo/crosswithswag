@@ -85,12 +85,6 @@ export function scrollToHomeLanding(options?: { immediate?: boolean }): void {
   scrollPageTo(hero, options);
 }
 
-export function scrollToShop(options?: { immediate?: boolean }): void {
-  const el = document.getElementById("shop");
-  if (el) scrollPageTo(el, options);
-  else scrollPageTo(0, options);
-}
-
 function chapterHeadElement(path: string): HTMLElement | null {
   const chapter = chapterByPath(path);
   if (chapter) {
