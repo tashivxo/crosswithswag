@@ -13,7 +13,6 @@ import {
   queueRouteScroll,
   restoreRouteScroll,
 } from "@/lib/home-scroll";
-import { comingSoonEnabled } from "@/lib/coming-soon";
 import {
   hashRoutes,
   normalizePath,
@@ -93,13 +92,10 @@ export function SiteChrome({
     router.replace(target, { scroll: false });
   }, [pathname, router]);
 
-  // Figma 21:277 landing: header mark is docked from first paint (the big mark is page content).
-  // Only the coming-soon poster still needs the hero flight.
-  const mode =
-    normalizePath(pathname) === "/" && comingSoonEnabled() ? "hero" : "docked";
-
-  // The coming-soon poster on / is its own dark composition.
-  const surface = mode === "hero" ? "dark" : (tone ?? surfaceTone(pathname));
+  // Figma 21:277: header mark is docked from first paint. V3.3.3 coming-soon
+  // hero flight is not used on V4_branch.
+  const mode = "docked" as const;
+  const surface = tone ?? surfaceTone(pathname);
 
   return (
     <main className="page-shell" data-surface={surface}>

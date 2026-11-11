@@ -45,7 +45,8 @@ export function ShopCard({ product }: { product: StandardProduct }) {
     flash("added");
   };
 
-  const src = productCardImage(product);
+  const frontSrc = productCardImage(product);
+  const hoverSrc = product.images.hover;
   const href = `/current?product=${product.slug}`;
   const label =
     state === "added"
@@ -61,13 +62,26 @@ export function ShopCard({ product }: { product: StandardProduct }) {
         className="land-card__media"
         aria-label={`${product.shirtName.toLowerCase()} — ${product.colourwayName}`}
       >
-        {src ? (
-          <Image
-            src={src}
-            alt={`${product.shirtName.toLowerCase()} in ${product.colourwayName}`}
-            fill
-            sizes="(max-width: 599px) 100vw, (max-width: 899px) 50vw, 33vw"
-          />
+        {frontSrc ? (
+          <>
+            <Image
+              className="land-card__media-img land-card__media-img--front"
+              src={frontSrc}
+              alt={`${product.shirtName.toLowerCase()} in ${product.colourwayName}`}
+              fill
+              sizes="(max-width: 599px) 100vw, (max-width: 899px) 50vw, 33vw"
+            />
+            {hoverSrc ? (
+              <Image
+                className="land-card__media-img land-card__media-img--detail"
+                src={hoverSrc}
+                alt=""
+                fill
+                sizes="(max-width: 599px) 100vw, (max-width: 899px) 50vw, 33vw"
+                aria-hidden
+              />
+            ) : null}
+          </>
         ) : (
           <span className="land-card__missing lbl">
             draft — image missing

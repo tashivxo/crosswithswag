@@ -19,7 +19,6 @@ export default defineConfig({
     timeout: 120_000,
     env: {
       ...process.env,
-      NEXT_PUBLIC_COMING_SOON: "1",
     },
   },
   projects: [

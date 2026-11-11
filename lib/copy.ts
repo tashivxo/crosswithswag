@@ -429,14 +429,38 @@ export const manifesto = {
   },
 };
 
-// NEW: /space. No /space frame exists. Intro and cards are verbatim from Figma 21:24 ("02 — The Space"), which
-// the file marks as draft copy. The h1 is derived from the section label and is NEW.
+// V4.1 /space gallery home — Figma 398:1268 / original 21:24.
 export const spacePage = {
-  label: "[ 02 — the space ]",
-  display: ["THE", "SPACE."],
-  intro:
-    "swag is not just clothes. a standard edition, always open. parties. recorded sessions. artist spotlights. and editions that close once.",
-  head: { left: "[ 02 — the space ]", right: "PARTIES — SESSIONS — SPOTLIGHTS" },
+  hero: {
+    editionLabel: "[ STANDARD EDITION — 13.11 ]",
+    est: "CAPE TOWN — EST. 2026",
+    display: ["CROSS", "WITH", "SWAG"],
+    wearableLabel: "[ MORE THAN CLOTHES ]",
+    intro:
+      "swag is not just clothes. a standard edition, always open. parties. recorded sessions. artist spotlights. and editions that close once.",
+    links: [
+      { label: "THE STANDARD EDITION", href: "/#shop" },
+      { label: "THE ARCHIVE", href: "/archive" },
+    ],
+  },
+  ticker: ["standard edition — drops 13.11"],
+  standard: {
+    label: "[ 01 — THE STANDARD EDITION ]",
+    title: "standard edition",
+    body: "a homage to streetwear and the y2k era. always open. drops 13.11.",
+    range: "SEE THE RANGE",
+    shop: "SHOP THE STANDARD EDITION →",
+    tiles: [
+      { src: "/assets/Frame_2_clean.svg", alt: "standard edition logo tile one" },
+      { src: "/assets/Frame_3_clean.svg", alt: "standard edition logo tile two" },
+      { src: "/assets/Frame_4_clean.svg", alt: "standard edition logo tile three" },
+      { src: "/assets/Frame_5_clean.svg", alt: "standard edition logo tile four" },
+    ],
+  },
+  space: {
+    label: "[ 02 — THE SPACE ]",
+    right: "PARTIES — SESSIONS — SPOTLIGHTS",
+  },
   objects: [
     {
       numeral: "[ I ]",
@@ -454,14 +478,69 @@ export const spacePage = {
       body: "the artists we listen to, one at a time. given the room and the night.",
     },
   ],
-  photos: {
-    label: "[ the room ]",
-    setLabel: "more photographs from the space",
+  editions: {
+    label: "[ 03 — THE EDITIONS ]",
+    right: "THREE OBJECTS — ONE THOUGHT",
+    objects: home.structure,
   },
-  links: [
-    { label: "SHOP THE STANDARD EDITION →", href: "/#shop" },
-    { label: "THE ARCHIVE →", href: "/archive" },
-  ],
+  manifesto: {
+    label: "[ 04 — THE MANIFESTO ]",
+    display: ["OWE", "NOTHING."],
+    lines: [
+      "We owe nothing to anyone. We stop explaining. We stop convincing. We start being.",
+      "We occupy the space of those who have already accepted themselves.",
+    ],
+    cta: "READ THE MANIFESTO",
+  },
+  authority: {
+    label: "[ 05 — AUTHORITY ]",
+    display: ["WHAT IS", "SWAG?"],
+    intro: home.whatIsSwag.intro,
+    dense: home.whatIsSwag.dense,
+  },
+  archive: {
+    label: "[ 06 — THE ARCHIVE ]",
+    cta: "ENTER GALLERY →",
+    editionsLabel: "[ 07 — THE ARCHIVE ]",
+    editionsCta: "ALL EDITIONS →",
+    display: ["EVERY EDITION", "CLOSES."],
+    body:
+      "every edition closes the moment it opens. no repeats, no reissues. the standard edition never closes. we're not chasing scale. we're chasing depth.",
+    rows: [
+      { number: "001", name: "kloofstreetnights", desc: "two colourways, one night. after hours to first light.", state: "CLOSED" },
+      { number: "002", name: "crosswithswag — standard edition", desc: "a homage to streetwear and the y2k era.", state: "COMING SOON" },
+      { number: "003", name: "atm", desc: "all that matters.", state: "IN DEVELOPMENT" },
+      { number: "004", name: "octane", desc: "—", state: "IN DEVELOPMENT" },
+      { number: "005", name: "mountain eater red", desc: "second edition. red colourway.", state: "IN DEVELOPMENT" },
+      { number: "006", name: "courtside club culture", desc: "—", state: "IN DEVELOPMENT" },
+    ],
+    note:
+      "edition 002 is the standard edition: always open, drops 13.11. editions 003–006 are unreleased. names are locked; dates are not announced.",
+  },
+  list: {
+    label: "[ 08 — THE LIST ]",
+    title: ["JOIN", "THE LIST"],
+    body: "first access to each drop. the standard edition, swag.bash, the sessions. nothing else.",
+    note: "email and whatsapp waitlist. no paid advertising. no hype.",
+  },
+  closer: {
+    label: "[ NOTHING OWING ]",
+    display: ["CROSS", "WITH", "SWAG"],
+  },
+  playlistPopup: {
+    label: "[ NEW — PLAYLISTS ]",
+    close: "[ CLOSE ]",
+    display: "SOUND COMES FIRST.",
+    lede: "three playlists for three moments. free to save, always open.",
+    seeAll: "SEE ALL THREE PLAYLISTS →",
+    notNow: "NOT NOW",
+    listen: "LISTEN →",
+    rows: [
+      { slug: "stepwithswag" as const, name: "STEP" },
+      { slug: "dalawithswag" as const, name: "DALA" },
+      { slug: "freefallwithswag" as const, name: "FREEFALL" },
+    ],
+  },
 };
 
 // NEW: "open the set" interaction (no Figma frame). Extra photographs sit behind it.

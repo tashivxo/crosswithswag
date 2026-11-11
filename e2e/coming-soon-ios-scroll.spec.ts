@@ -59,6 +59,10 @@ async function skipPreloader(page: Page) {
 }
 
 test.describe("coming-soon iOS scroll (iPhone 13 Pro Max WebKit)", () => {
+  test.skip(
+    true,
+    "V4_branch `/` is Figma 21:277 shop landing; the V3.3.3 Jotform poster is not mounted",
+  );
   test("height-only viewport changes never clear the veil canvas", async ({
     page,
   }) => {

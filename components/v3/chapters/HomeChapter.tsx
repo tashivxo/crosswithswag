@@ -1,12 +1,9 @@
-import type { CSSProperties } from "react";
 import Link from "next/link";
 import { Reveal } from "@/components/v3/Reveal";
 import { Ticker } from "@/components/v3/Ticker";
 import { WaitlistForm } from "@/components/v3/WaitlistForm";
 import { CampaignFrame, ImageGrid } from "@/components/v3/ImageGrid";
 import { EditionRow } from "@/components/v3/EditionRow";
-import { ComingSoonChapter } from "@/components/v3/chapters/ComingSoonChapter";
-import { comingSoonEnabled } from "@/lib/coming-soon";
 import { home, landing } from "@/lib/copy";
 import { clothesArtboards, editions } from "@/lib/editions";
 import { chapterById } from "@/lib/sections.config";
@@ -14,7 +11,6 @@ import { ShopChapter } from "@/components/v3/chapters/ShopChapter";
 import { ShopAnchor } from "@/components/v3/ShopAnchor";
 import { Wordmark } from "@/components/ui/Wordmark";
 
-const homeChapter = chapterById("home");
 const currentPath = "/#shop";
 const archivePath = chapterById("archive").path;
 const manifestoPath = chapterById("manifesto").path;
@@ -26,7 +22,6 @@ export function HomeChapter({
   variant?: "shop" | "space";
 }) {
   const isShop = variant === "shop";
-  const comingSoon = isShop && comingSoonEnabled();
   return (
     <>
       {!isShop && (
@@ -70,50 +65,35 @@ export function HomeChapter({
         </section>
       )}
       {isShop && (
-      <section
-        id="home"
-        className="chapter section-shell hero-section"
-        style={
-          comingSoon
-            ? ({
-                "--section-bg": homeChapter.background,
-                "--section-fg": homeChapter.foreground,
-              } as CSSProperties)
-            : undefined
-        }
-      >
-        {comingSoon ? (
-          <ComingSoonChapter id="home-intro" />
-        ) : (
-          /* Figma 21:277: the mark sits in the first viewport; the header mark is already docked, so there is no #home-intro scroll spacer. */
-          <div className="landing-hero">
-            <div id="home-hero" className="landing-hero__body" tabIndex={-1}>
-              <h1 className="sr-only">{landing.hero.srTitle}</h1>
-              <div className="landing-hero__stage">
-                <div className="landing-mark" aria-hidden="true">
-                  <Wordmark />
-                </div>
-                <div className="landing-hero__below">
-                  <span className="lbl lbl--clay">
-                    {landing.hero.standardLabel}
-                  </span>
-                  <div className="landing-cta">
-                    <ShopAnchor className="tlink tlink--clay">
-                      {landing.hero.shopCta}
-                    </ShopAnchor>
-                    <Link className="tlink" href="/space">
-                      {landing.hero.enterCta}
-                    </Link>
-                  </div>
-                </div>
+      <section id="home" className="chapter section-shell hero-section">
+        {/* Figma 21:277: docked header mark + in-page landing mark. Not the V3.3.3 Jotform coming-soon poster. */}
+        <div className="landing-hero">
+          <div id="home-hero" className="landing-hero__body" tabIndex={-1}>
+            <h1 className="sr-only">{landing.hero.srTitle}</h1>
+            <div className="landing-hero__stage">
+              <div className="landing-mark" aria-hidden="true">
+                <Wordmark />
               </div>
-              <div className="landing-hero__meta">
-                <span className="lbl">{home.est}</span>
-                <span className="lbl">{landing.hero.meta}</span>
+              <div className="landing-hero__below">
+                <span className="lbl lbl--clay">
+                  {landing.hero.standardLabel}
+                </span>
+                <div className="landing-cta">
+                  <ShopAnchor className="tlink tlink--clay">
+                    {landing.hero.shopCta}
+                  </ShopAnchor>
+                  <Link className="tlink" href="/space">
+                    {landing.hero.enterCta}
+                  </Link>
+                </div>
               </div>
             </div>
+            <div className="landing-hero__meta">
+              <span className="lbl">{home.est}</span>
+              <span className="lbl">{landing.hero.meta}</span>
+            </div>
           </div>
-        )}
+        </div>
       </section>
       )}
 

@@ -25,9 +25,10 @@ const V4 = "/assets/v4";
 /**
  * Shop files in /assets/v4/shop (curated from Marcus's v41-products.zip, resized to 1600w).
  * Naming: product-{family}_{colourway}[ _view].jpg
- *   product-X.jpg          card (Figma front + back composite)
- *   product-X_front.jpg    Front / Full
- *   product-X_front-detail.jpg, product-X_back.jpg, product-X_back-detail.jpg
+ *   product-X.jpg          unused composite (left in public/, not on cards)
+ *   product-X_front.jpg    shop card / cart thumb (Front / Full)
+ *   product-X_front-detail.jpg  shop-card hover on fine pointers; also PDP thumbs
+ *   product-X_back.jpg, product-X_back-detail.jpg
  *
  * The zip folders are Dispatch, Orbit, Grey Department, Royal Department, Pulse, Rush.
  * Confirmed by Marcus (9 Nov 23:17 SAST): SUPER = Pulse (pink) + Rush (lime);

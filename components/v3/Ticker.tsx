@@ -1,7 +1,7 @@
 import { home } from "@/lib/copy";
 
-export function Ticker() {
-  const items = [...home.ticker, ...home.ticker];
+export function Ticker({ items: sourceItems = home.ticker }: { items?: readonly string[] }) {
+  const items = [...sourceItems, ...sourceItems];
 
   return (
     <div className="ticker" aria-hidden="true">

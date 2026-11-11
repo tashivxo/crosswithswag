@@ -8,4 +8,12 @@ describe("comingSoonEnabled", () => {
     expect(comingSoonEnabled({ NEXT_PUBLIC_COMING_SOON: "true" })).toBe(false);
     expect(comingSoonEnabled({})).toBe(false);
   });
+
+  it("stays off at Next runtime even if the env is 1", () => {
+    const original = process.env.VITEST;
+    process.env.VITEST = "false";
+    expect(comingSoonEnabled({ NEXT_PUBLIC_COMING_SOON: "1" })).toBe(false);
+    if (original === undefined) delete process.env.VITEST;
+    else process.env.VITEST = original;
+  });
 });

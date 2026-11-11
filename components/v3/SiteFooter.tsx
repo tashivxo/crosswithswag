@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Wordmark } from "@/components/ui/Wordmark";
 import { footer } from "@/lib/copy";
 
 export function SiteFooter() {
@@ -8,11 +7,8 @@ export function SiteFooter() {
       <div className="foot">
         <div>
           <div className="foot-mark">
-            <Wordmark />
+            <div className="foot-lockup" role="img" aria-label="swag. cross with swag" />
           </div>
-          {footer.tagline ? (
-            <p className="foot-tagline">{footer.tagline}</p>
-          ) : null}
           <a
             className="foot-handle"
             href={footer.handle.href}

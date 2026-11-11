@@ -12,6 +12,8 @@ export type ProductImages = {
   thumbs: [string | null, string | null];
   mobileMain?: string;
   card: string;
+  /** Front detail — shop card hover on fine pointers. */
+  hover: string;
   /** Print close-up shown first on the PDP (Figma black tile). Only dispatch black has one. */
   printClose?: string;
 };
@@ -46,16 +48,17 @@ export const productFamilies: Record<
 function shopImages(
   key: string,
   opts: {
-    card?: "composite" | "front";
     thumbs?: [string | null, string | null];
   } = {},
 ): ProductImages {
   const base = `${SHOP_ASSET}/product-${key}`;
   const front = `${base}_front.jpg`;
+  const detail = `${base}_front-detail.jpg`;
   return {
     main: front,
-    thumbs: opts.thumbs ?? [`${base}_front-detail.jpg`, null],
-    card: opts.card === "front" ? front : `${base}.jpg`,
+    thumbs: opts.thumbs ?? [detail, null],
+    card: front,
+    hover: detail,
   };
 }
 
@@ -118,8 +121,8 @@ export const standardProducts: StandardProduct[] = [
     colourwayName: "orbit white",
     priceCents: STANDARD_EDITION_PRICE_CENTS,
     shirtIndex: 5,
-    // DRAFT: zip folder is "White tee - Black print"; the Figma card is a front + back composite we do not have.
-    images: shopImages("halo_orbit-white", { card: "front" }),
+    // DRAFT: zip folder is "White tee - Black print"; card uses front-full until a composite exists.
+    images: shopImages("halo_orbit-white"),
   },
   {
     id: "super-rush",
@@ -162,7 +165,7 @@ export const standardProducts: StandardProduct[] = [
     colourwayName: "grey department",
     priceCents: STANDARD_EDITION_PRICE_CENTS,
     shirtIndex: 8,
-    images: shopImages("daily_grey-department", { card: "front" }),
+    images: shopImages("daily_grey-department"),
   },
   {
     id: "daily-royal-department",
@@ -173,7 +176,7 @@ export const standardProducts: StandardProduct[] = [
     colourwayName: "royal department",
     priceCents: STANDARD_EDITION_PRICE_CENTS,
     shirtIndex: 9,
-    images: shopImages("daily_royal-department", { card: "front" }),
+    images: shopImages("daily_royal-department"),
   },
 ];
 
