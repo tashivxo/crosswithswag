@@ -19,6 +19,7 @@
   /* Shared outline CTA: Clay wipe, cream label (4.9:1). */
   --cta-fill: var(--clay);
   --cta-on-fill: var(--studio-white);
+  --cta-wipe-dur: 0.7s;
   --line: rgba(214, 209, 196, 0.14);
   --line-strong: rgba(214, 209, 196, 0.28);
   --raise: rgba(214, 209, 196, 0.035);
@@ -31,13 +32,15 @@
   --wordmark-hero-width: clamp(240px, 45.3vw, 652px);
   --wordmark-dock-width: clamp(88px, 11vw, 120px);
   --wordmark-aspect-ratio: 1.426685;
+  /* Visible glyph box of SWAG_mark_fill.svg (692 × 254 inside 909 × 697 art). */
+  --wordmark-glyph-ratio: 2.7244094488188976;
   --wordmark-hero-height: calc(
-    var(--wordmark-hero-width) / var(--wordmark-aspect-ratio)
+    var(--wordmark-hero-width) / var(--wordmark-glyph-ratio)
   );
   --wordmark-dock-height: calc(
-    var(--wordmark-dock-width) / var(--wordmark-aspect-ratio)
+    var(--wordmark-dock-width) / var(--wordmark-glyph-ratio)
   );
-  --header-height: calc(var(--wordmark-dock-height) + 8px);
+  --header-height: max(60px, calc(var(--wordmark-dock-height) + 16px));
   --font-display: var(--font-instrument-sans, "Instrument Sans", sans-serif);
   /* transitions-dev */
   --resize-dur: 300ms;
@@ -648,6 +651,7 @@ button:focus-visible {
   width: var(--wordmark-dock-width);
   min-width: var(--wordmark-dock-width);
   height: var(--wordmark-dock-height);
+  aspect-ratio: 692 / 254;
   flex: 0 0 auto;
   display: flex;
   align-items: center;
@@ -664,6 +668,14 @@ button:focus-visible {
   pointer-events: none;
   transform: translateY(-8px);
   will-change: transform, opacity;
+}
+
+.site-header__chrome[data-interactive] {
+  pointer-events: auto;
+}
+
+[data-route="hero"] .site-header__chrome[data-interactive] {
+  pointer-events: auto;
 }
 
 .burger {
@@ -842,11 +854,6 @@ button:focus-visible {
 }
 
 @media (min-width: 900px) {
-  :root {
-  --wordmark-dock-width: 72px;
-  --header-height: 78.485px;
-  }
-
   .hdr-in {
     box-sizing: border-box;
     min-height: var(--header-height);
@@ -1108,6 +1115,8 @@ button:focus-visible {
   position: relative;
   flex: 0 0 auto;
   width: var(--wordmark-hero-width);
+  aspect-ratio: 692 / 254;
+  overflow: hidden;
   margin-inline: calc(
     (var(--wordmark-dock-width) - var(--wordmark-hero-width)) / 2
   );
@@ -1116,6 +1125,16 @@ button:focus-visible {
   transform-origin: 50% 50%;
   will-change: transform;
   backface-visibility: hidden;
+}
+
+/* Crop the padded SVG to the glyph, matching `.landing-mark`. Docked 120px is 120px of ink. */
+.wordmark-drift-layer .wordmark {
+  width: 131.35%;
+  margin-left: -15.61%;
+  margin-top: -31.94%;
+  aspect-ratio: 909 / 697;
+  mask-size: 100% 100%;
+  -webkit-mask-size: 100% 100%;
 }
 
 /* ticker */
@@ -1228,24 +1247,11 @@ button:focus-visible {
   font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  transition: background 0.35s var(--ease), color 0.35s, border-color 0.35s;
-}
-
-.btn:hover {
-  background: var(--sand);
-  color: var(--void);
-  border-color: var(--sand);
 }
 
 .btn--clay {
   border-color: var(--clay);
   color: var(--sand);
-}
-
-.btn--clay:hover {
-  background: var(--clay);
-  color: var(--sand);
-  border-color: var(--clay);
 }
 
 .feature {
@@ -2647,32 +2653,6 @@ html[data-cs-short="1"]:has(.cs) .site-header::after {
   letter-spacing: 0.16em;
   line-height: 1;
   text-transform: uppercase;
-  transform-origin: center;
-  transition:
-    color 0.3s var(--ease),
-    transform var(--avatar-dur) var(--avatar-ease-out);
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .tlink:hover {
-    transform: scale(1.04) translateY(-2px);
-  }
-}
-
-.tlink:hover {
-  color: var(--clay);
-}
-
-.tlink:focus-visible {
-  outline: 1px solid var(--clay);
-  outline-offset: 4px;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .tlink {
-    transition: none;
-    transform: none !important;
-  }
 }
 
 /* first viewport: the mark + CTAs, no dock spacer */
@@ -2691,6 +2671,15 @@ html[data-cs-short="1"]:has(.cs) .site-header::after {
   min-height: 100dvh;
   padding-top: var(--header-height);
   padding-bottom: clamp(24px, 6.4vh, 58px);
+}
+
+/* Touch: svh so the iOS URL bar cannot reflow the pinned landing (V3.3.3). */
+@media (pointer: coarse) {
+  #home.hero-section,
+  #home.hero-section .landing-hero,
+  #home.hero-section .landing-hero__body {
+    min-height: 100svh;
+  }
 }
 
 .landing-hero__stage {
@@ -4259,7 +4248,8 @@ html:has(.page-shell[data-surface="cream"]) .cart-drawer__scrim {
 
 /* ===== Shared outline CTA (.tlink, .btn, .btn--clay) =====
    One hover/focus treatment: a Clay fill wipes in from the left, the label flips to cream and a second
-   hairline ring settles 3px inside the box. Under reduced motion the same end state applies instantly. */
+   hairline ring settles 3px inside the box. Wipe is 0.7s --ease (strong ease-out) so it
+   reads as a material fill, not a flash. Under reduced motion the end state is instant. */
 .tlink,
 .btn {
   position: relative;
@@ -4268,8 +4258,8 @@ html:has(.page-shell[data-surface="cream"]) .cart-drawer__scrim {
   min-height: 44px;
   transform: none;
   transition:
-    color 0.35s var(--ease),
-    border-color 0.35s var(--ease);
+    color var(--cta-wipe-dur) var(--ease),
+    border-color var(--cta-wipe-dur) var(--ease);
 }
 
 .tlink::before,
@@ -4281,7 +4271,7 @@ html:has(.page-shell[data-surface="cream"]) .cart-drawer__scrim {
   background: var(--cta-fill);
   transform: scaleX(0);
   transform-origin: left center;
-  transition: transform 0.5s var(--ease);
+  transition: transform var(--cta-wipe-dur) var(--ease);
 }
 
 .tlink::after,
@@ -4294,13 +4284,32 @@ html:has(.page-shell[data-surface="cream"]) .cart-drawer__scrim {
   opacity: 0;
   transform: scale(1.06);
   transition:
-    opacity 0.4s var(--ease) 0.08s,
-    transform 0.5s var(--ease) 0.08s;
+    opacity var(--cta-wipe-dur) var(--ease) 0.08s,
+    transform var(--cta-wipe-dur) var(--ease) 0.08s;
   pointer-events: none;
 }
 
-.tlink:not([aria-disabled="true"]):not(:disabled):hover,
-.btn:not([aria-disabled="true"]):not(:disabled):hover,
+@media (hover: hover) and (pointer: fine) {
+  .tlink:not([aria-disabled="true"]):not(:disabled):hover,
+  .btn:not([aria-disabled="true"]):not(:disabled):hover {
+    background: none;
+    color: var(--cta-on-fill);
+    border-color: var(--cta-fill);
+    transform: none;
+  }
+
+  .tlink:not([aria-disabled="true"]):not(:disabled):hover::before,
+  .btn:not([aria-disabled="true"]):not(:disabled):hover::before {
+    transform: scaleX(1);
+  }
+
+  .tlink:not([aria-disabled="true"]):not(:disabled):hover::after,
+  .btn:not([aria-disabled="true"]):not(:disabled):hover::after {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+}
+
 .tlink:not([aria-disabled="true"]):not(:disabled):focus-visible,
 .btn:not([aria-disabled="true"]):not(:disabled):focus-visible {
   background: none;
@@ -4309,15 +4318,11 @@ html:has(.page-shell[data-surface="cream"]) .cart-drawer__scrim {
   transform: none;
 }
 
-.tlink:not([aria-disabled="true"]):not(:disabled):hover::before,
-.btn:not([aria-disabled="true"]):not(:disabled):hover::before,
 .tlink:not([aria-disabled="true"]):not(:disabled):focus-visible::before,
 .btn:not([aria-disabled="true"]):not(:disabled):focus-visible::before {
   transform: scaleX(1);
 }
 
-.tlink:not([aria-disabled="true"]):not(:disabled):hover::after,
-.btn:not([aria-disabled="true"]):not(:disabled):hover::after,
 .tlink:not([aria-disabled="true"]):not(:disabled):focus-visible::after,
 .btn:not([aria-disabled="true"]):not(:disabled):focus-visible::after {
   opacity: 0.55;

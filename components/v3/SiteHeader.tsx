@@ -5,12 +5,8 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import {
-  WORDMARK_DOCK_SCROLL,
-  WordmarkDriftDock,
-  getDockScrub,
-  getWordmarkDockTrigger,
-} from "@/components/v3/WordmarkDriftDock";
+import { WordmarkDriftDock } from "@/components/v3/WordmarkDriftDock";
+import { acquireLandingDock } from "@/lib/landing-dock";
 import { useShortScreen } from "@/lib/use-short-screen";
 import {
   queueRouteScroll,
@@ -89,7 +85,9 @@ export function SiteHeader({
   const pathname = usePathname();
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [chromeLive, setChromeLive] = useState(mode === "docked");
   const shortScreen = useShortScreen();
+  const navTab = ready && chromeLive ? 0 : -1;
   const { count, openDrawer } = useCart();
   const burgerRef = useRef<HTMLButtonElement>(null);
   const chromeRef = useRef<HTMLDivElement>(null);
@@ -190,67 +188,76 @@ export function SiteHeader({
 
     const chrome = chromeRef.current;
     const header = headerRef.current;
-    const intro = getWordmarkDockTrigger();
     const reduceMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
+
+    const armChrome = (live: boolean) => {
+      if (live) chrome.setAttribute("data-interactive", "");
+      else chrome.removeAttribute("data-interactive");
+      chrome.style.pointerEvents = live ? "auto" : "none";
+      setChromeLive(live);
+    };
 
     const showChrome = () => {
       gsap.set(chrome, {
         autoAlpha: 1,
         y: 0,
-        pointerEvents: "auto",
       });
+      armChrome(true);
       if (header) {
         gsap.set(header, { "--header-line": 1 });
       }
     };
 
-    if (mode === "docked" || !intro || reduceMotion) {
+    if (mode === "docked" || reduceMotion) {
       showChrome();
       return;
     }
 
-    const ctx = gsap.context(() => {
-      const dockScroll = () => ({
-        trigger: intro,
-        start: WORDMARK_DOCK_SCROLL.start,
-        end: WORDMARK_DOCK_SCROLL.end,
-        scrub: getDockScrub(),
-      });
+    const dock = acquireLandingDock();
+    if (!dock) {
+      showChrome();
+      return;
+    }
 
-      gsap.fromTo(
+    armChrome(false);
+    const stopProgress = dock.onProgress((progress) => {
+      armChrome(progress >= 0.85);
+    });
+
+    const ctx = gsap.context(() => {
+      dock.timeline.fromTo(
         chrome,
         {
           autoAlpha: 0,
           y: -8,
-          pointerEvents: "none",
         },
         {
           autoAlpha: 1,
           y: 0,
-          pointerEvents: "auto",
           ease: "none",
-          immediateRender: true,
-          scrollTrigger: dockScroll(),
+          duration: 1,
         },
+        0,
       );
 
       if (header) {
-        gsap.fromTo(
+        dock.timeline.fromTo(
           header,
           { "--header-line": 0 },
-          {
-            "--header-line": 1,
-            ease: "none",
-            immediateRender: true,
-            scrollTrigger: dockScroll(),
-          },
+          { "--header-line": 1, ease: "none", duration: 1 },
+          0,
         );
       }
     }, chrome);
 
-    return () => ctx.revert();
+    return () => {
+      stopProgress();
+      armChrome(false);
+      ctx.revert();
+      dock.release();
+    };
   }, [ready, mode, shortScreen]);
 
   return (
@@ -279,7 +286,7 @@ export function SiteHeader({
           <div
             ref={chromeRef}
             className="site-header__chrome"
-            aria-hidden={!ready}
+            aria-hidden={!ready || !chromeLive}
           >
             <nav className="site-nav" aria-label="Primary">
               {getDesktopNavItems().map((item) => {
@@ -296,7 +303,7 @@ export function SiteHeader({
                       key={item.id}
                       type="button"
                       className={className}
-                      tabIndex={ready ? 0 : -1}
+                      tabIndex={navTab}
                       aria-current={current ? "page" : undefined}
                       onClick={openDrawer}
                     >
@@ -310,7 +317,7 @@ export function SiteHeader({
                     key={item.id}
                     className={className}
                     href={item.href}
-                    tabIndex={ready ? 0 : -1}
+                    tabIndex={navTab}
                     aria-current={current ? "page" : undefined}
                     onAuxClick={() => {
                       /* native <a href> handles middle-click */
@@ -345,7 +352,7 @@ export function SiteHeader({
             <button
               type="button"
               className="burger site-header__cart"
-              tabIndex={ready ? 0 : -1}
+              tabIndex={navTab}
               onClick={openDrawer}
               aria-label={`Cart (${count})`}
             >
@@ -355,7 +362,7 @@ export function SiteHeader({
               ref={burgerRef}
               type="button"
               className="burger site-header__menu-btn"
-              tabIndex={ready ? 0 : -1}
+              tabIndex={navTab}
               aria-expanded={menuOpen}
               aria-controls="menu"
               onClick={openMenu}

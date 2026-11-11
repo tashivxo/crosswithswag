@@ -4,19 +4,11 @@ import { useLayoutEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Wordmark } from "@/components/ui/Wordmark";
+import { acquireLandingDock } from "@/lib/landing-dock";
 import { useShortScreen } from "@/lib/use-short-screen";
 import { markHomeIntroSeen } from "@/lib/home-scroll";
 
 gsap.registerPlugin(ScrollTrigger);
-
-export const WORDMARK_DOCK_SCROLL = {
-  start: "top top",
-  end: "bottom top",
-} as const;
-
-export function getWordmarkDockTrigger() {
-  return document.getElementById("home");
-}
 
 function viewportSize() {
   const vv = window.visualViewport;
@@ -42,10 +34,6 @@ function heroOffset(slot: Element) {
   };
 }
 
-export function getDockScrub() {
-  return window.matchMedia("(pointer: coarse)").matches ? 0.25 : true;
-}
-
 export function WordmarkDriftDock({
   ready,
   mode,
@@ -69,13 +57,27 @@ export function WordmarkDriftDock({
     if (!slot) return;
 
     const dockNow = () => {
-      gsap.set(layer, {
-        x: 0,
-        y: 0,
-        scale: dockScale(slot, layer),
-        opacity: 1,
-      });
+      const apply = () => {
+        gsap.set(layer, {
+          x: 0,
+          y: 0,
+          scale: dockScale(slot, layer),
+          opacity: 1,
+        });
+      };
+      apply();
+
+      const observer =
+        typeof ResizeObserver === "undefined" ? null : new ResizeObserver(apply);
+      observer?.observe(slot);
+      observer?.observe(layer);
+      window.addEventListener("resize", apply);
+      window.visualViewport?.addEventListener("resize", apply);
+
       return () => {
+        observer?.disconnect();
+        window.removeEventListener("resize", apply);
+        window.visualViewport?.removeEventListener("resize", apply);
         gsap.set(layer, { clearProps: "transform" });
       };
     };
@@ -84,8 +86,8 @@ export function WordmarkDriftDock({
       return dockNow();
     }
 
-    const intro = getWordmarkDockTrigger();
-    if (!intro) {
+    const dock = acquireLandingDock();
+    if (!dock) {
       return dockNow();
     }
 
@@ -100,9 +102,13 @@ export function WordmarkDriftDock({
       endScale = dockScale(slot, layer);
     };
 
-    const ctx = gsap.context(() => {
-      measure();
+    measure();
+    const stopRefresh = dock.onRefresh(measure);
+    const stopProgress = dock.onProgress((progress) => {
+      if (progress >= 1) markHomeIntroSeen();
+    });
 
+    const ctx = gsap.context(() => {
       gsap.set(layer, {
         x: startX,
         y: startY,
@@ -111,7 +117,7 @@ export function WordmarkDriftDock({
         force3D: true,
       });
 
-      gsap.fromTo(
+      dock.timeline.fromTo(
         layer,
         {
           x: () => startX,
@@ -127,31 +133,17 @@ export function WordmarkDriftDock({
           opacity: 1,
           force3D: true,
           ease: "none",
-          immediateRender: true,
-          scrollTrigger: {
-            trigger: intro,
-            start: WORDMARK_DOCK_SCROLL.start,
-            end: WORDMARK_DOCK_SCROLL.end,
-            scrub: getDockScrub(),
-            invalidateOnRefresh: true,
-            onRefresh: measure,
-            onLeave: () => markHomeIntroSeen(),
-            onUpdate: (self) => {
-              if (self.progress >= 1) {
-                markHomeIntroSeen();
-              }
-            },
-          },
+          duration: 1,
         },
+        0,
       );
-
-      requestAnimationFrame(() => {
-        ScrollTrigger.refresh();
-      });
     }, layer);
 
     return () => {
+      stopRefresh();
+      stopProgress();
       ctx.revert();
+      dock.release();
     };
   }, [ready, mode, shortScreen]);
 

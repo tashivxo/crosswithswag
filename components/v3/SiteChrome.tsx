@@ -92,8 +92,8 @@ export function SiteChrome({
     router.replace(target, { scroll: false });
   }, [pathname, router]);
 
-  // V4 `/` reuses the WordmarkDriftDock + SiteHeader scrub against `#home`.
-  // Do not mount the Jotform coming-soon pin. Inner routes stay docked.
+  // V4 `/` pins `#home` while the mark flies (V3.3.3 dock length).
+  // Do not mount the Jotform coming-soon poster. Inner routes stay docked.
   const mode = normalizePath(pathname) === "/" ? "hero" : "docked";
   const surface = tone ?? surfaceTone(pathname);
 
