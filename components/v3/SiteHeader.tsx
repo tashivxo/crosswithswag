@@ -1,6 +1,12 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type ButtonHTMLAttributes,
+} from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { gsap } from "gsap";
@@ -20,7 +26,50 @@ import {
   navItems,
   normalizePath,
 } from "@/lib/sections.config";
+import { CartIcon, type CartIconHandle } from "@/components/icons/cart";
 import { useCart } from "@/lib/v4/cart/CartProvider";
+
+const HEADER_CART_ICON_SIZE = 18;
+
+function HeaderCartTrigger({
+  count,
+  className,
+  onMouseEnter,
+  onMouseLeave,
+  ...buttonProps
+}: {
+  count: number;
+} & ButtonHTMLAttributes<HTMLButtonElement>) {
+  const iconRef = useRef<CartIconHandle>(null);
+
+  return (
+    <button
+      type="button"
+      className={className}
+      aria-label={`Cart (${count})`}
+      {...buttonProps}
+      onMouseEnter={(event) => {
+        iconRef.current?.startAnimation();
+        onMouseEnter?.(event);
+      }}
+      onMouseLeave={(event) => {
+        iconRef.current?.stopAnimation();
+        onMouseLeave?.(event);
+      }}
+    >
+      <span className="site-header__cart-control">
+        <CartIcon
+          ref={iconRef}
+          size={HEADER_CART_ICON_SIZE}
+          className="site-header__cart-icon"
+        />
+        <span className="site-header__cart-count" aria-hidden="true">
+          {count}
+        </span>
+      </span>
+    </button>
+  );
+}
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -292,23 +341,18 @@ export function SiteHeader({
               {getDesktopNavItems().map((item) => {
                 const current = isDesktopNavCurrent(item, currentPath);
                 const className = "site-nav__link";
-                const label =
-                  item.action === "cart"
-                    ? `${item.navLabel} (${count})`
-                    : item.navLabel;
+                const label = item.navLabel;
 
                 if (item.action === "cart") {
                   return (
-                    <button
+                    <HeaderCartTrigger
                       key={item.id}
-                      type="button"
+                      count={count}
                       className={className}
                       tabIndex={navTab}
                       aria-current={current ? "page" : undefined}
                       onClick={openDrawer}
-                    >
-                      <span className="nav-label">{label}</span>
-                    </button>
+                    />
                   );
                 }
 
@@ -349,15 +393,12 @@ export function SiteHeader({
                 );
               })}
             </nav>
-            <button
-              type="button"
+            <HeaderCartTrigger
+              count={count}
               className="burger site-header__cart"
               tabIndex={navTab}
               onClick={openDrawer}
-              aria-label={`Cart (${count})`}
-            >
-              <span className="nav-label">cart ({count})</span>
-            </button>
+            />
             <button
               ref={burgerRef}
               type="button"

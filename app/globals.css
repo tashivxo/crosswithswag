@@ -702,6 +702,7 @@ button:focus-visible {
   min-width: 44px;
   min-height: 44px;
   transform: translate(-50%, -50%);
+  pointer-events: none;
 }
 
 .menu-close {
@@ -851,6 +852,39 @@ button:focus-visible {
   text-decoration-color: var(--clay);
   text-decoration-thickness: 1px;
   text-underline-offset: 4px;
+}
+
+.site-header__cart {
+  flex: 0 0 auto;
+  width: auto;
+  gap: 0;
+}
+
+.site-header__cart-control {
+  display: inline-flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  gap: 4px;
+  width: max-content;
+  color: inherit;
+}
+
+.site-header__cart-icon {
+  display: block;
+  flex: 0 0 18px;
+  width: 18px;
+  height: 18px;
+  line-height: 0;
+  color: currentColor;
+  pointer-events: none;
+}
+
+.site-header__cart-count {
+  font-size: 10px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+  line-height: 1;
 }
 
 @media (min-width: 900px) {
