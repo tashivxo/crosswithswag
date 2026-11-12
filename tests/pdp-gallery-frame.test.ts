@@ -6,8 +6,12 @@ import {
   PDP_GALLERY_ASPECT_HEIGHT,
   PDP_GALLERY_ASPECT_WIDTH,
   PDP_GALLERY_MAT,
+  PDP_PRINT_EDGES,
+  PDP_PRINT_MAT,
   galleryViewFileSizes,
   sampleGalleryMatColour,
+  samplePrintEdgeColours,
+  samplePrintMatColour,
   tallestGalleryAspect,
 } from "@/lib/v4/pdp-gallery-frame";
 
@@ -49,9 +53,24 @@ describe("PDP main gallery frame from actual files", () => {
     expect(PDP_GALLERY_MAT.toLowerCase()).not.toBe("#d6d1c4");
   });
 
+  it("samples each Print edge and uses the majority as the Print mat", async () => {
+    const edges = await samplePrintEdgeColours();
+    expect(edges).toEqual(PDP_PRINT_EDGES);
+    expect(PDP_PRINT_EDGES).toEqual({
+      top: "#0a0a0a",
+      bottom: "#000000",
+      left: "#000000",
+      right: "#000000",
+    });
+    expect(await samplePrintMatColour()).toBe(PDP_PRINT_MAT);
+    expect(PDP_PRINT_MAT).toBe("#000000");
+    expect(PDP_PRINT_MAT.toLowerCase()).not.toBe("#141414");
+  });
+
   it("reserves that ratio and mat on .pdp-gallery__main with contain, centred", () => {
     expect(css).toMatch(/--pdp-gallery-aspect:\s*1600\s*\/\s*2000/);
     expect(css).toMatch(/--pdp-gallery-mat:\s*#ffffff/i);
+    expect(css).toMatch(/--pdp-gallery-print-mat:\s*#000000/i);
     const main = css.slice(css.indexOf(".pdp-gallery__main {"));
     const block = main.slice(0, main.indexOf(".pdp-gallery__thumbs"));
     expect(block).toMatch(/aspect-ratio:\s*var\(--pdp-gallery-aspect\)/);
@@ -60,6 +79,12 @@ describe("PDP main gallery frame from actual files", () => {
     expect(block).toMatch(/object-position:\s*center\s*!important/);
     expect(block).toMatch(/\.pdp-gallery__main::after/);
     expect(block).toMatch(/content:\s*none/);
+    expect(css).toMatch(
+      /\.pdp-tile--print\s*\{[^}]*background:\s*var\(--pdp-gallery-print-mat\)/s,
+    );
+    expect(css).toMatch(
+      /\.pdp-tile--print\s*\{[^}]*border-color:\s*var\(--pdp-gallery-print-mat\)/s,
+    );
   });
 
   it("keeps a reserved gallery frame in the /current Suspense fallback", () => {
