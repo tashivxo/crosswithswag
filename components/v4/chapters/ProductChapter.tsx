@@ -16,7 +16,7 @@ import {
   formatPrice,
   isSizeSoldOut,
   productBySlug,
-  productGalleryImages,
+  productGalleryViews,
   productMakeTable,
   productSpecRows,
   sizeButtonState,
@@ -39,9 +39,9 @@ function isPrint(src: string | undefined): boolean {
 }
 
 function ProductGallery({ product }: { product: StandardProduct }) {
-  const images = useMemo(() => productGalleryImages(product), [product]);
+  const views = useMemo(() => productGalleryViews(product), [product]);
   const [index, setIndex] = useState(0);
-  const active = images[index];
+  const active = views[index]?.src;
 
   return (
     <div className="pdp-gallery">
@@ -51,7 +51,7 @@ function ProductGallery({ product }: { product: StandardProduct }) {
         {active ? (
           <Image
             src={active}
-            alt={`${product.colourwayName} — view ${index + 1}`}
+            alt={`${product.colourwayName} — ${views[index].label.toLowerCase()}`}
             fill
             sizes="(max-width: 899px) 100vw, 55vw"
             priority
@@ -60,15 +60,15 @@ function ProductGallery({ product }: { product: StandardProduct }) {
           <span className="shop-tile__fill voice">{product.colourwayName}</span>
         )}
       </div>
-      {images.length > 1 ? (
+      {views.length > 1 ? (
         <div className="pdp-gallery__thumbs">
-          {images.map((src, i) =>
+          {views.map(({ src, label }, i) =>
             i === index ? null : (
             <button
               key={src}
               type="button"
               className={`pdp-thumb${isPrint(src) ? " pdp-tile--print" : ""}`}
-              aria-label={`Show image ${i + 1} of ${images.length}`}
+              aria-label={label}
               onClick={() => setIndex(i)}
             >
               <Image src={src} alt="" fill sizes="(max-width: 899px) 50vw, 25vw" />

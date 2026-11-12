@@ -2885,68 +2885,61 @@ html[data-cs-short="1"]:has(.cs) .site-header::after {
 }
 
 /* Front-detail tees: plain 180ms crossfade, pointer hover or keyboard focus. */
-.land-card__media-img--front,
-.land-card__media-img--detail {
+.land-card__media[data-hover="front-detail"] .land-card__media-img {
   transition: opacity 180ms ease;
 }
 
-.land-card__media:focus-visible .land-card__media-img--front {
+.land-card__media[data-hover="front-detail"]:focus-visible .land-card__media-img--front {
   opacity: 0;
 }
 
-.land-card__media:focus-visible .land-card__media-img--detail {
+.land-card__media[data-hover="front-detail"]:focus-visible .land-card__media-img--detail {
   opacity: 1;
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .land-card__media:hover .land-card__media-img--front {
+  .land-card__media[data-hover="front-detail"]:hover .land-card__media-img--front {
     opacity: 0;
   }
 
-  .land-card__media:hover .land-card__media-img--detail {
+  .land-card__media[data-hover="front-detail"]:hover .land-card__media-img--detail {
     opacity: 1;
   }
 }
 
-/* Back-print tees (SUPER pulse, rush): a two-phase turn on Y, front out then back in, 300ms ease-out
-   in total. Transform and opacity only, on layers that already fill the fixed 4/5 frame, so the card
-   never changes size. Phases are sequenced by delay; the same rules play in reverse on leave/blur. */
-.land-card__media[data-hover="back"] .land-card__media-img {
+/* Back-print tees (SUPER pulse, rush): one true card flip. The media link is the perspective parent;
+   the .land-card__flip wrapper rotates 0 -> 180deg on Y over 300ms ease-out, carrying a front face and
+   a back face pre-rotated 180deg, both backface-hidden, so the back lands unmirrored. No opacity is
+   animated, so there is never a faded or blank frame. Only transform changes, on a wrapper that fills
+   the fixed 4/5 frame, so the card never changes size. Reverses on leave/blur. */
+.land-card__media[data-hover="back"] {
+  perspective: 1200px;
+}
+
+.land-card__flip {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transform: rotateY(0deg);
+  transition: transform 300ms ease-out;
+}
+
+.land-card__flip .land-card__media-img {
+  -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
-  transition-property: transform, opacity;
-  transition-duration: 150ms;
-  transition-timing-function: ease-out;
 }
 
-.land-card__media[data-hover="back"] .land-card__media-img--front {
-  transform: perspective(900px) rotateY(0deg);
-  transition-delay: 150ms;
+.land-card__flip .land-card__media-img--back {
+  transform: rotateY(180deg);
 }
 
-.land-card__media[data-hover="back"] .land-card__media-img--detail {
-  transform: perspective(900px) rotateY(90deg);
-  transition-delay: 0ms;
-}
-
-.land-card__media[data-hover="back"]:focus-visible .land-card__media-img--front {
-  transform: perspective(900px) rotateY(-90deg);
-  transition-delay: 0ms;
-}
-
-.land-card__media[data-hover="back"]:focus-visible .land-card__media-img--detail {
-  transform: perspective(900px) rotateY(0deg);
-  transition-delay: 150ms;
+.land-card__media[data-hover="back"]:focus-visible .land-card__flip {
+  transform: rotateY(180deg);
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .land-card__media[data-hover="back"]:hover .land-card__media-img--front {
-    transform: perspective(900px) rotateY(-90deg);
-    transition-delay: 0ms;
-  }
-
-  .land-card__media[data-hover="back"]:hover .land-card__media-img--detail {
-    transform: perspective(900px) rotateY(0deg);
-    transition-delay: 150ms;
+  .land-card__media[data-hover="back"]:hover .land-card__flip {
+    transform: rotateY(180deg);
   }
 }
 
@@ -2976,15 +2969,13 @@ html[data-cs-short="1"]:has(.cs) .site-header::after {
   opacity: 1;
 }
 
-/* Reduced motion: no transitions and no turn. Back-print tees still swap to the back, instantly,
-   on hover (fine pointer) and keyboard focus. Front-detail tees stay front-only, as before. */
+/* Reduced motion: no transitions. Back-print tees still show the back on hover (fine pointer) and
+   keyboard focus as an instant swap. Front-detail tees stay front-only, as before. */
 @media (prefers-reduced-motion: reduce) {
-  .land-card__media-img--front,
-  .land-card__media-img--detail,
-  .land-card__media[data-hover="back"] .land-card__media-img,
+  .land-card__media[data-hover="front-detail"] .land-card__media-img,
+  .land-card__flip,
   .land-card__back {
-    transition: none !important;
-    transform: none !important;
+    transition: none;
   }
 
   .land-card__media[data-hover="front-detail"] .land-card__media-img--detail {

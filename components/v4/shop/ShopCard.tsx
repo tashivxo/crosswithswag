@@ -7,8 +7,8 @@ import { useCart } from "@/lib/v4/cart/CartProvider";
 import {
   formatPrice,
   productCardImage,
+  productCardLinkName,
   productHasBackPrint,
-  productHoverAlt,
   sizeButtonState,
   type ProductSize,
   type StandardProduct,
@@ -50,6 +50,7 @@ export function ShopCard({ product }: { product: StandardProduct }) {
   const frontSrc = productCardImage(product);
   const hoverSrc = product.images.hover;
   const backPrint = productHasBackPrint(product);
+  const imageSizes = "(max-width: 599px) 100vw, (max-width: 899px) 50vw, 33vw";
   const href = `/current?product=${product.slug}`;
   const label =
     state === "added"
@@ -64,26 +65,46 @@ export function ShopCard({ product }: { product: StandardProduct }) {
         href={href}
         className="land-card__media"
         data-hover={product.images.hoverView}
-        aria-label={`${product.shirtName.toLowerCase()} — ${product.colourwayName}`}
+        aria-label={productCardLinkName(product)}
       >
-        {frontSrc ? (
+        {frontSrc && backPrint && hoverSrc ? (
+          <span className="land-card__flip">
+            <Image
+              className="land-card__media-img land-card__media-img--front"
+              src={frontSrc}
+              alt=""
+              aria-hidden
+              fill
+              sizes={imageSizes}
+            />
+            <Image
+              className="land-card__media-img land-card__media-img--back"
+              src={hoverSrc}
+              alt=""
+              aria-hidden
+              fill
+              sizes={imageSizes}
+              loading="eager"
+              fetchPriority="low"
+            />
+          </span>
+        ) : frontSrc ? (
           <>
             <Image
               className="land-card__media-img land-card__media-img--front"
               src={frontSrc}
               alt={`${product.shirtName.toLowerCase()} in ${product.colourwayName}`}
               fill
-              sizes="(max-width: 599px) 100vw, (max-width: 899px) 50vw, 33vw"
+              sizes={imageSizes}
             />
             {hoverSrc ? (
               <Image
                 className="land-card__media-img land-card__media-img--detail"
                 src={hoverSrc}
-                alt={productHoverAlt(product)}
+                alt=""
                 fill
-                sizes="(max-width: 599px) 100vw, (max-width: 899px) 50vw, 33vw"
-                aria-hidden={backPrint ? undefined : true}
-                {...(backPrint ? { loading: "eager", fetchPriority: "low" } : {})}
+                sizes={imageSizes}
+                aria-hidden
               />
             ) : null}
           </>

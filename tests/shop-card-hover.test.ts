@@ -3,14 +3,16 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
   productCardImage,
+  productCardLinkName,
   productGalleryImages,
+  productGalleryViews,
   productHasBackPrint,
-  productHoverAlt,
   standardProducts,
 } from "@/lib/v4/products";
 
 const css = readFileSync(join(process.cwd(), "app/globals.css"), "utf8");
 const card = readFileSync(join(process.cwd(), "components/v4/shop/ShopCard.tsx"), "utf8");
+const pdp = readFileSync(join(process.cwd(), "components/v4/chapters/ProductChapter.tsx"), "utf8");
 
 const BACK_PRINT_SLUGS = ["product-super-pulse", "product-super-rush"];
 
@@ -40,7 +42,7 @@ describe("shop card hover image", () => {
     }
   });
 
-  it("flags only pulse and rush as back-print and keeps their card image on the front", () => {
+  it("flags only pulse and rush as back-print and keeps every card image on the front", () => {
     for (const p of standardProducts) {
       expect(productHasBackPrint(p), p.slug).toBe(BACK_PRINT_SLUGS.includes(p.slug));
       expect(productCardImage(p), p.slug).toMatch(/_front\.jpg$/);
@@ -54,8 +56,8 @@ describe("shop card hover image", () => {
   });
 });
 
-describe("PDP gallery for back-print tees", () => {
-  it("puts the front first and the back second", () => {
+describe("PDP gallery", () => {
+  it("puts the front first and the back second for back-print tees", () => {
     for (const slug of BACK_PRINT_SLUGS) {
       const images = productGalleryImages(bySlug(slug));
       expect(images[0], slug).toMatch(/_front\.jpg$/);
@@ -63,27 +65,62 @@ describe("PDP gallery for back-print tees", () => {
       expect(new Set(images).size, slug).toBe(images.length);
     }
   });
+
+  it("names Pulse and Rush thumbnails Front, Back print, Front detail", () => {
+    for (const slug of BACK_PRINT_SLUGS) {
+      expect(productGalleryViews(bySlug(slug)).map((v) => v.label), slug).toEqual([
+        "Front",
+        "Back print",
+        "Front detail",
+      ]);
+    }
+  });
+
+  it("gives every other tee sensible view names (Print for the print close-up), never 'image N of M'", () => {
+    expect(productGalleryViews(bySlug("product-express-dispatch-black")).map((v) => v.label)).toEqual([
+      "Print",
+      "Front",
+      "Front detail",
+    ]);
+    for (const p of standardProducts) {
+      const labels = productGalleryViews(p).map((v) => v.label);
+      expect(new Set(labels).size, p.slug).toBe(labels.length);
+      for (const label of labels) expect(label, p.slug).toMatch(/^(Print|Front|Front detail|Back print|Back detail)$/);
+    }
+  });
+
+  it("uses the view name as the thumbnail's accessible name", () => {
+    expect(pdp).toContain("aria-label={label}");
+    expect(pdp).not.toMatch(/Show image/);
+  });
 });
 
 describe("shop card markup", () => {
-  it("names the back image as the back print; the seven front-detail tees stay decorative", () => {
-    expect(productHoverAlt(bySlug("product-super-pulse"))).toBe("product super in pulse, back print");
-    expect(productHoverAlt(bySlug("product-super-rush"))).toBe("product super in rush, back print");
+  it("appends 'back print' to the link name for pulse and rush only, leaving product copy as is", () => {
+    expect(productCardLinkName(bySlug("product-super-pulse"))).toBe("product super — pulse, back print");
+    expect(productCardLinkName(bySlug("product-super-rush"))).toBe("product super — rush, back print");
     for (const p of standardProducts.filter((x) => !BACK_PRINT_SLUGS.includes(x.slug))) {
-      expect(productHoverAlt(p), p.slug).toBe("");
+      expect(productCardLinkName(p), p.slug).toBe(`${p.shirtName.toLowerCase()} — ${p.colourwayName}`);
     }
-    expect(card).toContain("alt={productHoverAlt(product)}");
-    expect(card).toContain("aria-hidden={backPrint ? undefined : true}");
+    expect(card).toContain("aria-label={productCardLinkName(product)}");
   });
 
-  it("keeps the link's accessible name as the product, not the images", () => {
-    expect(card).toContain("aria-label={`${product.shirtName.toLowerCase()} — ${product.colourwayName}`}");
+  it("renders both flip faces decorative (alt empty, aria-hidden) so the link is not double-announced", () => {
+    const flip = card.slice(card.indexOf('<span className="land-card__flip">'), card.indexOf("</span>", card.indexOf('<span className="land-card__flip">')));
+    expect(flip.match(/alt=""/g)).toHaveLength(2);
+    expect(flip.match(/aria-hidden/g)).toHaveLength(2);
+    expect(flip).toContain("land-card__media-img--front");
+    expect(flip).toContain("land-card__media-img--back");
   });
 
-  it("loads the back layer eagerly (low priority) so the first hover never shows a blank frame", () => {
-    expect(card).toContain('loading: "eager"');
-    expect(card).toContain('fetchPriority: "low"');
-    expect(card).toContain("backPrint ? {");
+  it("loads the back face eagerly (low priority) so the first hover never shows a blank frame", () => {
+    expect(card).toContain('loading="eager"');
+    expect(card).toContain('fetchPriority="low"');
+  });
+
+  it("leaves the front-detail tees' markup as it was (front alt kept, decorative hover layer)", () => {
+    expect(card).toContain("alt={`${product.shirtName.toLowerCase()} in ${product.colourwayName}`}");
+    expect(card).toMatch(/land-card__media-img--detail"[\s\S]{0,120}alt=""[\s\S]{0,160}aria-hidden/);
   });
 
   it("labels only back-print cards and sets data-hover", () => {
@@ -91,61 +128,76 @@ describe("shop card markup", () => {
     expect(card).toContain("{backPrint ? <span");
     expect(card).toContain("back print");
   });
-
-  it("never hides the hover layer with display or visibility for back-print tees (it must stay painted)", () => {
-    expect(css).not.toMatch(/data-hover="back"[^{}]*\{[^}]*(display:\s*none|(?<!backface-)visibility:\s*hidden)/);
-  });
 });
 
-function block(selector: string, from = 0): string {
-  const start = css.indexOf(selector, from);
+function block(selector: string): string {
+  const start = css.indexOf(selector);
   expect(start, selector).toBeGreaterThan(-1);
   return css.slice(start, css.indexOf("}", start) + 1);
 }
 
-describe("shop card hover CSS", () => {
-  const reduced = css.slice(
-    css.indexOf("@media (prefers-reduced-motion: reduce) {", css.indexOf(".land-card__back")),
-  );
-  const reducedBlock = reduced.slice(0, reduced.indexOf("\n}\n"));
+const flipSection = css.slice(
+  css.indexOf('.land-card__media[data-hover="back"] {'),
+  css.indexOf(".land-card__back {"),
+);
 
-  it("turns on Y over 150ms + 150ms ease-out, with transform and opacity only", () => {
-    const base = block('.land-card__media[data-hover="back"] .land-card__media-img {');
-    expect(base).toContain("transition-property: transform, opacity;");
-    expect(base).toContain("transition-duration: 150ms;");
-    expect(base).toContain("transition-timing-function: ease-out;");
-    expect(base).toContain("backface-visibility: hidden;");
-    expect(block('.land-card__media[data-hover="back"]:focus-visible .land-card__media-img--detail')).toContain(
-      "transition-delay: 150ms;",
-    );
-    const turn = css.slice(
-      css.indexOf('.land-card__media[data-hover="back"] .land-card__media-img {'),
-      css.indexOf(".land-card__back {"),
-    );
-    expect(turn).toMatch(/rotateY/);
-    for (const layout of ["width:", "height:", "top:", "left:", "margin", "padding", "inset"]) {
-      expect(turn, layout).not.toContain(layout);
-    }
+describe("shop card flip CSS", () => {
+  it("is a single preserve-3d flip under a perspective parent", () => {
+    expect(block('.land-card__media[data-hover="back"] {')).toMatch(/perspective:\s*1[12]\d\dpx;/);
+    const flip = block(".land-card__flip {");
+    expect(flip).toContain("transform-style: preserve-3d;");
+    expect(flip).toContain("position: absolute;");
+    expect(flip).toContain("inset: 0;");
   });
 
-  it("reveals the back on keyboard focus-visible, not only on hover", () => {
-    expect(css).toContain(".land-card__media:focus-visible .land-card__media-img--detail");
-    expect(css).toContain('.land-card__media[data-hover="back"]:focus-visible .land-card__media-img--front');
-    expect(css).toContain(".land-card__media:focus-visible ~ .land-card__cw .land-card__back");
+  it("hides both faces' backs (incl. -webkit-) and pre-rotates the back 180deg", () => {
+    const faces = block(".land-card__flip .land-card__media-img {");
+    expect(faces).toContain("-webkit-backface-visibility: hidden;");
+    expect(faces).toContain("backface-visibility: hidden;");
+    expect(block(".land-card__flip .land-card__media-img--back {")).toContain("transform: rotateY(180deg);");
+  });
+
+  it("rotates the wrapper 0 -> 180deg over 300ms ease-out, on hover (fine pointers) and focus-visible", () => {
+    const flip = block(".land-card__flip {");
+    expect(flip).toContain("transform: rotateY(0deg);");
+    expect(flip).toContain("transition: transform 300ms ease-out;");
+    expect(block('.land-card__media[data-hover="back"]:focus-visible .land-card__flip {')).toContain(
+      "transform: rotateY(180deg);",
+    );
+    expect(
+      css,
+    ).toMatch(
+      /@media \(hover: hover\) and \(pointer: fine\) \{\s*\.land-card__media\[data-hover="back"\]:hover \.land-card__flip \{\s*transform: rotateY\(180deg\);/,
+    );
+  });
+
+  it("never fades the flip layers: no opacity or layout property is set or transitioned on them", () => {
+    const rules = flipSection.slice(0, flipSection.indexOf("/* Label sits"));
+    const body = rules.replace(/\/\*[\s\S]*?\*\//g, "");
+    const flipBlocks = body.split("}").filter((b) => /land-card__flip|data-hover="back"/.test(b));
+    expect(flipBlocks.length).toBeGreaterThan(4);
+    for (const b of flipBlocks) {
+      expect(b, b).not.toMatch(/opacity/);
+      expect(b, b).not.toMatch(/\b(width|height|top|left|margin|padding)\s*:/);
+    }
+    expect(block(".land-card__flip {")).not.toMatch(/transition:[^;]*opacity/);
+  });
+
+  it("scopes the opacity crossfade to the front-detail tees only", () => {
+    expect(css).toContain('.land-card__media[data-hover="front-detail"] .land-card__media-img {\n  transition: opacity 180ms ease;');
+    expect(css).not.toMatch(/data-hover="back"[^{}]*\{[^}]*opacity/);
   });
 
   it("limits pointer hover to fine, hover-capable pointers", () => {
-    const hoverRules = css.slice(
-      css.indexOf(".land-card__media-img--detail {\n  opacity: 0;"),
+    const section = css.slice(
+      css.indexOf('.land-card__media[data-hover="front-detail"] .land-card__media-img {'),
       css.indexOf("@media (prefers-reduced-motion: reduce) {", css.indexOf(".land-card__back {")),
     );
-    const hoverSelectors = hoverRules.match(/[^{}]*:hover[^{}]*\{/g) ?? [];
-    expect(hoverSelectors.length).toBeGreaterThan(0);
-    const outside = hoverRules.replace(
-      /@media \(hover: hover\) and \(pointer: fine\) \{[\s\S]*?\n\}\n/g,
-      "",
-    );
-    expect(outside.replace(/\/\*[\s\S]*?\*\//g, "")).not.toMatch(/:hover/);
+    expect((section.match(/:hover/g) ?? []).length).toBeGreaterThan(0);
+    const outside = section
+      .replace(/\/\*[\s\S]*?\*\//g, "")
+      .replace(/@media \(hover: hover\) and \(pointer: fine\) \{[\s\S]*?\n\}\n/g, "");
+    expect(outside).not.toMatch(/:hover/);
   });
 
   it("shows the label always on coarse pointers and hides it until hover/focus on fine ones", () => {
@@ -154,16 +206,16 @@ describe("shop card hover CSS", () => {
     expect(label).toContain("text-transform: uppercase;");
     expect(label).toContain("color: var(--clay);");
     expect(label).not.toContain("opacity");
-    expect(css).toMatch(
-      /@media \(hover: hover\) and \(pointer: fine\) \{\s*\.land-card__back \{\s*opacity: 0;/,
-    );
+    expect(css).toMatch(/@media \(hover: hover\) and \(pointer: fine\) \{\s*\.land-card__back \{\s*opacity: 0;/);
+    expect(css).toContain(".land-card__media:focus-visible ~ .land-card__cw .land-card__back");
   });
 
-  it("under reduced motion drops every transition and transform but still swaps back-print tees", () => {
-    expect(reducedBlock).toContain("transition: none !important;");
-    expect(reducedBlock).toContain("transform: none !important;");
-    expect(reducedBlock).toContain('[data-hover="front-detail"] .land-card__media-img--detail');
-    expect(reducedBlock).not.toContain('[data-hover="back"] .land-card__media-img--detail {\n    display');
-    expect(reducedBlock).not.toMatch(/data-hover="back"[^{}]*\{[^}]*display:\s*none/);
+  it("under reduced motion drops the flip transition (instant swap) and keeps the swap rules", () => {
+    const start = css.indexOf("@media (prefers-reduced-motion: reduce) {", css.indexOf(".land-card__back {"));
+    const reduced = css.slice(start, css.indexOf("\n}\n", start));
+    expect(reduced).toMatch(/\.land-card__flip,[\s\S]*?transition: none;/);
+    expect(reduced).not.toMatch(/\.land-card__flip[^{}]*\{[^}]*transform:\s*none/);
+    expect(reduced).not.toMatch(/data-hover="back"[^{}]*\{[^}]*display:\s*none/);
+    expect(reduced).toContain('[data-hover="front-detail"] .land-card__media-img--detail');
   });
 });

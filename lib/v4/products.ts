@@ -195,11 +195,10 @@ export function productById(id: string): StandardProduct | undefined {
   return standardProducts.find((p) => p.id === id);
 }
 
-/** Alt for the shop card hover layer: names the back print; front-detail stays decorative (empty). */
-export function productHoverAlt(product: StandardProduct): string {
-  return productHasBackPrint(product)
-    ? `${product.shirtName.toLowerCase()} in ${product.colourwayName}, back print`
-    : "";
+/** Link name for the shop card image: the product, plus the back print where the hover shows one. */
+export function productCardLinkName(product: StandardProduct): string {
+  const name = `${product.shirtName.toLowerCase()} — ${product.colourwayName}`;
+  return productHasBackPrint(product) ? `${name}, back print` : name;
 }
 
 export function productHasBackPrint(product: StandardProduct): boolean {
@@ -216,6 +215,29 @@ export function productGalleryImages(product: StandardProduct): string[] {
     ...galleryMobileSlides(product),
   ];
   return Array.from(new Set(all));
+}
+
+export type GalleryView = {
+  src: string;
+  /** Accessible and visible-name for the thumbnail, e.g. "Front", "Back print", "Front detail". */
+  label: string;
+};
+
+function galleryViewLabel(src: string, index: number): string {
+  const file = src.split("/").pop() ?? "";
+  if (file.includes("print")) return "Print";
+  if (file.endsWith("_front-detail.jpg")) return "Front detail";
+  if (file.endsWith("_back-detail.jpg")) return "Back detail";
+  if (file.endsWith("_back.jpg")) return "Back print";
+  if (file.endsWith("_front.jpg")) return "Front";
+  return `View ${index + 1}`;
+}
+
+export function productGalleryViews(product: StandardProduct): GalleryView[] {
+  return productGalleryImages(product).map((src, i) => ({
+    src,
+    label: galleryViewLabel(src, i),
+  }));
 }
 
 export function productCardImage(product: StandardProduct): string {
