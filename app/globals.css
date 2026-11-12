@@ -3309,6 +3309,15 @@ html[data-cs-short="1"]:has(.cs) .site-header::after {
   color: var(--ink);
 }
 
+.pdp-title:focus {
+  outline: none;
+}
+
+.pdp-title:focus-visible {
+  outline: 1px solid var(--clay);
+  outline-offset: 2px;
+}
+
 .pdp-colourway-name {
   margin-top: 25px;
   font-size: 20px;

@@ -19,7 +19,14 @@ const SIZES: ProductSize[] = ["S", "M", "L", "XL", "2XL", "3XL"];
 
 type AtcState = "idle" | "need-size" | "added";
 
-export function ShopCard({ product }: { product: StandardProduct }) {
+export function ShopCard({
+  product,
+  scroll = true,
+}: {
+  product: StandardProduct;
+  /** False on the PDP related row so a same-shirt colourway card does not jump. */
+  scroll?: boolean;
+}) {
   const { addLine } = useCart();
   const [size, setSize] = useState<ProductSize | null>(null);
   const [state, setState] = useState<AtcState>("idle");
@@ -63,6 +70,7 @@ export function ShopCard({ product }: { product: StandardProduct }) {
     <article className="land-card">
       <Link
         href={href}
+        scroll={scroll}
         className="land-card__media"
         data-hover={product.images.hoverView}
         aria-label={productCardLinkName(product)}

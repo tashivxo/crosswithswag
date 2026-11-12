@@ -2,13 +2,18 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useRef, useState, type Ref } from "react";
 import { Reveal } from "@/components/v3/Reveal";
 import { productPage } from "@/lib/copy";
 import { ShopCard } from "@/components/v4/shop/ShopCard";
 import { useCart } from "@/lib/v4/cart/CartProvider";
 import { INITIAL_SIZE, pdpPath, stripSizeParam } from "@/lib/v4/pdp-url";
+import {
+  applyPdpProductChange,
+  scrollPdpToTop,
+  shirtKey,
+} from "@/lib/v4/pdp-switch";
 import { isStickyBarHidden } from "@/lib/v4/pdp-sticky";
 import {
   STANDARD_EDITION_TOTAL,
@@ -21,7 +26,6 @@ import {
   productSpecRows,
   sizeButtonState,
   relatedProducts,
-  sizeAfterColourwaySwitch,
   type ProductSize,
   type StandardProduct,
 } from "@/lib/v4/products";
@@ -41,7 +45,8 @@ function isPrint(src: string | undefined): boolean {
 function ProductGallery({ product }: { product: StandardProduct }) {
   const views = useMemo(() => productGalleryViews(product), [product]);
   const [index, setIndex] = useState(0);
-  const active = views[index]?.src;
+  const safeIndex = views.length === 0 ? 0 : Math.min(index, views.length - 1);
+  const active = views[safeIndex]?.src;
 
   return (
     <div className="pdp-gallery">
@@ -63,7 +68,7 @@ function ProductGallery({ product }: { product: StandardProduct }) {
       {views.length > 1 ? (
         <div className="pdp-gallery__thumbs">
           {views.map(({ src, label }, i) =>
-            i === index ? null : (
+            i === safeIndex ? null : (
             <button
               key={src}
               type="button"
@@ -171,11 +176,13 @@ function SoldOutNotify({ size }: { size: ProductSize }) {
 function PurchasePanel({
   product,
   selectedSize,
+  headingRef,
   onSelectSize,
   onSelectColourway,
 }: {
   product: StandardProduct;
   selectedSize: ProductSize | null;
+  headingRef: Ref<HTMLHeadingElement>;
   onSelectSize: (size: ProductSize) => void;
   onSelectColourway: (slug: string) => void;
 }) {
@@ -206,7 +213,9 @@ function PurchasePanel({
       <span className="lbl pdp-kicker">
         {productPage.kicker(pad(product.shirtIndex), pad(STANDARD_EDITION_TOTAL))}
       </span>
-      <h1 className="pdp-title voice">{product.shirtName.toLowerCase()}</h1>
+      <h1 ref={headingRef} tabIndex={-1} className="pdp-title voice">
+        {product.shirtName.toLowerCase()}
+      </h1>
       <p className="pdp-colourway-name voice">{product.colourwayName}</p>
       <div className="pdp-price">
         <span className="pdp-price__amount">
@@ -310,40 +319,44 @@ function PurchasePanel({
 
 export function ProductChapter() {
   const params = useSearchParams();
-  const urlSlug = params.get("product") ?? DEFAULT_SLUG;
-  const [slug, setSlug] = useState(urlSlug);
-  const [seenUrlSlug, setSeenUrlSlug] = useState(urlSlug);
+  const router = useRouter();
+  const pathname = usePathname();
+  const slug = params.get("product") ?? DEFAULT_SLUG;
+  const product = productBySlug(slug) ?? productBySlug(DEFAULT_SLUG);
   const [selectedSize, setSelectedSize] = useState<ProductSize | null>(INITIAL_SIZE);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const prevProductRef = useRef<StandardProduct | null>(null);
+  const sizeRef = useRef(selectedSize);
+  useEffect(() => {
+    sizeRef.current = selectedSize;
+  }, [selectedSize]);
 
   // Shared URLs carry the colourway only: never read a size, and drop one if a link brought it.
   useEffect(() => {
-    const { pathname, search, hash } = window.location;
-    const cleaned = stripSizeParam(search);
+    const cleaned = stripSizeParam(window.location.search);
     if (cleaned === null) return;
-    window.history.replaceState(window.history.state, "", `${pathname}${cleaned}${hash}`);
-  }, [params]);
+    router.replace(`${pathname}${cleaned}${window.location.hash}`, { scroll: false });
+  }, [params, pathname, router]);
 
-  // Back/forward, shared links and shop-card links change the URL: follow it.
-  if (urlSlug !== seenUrlSlug) {
-    setSeenUrlSlug(urlSlug);
-    setSlug(urlSlug);
-  }
+  // The URL is the visible product. Colourway clicks go through router.replace so
+  // useSearchParams (and back/forward) stay in sync — history.replaceState did not.
+  useEffect(() => {
+    if (!product) return;
+    const prev = prevProductRef.current;
+    prevProductRef.current = product;
+    if (!prev || prev.slug === product.slug) return;
+    const change = applyPdpProductChange(prev, product, sizeRef.current);
+    setSelectedSize(change.size);
+    if (change.announceShirt) {
+      const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      scrollPdpToTop(reduced);
+      headingRef.current?.focus({ preventScroll: true });
+    }
+  }, [product]);
 
-  const product = productBySlug(slug) ?? productBySlug(DEFAULT_SLUG);
-
-  // The visible shirt is local state so a colourway click never waits on a navigation.
-  // The URL is mirrored with replaceState (no history entry, no scroll jump).
   const selectColourway = (nextSlug: string) => {
-    const next = productBySlug(nextSlug);
-    if (!next || nextSlug === slug) return;
-    setSlug(nextSlug);
-    setSelectedSize((size) => sizeAfterColourwaySwitch(next, size));
-    const { pathname, hash } = window.location;
-    window.history.replaceState(
-      window.history.state,
-      "",
-      pdpPath(pathname, nextSlug, hash),
-    );
+    if (!productBySlug(nextSlug) || nextSlug === slug) return;
+    router.replace(pdpPath(pathname, nextSlug, window.location.hash), { scroll: false });
   };
 
   if (!product) {
@@ -372,10 +385,11 @@ export function ProductChapter() {
       </div>
 
       <section className="wrap pad-sm pdp-main">
-        <ProductGallery key={`gallery-${product.slug}`} product={product} />
+        <ProductGallery key={shirtKey(product)} product={product} />
         <PurchasePanel
           product={product}
           selectedSize={selectedSize}
+          headingRef={headingRef}
           onSelectSize={setSelectedSize}
           onSelectColourway={selectColourway}
         />
@@ -390,7 +404,7 @@ export function ProductChapter() {
         </Reveal>
         <Reveal className="land-family pdp-related">
           {related.map((item) => (
-            <ShopCard key={item.id} product={item} />
+            <ShopCard key={item.id} product={item} scroll={false} />
           ))}
         </Reveal>
       </section>
