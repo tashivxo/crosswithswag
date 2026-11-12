@@ -1,0 +1,250 @@
+{
+  "currency": "ZAR",
+  "edition": "Standard Wearable Editions. List prices are VAT-inclusive until Marcus confirms otherwise.",
+  "products": [
+    {
+      "sku": "express-dispatch-black",
+      "id": "express-dispatch-black",
+      "slug": "product-express-dispatch-black",
+      "family": "express",
+      "shirtName": "PRODUCT EXPRESS",
+      "colourwayName": "dispatch black",
+      "price_cents": 35000,
+      "shirt_index": 1,
+      "sizes": [
+        { "code": "S", "offered": true },
+        { "code": "M", "offered": true },
+        { "code": "L", "offered": true },
+        { "code": "XL", "offered": true },
+        { "code": "2XL", "offered": true },
+        { "code": "3XL", "offered": false }
+      ],
+      "images": {
+        "main": "/assets/v4/shop/product-express_dispatch-black_front.jpg",
+        "thumbs": [
+          "/assets/v4/shop/product-express_dispatch-black_front-detail.jpg",
+          null
+        ],
+        "card": "/assets/v4/shop/product-express_dispatch-black_front.jpg",
+        "hover": "/assets/v4/shop/product-express_dispatch-black_front-detail.jpg",
+        "printClose": "/assets/v4/shop/dispatch-black-cross-print.png"
+      }
+    },
+    {
+      "sku": "express-dispatch-white",
+      "id": "express-dispatch-white",
+      "slug": "product-express-dispatch-white",
+      "family": "express",
+      "shirtName": "PRODUCT EXPRESS",
+      "colourwayName": "dispatch white",
+      "price_cents": 35000,
+      "shirt_index": 2,
+      "sizes": [
+        { "code": "S", "offered": true },
+        { "code": "M", "offered": true },
+        { "code": "L", "offered": true },
+        { "code": "XL", "offered": true },
+        { "code": "2XL", "offered": true },
+        { "code": "3XL", "offered": true }
+      ],
+      "images": {
+        "main": "/assets/v4/shop/product-express_dispatch-white_front.jpg",
+        "thumbs": [
+          "/assets/v4/shop/product-express_dispatch-white_front-detail.jpg",
+          null
+        ],
+        "card": "/assets/v4/shop/product-express_dispatch-white_front.jpg",
+        "hover": "/assets/v4/shop/product-express_dispatch-white_front-detail.jpg"
+      }
+    },
+    {
+      "sku": "halo-orbit-pink",
+      "id": "halo-orbit-pink",
+      "slug": "product-halo-orbit-pink",
+      "family": "halo",
+      "shirtName": "PRODUCT HALO",
+      "colourwayName": "orbit pink",
+      "price_cents": 35000,
+      "shirt_index": 3,
+      "sizes": [
+        { "code": "S", "offered": true },
+        { "code": "M", "offered": true },
+        { "code": "L", "offered": true },
+        { "code": "XL", "offered": true },
+        { "code": "2XL", "offered": true },
+        { "code": "3XL", "offered": true }
+      ],
+      "images": {
+        "main": "/assets/v4/shop/product-halo_orbit-pink_front.jpg",
+        "thumbs": [
+          "/assets/v4/shop/product-halo_orbit-pink_front-detail.jpg",
+          null
+        ],
+        "card": "/assets/v4/shop/product-halo_orbit-pink_front.jpg",
+        "hover": "/assets/v4/shop/product-halo_orbit-pink_front-detail.jpg"
+      }
+    },
+    {
+      "sku": "halo-orbit-black",
+      "id": "halo-orbit-black",
+      "slug": "product-halo-orbit-black",
+      "family": "halo",
+      "shirtName": "PRODUCT HALO",
+      "colourwayName": "orbit black",
+      "price_cents": 35000,
+      "shirt_index": 4,
+      "sizes": [
+        { "code": "S", "offered": true },
+        { "code": "M", "offered": true },
+        { "code": "L", "offered": true },
+        { "code": "XL", "offered": true },
+        { "code": "2XL", "offered": true },
+        { "code": "3XL", "offered": true }
+      ],
+      "images": {
+        "main": "/assets/v4/shop/product-halo_orbit-black_front.jpg",
+        "thumbs": [
+          "/assets/v4/shop/product-halo_orbit-black_front-detail.jpg",
+          null
+        ],
+        "card": "/assets/v4/shop/product-halo_orbit-black_front.jpg",
+        "hover": "/assets/v4/shop/product-halo_orbit-black_front-detail.jpg"
+      }
+    },
+    {
+      "sku": "halo-orbit-white",
+      "id": "halo-orbit-white",
+      "slug": "product-halo-orbit-white",
+      "family": "halo",
+      "shirtName": "PRODUCT HALO",
+      "colourwayName": "orbit white",
+      "price_cents": 35000,
+      "shirt_index": 5,
+      "sizes": [
+        { "code": "S", "offered": true },
+        { "code": "M", "offered": true },
+        { "code": "L", "offered": true },
+        { "code": "XL", "offered": true },
+        { "code": "2XL", "offered": true },
+        { "code": "3XL", "offered": true }
+      ],
+      "images": {
+        "main": "/assets/v4/shop/product-halo_orbit-white_front.jpg",
+        "thumbs": [
+          "/assets/v4/shop/product-halo_orbit-white_front-detail.jpg",
+          null
+        ],
+        "card": "/assets/v4/shop/product-halo_orbit-white_front.jpg",
+        "hover": "/assets/v4/shop/product-halo_orbit-white_front-detail.jpg"
+      }
+    },
+    {
+      "sku": "super-rush",
+      "id": "super-rush",
+      "slug": "product-super-rush",
+      "family": "super",
+      "shirtName": "PRODUCT SUPER",
+      "colourwayName": "rush",
+      "price_cents": 35000,
+      "shirt_index": 6,
+      "sizes": [
+        { "code": "S", "offered": true },
+        { "code": "M", "offered": true },
+        { "code": "L", "offered": true },
+        { "code": "XL", "offered": true },
+        { "code": "2XL", "offered": true },
+        { "code": "3XL", "offered": true }
+      ],
+      "images": {
+        "main": "/assets/v4/shop/product-super_rush_front.jpg",
+        "thumbs": [
+          "/assets/v4/shop/product-super_rush_front-detail.jpg",
+          "/assets/v4/shop/product-super_rush_back.jpg"
+        ],
+        "card": "/assets/v4/shop/product-super_rush_front.jpg",
+        "hover": "/assets/v4/shop/product-super_rush_front-detail.jpg"
+      }
+    },
+    {
+      "sku": "super-pulse",
+      "id": "super-pulse",
+      "slug": "product-super-pulse",
+      "family": "super",
+      "shirtName": "PRODUCT SUPER",
+      "colourwayName": "pulse",
+      "price_cents": 35000,
+      "shirt_index": 7,
+      "sizes": [
+        { "code": "S", "offered": true },
+        { "code": "M", "offered": true },
+        { "code": "L", "offered": true },
+        { "code": "XL", "offered": true },
+        { "code": "2XL", "offered": true },
+        { "code": "3XL", "offered": true }
+      ],
+      "images": {
+        "main": "/assets/v4/shop/product-super_pulse_front.jpg",
+        "thumbs": [
+          "/assets/v4/shop/product-super_pulse_front-detail.jpg",
+          "/assets/v4/shop/product-super_pulse_back.jpg"
+        ],
+        "card": "/assets/v4/shop/product-super_pulse_front.jpg",
+        "hover": "/assets/v4/shop/product-super_pulse_front-detail.jpg"
+      }
+    },
+    {
+      "sku": "daily-grey-department",
+      "id": "daily-grey-department",
+      "slug": "product-daily-grey-department",
+      "family": "daily",
+      "shirtName": "PRODUCT DAILY",
+      "colourwayName": "grey department",
+      "price_cents": 35000,
+      "shirt_index": 8,
+      "sizes": [
+        { "code": "S", "offered": true },
+        { "code": "M", "offered": true },
+        { "code": "L", "offered": true },
+        { "code": "XL", "offered": true },
+        { "code": "2XL", "offered": true },
+        { "code": "3XL", "offered": true }
+      ],
+      "images": {
+        "main": "/assets/v4/shop/product-daily_grey-department_front.jpg",
+        "thumbs": [
+          "/assets/v4/shop/product-daily_grey-department_front-detail.jpg",
+          null
+        ],
+        "card": "/assets/v4/shop/product-daily_grey-department_front.jpg",
+        "hover": "/assets/v4/shop/product-daily_grey-department_front-detail.jpg"
+      }
+    },
+    {
+      "sku": "daily-royal-department",
+      "id": "daily-royal-department",
+      "slug": "product-daily-royal-department",
+      "family": "daily",
+      "shirtName": "PRODUCT DAILY",
+      "colourwayName": "royal department",
+      "price_cents": 35000,
+      "shirt_index": 9,
+      "sizes": [
+        { "code": "S", "offered": true },
+        { "code": "M", "offered": true },
+        { "code": "L", "offered": true },
+        { "code": "XL", "offered": true },
+        { "code": "2XL", "offered": true },
+        { "code": "3XL", "offered": true }
+      ],
+      "images": {
+        "main": "/assets/v4/shop/product-daily_royal-department_front.jpg",
+        "thumbs": [
+          "/assets/v4/shop/product-daily_royal-department_front-detail.jpg",
+          null
+        ],
+        "card": "/assets/v4/shop/product-daily_royal-department_front.jpg",
+        "hover": "/assets/v4/shop/product-daily_royal-department_front-detail.jpg"
+      }
+    }
+  ]
+}

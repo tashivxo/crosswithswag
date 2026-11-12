@@ -1,0 +1,34 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/swag}
+    username: ${SPRING_DATASOURCE_USERNAME:swag}
+    password: ${SPRING_DATASOURCE_PASSWORD:swag_local}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    enabled: true
+
+app:
+  catalog-path: ${APP_CATALOG_PATH:../packages/catalog/catalog.json}
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000}
+  payfast:
+    merchant-id: ${PAYFAST_MERCHANT_ID:}
+    merchant-key: ${PAYFAST_MERCHANT_KEY:}
+    passphrase: ${PAYFAST_PASSPHRASE:}
+    sandbox: ${PAYFAST_SANDBOX:true}
+    return-url: ${PAYFAST_RETURN_URL:http://localhost:3000/order/confirmed}
+    cancel-url: ${PAYFAST_CANCEL_URL:http://localhost:3000/checkout}
+    notify-url: ${PAYFAST_NOTIFY_URL:http://localhost:8080/v1/payfast/itn}
+  mail:
+    resend-api-key: ${RESEND_API_KEY:}
+    from: ${MAIL_FROM:orders@crosswithswag.co.za}
+  shipping:
+    paxi-cents: ${SHIPPING_PAXI_CENTS:6000}

@@ -137,9 +137,12 @@ Confirmed colour sequence:
 - **V4.1 Marcus Figma feedback (11 Nov 2026, `V4_branch`, plan `plan/feature-v4-marcus-figma-feedback-1.md`):** Footer lockup is `public/assets/Frame_6_clean.svg` (Group 53: `swag.` + `CROSS WITH SWAG`) via `.foot-lockup`; header / docked nav mark stays `SWAG_mark_fill.svg` (no micro-text). Shop cards use `*_front.jpg` with hover `*_front-detail.jpg` on fine pointers (reduced-motion and coarse pointers stay front-full); cart thumbs use front-full, not composite `product-X.jpg`. SPACE playlist popup (`PlaylistPopup` + `SpacePlaylistGate`) is session-gated on `/space` only (`sessionStorage` key `swag:space-playlist-popup-seen`); the overlay always hydrates closed, then opens after client snapshot if unseen. 01 Standard Edition uses Figma `398:1309` lockup grid (`public/assets/v4/space/standard-edition-lockups.png`) until Cavendish. PLAYLISTS stays in desktop nav and the mobile overlay MENU. **Leave Marcus Figma comments unresolved** until he re-reviews.
 - `components/v4/chapters/ProductChapter.tsx` — `/current` standard edition PDP built from V3 page-head, `frame`, `feature`/`spec` and `sig` patterns (`.pdp-*`). Cycle 4 behaviour kept (query-preserving size guide, notify-only sold-out, 3-card related row).
 - `components/v4/cart/*` + `components/v4/chapters/CommerceChapter.tsx` — cart drawer, `/cart`, `/checkout`, `/order/confirmed` restyled as V3 typographic posters (`.cart-*`, UI only). CTAs are V3 `.btn` outlines; filled Sand VIEW only on shop cards; chrome/landing/cart stay `.btn` outlines.
-- `lib/v4/products.ts` — standard edition catalog (R350 placeholder; dispatch-black gallery is cross print + shirt still)
+- `lib/v4/products.ts` — standard edition catalog (R350 placeholder; dispatch-black gallery is cross print + shirt still). Hand-aligned with `packages/catalog/catalog.json`; pay path must use Spring’s copy.
 - `lib/v4/cart/CartProvider.tsx` — client cart state (no payment)
 - `app/(gallery)/*` — `/` shop, `/space`, `/current` product, commerce routes, and V3 editorial chapters, all under the V3 `SiteChrome` with `CartProvider` + `CartDrawer` in `app/(gallery)/layout.tsx`
+- `packages/catalog/catalog.json` — shared merchandising bible (9 SKUs, ZAR cents, size `offered` flags). Next still reads `products.ts` until the P1 generate script.
+- `api/` — local Spring Boot 3.4.5 checkout API (`za.co.crosswithswag.api`): `POST /v1/checkout`, `POST /v1/payfast/itn`, `GET /v1/orders/{ref}`. Flyway + Postgres 16 via root `docker-compose.yml`. Secrets via env (see `.env.example`). Checkout UI still uses the payment stub until the frontend is wired (`cursor.md/backend-plan.md` §10).
+- `docker-compose.yml` — Postgres 16 only (`swag` / `swag_local`). No Redis/Mongo. Docker Desktop must be running to start it.
 
 ## Current Implementation Files (V3 production on `main`)
 
@@ -347,3 +350,5 @@ Still open after cutover:
 - Vercel Authentication is off so production and the V2 freeze preview are publicly viewable. Re-enable only if Marcus wants URLs gated again.
 - Analytics is intentionally not installed because the provider is not chosen.
 - `cursor.md/brand-copy.md` and Stitch docs still describe the pre-V2 nine-section structure; `lib/copy.ts` and this file are authoritative for the live V3 build. V2 live source is `v2-production-freeze`.
+- V4 checkout API exists locally (`api/`) but the gallery still pays through the sessionStorage stub. Wire `POST /v1/checkout` only after Docker Postgres is up and sandbox ITN is tunneled. Do not put PayFast keys in the Next bundle. Live PayFast stays off until VPS + `api.crosswithswag.co.za`.
+- P0.4 Paxi `shipping_cents` is still a placeholder (`SHIPPING_PAXI_CENTS=6000`) until Marcus.
