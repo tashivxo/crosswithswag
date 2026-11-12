@@ -3,14 +3,16 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useRef, useState, type Ref } from "react";
+import { startTransition, useEffect, useMemo, useRef, useState, type Ref } from "react";
+import { flushSync } from "react-dom";
 import { Reveal } from "@/components/v3/Reveal";
 import { productPage } from "@/lib/copy";
 import { ShopCard } from "@/components/v4/shop/ShopCard";
 import { useCart } from "@/lib/v4/cart/CartProvider";
-import { INITIAL_SIZE, pdpPath, stripSizeParam } from "@/lib/v4/pdp-url";
+import { INITIAL_SIZE, stripSizeParam } from "@/lib/v4/pdp-url";
 import {
   applyPdpProductChange,
+  colourwayClickPlan,
   galleryIndexForView,
   pdpDocumentTitle,
   scrollPdpToTop,
@@ -353,11 +355,13 @@ export function ProductChapter() {
   useEffect(() => {
     const cleaned = stripSizeParam(window.location.search);
     if (cleaned === null) return;
-    router.replace(`${pathname}${cleaned}${window.location.hash}`, { scroll: false });
+    startTransition(() => {
+      router.replace(`${pathname}${cleaned}${window.location.hash}`, { scroll: false });
+    });
   }, [params, pathname, router]);
 
-  // The URL is the visible product. Colourway clicks go through router.replace so
-  // useSearchParams (and back/forward) stay in sync — history.replaceState did not.
+  // Colourway clicks paint from pending state; the URL is still the source of
+  // truth for loads, back/forward, and Links once router.replace catches up.
   useEffect(() => {
     if (!product) return;
     const prev = prevProductRef.current;
@@ -373,11 +377,20 @@ export function ProductChapter() {
   }, [product]);
 
   const selectColourway = (nextSlug: string) => {
-    if (!productBySlug(nextSlug) || nextSlug === slug) return;
-    const url = pdpPath(pathname, nextSlug, window.location.hash);
-    setPending({ from: slug, to: nextSlug });
-    window.history.replaceState(window.history.state, "", url);
-    router.replace(url, { scroll: false });
+    const plan = colourwayClickPlan({
+      currentSlug: slug,
+      nextSlug,
+      pathname,
+      hash: window.location.hash,
+    });
+    if (!plan) return;
+    flushSync(() => {
+      setPending(plan.pending);
+    });
+    window.history.replaceState(window.history.state, "", plan.url);
+    startTransition(() => {
+      router.replace(plan.url, { scroll: false });
+    });
   };
 
   if (!product) {

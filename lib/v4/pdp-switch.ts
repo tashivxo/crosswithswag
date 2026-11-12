@@ -1,7 +1,8 @@
 import { getLenis } from "@/lib/lenis";
 import { meta } from "@/lib/copy";
-import { INITIAL_SIZE } from "@/lib/v4/pdp-url";
+import { INITIAL_SIZE, pdpPath } from "@/lib/v4/pdp-url";
 import {
+  productBySlug,
   sizeAfterColourwaySwitch,
   type GalleryView,
   type ProductSize,
@@ -89,11 +90,41 @@ export function pdpDocumentTitle(product: StandardProduct): string {
 
 export type PendingColourway = { from: string; to: string };
 
+export type ColourwayClickPlan = {
+  pending: PendingColourway;
+  url: string;
+  /** Paint `pending.to` urgently; let `router.replace` run inside startTransition. */
+  routerSync: "transition";
+};
+
 /**
- * Colourway clicks write the URL with history.replaceState because a cold load of
- * the prerendered /current page can ignore the first router.replace of search params.
- * Until useSearchParams catches up, keep the pending slug so the UI still switches.
- * A urlSlug that is neither from nor to (related card, back/forward) wins.
+ * Colourway click: the visible product is `pending.to` in the same frame.
+ * `router.replace` is a transition so a force-dynamic RSC does not block that paint.
+ * The URL stays the source of truth for loads, back/forward, and Links once it catches up.
+ */
+export function colourwayClickPlan({
+  currentSlug,
+  nextSlug,
+  pathname,
+  hash,
+}: {
+  currentSlug: string;
+  nextSlug: string;
+  pathname: string;
+  hash: string;
+}): ColourwayClickPlan | null {
+  if (!productBySlug(nextSlug) || nextSlug === currentSlug) return null;
+  return {
+    pending: { from: currentSlug, to: nextSlug },
+    url: pdpPath(pathname, nextSlug, hash),
+    routerSync: "transition",
+  };
+}
+
+/**
+ * Until useSearchParams catches up with a colourway click, keep the pending slug
+ * so the UI still switches. A urlSlug that is neither from nor to (related card,
+ * back/forward) wins.
  */
 export function visiblePdpSlug({
   urlSlug,

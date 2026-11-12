@@ -3,7 +3,7 @@ import { defineConfig } from "@playwright/test";
 /** Production-build PDP checks (`next start`). Run after `npm run build`. */
 export default defineConfig({
   testDir: "e2e",
-  testMatch: "**/pdp-colourway-cold.spec.ts",
+  testMatch: ["**/pdp-colourway-cold.spec.ts", "**/pdp-colourway-timing.spec.ts"],
   fullyParallel: false,
   retries: 0,
   workers: 1,
