@@ -1,6 +1,15 @@
 import { describe, expect, it } from "vitest";
 import { addToLines } from "@/lib/v4/cart/cart-math";
-import { applyPdpProductChange, isSameShirt, pdpScrollToTopOptions, shirtKey } from "@/lib/v4/pdp-switch";
+import {
+  applyPdpProductChange,
+  galleryIndexForView,
+  isSameShirt,
+  pdpDocumentTitle,
+  pdpMetadataTitle,
+  pdpScrollToTopOptions,
+  shirtKey,
+  visiblePdpSlug,
+} from "@/lib/v4/pdp-switch";
 import { INITIAL_SIZE } from "@/lib/v4/pdp-url";
 import { formatPrice, productBySlug, productGalleryViews } from "@/lib/v4/products";
 
@@ -99,6 +108,64 @@ describe("scroll on a shirt change", () => {
     expect(pdpScrollToTopOptions(true).behavior).toBe("auto");
     expect(pdpScrollToTopOptions(true).immediate).toBe(true);
     expect(pdpScrollToTopOptions(false).immediate).toBe(true);
+  });
+});
+
+describe("gallery keeps the named view across colourways", () => {
+  it("keeps Front (not numeric index) when switching dispatch black → white", () => {
+    const blackViews = productGalleryViews(black);
+    const whiteViews = productGalleryViews(white);
+    expect(blackViews.map((v) => v.label)).toEqual(["Print", "Front", "Front detail"]);
+    expect(whiteViews.map((v) => v.label)).toEqual(["Front", "Front detail"]);
+    const frontOnBlack = blackViews.findIndex((v) => v.label === "Front");
+    expect(frontOnBlack).toBe(1);
+    expect(galleryIndexForView(whiteViews, blackViews[frontOnBlack].label)).toBe(0);
+    expect(whiteViews[0].label).toBe("Front");
+  });
+
+  it("falls back to the first image when the new colourway lacks that view", () => {
+    const blackViews = productGalleryViews(black);
+    const whiteViews = productGalleryViews(white);
+    expect(blackViews[0].label).toBe("Print");
+    expect(whiteViews.some((v) => v.label === "Print")).toBe(false);
+    expect(galleryIndexForView(whiteViews, "Print")).toBe(0);
+  });
+});
+
+describe("document title per product", () => {
+  it("uses the site template plus the shirt and colourway names already in data", () => {
+    expect(pdpMetadataTitle(black)).toBe("product express — dispatch black");
+    expect(pdpDocumentTitle(black)).toBe("SWAG — product express — dispatch black");
+    expect(pdpDocumentTitle(white)).toBe("SWAG — product express — dispatch white");
+  });
+});
+
+describe("visible slug while Next.js searchParams lag", () => {
+  it("keeps a colourway click when the URL hook is still on the previous slug", () => {
+    expect(
+      visiblePdpSlug({
+        urlSlug: black.slug,
+        pending: { from: black.slug, to: white.slug },
+        fallback: black.slug,
+      }),
+    ).toEqual({ slug: white.slug, pending: { from: black.slug, to: white.slug } });
+  });
+
+  it("follows the URL once Next.js catches up, and yields to a Link/back", () => {
+    expect(
+      visiblePdpSlug({
+        urlSlug: white.slug,
+        pending: { from: black.slug, to: white.slug },
+        fallback: black.slug,
+      }),
+    ).toEqual({ slug: white.slug, pending: null });
+    expect(
+      visiblePdpSlug({
+        urlSlug: haloPink.slug,
+        pending: { from: black.slug, to: white.slug },
+        fallback: black.slug,
+      }),
+    ).toEqual({ slug: haloPink.slug, pending: null });
   });
 });
 

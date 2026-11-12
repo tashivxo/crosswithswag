@@ -24,9 +24,22 @@ export default defineConfig({
   projects: [
     {
       name: "iphone-13-pro-max",
+      testIgnore: "**/pdp-colourway-cold.spec.ts",
       use: {
         ...devices["iPhone 13 Pro Max"],
         browserName: "webkit",
+      },
+    },
+    {
+      name: "chromium-desktop",
+      testMatch: "**/pdp-colourway-cold.spec.ts",
+      use: {
+        browserName: "chromium",
+        viewport: { width: 1440, height: 900 },
+        launchOptions: {
+          executablePath: process.env.PLAYWRIGHT_CHROME ?? "/usr/local/bin/google-chrome",
+          args: ["--no-sandbox"],
+        },
       },
     },
   ],

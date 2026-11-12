@@ -11,8 +11,12 @@ import { useCart } from "@/lib/v4/cart/CartProvider";
 import { INITIAL_SIZE, pdpPath, stripSizeParam } from "@/lib/v4/pdp-url";
 import {
   applyPdpProductChange,
+  galleryIndexForView,
+  pdpDocumentTitle,
   scrollPdpToTop,
   shirtKey,
+  visiblePdpSlug,
+  type PendingColourway,
 } from "@/lib/v4/pdp-switch";
 import { isStickyBarHidden } from "@/lib/v4/pdp-sticky";
 import {
@@ -44,8 +48,8 @@ function isPrint(src: string | undefined): boolean {
 
 function ProductGallery({ product }: { product: StandardProduct }) {
   const views = useMemo(() => productGalleryViews(product), [product]);
-  const [index, setIndex] = useState(0);
-  const safeIndex = views.length === 0 ? 0 : Math.min(index, views.length - 1);
+  const [viewLabel, setViewLabel] = useState(views[0]?.label ?? "");
+  const safeIndex = galleryIndexForView(views, viewLabel);
   const active = views[safeIndex]?.src;
 
   return (
@@ -56,7 +60,7 @@ function ProductGallery({ product }: { product: StandardProduct }) {
         {active ? (
           <Image
             src={active}
-            alt={`${product.colourwayName} — ${views[index].label.toLowerCase()}`}
+            alt={`${product.colourwayName} — ${(views[safeIndex]?.label ?? "").toLowerCase()}`}
             fill
             sizes="(max-width: 899px) 100vw, 55vw"
             priority
@@ -74,7 +78,7 @@ function ProductGallery({ product }: { product: StandardProduct }) {
               type="button"
               className={`pdp-thumb${isPrint(src) ? " pdp-tile--print" : ""}`}
               aria-label={label}
-              onClick={() => setIndex(i)}
+              onClick={() => setViewLabel(label)}
             >
               <Image src={src} alt="" fill sizes="(max-width: 899px) 50vw, 25vw" />
             </button>
@@ -321,15 +325,29 @@ export function ProductChapter() {
   const params = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
-  const slug = params.get("product") ?? DEFAULT_SLUG;
-  const product = productBySlug(slug) ?? productBySlug(DEFAULT_SLUG);
+  const urlSlug = params.get("product") ?? DEFAULT_SLUG;
+  const [pending, setPending] = useState<PendingColourway | null>(null);
   const [selectedSize, setSelectedSize] = useState<ProductSize | null>(INITIAL_SIZE);
+  const visible = visiblePdpSlug({
+    urlSlug,
+    pending,
+    fallback: DEFAULT_SLUG,
+  });
+  if (visible.pending !== pending) {
+    setPending(visible.pending);
+  }
+  const slug = visible.slug;
+  const product = productBySlug(slug) ?? productBySlug(DEFAULT_SLUG);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const prevProductRef = useRef<StandardProduct | null>(null);
   const sizeRef = useRef(selectedSize);
   useEffect(() => {
     sizeRef.current = selectedSize;
   }, [selectedSize]);
+
+  useEffect(() => {
+    if (product) document.title = pdpDocumentTitle(product);
+  }, [product]);
 
   // Shared URLs carry the colourway only: never read a size, and drop one if a link brought it.
   useEffect(() => {
@@ -356,7 +374,10 @@ export function ProductChapter() {
 
   const selectColourway = (nextSlug: string) => {
     if (!productBySlug(nextSlug) || nextSlug === slug) return;
-    router.replace(pdpPath(pathname, nextSlug, window.location.hash), { scroll: false });
+    const url = pdpPath(pathname, nextSlug, window.location.hash);
+    setPending({ from: slug, to: nextSlug });
+    window.history.replaceState(window.history.state, "", url);
+    router.replace(url, { scroll: false });
   };
 
   if (!product) {
