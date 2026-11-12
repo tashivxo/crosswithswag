@@ -30,5 +30,6 @@ app:
   mail:
     resend-api-key: ${RESEND_API_KEY:}
     from: ${MAIL_FROM:orders@crosswithswag.co.za}
+    orders-to: ${MAIL_ORDERS_TO:orders@crosswithswag.co.za}
   shipping:
     paxi-cents: ${SHIPPING_PAXI_CENTS:6000}

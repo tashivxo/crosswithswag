@@ -15,6 +15,7 @@ const valid: CheckoutValues = {
   name: "Ayanda Dlamini",
   email: "ayanda@example.com",
   phone: "082 123 4567",
+  paxiCode: "PEP123",
   address: "12 Kloof Street, Gardens, Cape Town",
 };
 
@@ -24,7 +25,13 @@ describe("validateCheckout", () => {
   });
 
   it("flags every empty field with its message", () => {
-    const errors = validateCheckout({ name: "", email: "", phone: "", address: "" });
+    const errors = validateCheckout({
+      name: "",
+      email: "",
+      phone: "",
+      paxiCode: "",
+      address: "",
+    });
     expect(errors).toEqual({
       name: checkoutCopy.errors.name,
       email: checkoutCopy.errors.email,
@@ -55,11 +62,35 @@ describe("validateCheckout", () => {
       expect(validateCheckout({ ...valid, phone }).phone).toBeDefined();
     }
   });
+
+  it("requires a paxi code for collect and skips address", () => {
+    const errors = validateCheckout(
+      { ...valid, paxiCode: "", address: "" },
+      "PAXI_COLLECT",
+    );
+    expect(errors.paxiCode).toBe(checkoutCopy.errors.paxiCode);
+    expect(errors.address).toBeUndefined();
+  });
+
+  it("requires an address for private ship and skips paxi code", () => {
+    const errors = validateCheckout(
+      { ...valid, paxiCode: "", address: "" },
+      "PRIVATE_SHIP",
+    );
+    expect(errors.address).toBe(checkoutCopy.errors.address);
+    expect(errors.paxiCode).toBeUndefined();
+  });
 });
 
 describe("firstInvalidField", () => {
   it("follows the visual order of the form", () => {
-    expect(CHECKOUT_FIELD_ORDER).toEqual(["name", "email", "phone", "address"]);
+    expect(CHECKOUT_FIELD_ORDER).toEqual([
+      "name",
+      "email",
+      "phone",
+      "paxiCode",
+      "address",
+    ]);
     expect(firstInvalidField({ address: "x", email: "y" })).toBe("email");
     expect(firstInvalidField({ phone: "x", name: "y" })).toBe("name");
   });

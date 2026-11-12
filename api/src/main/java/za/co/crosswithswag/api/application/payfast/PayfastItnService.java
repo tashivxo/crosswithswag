@@ -5,7 +5,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
-import za.co.crosswithswag.api.application.mail.MailPort;
+import za.co.crosswithswag.api.application.mail.PaidOrderMailer;
 import za.co.crosswithswag.api.application.order.OrderRepository;
 import za.co.crosswithswag.api.application.payment.PaymentProvider;
 import za.co.crosswithswag.api.domain.order.Order;
@@ -17,12 +17,13 @@ public class PayfastItnService {
 
 	private final OrderRepository orderRepository;
 	private final PaymentProvider paymentProvider;
-	private final MailPort mailPort;
+	private final PaidOrderMailer mailer;
 
-	public PayfastItnService(OrderRepository orderRepository, PaymentProvider paymentProvider, MailPort mailPort) {
+	public PayfastItnService(
+			OrderRepository orderRepository, PaymentProvider paymentProvider, PaidOrderMailer mailer) {
 		this.orderRepository = orderRepository;
 		this.paymentProvider = paymentProvider;
-		this.mailPort = mailPort;
+		this.mailer = mailer;
 	}
 
 	@Transactional
@@ -47,38 +48,8 @@ public class PayfastItnService {
 		}
 		order.markPaid(params.get("pf_payment_id"), params.toString(), Instant.now());
 		orderRepository.save(order);
-		sendPaidMails(order);
+		mailer.sendPaidMails(order);
 		log.info("PayFast ITN marked PAID ref={}", ref);
 		return PaymentProvider.ItnVerdict.PAID;
-	}
-
-	private void sendPaidMails(Order order) {
-		mailPort.send(new MailPort.MailMessage(
-				order.email(),
-				"SWAG order confirmed " + order.ref(),
-				"Thanks — we received payment for " + order.ref() + ".",
-				null));
-		mailPort.send(new MailPort.MailMessage(
-				"orders@crosswithswag.co.za",
-				"New paid order " + order.ref(),
-				"Order paid.",
-				buildCsv(order)));
-	}
-
-	private static String buildCsv(Order order) {
-		StringBuilder sb = new StringBuilder("ref,sku,size,qty,unit_price_cents\n");
-		for (var line : order.lines()) {
-			sb.append(order.ref())
-					.append(',')
-					.append(line.sku())
-					.append(',')
-					.append(line.size())
-					.append(',')
-					.append(line.qty())
-					.append(',')
-					.append(line.unitPriceCents())
-					.append('\n');
-		}
-		return sb.toString();
 	}
 }

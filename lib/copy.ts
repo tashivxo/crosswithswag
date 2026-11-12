@@ -220,49 +220,60 @@ export const checkoutCopy = {
   sub: "guest checkout — no account needed",
   title: "checkout.",
   contact: "[ 01 — contact ]",
-  delivery: "[ 02 — delivery — paxi ]",
+  delivery: "[ 02 — delivery ]",
   payment: "[ 03 — payment ]",
-  paymentOptions: [
-    { id: "card", label: "card — yoco (hosted checkout)" },
-    { id: "eft", label: "instant eft — payfast" },
-  ],
   paymentNote:
-    "card details never touch this site. an order is marked paid by the processor, not by the redirect.",
+    "card and instant eft happen on payfast. this site never sees card numbers. an order is paid when payfast notifies us, not when you land back here.",
   items: (n: number) => `${n} item${n === 1 ? "" : "s"} · delivery extra`,
-  /** NEW: stub payment CTA. The existing "pay → (not wired)" is split into label + note. */
   pay: "pay →",
   processing: "processing…",
-  stubNote: "payment is not wired yet — nothing is charged.",
+  stubNote: "api is not configured — this will not charge.",
+  payNote: "you will leave the site to pay.",
+  submitError: "checkout failed. try again.",
   summaryLabel: "[ your order ]",
   deliveryRow: "delivery",
   totalRow: "total",
-  /** NEW: form. */
+  shipMethods: [
+    {
+      id: "PAXI_COLLECT" as const,
+      label: "pep paxi collect",
+    },
+    {
+      id: "PRIVATE_SHIP" as const,
+      label: "private ship — garment only, no fee",
+    },
+  ],
+  paxiHint:
+    "pick a pep point in the map. if the code does not fill, type it below.",
+  paxiMapLink: "open the paxi map →",
   fields: {
     name: { label: "full name", autoComplete: "name" },
     email: { label: "email", autoComplete: "email" },
     phone: { label: "phone", autoComplete: "tel" },
+    paxiCode: { label: "paxi store code", autoComplete: "off" },
     address: {
-      label: "delivery address or paxi pick-up point",
+      label: "delivery address",
       autoComplete: "street-address",
     },
   },
   deliveryLegend: "delivery option",
-  paymentLegend: "payment method",
   errors: {
     name: "enter your full name.",
     email: "enter a valid email.",
     phone: "enter a phone number with at least 10 digits.",
-    address: "enter a delivery address or paxi pick-up point.",
+    address: "enter a delivery address.",
+    paxiCode: "enter a paxi store code.",
   },
 };
 
 export const orderConfirmedCopy = {
   label: "[ order ]",
   state: "received",
+  waiting: "waiting for payment",
+  paid: "paid",
   title: "order received.",
-  body: "thank you. this is a static confirmation screen on v4_branch.",
+  body: "thank you. if payfast is still settling, this number stays. we email when the order is paid.",
   cta: "back to the shop →",
-  /** NEW */
   numberLabel: "order number",
 };
 

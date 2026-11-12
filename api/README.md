@@ -41,4 +41,6 @@ Server listens on `http://localhost:8080`.
 
 See repository root `.env.example` for PayFast, Resend, shipping, and datasource overrides. Secrets stay in environment variables, not in git.
 
+Set `RESEND_API_KEY` to send buyer confirmation and an `orders@` CSV on ITN `PAID`. Without the key, mail is recorded only (`RecordingMailPort`). PayFast `return_url` is signed with `?ref=SWAG-XXXXXX`.
+
 **Catalog:** `app.catalog-path` defaults to `../packages/catalog/catalog.json` relative to the working directory when you run from `api/`. A classpath copy may replace this later.

@@ -1,6 +1,6 @@
 # SWAG Backend Plan (v1)
 
-Status: **agreed, not implemented.** Frontend stays on Vercel. Spring + Postgres run locally until a VPS is purchased. Live PayFast money does not happen before that VPS + `api.*` DNS.
+Status: **v1 API + checkout UI wired; sandbox money still blocked on PayFast merchant, Resend DNS, and a tunnel.** Frontend stays on Vercel. Spring + Postgres run locally until a VPS is purchased. Live PayFast money does not happen before that VPS + `api.*` DNS.
 
 Canonical for this plan. If this file conflicts with older “gallery not ecommerce” copy, this file wins for **V4 shop checkout**. Production V3.3.3 gallery behaviour is unchanged until V4 is promoted.
 

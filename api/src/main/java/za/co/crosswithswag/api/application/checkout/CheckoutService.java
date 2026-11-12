@@ -87,7 +87,11 @@ public class CheckoutService {
 				now);
 		orderRepository.save(order);
 		log.info("checkout created order ref={} totalCents={}", ref, total);
-		return paymentProvider.createCheckout(order);
+		try {
+			return paymentProvider.createCheckout(order);
+		} catch (IllegalStateException ex) {
+			throw new CheckoutException(ex.getMessage());
+		}
 	}
 
 	private void validateShipping(CheckoutCommand command) {

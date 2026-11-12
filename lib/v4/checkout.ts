@@ -1,6 +1,7 @@
 import { checkoutCopy } from "@/lib/copy";
+import type { ShopShipMethod } from "@/lib/v4/shipping";
 
-export type CheckoutField = "name" | "email" | "phone" | "address";
+export type CheckoutField = "name" | "email" | "phone" | "paxiCode" | "address";
 
 export type CheckoutValues = Record<CheckoutField, string>;
 
@@ -11,6 +12,7 @@ export const CHECKOUT_FIELD_ORDER: readonly CheckoutField[] = [
   "name",
   "email",
   "phone",
+  "paxiCode",
   "address",
 ];
 
@@ -18,6 +20,7 @@ export const EMPTY_CHECKOUT_VALUES: CheckoutValues = {
   name: "",
   email: "",
   phone: "",
+  paxiCode: "",
   address: "",
 };
 
@@ -25,7 +28,10 @@ const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PHONE_CHARS = /^\+?[\d\s\-()]+$/;
 const MIN_PHONE_DIGITS = 10;
 
-export function validateCheckout(values: CheckoutValues): CheckoutErrors {
+export function validateCheckout(
+  values: CheckoutValues,
+  shipMethod: ShopShipMethod = "PRIVATE_SHIP",
+): CheckoutErrors {
   const errors: CheckoutErrors = {};
   if (values.name.trim().length < 2) errors.name = checkoutCopy.errors.name;
   if (!EMAIL.test(values.email.trim())) errors.email = checkoutCopy.errors.email;
@@ -34,7 +40,11 @@ export function validateCheckout(values: CheckoutValues): CheckoutErrors {
   if (!PHONE_CHARS.test(phone) || digits.length < MIN_PHONE_DIGITS) {
     errors.phone = checkoutCopy.errors.phone;
   }
-  if (values.address.trim().length < 5) errors.address = checkoutCopy.errors.address;
+  if (shipMethod === "PAXI_COLLECT") {
+    if (values.paxiCode.trim().length < 3) errors.paxiCode = checkoutCopy.errors.paxiCode;
+  } else if (values.address.trim().length < 5) {
+    errors.address = checkoutCopy.errors.address;
+  }
   return errors;
 }
 

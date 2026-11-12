@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
+  useCallback,
   useEffect,
   useId,
   useRef,
@@ -17,6 +18,7 @@ import {
   CartLineList,
   CartTotalsBlock,
 } from "@/components/v4/cart/CartUi";
+import { PaxiLocator } from "@/components/v4/checkout/PaxiLocator";
 import { cartCopy, checkoutCopy, orderConfirmedCopy } from "@/lib/copy";
 import { orderTotalCents } from "@/lib/v4/cart/cart-math";
 import { useCart } from "@/lib/v4/cart/CartProvider";
@@ -33,12 +35,23 @@ import {
   type CheckoutValues,
 } from "@/lib/v4/checkout";
 import {
+  apiBaseUrl,
+  CheckoutApiError,
+  fetchOrderConfirmation,
+  postCheckout,
+} from "@/lib/v4/checkout-api";
+import {
+  CHECKOUT_SESSION_KEY,
   STUB_ORDER_STORAGE_KEY,
   createPaymentStub,
+  parseCheckoutSession,
   parseStubOrder,
+  serialiseCheckoutSession,
   serialiseStubOrder,
 } from "@/lib/v4/order";
-import { deliveryOptions, formatPrice } from "@/lib/v4/products";
+import { submitPayfastForm } from "@/lib/v4/payfast";
+import { formatPrice } from "@/lib/v4/products";
+import { shippingCents, type ShopShipMethod } from "@/lib/v4/shipping";
 
 function CommerceHead({
   id,
@@ -119,6 +132,7 @@ function Field({
   error,
   errors,
   inputMode,
+  required = true,
   onChange,
 }: {
   field: CheckoutField;
@@ -127,6 +141,7 @@ function Field({
   error?: string;
   errors: CheckoutErrors;
   inputMode?: "email" | "tel" | "text";
+  required?: boolean;
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
 }) {
   const copy = checkoutCopy.fields[field];
@@ -143,8 +158,8 @@ function Field({
         autoComplete={copy.autoComplete}
         className="cm-input"
         value={value}
-        required
-        aria-required="true"
+        required={required}
+        aria-required={required ? "true" : undefined}
         aria-invalid={error ? "true" : undefined}
         aria-describedby={describedByIds(field, errors)}
         onChange={onChange}
@@ -163,12 +178,14 @@ export function CheckoutChapter() {
   const { lines, count, subtotalCents, clear } = useCart();
   const [values, setValues] = useState<CheckoutValues>(EMPTY_CHECKOUT_VALUES);
   const [errors, setErrors] = useState<CheckoutErrors>({});
-  const [deliveryId, setDeliveryId] = useState<string>(deliveryOptions[0].id);
-  const [paymentId, setPaymentId] = useState<string>(
-    checkoutCopy.paymentOptions[0].id,
-  );
+  const [shipMethod, setShipMethod] = useState<ShopShipMethod>("PAXI_COLLECT");
+  const [paxiName, setPaxiName] = useState("");
+  const [paxiAddress, setPaxiAddress] = useState("");
   const [pending, setPending] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const radioGroup = useId();
+  const inFlight = useRef(false);
+  const liveApi = Boolean(apiBaseUrl());
 
   const [payment] = useState(() =>
     createPaymentStub({
@@ -195,9 +212,23 @@ export function CheckoutChapter() {
 
   useEffect(() => () => payment.cancel(), [payment]);
 
-  const delivery =
-    deliveryOptions.find((o) => o.id === deliveryId) ?? deliveryOptions[0];
-  const total = orderTotalCents(subtotalCents, delivery.priceCents);
+  const deliveryCents = shippingCents(shipMethod);
+  const total = orderTotalCents(subtotalCents, deliveryCents);
+
+  const onPaxiPoint = useCallback(
+    (point: { code: string; name: string; address: string }) => {
+      setValues((current) => ({ ...current, paxiCode: point.code }));
+      setPaxiName(point.name);
+      setPaxiAddress(point.address);
+      setErrors((current) => {
+        if (!current.paxiCode) return current;
+        const rest = { ...current };
+        delete rest.paxiCode;
+        return rest;
+      });
+    },
+    [],
+  );
 
   const onFieldChange =
     (field: CheckoutField) => (event: ChangeEvent<HTMLInputElement>) => {
@@ -205,21 +236,66 @@ export function CheckoutChapter() {
       setValues(next);
       if (errors[field]) {
         const rest = { ...errors };
-        if (!validateCheckout(next)[field]) delete rest[field];
+        if (!validateCheckout(next, shipMethod)[field]) delete rest[field];
         setErrors(rest);
       }
     };
 
-  const onSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (payment.isInFlight()) return;
-    const found = validateCheckout(values);
+    if (inFlight.current || payment.isInFlight()) return;
+    const found = validateCheckout(values, shipMethod);
     // Render the errors (and their aria-describedby links) before focus moves, so the
     // first invalid field is announced together with its message.
     flushSync(() => setErrors(found));
     if (focusFirstInvalid(found, (id) => document.getElementById(id))) return;
 
-    if (payment.submit({ itemCount: count, totalCents: total })) setPending(true);
+    if (!liveApi) {
+      if (payment.submit({ itemCount: count, totalCents: total })) setPending(true);
+      return;
+    }
+
+    inFlight.current = true;
+    setPending(true);
+    setSubmitError(null);
+    try {
+      const result = await postCheckout({
+        name: values.name.trim(),
+        email: values.email.trim(),
+        phone: values.phone.trim(),
+        shipMethod,
+        paxiCode: shipMethod === "PAXI_COLLECT" ? values.paxiCode.trim() : undefined,
+        paxiName: shipMethod === "PAXI_COLLECT" ? paxiName || undefined : undefined,
+        paxiAddress:
+          shipMethod === "PAXI_COLLECT" ? paxiAddress || undefined : undefined,
+        addressText:
+          shipMethod === "PRIVATE_SHIP" ? values.address.trim() : undefined,
+        lines: lines.map((line) => ({
+          sku: line.productId,
+          size: line.size,
+          qty: line.quantity,
+        })),
+      });
+      try {
+        window.sessionStorage.setItem(
+          CHECKOUT_SESSION_KEY,
+          serialiseCheckoutSession({
+            ref: result.ref,
+            email: values.email.trim(),
+          }),
+        );
+      } catch {
+        // Confirmation can still read ?ref= from PayFast return_url.
+      }
+      clear();
+      submitPayfastForm(result.redirectUrl, result.vendorFields);
+    } catch (err) {
+      inFlight.current = false;
+      setPending(false);
+      setSubmitError(
+        err instanceof CheckoutApiError ? err.message : checkoutCopy.submitError,
+      );
+    }
   };
 
   const showForm = lines.length > 0 || pending;
@@ -243,7 +319,9 @@ export function CheckoutChapter() {
                 <h2 className="lbl cm-block__label">
                   {checkoutCopy.contact}
                 </h2>
-                {CHECKOUT_FIELD_ORDER.filter((f) => f !== "address").map(
+                {CHECKOUT_FIELD_ORDER.filter(
+                  (f) => f !== "address" && f !== "paxiCode",
+                ).map(
                   (field) => (
                     <Field
                       key={field}
@@ -267,66 +345,58 @@ export function CheckoutChapter() {
                 <h2 className="lbl cm-block__label">
                   {checkoutCopy.delivery}
                 </h2>
-                <Field
-                  field="address"
-                  type="text"
-                  value={values.address}
-                  error={errors.address}
-                  errors={errors}
-                  onChange={onFieldChange("address")}
-                />
                 <div
                   className="cm-options"
                   role="radiogroup"
                   aria-label={checkoutCopy.deliveryLegend}
                 >
-                  {deliveryOptions.map((opt) => (
+                  {checkoutCopy.shipMethods.map((opt) => (
                     <label
                       key={opt.id}
                       className="cm-option"
-                      data-checked={opt.id === deliveryId || undefined}
+                      data-checked={opt.id === shipMethod || undefined}
                     >
                       <input
                         type="radio"
                         name={`${radioGroup}-delivery`}
                         value={opt.id}
-                        checked={opt.id === deliveryId}
-                        onChange={() => setDeliveryId(opt.id)}
+                        checked={opt.id === shipMethod}
+                        onChange={() => setShipMethod(opt.id)}
                       />
                       <span>
-                        {opt.label} · {formatPrice(opt.priceCents)}
+                        {opt.label} · {formatPrice(shippingCents(opt.id))}
                       </span>
                     </label>
                   ))}
                 </div>
+                {shipMethod === "PAXI_COLLECT" ? (
+                  <>
+                    <PaxiLocator onPoint={onPaxiPoint} />
+                    <Field
+                      field="paxiCode"
+                      type="text"
+                      value={values.paxiCode}
+                      error={errors.paxiCode}
+                      errors={errors}
+                      onChange={onFieldChange("paxiCode")}
+                    />
+                  </>
+                ) : (
+                  <Field
+                    field="address"
+                    type="text"
+                    value={values.address}
+                    error={errors.address}
+                    errors={errors}
+                    onChange={onFieldChange("address")}
+                  />
+                )}
               </section>
 
               <section className="cm-block">
                 <h2 className="lbl cm-block__label">
                   {checkoutCopy.payment}
                 </h2>
-                <div
-                  className="cm-options"
-                  role="radiogroup"
-                  aria-label={checkoutCopy.paymentLegend}
-                >
-                  {checkoutCopy.paymentOptions.map((opt) => (
-                    <label
-                      key={opt.id}
-                      className="cm-option"
-                      data-checked={opt.id === paymentId || undefined}
-                    >
-                      <input
-                        type="radio"
-                        name={`${radioGroup}-payment`}
-                        value={opt.id}
-                        checked={opt.id === paymentId}
-                        onChange={() => setPaymentId(opt.id)}
-                      />
-                      <span>{opt.label}</span>
-                    </label>
-                  ))}
-                </div>
                 <p className="lbl cm-note">{checkoutCopy.paymentNote}</p>
               </section>
             </div>
@@ -359,7 +429,7 @@ export function CheckoutChapter() {
               <div className="cart-totals__row">
                 <span className="lbl">{checkoutCopy.deliveryRow}</span>
                 <span className="cm-summary-value">
-                  {formatPrice(delivery.priceCents)}
+                  {formatPrice(deliveryCents)}
                 </span>
               </div>
               <div className="cart-totals__row cm-total">
@@ -380,7 +450,14 @@ export function CheckoutChapter() {
                   {checkoutCopy.processing}
                 </span>
               </button>
-              <p className="lbl cm-note">{checkoutCopy.stubNote}</p>
+              {submitError ? (
+                <p className="cm-field__error" role="alert">
+                  {submitError}
+                </p>
+              ) : null}
+              <p className="lbl cm-note">
+                {liveApi ? checkoutCopy.payNote : checkoutCopy.stubNote}
+              </p>
               <div className="sr-only" role="status" aria-live="polite">
                 {pending ? checkoutCopy.processing : ""}
               </div>
@@ -404,6 +481,23 @@ function readStubOrderText() {
   }
 }
 
+function readCheckoutSessionText() {
+  try {
+    return window.sessionStorage.getItem(CHECKOUT_SESSION_KEY);
+  } catch {
+    return null;
+  }
+}
+
+function readRefFromLocation() {
+  try {
+    const ref = new URLSearchParams(window.location.search).get("ref");
+    return ref && /^SWAG-[0-9A-Z]{6}$/.test(ref) ? ref : null;
+  } catch {
+    return null;
+  }
+}
+
 export function OrderConfirmedChapter() {
   const headingRef = useRef<HTMLHeadingElement>(null);
   const stored = useSyncExternalStore(
@@ -411,27 +505,70 @@ export function OrderConfirmedChapter() {
     readStubOrderText,
     () => null,
   );
-  const order = parseStubOrder(stored);
+  const sessionText = useSyncExternalStore(
+    subscribeNever,
+    readCheckoutSessionText,
+    () => null,
+  );
+  const queryRef = useSyncExternalStore(
+    subscribeNever,
+    readRefFromLocation,
+    () => null,
+  );
+  const stub = parseStubOrder(stored);
+  const session = parseCheckoutSession(sessionText);
+  const ref = queryRef ?? session?.ref ?? stub?.ref ?? null;
+  const [status, setStatus] = useState<string | null>(null);
 
   useEffect(() => {
     headingRef.current?.focus({ preventScroll: true });
   }, []);
+
+  useEffect(() => {
+    if (!ref || !session?.email || !apiBaseUrl()) return;
+    let cancelled = false;
+    const poll = async () => {
+      try {
+        const order = await fetchOrderConfirmation(ref, session.email);
+        if (!cancelled && order) setStatus(order.status);
+      } catch {
+        // Keep the static confirmation; ITN may still be in flight.
+      }
+    };
+    void poll();
+    const id = window.setInterval(() => {
+      void poll();
+    }, 2000);
+    const stop = window.setTimeout(() => window.clearInterval(id), 30000);
+    return () => {
+      cancelled = true;
+      window.clearInterval(id);
+      window.clearTimeout(stop);
+    };
+  }, [ref, session?.email]);
+
+  const meta =
+    status === "PAID"
+      ? orderConfirmedCopy.paid
+      : status
+        ? orderConfirmedCopy.waiting
+        : orderConfirmedCopy.state;
 
   return (
     <section id="order-confirmed" className="chapter cm">
       <CommerceHead
         id="order-confirmed-head"
         label={orderConfirmedCopy.label}
-        meta={orderConfirmedCopy.state}
+        meta={meta}
         title={orderConfirmedCopy.title}
         titleRef={headingRef}
       />
 
       <div className="wrap cm-main cm-confirmed">
-        {order ? (
+        {ref ? (
           <div className="cm-order">
             <p className="lbl">{orderConfirmedCopy.numberLabel}</p>
-            <p className="cm-order__number">{order.ref}</p>
+            <p className="cm-order__number">{ref}</p>
           </div>
         ) : null}
         <p className="body-copy voice">{orderConfirmedCopy.body}</p>

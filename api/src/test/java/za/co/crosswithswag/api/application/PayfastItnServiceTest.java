@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import za.co.crosswithswag.api.application.mail.PaidOrderMailer;
 import za.co.crosswithswag.api.application.mail.RecordingMailPort;
 import za.co.crosswithswag.api.application.order.InMemoryOrderRepository;
 import za.co.crosswithswag.api.application.payfast.PayfastItnService;
@@ -44,7 +45,8 @@ class PayfastItnServiceTest {
 				"http://localhost:3000/checkout",
 				"http://localhost:8080/v1/payfast/itn");
 		var provider = new PayfastPaymentProvider(props, signature, repository);
-		itnService = new PayfastItnService(repository, provider, mail);
+		itnService = new PayfastItnService(
+				repository, provider, new PaidOrderMailer(mail, "orders@crosswithswag.co.za"));
 	}
 
 	@Test

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import za.co.crosswithswag.api.application.checkout.CheckoutCommand;
+import za.co.crosswithswag.api.application.checkout.CheckoutException;
 import za.co.crosswithswag.api.application.checkout.CheckoutFacade;
 import za.co.crosswithswag.api.domain.catalog.LineRequest;
 import za.co.crosswithswag.api.domain.order.ShipMethod;
@@ -29,12 +30,18 @@ public class CheckoutController {
 		List<LineRequest> lines = request.lines().stream()
 				.map(l -> new LineRequest(l.sku(), l.size(), l.qty()))
 				.toList();
+		ShipMethod shipMethod;
+		try {
+			shipMethod = ShipMethod.valueOf(request.shipMethod());
+		} catch (IllegalArgumentException ex) {
+			throw new CheckoutException("shipMethod must be PAXI_COLLECT or PRIVATE_SHIP");
+		}
 		var command = new CheckoutCommand(
 				request.name(),
 				request.email(),
 				request.phone(),
 				lines,
-				ShipMethod.valueOf(request.shipMethod()),
+				shipMethod,
 				request.paxiCode(),
 				request.paxiName(),
 				request.paxiAddress(),

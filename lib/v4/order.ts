@@ -1,9 +1,9 @@
 /**
- * Payment stub. No processor is wired: the pay button validates the guest form, waits briefly,
- * and hands a placeholder reference to /order/confirmed through sessionStorage. Replace this
- * module (and the stub note in lib/copy.ts) when Yoco / PayFast are signed.
+ * Guest checkout helpers. When NEXT_PUBLIC_API_URL is unset, pay still uses the in-browser stub.
+ * With the API, Spring creates the order and PayFast hosted checkout takes the money.
  */
 export const STUB_ORDER_STORAGE_KEY = "swag:stub-order";
+export const CHECKOUT_SESSION_KEY = "swag:checkout-session";
 
 /** How long the pay button shows "processing…" before the stub confirms. */
 export const STUB_PROCESSING_MS = 900;
@@ -12,6 +12,11 @@ export type StubOrder = {
   ref: string;
   itemCount: number;
   totalCents: number;
+};
+
+export type CheckoutSession = {
+  ref: string;
+  email: string;
 };
 
 const REF_PATTERN = /^SWAG-[0-9A-Z]{6}$/;
@@ -41,6 +46,24 @@ export function parseStubOrder(text: string | null): StubOrder | null {
     if (typeof ref !== "string" || !REF_PATTERN.test(ref)) return null;
     if (typeof itemCount !== "number" || typeof totalCents !== "number") return null;
     return { ref, itemCount, totalCents };
+  } catch {
+    return null;
+  }
+}
+
+export function serialiseCheckoutSession(session: CheckoutSession): string {
+  return JSON.stringify(session);
+}
+
+export function parseCheckoutSession(text: string | null): CheckoutSession | null {
+  if (!text) return null;
+  try {
+    const data: unknown = JSON.parse(text);
+    if (typeof data !== "object" || data === null) return null;
+    const { ref, email } = data as Record<string, unknown>;
+    if (typeof ref !== "string" || !REF_PATTERN.test(ref)) return null;
+    if (typeof email !== "string" || !email.includes("@")) return null;
+    return { ref, email };
   } catch {
     return null;
   }

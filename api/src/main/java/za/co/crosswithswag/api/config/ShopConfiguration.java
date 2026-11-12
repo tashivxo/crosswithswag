@@ -5,9 +5,11 @@ import java.nio.file.Path;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestClient;
 import za.co.crosswithswag.api.application.checkout.CheckoutService;
 import za.co.crosswithswag.api.application.checkout.ShippingCalculator;
 import za.co.crosswithswag.api.application.mail.MailPort;
+import za.co.crosswithswag.api.application.mail.PaidOrderMailer;
 import za.co.crosswithswag.api.application.mail.RecordingMailPort;
 import za.co.crosswithswag.api.application.order.OrderRefGenerator;
 import za.co.crosswithswag.api.application.order.OrderRepository;
@@ -17,6 +19,7 @@ import za.co.crosswithswag.api.application.payment.PaymentProvider;
 import za.co.crosswithswag.api.domain.catalog.Catalog;
 import za.co.crosswithswag.api.domain.catalog.CatalogPricingService;
 import za.co.crosswithswag.api.infrastructure.catalog.JsonCatalogRepository;
+import za.co.crosswithswag.api.infrastructure.mail.ResendMailPort;
 import za.co.crosswithswag.api.infrastructure.payfast.PayfastPaymentProvider;
 import za.co.crosswithswag.api.infrastructure.payfast.PayfastSignature;
 
@@ -81,15 +84,22 @@ public class ShopConfiguration {
 
 	@Bean
 	PayfastItnService payfastItnService(
-			OrderRepository orderRepository, PaymentProvider paymentProvider, MailPort mailPort) {
-		return new PayfastItnService(orderRepository, paymentProvider, mailPort);
+			OrderRepository orderRepository, PaymentProvider paymentProvider, PaidOrderMailer paidOrderMailer) {
+		return new PayfastItnService(orderRepository, paymentProvider, paidOrderMailer);
 	}
 
 	@Bean
-	MailPort mailPort(@Value("${app.mail.resend-api-key:}") String resendApiKey) {
+	PaidOrderMailer paidOrderMailer(MailPort mailPort, @Value("${app.mail.orders-to}") String ordersTo) {
+		return new PaidOrderMailer(mailPort, ordersTo);
+	}
+
+	@Bean
+	MailPort mailPort(
+			@Value("${app.mail.resend-api-key:}") String resendApiKey,
+			@Value("${app.mail.from}") String from) {
 		if (resendApiKey == null || resendApiKey.isBlank()) {
 			return new RecordingMailPort();
 		}
-		return new RecordingMailPort();
+		return new ResendMailPort(RestClient.builder(), resendApiKey, from);
 	}
 }

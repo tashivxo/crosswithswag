@@ -30,10 +30,14 @@ public class PayfastPaymentProvider implements PaymentProvider {
 
 	@Override
 	public CheckoutResult createCheckout(Order order) {
+		if (properties.merchantId() == null || properties.merchantId().isBlank()
+				|| properties.merchantKey() == null || properties.merchantKey().isBlank()) {
+			throw new IllegalStateException("PayFast is not configured");
+		}
 		Map<String, String> fields = new LinkedHashMap<>();
 		fields.put("merchant_id", properties.merchantId());
 		fields.put("merchant_key", properties.merchantKey());
-		fields.put("return_url", properties.returnUrl());
+		fields.put("return_url", withRef(properties.returnUrl(), order.ref()));
 		fields.put("cancel_url", properties.cancelUrl());
 		fields.put("notify_url", properties.notifyUrl());
 		fields.put("email_address", order.email());
@@ -78,6 +82,14 @@ public class PayfastPaymentProvider implements PaymentProvider {
 
 	static String formatAmount(int totalCents) {
 		return BigDecimal.valueOf(totalCents, 2).setScale(2, RoundingMode.HALF_UP).toPlainString();
+	}
+
+	static String withRef(String returnUrl, String ref) {
+		if (returnUrl == null || returnUrl.isBlank()) {
+			return returnUrl;
+		}
+		String separator = returnUrl.contains("?") ? "&" : "?";
+		return returnUrl + separator + "ref=" + ref;
 	}
 
 	private static String firstName(String name) {

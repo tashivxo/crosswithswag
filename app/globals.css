@@ -4076,6 +4076,19 @@ html[data-cs-short="1"]:has(.cs) .site-header::after {
   outline-offset: 2px;
 }
 
+.cm-paxi {
+  display: grid;
+  gap: 12px;
+}
+
+.cm-paxi__map {
+  display: block;
+  width: 100%;
+  height: min(800px, 70dvh);
+  border: 1px solid var(--ink-line-field);
+  background: var(--surface-tile);
+}
+
 .cm-checkout__summary {
   display: grid;
   gap: 16px;

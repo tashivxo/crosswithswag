@@ -71,4 +71,22 @@ class CheckoutControllerTest {
 				.andExpect(status().isBadRequest())
 				.andExpect(jsonPath("$.message").value("paxi_code is required"));
 	}
+
+	@Test
+	void unknownShipMethodReturns400() throws Exception {
+		mockMvc.perform(post("/v1/checkout")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content("""
+								{
+								  "name": "Marcus",
+								  "email": "marcus@example.com",
+								  "phone": "082",
+								  "shipMethod": "COURIER",
+								  "addressText": "12 Kloof",
+								  "lines": [{"sku": "express-dispatch-black", "size": "M", "qty": 1}]
+								}
+								"""))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.message").value("shipMethod must be PAXI_COLLECT or PRIVATE_SHIP"));
+	}
 }
