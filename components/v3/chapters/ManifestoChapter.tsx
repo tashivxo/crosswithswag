@@ -27,7 +27,7 @@ export function ManifestoChapter() {
           />
           <source
             type="image/webp"
-            srcSet={`${V4_BACKDROP}-1200.webp 1200w, ${V4_BACKDROP}-2000.webp 2000w`}
+            srcSet={`${V4_BACKDROP}-1200.webp 1200w, ${V4_BACKDROP}-2000.webp 2000w, ${V4_BACKDROP}-3200.webp 3200w`}
             sizes="100vw"
           />
           <img

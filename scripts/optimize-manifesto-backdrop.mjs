@@ -8,7 +8,7 @@ const dir = "public/assets/v4/archive";
 const variants = [
   { w: 1200, avif: 42, webp: 62 },
   { w: 2000, avif: 42, webp: 58 },
-  { w: 3200, avif: 42, webp: null },
+  { w: 3200, avif: 42, webp: 50 },
 ];
 
 for (const { w, avif, webp } of variants) {
