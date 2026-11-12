@@ -4933,21 +4933,30 @@ html:has(.page-shell[data-surface="photo"]) body {
 .mf {
   position: relative;
   isolation: isolate;
+  clip-path: inset(0);
   background: var(--stone);
   color: var(--studio-white);
-  --fp-rule: rgba(245, 243, 231, 0.6);
+  --fp-rule: rgba(245, 243, 231, 0.12);
 }
 
 .mf-backdrop {
-  position: absolute;
+  position: fixed;
   inset: 0;
+  height: 100lvh;
   z-index: -1;
   background-color: var(--stone);
-  background-repeat: no-repeat;
-  background-size: 395.5% auto;
-  background-position: 49.1% 12.8%;
   opacity: 0.37;
   pointer-events: none;
+  overflow: hidden;
+}
+
+.mf-backdrop img {
+  object-fit: cover;
+  object-position: 50% 30%;
+}
+
+body:has(.mf) .site-header::after {
+  display: none;
 }
 
 html:has(.mf),
@@ -5065,7 +5074,6 @@ html:has(.mf) body {
   position: relative;
   margin: 0;
   aspect-ratio: 1;
-  border: 1px solid var(--studio-white);
   overflow: hidden;
 }
 
@@ -5134,9 +5142,8 @@ html:has(.mf) body {
     grid-template-columns: 1fr;
   }
 
-  .mf-backdrop {
-    background-size: cover;
-    background-position: 50% 20%;
+  .mf-backdrop img {
+    object-position: 50% 30%;
   }
 
   .mf .image-set__grid {

@@ -16,11 +16,16 @@ function Lines({ lines }: { lines: string[] }) {
 export function ManifestoChapter() {
   return (
     <section id="manifesto" className="chapter fp mf">
-      <div
-        className="mf-backdrop"
-        aria-hidden="true"
-        style={{ backgroundImage: `url(${manifestoPhotos.backdrop.path})` }}
-      />
+      <div className="mf-backdrop" aria-hidden="true">
+        <Image
+          src={manifestoPhotos.backdrop.path}
+          alt=""
+          fill
+          sizes="100vw"
+          quality={75}
+          priority
+        />
+      </div>
       <h1 className="sr-only">the manifesto</h1>
 
       <section className="mf-sec mf-sec--first" aria-labelledby="mf-home">
