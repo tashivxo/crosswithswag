@@ -14,11 +14,9 @@ import {
   STANDARD_EDITION_TOTAL,
   colourwaySiblings,
   formatPrice,
-  galleryDesktopMain,
-  galleryDesktopThumbs,
-  galleryMobileSlides,
   isSizeSoldOut,
   productBySlug,
+  productGalleryImages,
   productMakeTable,
   productSpecRows,
   sizeButtonState,
@@ -36,23 +34,12 @@ function pad(n: number): string {
   return String(n).padStart(2, "0");
 }
 
-function galleryImages(product: StandardProduct): string[] {
-  const main = galleryDesktopMain(product);
-  const all = [
-    ...(product.images.printClose ? [product.images.printClose] : []),
-    ...(main ? [main] : []),
-    ...galleryDesktopThumbs(product),
-    ...galleryMobileSlides(product),
-  ];
-  return Array.from(new Set(all));
-}
-
 function isPrint(src: string | undefined): boolean {
   return Boolean(src && src.includes("print"));
 }
 
 function ProductGallery({ product }: { product: StandardProduct }) {
-  const images = useMemo(() => galleryImages(product), [product]);
+  const images = useMemo(() => productGalleryImages(product), [product]);
   const [index, setIndex] = useState(0);
   const active = images[index];
 

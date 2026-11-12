@@ -7,6 +7,8 @@ import { useCart } from "@/lib/v4/cart/CartProvider";
 import {
   formatPrice,
   productCardImage,
+  productHasBackPrint,
+  productHoverAlt,
   sizeButtonState,
   type ProductSize,
   type StandardProduct,
@@ -47,6 +49,7 @@ export function ShopCard({ product }: { product: StandardProduct }) {
 
   const frontSrc = productCardImage(product);
   const hoverSrc = product.images.hover;
+  const backPrint = productHasBackPrint(product);
   const href = `/current?product=${product.slug}`;
   const label =
     state === "added"
@@ -60,6 +63,7 @@ export function ShopCard({ product }: { product: StandardProduct }) {
       <Link
         href={href}
         className="land-card__media"
+        data-hover={product.images.hoverView}
         aria-label={`${product.shirtName.toLowerCase()} — ${product.colourwayName}`}
       >
         {frontSrc ? (
@@ -75,10 +79,11 @@ export function ShopCard({ product }: { product: StandardProduct }) {
               <Image
                 className="land-card__media-img land-card__media-img--detail"
                 src={hoverSrc}
-                alt=""
+                alt={productHoverAlt(product)}
                 fill
                 sizes="(max-width: 599px) 100vw, (max-width: 899px) 50vw, 33vw"
-                aria-hidden
+                aria-hidden={backPrint ? undefined : true}
+                {...(backPrint ? { loading: "eager", fetchPriority: "low" } : {})}
               />
             ) : null}
           </>
@@ -94,7 +99,10 @@ export function ShopCard({ product }: { product: StandardProduct }) {
         <span className="land-card__name">{product.shirtName}</span>
         <span className="land-card__price">{formatPrice(product.priceCents)}</span>
       </div>
-      <span className="land-card__cw">{product.colourwayName}</span>
+      <span className="land-card__cw">
+        <span>{product.colourwayName}</span>
+        {backPrint ? <span className="land-card__back">back print</span> : null}
+      </span>
       <div
         className="land-sizes"
         role="group"

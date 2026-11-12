@@ -6,14 +6,18 @@ export type ProductSize = "S" | "M" | "L" | "XL" | "2XL" | "3XL";
 
 const SHOP_ASSET = "/assets/v4/shop";
 
+export type ProductHoverView = "front-detail" | "back";
+
 export type ProductImages = {
   /** Empty string = no photo (placeholder block in UI). */
   main: string;
   thumbs: [string | null, string | null];
   mobileMain?: string;
   card: string;
-  /** Front detail — shop card hover on fine pointers. */
+  /** Shop card hover/focus image: front-detail by default, the back for SUPER tees whose print is on the back. */
   hover: string;
+  /** "back" gets the turn reveal and the BACK PRINT label on the shop card; "front-detail" is the plain crossfade. */
+  hoverView: ProductHoverView;
   /** Print close-up shown first on the PDP (Figma black tile). Only dispatch black has one. */
   printClose?: string;
 };
@@ -49,6 +53,8 @@ function shopImages(
   key: string,
   opts: {
     thumbs?: [string | null, string | null];
+    /** Explicit hover image. Omit for the front-detail crossfade. */
+    hover?: { view: "back"; src: string };
   } = {},
 ): ProductImages {
   const base = `${SHOP_ASSET}/product-${key}`;
@@ -58,8 +64,19 @@ function shopImages(
     main: front,
     thumbs: opts.thumbs ?? [detail, null],
     card: front,
-    hover: detail,
+    hover: opts.hover?.src ?? detail,
+    hoverView: opts.hover?.view ?? "front-detail",
   };
+}
+
+/** SUPER tees carry their print on the back: hover/focus shows the back, and it is the 2nd PDP image. */
+function backPrintImages(key: string): ProductImages {
+  const base = `${SHOP_ASSET}/product-${key}`;
+  const back = `${base}_back.jpg`;
+  return shopImages(key, {
+    thumbs: [back, `${base}_front-detail.jpg`],
+    hover: { view: "back", src: back },
+  });
 }
 
 /**
@@ -133,12 +150,7 @@ export const standardProducts: StandardProduct[] = [
     colourwayName: "rush",
     priceCents: STANDARD_EDITION_PRICE_CENTS,
     shirtIndex: 6,
-    images: shopImages("super_rush", {
-      thumbs: [
-        `${SHOP_ASSET}/product-super_rush_front-detail.jpg`,
-        `${SHOP_ASSET}/product-super_rush_back.jpg`,
-      ],
-    }),
+    images: backPrintImages("super_rush"),
   },
   {
     id: "super-pulse",
@@ -149,12 +161,7 @@ export const standardProducts: StandardProduct[] = [
     colourwayName: "pulse",
     priceCents: STANDARD_EDITION_PRICE_CENTS,
     shirtIndex: 7,
-    images: shopImages("super_pulse", {
-      thumbs: [
-        `${SHOP_ASSET}/product-super_pulse_front-detail.jpg`,
-        `${SHOP_ASSET}/product-super_pulse_back.jpg`,
-      ],
-    }),
+    images: backPrintImages("super_pulse"),
   },
   {
     id: "daily-grey-department",
@@ -186,6 +193,29 @@ export function productBySlug(slug: string): StandardProduct | undefined {
 
 export function productById(id: string): StandardProduct | undefined {
   return standardProducts.find((p) => p.id === id);
+}
+
+/** Alt for the shop card hover layer: names the back print; front-detail stays decorative (empty). */
+export function productHoverAlt(product: StandardProduct): string {
+  return productHasBackPrint(product)
+    ? `${product.shirtName.toLowerCase()} in ${product.colourwayName}, back print`
+    : "";
+}
+
+export function productHasBackPrint(product: StandardProduct): boolean {
+  return product.images.hoverView === "back";
+}
+
+/** Every distinct PDP gallery image in display order: print close-up (if any), front, then the thumbs. */
+export function productGalleryImages(product: StandardProduct): string[] {
+  const main = galleryDesktopMain(product);
+  const all = [
+    ...(product.images.printClose ? [product.images.printClose] : []),
+    ...(main ? [main] : []),
+    ...galleryDesktopThumbs(product),
+    ...galleryMobileSlides(product),
+  ];
+  return Array.from(new Set(all));
 }
 
 export function productCardImage(product: StandardProduct): string {
