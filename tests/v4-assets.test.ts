@@ -12,7 +12,7 @@ import {
 
 const registered: Record<string, AssetSlot[]> = {
   space: spaceSet,
-  manifesto: [manifestoPhotos.backdrop, manifestoPhotos.frame, manifestoPhotos.alternate],
+  manifesto: [manifestoPhotos.frame, manifestoPhotos.alternate],
   archive: [...archiveGalleryFrames, ...archiveExtraPhotos],
 };
 
@@ -42,6 +42,36 @@ describe("registered v4 photos", () => {
       });
     });
   }
+
+  describe("manifesto backdrop set", () => {
+    const widths = [1200, 2000, 3200];
+    const formats = ["avif", "webp"] as const;
+    const slot = manifestoPhotos.backdrop;
+
+    it("is registered with alt text and the 3200w AVIF as its primary path", () => {
+      expect(slot.path).toBe("/assets/v4/archive/manifesto-backdrop-3200.avif");
+      expect(slot.alt?.trim().length ?? 0).toBeGreaterThan(8);
+      expect(existsSync(join(process.cwd(), "public", slot.path))).toBe(true);
+    });
+
+    for (const format of formats) {
+      for (const width of widths) {
+        const file = `public/assets/v4/archive/manifesto-backdrop-${width}.${format}`;
+        it(`${file} exists as ${format} at ${width}px wide`, async () => {
+          expect(existsSync(join(process.cwd(), file)), file).toBe(true);
+          const meta = await sharp(join(process.cwd(), file)).metadata();
+          expect(meta.format, file).toBe(format === "avif" ? "heif" : "webp");
+          expect(meta.width, file).toBe(width);
+        });
+      }
+    }
+
+    it("registered dimensions match the 3200w AVIF", async () => {
+      const meta = await sharp(join(process.cwd(), "public", slot.path)).metadata();
+      expect(slot.width).toBe(meta.width);
+      expect(slot.height).toBe(meta.height);
+    });
+  });
 
   it("places all 22 archive photos exactly once: 12 gallery frames, the rest behind the set", () => {
     expect(archiveGalleryFrames).toHaveLength(12);
