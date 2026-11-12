@@ -13,18 +13,32 @@ function Lines({ lines }: { lines: string[] }) {
   );
 }
 
+const V4_BACKDROP = manifestoPhotos.backdrop.path.replace(/-3200\.avif$/, "");
+
 export function ManifestoChapter() {
   return (
     <section id="manifesto" className="chapter fp mf">
       <div className="mf-backdrop" aria-hidden="true">
-        <Image
-          src={manifestoPhotos.backdrop.path}
-          alt=""
-          fill
-          sizes="100vw"
-          quality={75}
-          priority
-        />
+        <picture>
+          <source
+            type="image/avif"
+            srcSet={`${V4_BACKDROP}-1200.avif 1200w, ${V4_BACKDROP}-2000.avif 2000w, ${V4_BACKDROP}-3200.avif 3200w`}
+            sizes="100vw"
+          />
+          <source
+            type="image/webp"
+            srcSet={`${V4_BACKDROP}-1200.webp 1200w, ${V4_BACKDROP}-2000.webp 2000w`}
+            sizes="100vw"
+          />
+          <img
+            src={`${V4_BACKDROP}-2000.webp`}
+            alt=""
+            width={manifestoPhotos.backdrop.width}
+            height={manifestoPhotos.backdrop.height}
+            decoding="async"
+            fetchPriority="high"
+          />
+        </picture>
       </div>
       <h1 className="sr-only">the manifesto</h1>
 
@@ -68,7 +82,7 @@ export function ManifestoChapter() {
               alt={manifestoPhotos.frame.alt ?? ""}
               fill
               sizes="(max-width: 899px) 100vw, 560px"
-              priority
+              loading="lazy"
             />
             <figcaption className="mf-frame__tag">
               [ {manifesto.wound.imageTag} ]
