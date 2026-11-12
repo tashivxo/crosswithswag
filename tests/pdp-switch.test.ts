@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { addToLines } from "@/lib/v4/cart/cart-math";
 import {
   applyPdpProductChange,
+  colourwayClickPlan,
   galleryIndexForView,
   isSameShirt,
   pdpDocumentTitle,
@@ -166,6 +167,48 @@ describe("visible slug while Next.js searchParams lag", () => {
         fallback: black.slug,
       }),
     ).toEqual({ slug: haloPink.slug, pending: null });
+  });
+});
+
+describe("colourway click plan (paint first, router catches up)", () => {
+  it("returns the next slug as an urgent pending update and defers router sync", () => {
+    const plan = colourwayClickPlan({
+      currentSlug: black.slug,
+      nextSlug: white.slug,
+      pathname: "/current",
+      hash: "",
+    });
+    expect(plan).toEqual({
+      pending: { from: black.slug, to: white.slug },
+      url: "/current?product=product-express-dispatch-white",
+      routerSync: "transition",
+    });
+    expect(
+      visiblePdpSlug({
+        urlSlug: black.slug,
+        pending: plan!.pending,
+        fallback: black.slug,
+      }).slug,
+    ).toBe(white.slug);
+  });
+
+  it("ignores a click on the visible colourway or an unknown slug", () => {
+    expect(
+      colourwayClickPlan({
+        currentSlug: black.slug,
+        nextSlug: black.slug,
+        pathname: "/current",
+        hash: "",
+      }),
+    ).toBeNull();
+    expect(
+      colourwayClickPlan({
+        currentSlug: black.slug,
+        nextSlug: "not-a-product",
+        pathname: "/current",
+        hash: "",
+      }),
+    ).toBeNull();
   });
 });
 
