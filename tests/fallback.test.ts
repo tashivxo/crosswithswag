@@ -1,6 +1,9 @@
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
+import { playlists as sitePlaylists } from "../lib/playlists";
 import nextConfig from "../next.config";
 import { FallbackPage } from "../components/fallback/FallbackPage";
 import {
@@ -51,6 +54,16 @@ describe("playlists", () => {
   it("uses the existing Spotify playlist urls", () => {
     for (const p of fallbackPlaylists) {
       expect(p.spotifyUrl).toMatch(/^https:\/\/open\.spotify\.com\/playlist\/[A-Za-z0-9]+$/);
+    }
+  });
+  it("sources covers from lib/playlists.ts and the files exist", () => {
+    const expected = ["stepwithswag", "dalawithswag", "freefallwithswag"].map(
+      (slug) => sitePlaylists.find((p) => p.slug === slug)!.cover,
+    );
+    expect(fallbackPlaylists.map((p) => p.cover)).toEqual(expected);
+    for (const cover of expected) {
+      expect(existsSync(join(process.cwd(), "public", cover!))).toBe(true);
+      expect(html).toContain(encodeURIComponent(cover!));
     }
   });
   it("has one h1 and an h2 per screen", () => {

@@ -2,8 +2,6 @@ import Image from "next/image";
 import type { FallbackPlaylist } from "@/lib/fallback";
 
 export function PlaylistRow({ playlist }: { playlist: FallbackPlaylist }) {
-  const { cover } = playlist;
-  const [base] = playlist.name.split(".");
   return (
     <li className="fb-row">
       <p className="fb-label fb-row-index">
@@ -28,22 +26,12 @@ export function PlaylistRow({ playlist }: { playlist: FallbackPlaylist }) {
       </div>
       <div className="fb-cover">
         <Image
-          src={cover.src}
-          width={cover.width}
-          height={cover.height}
+          src={playlist.cover}
+          width={1024}
+          height={1024}
           sizes="(max-width: 767px) 160px, 240px"
           alt=""
-          unoptimized={cover.src.endsWith(".svg")}
         />
-        {cover.placeholder ? null : (
-          <p className="fb-cover-type" aria-hidden="true">
-            {base}.
-            <br />
-            <span>with.</span>
-            <br />
-            swag.
-          </p>
-        )}
       </div>
     </li>
   );

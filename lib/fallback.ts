@@ -40,7 +40,7 @@ export type FallbackPlaylist = {
   genres: string;
   playlistName: string;
   spotifyUrl: string;
-  cover: { src: string; width: number; height: number; placeholder: boolean };
+  cover: string;
 };
 
 function spotifyUrl(slug: PlaylistSlug): string {
@@ -50,12 +50,11 @@ function spotifyUrl(slug: PlaylistSlug): string {
   return url ?? "https://open.spotify.com/";
 }
 
-const placeholder = {
-  src: "/assets/playlists/cover-placeholder.svg",
-  width: 800,
-  height: 1000,
-  placeholder: true,
-};
+function coverFor(slug: PlaylistSlug): string {
+  const found = sitePlaylists.find((p) => p.slug === slug);
+  if (!found?.cover) throw new Error(`missing cover for ${slug}`);
+  return found.cover;
+}
 
 export const fallbackPlaylists: FallbackPlaylist[] = [
   {
@@ -66,12 +65,7 @@ export const fallbackPlaylists: FallbackPlaylist[] = [
     genres: "AMAPIANO · AFROBEATS · HIP HOP · GQOM",
     playlistName: "stepwithswag.",
     spotifyUrl: spotifyUrl("stepwithswag"),
-    cover: {
-      src: "/assets/playlists/step-cover-4x5.jpg",
-      width: 1028,
-      height: 1284,
-      placeholder: false,
-    },
+    cover: coverFor("stepwithswag"),
   },
   {
     index: "02",
@@ -81,8 +75,7 @@ export const fallbackPlaylists: FallbackPlaylist[] = [
     genres: "HIP HOP · INDIE · LOFI · 3 STEP · HOUSE · AFROTECH",
     playlistName: "dalawithswag.",
     spotifyUrl: spotifyUrl("dalawithswag"),
-    // TODO(cover): swap for the 1600x2000 export
-    cover: placeholder,
+    cover: coverFor("dalawithswag"),
   },
   {
     index: "03",
@@ -92,8 +85,7 @@ export const fallbackPlaylists: FallbackPlaylist[] = [
     genres: "NEO-SOUL · R&B · SOFT AMAPIANO · DOWNTEMPO",
     playlistName: "freefallwithswag.",
     spotifyUrl: spotifyUrl("freefallwithswag"),
-    // TODO(cover): swap for the 1600x2000 export
-    cover: placeholder,
+    cover: coverFor("freefallwithswag"),
   },
 ];
 
