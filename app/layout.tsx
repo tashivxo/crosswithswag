@@ -1,46 +1,34 @@
 import type { Metadata, Viewport } from "next";
 import { Instrument_Sans } from "next/font/google";
-import "./globals.css";
-import { LenisProvider } from "@/components/providers/LenisProvider";
+import "./fallback.css";
 import { ShortScreenScript } from "@/components/ShortScreenScript";
 import { comingSoonEnabled } from "@/lib/coming-soon";
-import { meta } from "@/lib/copy";
 
 const instrumentSans = Instrument_Sans({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "600", "700"],
   display: "swap",
   variable: "--font-instrument-sans",
 });
 
 export const metadata: Metadata = {
-  title: {
-    default: meta.title,
-    template: "SWAG — %s",
-  },
-  description: meta.description,
-  openGraph: {
-    title: meta.ogTitle,
-    description: meta.description,
-    type: "website",
-  },
+  title: "swag. — the site is down. the store isn't.",
+  description:
+    "the store is open on whatsapp. pick your pieces in the catalogue, confirm size, pay by eft.",
 };
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#0A0A0A",
+  themeColor: "#F5F3E7",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   const comingSoon = comingSoonEnabled();
 
   return (
-    // The head script sets data-cs-short on <html> before hydration (flag on only).
     <html
       lang="en"
       className={instrumentSans.variable}
@@ -51,9 +39,7 @@ export default function RootLayout({
           <ShortScreenScript />
         </head>
       ) : null}
-      <body>
-        <LenisProvider>{children}</LenisProvider>
-      </body>
+      <body>{children}</body>
     </html>
   );
 }
