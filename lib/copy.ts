@@ -961,10 +961,8 @@ export const privacyPolicy: PolicyPageCopy = {
   ],
 };
 
+/** Figma 451:452 Footer — glyph mark only; legal detail on policy pages and contact. */
 export const footer = {
-  /** Figma 21:23 footer: tagline sits under the mark. */
-  tagline: "CROSS WITH SWAG",
-  handle: { label: site.handle, href: site.instagramUrl },
   editions: [
     { label: "shop — standard edition", href: "/#shop" },
     { label: "archive", href: "/archive" },
@@ -972,18 +970,16 @@ export const footer = {
   info: [
     { label: "manifesto", href: "/manifesto" },
     { label: "contact", href: "/contact" },
+  ],
+  support: [
     { label: "terms", href: "/terms" },
     { label: "shipping", href: "/shipping" },
     { label: "refunds", href: "/refunds" },
     { label: "privacy", href: "/privacy" },
   ],
-  identity: [
-    legalEntity.name,
-    legalEntity.reg,
-    legalEntity.location,
-    legalEntity.email,
-  ],
-  meta: ["WEARABLE EDITIONS + A SPACE — CAPE TOWN"],
+  metaLeftLead: "WEARABLE EDITIONS + A SPACE —",
+  metaLeftPlace: " CAPE TOWN, WESTERN CAPE, SOUTH AFRICA",
+  metaRight: `GRISEUS REGIUS (PTY) LTD ${site.year}`,
 };
 
 // Coming-soon poster (Figma file lCZqp5HNaFCPBcWgPzAwUU, node 202:253).

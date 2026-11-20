@@ -1102,36 +1102,22 @@ button:focus-visible {
   -webkit-mask: url("/assets/SWAG_mark_fill.svg") center / contain no-repeat;
 }
 
-/* Footer lockup — Group 53 / Frame_6_clean (swag. + CROSS WITH SWAG). */
+/* Footer mark — Figma 451:452 Group 52: glyph-only swag. (SWAG_mark_fill crop). */
 .foot-mark {
   position: relative;
-  width: clamp(220px, 30.8vw, 443px);
-  aspect-ratio: 9088 / 6968;
+  width: clamp(220px, 28vw, 403px);
+  aspect-ratio: 692 / 254;
+  overflow: hidden;
   color: var(--sand);
 }
 
-.foot-lockup {
-  width: 100%;
-  height: 100%;
-  background: currentColor;
-  mask: url("/assets/Frame_6_clean.svg") center / contain no-repeat;
-  -webkit-mask: url("/assets/Frame_6_clean.svg") center / contain no-repeat;
-}
-
-/* Figma: bold caps under the mark, indented from the mark's left edge, same colour as the mark. */
-.foot-tagline {
-  margin: 14px 0 0 clamp(26px, 3.75vw, 54px);
-  font-size: clamp(11px, 1.32vw, 19px);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1;
-  text-transform: uppercase;
-  color: var(--sand);
-}
-
-.foot a.foot-handle {
-  display: inline-block;
-  margin-top: 8px;
+.foot-mark .foot-glyph {
+  width: 131.35%;
+  margin-left: -15.61%;
+  margin-top: -31.94%;
+  aspect-ratio: 909 / 697;
+  mask-size: 100% 100%;
+  -webkit-mask-size: 100% 100%;
 }
 
 [data-route="docked"] .site-header__chrome {
@@ -1973,52 +1959,112 @@ button:focus-visible {
 
 .site-footer {
   border-top: 1px solid var(--line);
-  padding-block: 36px;
+  padding-top: 44px;
+  padding-bottom: 45px;
 }
 
 .foot {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
-  gap: 28px;
+  grid-template-columns: minmax(0, auto) 1fr auto;
+  gap: clamp(24px, 4vw, 48px);
   align-items: start;
 }
 
-.foot h5 {
+.foot-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: clamp(48px, 8vw, 118px);
+}
+
+.foot-col h5 {
   font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.16em;
+  font-weight: 700;
+  letter-spacing: 1.76px;
+  line-height: 11px;
   text-transform: uppercase;
-  color: var(--stone);
+  color: var(--ink, var(--stone));
   margin-bottom: 14px;
 }
 
-.foot a {
+.foot-col a {
   display: block;
   font-size: 13px;
-  color: rgba(214, 209, 196, 0.66);
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--ink, rgba(214, 209, 196, 0.66));
   padding: 4px 0;
   transition: color 0.3s;
 }
 
-.foot a:hover {
-  color: var(--sand);
+.foot-col a:hover {
+  color: var(--clay);
 }
 
 .foot-base {
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
   gap: 18px;
   flex-wrap: wrap;
-  margin-top: 38px;
+  margin-top: clamp(32px, 4vw, 44px);
   padding-top: 20px;
   border-top: 1px solid var(--line);
 }
 
-.foot-base span {
+.foot-base__left {
+  margin: 0;
   font-size: 11px;
-  letter-spacing: 0.14em;
+  line-height: 11px;
   text-transform: uppercase;
   color: var(--stone);
+}
+
+.foot-base__lead {
+  font-weight: 700;
+  letter-spacing: 1.76px;
+}
+
+.foot-base__place {
+  font-weight: 500;
+  letter-spacing: 1.76px;
+}
+
+.foot-base__right {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.54px;
+  line-height: 11px;
+  text-transform: uppercase;
+  color: var(--stone);
+}
+
+@media (max-width: 899px) {
+  .foot {
+    grid-template-columns: 1fr;
+  }
+
+  .foot-nav {
+    justify-content: flex-start;
+    width: 100%;
+  }
+}
+
+@media (max-width: 560px) {
+  .foot-nav {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px 32px;
+  }
+
+  .foot-nav .foot-col:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .foot-base {
+    flex-direction: column;
+    gap: 12px;
+  }
 }
 
 @media (max-width: 1024px) {
@@ -2069,10 +2115,6 @@ button:focus-visible {
   .hero-bottom .cta-row {
     justify-self: start;
     margin-top: 28px;
-  }
-
-  .foot {
-    grid-template-columns: 1fr 1fr;
   }
 
   .contact-grid {
@@ -3654,7 +3696,7 @@ html[data-cs-short="1"]:has(.cs) .site-header::after {
   }
   /* The fixed ADD TO CART bar must never cover the footer legal line. */
   body:has(.pdp-sticky) .site-footer {
-    padding-bottom: calc(36px + var(--pdp-sticky-h) + env(safe-area-inset-bottom, 0px));
+    padding-bottom: calc(45px + var(--pdp-sticky-h) + env(safe-area-inset-bottom, 0px));
   }
   .pdp-sticky {
     box-sizing: border-box;
@@ -4378,15 +4420,20 @@ html:has(.page-shell[data-surface="cream"]) .cart-drawer__scrim {
 }
 
 /* Footer text follows Figma: Stone headings, ink links and legal line. */
-.page-shell[data-surface="cream"] .foot a {
+.page-shell[data-surface="cream"] .foot-col a {
   color: var(--ink);
 }
 
-.page-shell[data-surface="cream"] .foot a:hover {
+.page-shell[data-surface="cream"] .foot-col a:hover {
   color: var(--clay);
 }
 
-.page-shell[data-surface="cream"] .foot-base span {
+.page-shell[data-surface="cream"] .foot-base__left,
+.page-shell[data-surface="cream"] .foot-base__right {
+  color: var(--stone);
+}
+
+.page-shell[data-surface="cream"] .foot-col h5 {
   color: var(--ink);
 }
 
@@ -4702,28 +4749,6 @@ html:has(.page-shell[data-surface="photo"]) body {
   display: block;
   margin-bottom: 0.45em;
   color: var(--ink);
-}
-
-.foot-identity {
-  margin-top: clamp(16px, 2vw, 24px);
-  display: flex;
-  flex-direction: column;
-  gap: 0.35em;
-}
-
-.foot-identity__line {
-  display: block;
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  line-height: 1.4;
-  text-transform: uppercase;
-  color: var(--stone);
-  text-decoration: none;
-}
-
-a.foot-identity__line:hover {
-  color: var(--clay);
 }
 
 .cm-pay-note__link {

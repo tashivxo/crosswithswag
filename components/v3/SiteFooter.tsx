@@ -5,47 +5,44 @@ export function SiteFooter() {
   return (
     <footer className="wrap site-footer">
       <div className="foot">
-        <div>
-          <div className="foot-mark">
-            <div className="foot-lockup" role="img" aria-label="swag. cross with swag" />
-          </div>
-          <a
-            className="foot-handle"
-            href={footer.handle.href}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {footer.handle.label}
-          </a>
-          <div className="foot-identity">
-            {footer.identity.map((line) =>
-              line.includes("@") ? (
-                <a key={line} className="foot-identity__line" href={`mailto:${line}`}>
-                  {line}
-                </a>
-              ) : (
-                <span key={line} className="foot-identity__line">
-                  {line}
-                </span>
-              ),
-            )}
+        <div className="foot-brand">
+          <div className="foot-mark" role="img" aria-label="swag.">
+            <div className="foot-glyph wordmark" />
           </div>
         </div>
-        <div>
-          <h5>editions</h5>
-          {footer.editions.map((item) => (
-            <Link key={item.href} href={item.href}>{item.label}</Link>
-          ))}
-        </div>
-        <div>
-          <h5>info</h5>
-          {footer.info.map((item) => (
-            <Link key={item.href} href={item.href}>{item.label}</Link>
-          ))}
+        <div className="foot-nav">
+          <nav className="foot-col" aria-labelledby="foot-editions">
+            <h5 id="foot-editions">editions</h5>
+            {footer.editions.map((item) => (
+              <Link key={item.href} href={item.href}>
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+          <nav className="foot-col" aria-labelledby="foot-info">
+            <h5 id="foot-info">info</h5>
+            {footer.info.map((item) => (
+              <Link key={item.href} href={item.href}>
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+          <nav className="foot-col" aria-labelledby="foot-support">
+            <h5 id="foot-support">support</h5>
+            {footer.support.map((item) => (
+              <Link key={item.href} href={item.href}>
+                {item.label}
+              </Link>
+            ))}
+          </nav>
         </div>
       </div>
       <div className="foot-base">
-        {footer.meta.map((item) => <span key={item}>{item}</span>)}
+        <p className="foot-base__left">
+          <span className="foot-base__lead">{footer.metaLeftLead}</span>
+          <span className="foot-base__place">{footer.metaLeftPlace}</span>
+        </p>
+        <span className="foot-base__right">{footer.metaRight}</span>
       </div>
     </footer>
   );
