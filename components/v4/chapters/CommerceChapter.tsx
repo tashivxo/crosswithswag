@@ -51,7 +51,12 @@ import {
 } from "@/lib/v4/order";
 import { submitPayfastForm } from "@/lib/v4/payfast";
 import { formatPrice } from "@/lib/v4/products";
-import { shippingCents, type ShopShipMethod } from "@/lib/v4/shipping";
+import {
+  isPaxiPickup,
+  needsDeliveryAddress,
+  shippingCents,
+  type ShopShipMethod,
+} from "@/lib/v4/shipping";
 
 function CommerceHead({
   id,
@@ -178,7 +183,7 @@ export function CheckoutChapter() {
   const { lines, count, subtotalCents, clear } = useCart();
   const [values, setValues] = useState<CheckoutValues>(EMPTY_CHECKOUT_VALUES);
   const [errors, setErrors] = useState<CheckoutErrors>({});
-  const [shipMethod, setShipMethod] = useState<ShopShipMethod>("PAXI_COLLECT");
+  const [shipMethod, setShipMethod] = useState<ShopShipMethod>("PAXI_ECONOMY");
   const [paxiName, setPaxiName] = useState("");
   const [paxiAddress, setPaxiAddress] = useState("");
   const [pending, setPending] = useState(false);
@@ -264,12 +269,12 @@ export function CheckoutChapter() {
         email: values.email.trim(),
         phone: values.phone.trim(),
         shipMethod,
-        paxiCode: shipMethod === "PAXI_COLLECT" ? values.paxiCode.trim() : undefined,
-        paxiName: shipMethod === "PAXI_COLLECT" ? paxiName || undefined : undefined,
-        paxiAddress:
-          shipMethod === "PAXI_COLLECT" ? paxiAddress || undefined : undefined,
-        addressText:
-          shipMethod === "PRIVATE_SHIP" ? values.address.trim() : undefined,
+        paxiCode: isPaxiPickup(shipMethod) ? values.paxiCode.trim() : undefined,
+        paxiName: isPaxiPickup(shipMethod) ? paxiName || undefined : undefined,
+        paxiAddress: isPaxiPickup(shipMethod) ? paxiAddress || undefined : undefined,
+        addressText: needsDeliveryAddress(shipMethod)
+          ? values.address.trim()
+          : undefined,
         lines: lines.map((line) => ({
           sku: line.productId,
           size: line.size,
@@ -369,7 +374,7 @@ export function CheckoutChapter() {
                     </label>
                   ))}
                 </div>
-                {shipMethod === "PAXI_COLLECT" ? (
+                {isPaxiPickup(shipMethod) ? (
                   <>
                     <PaxiLocator onPoint={onPaxiPoint} />
                     <Field
@@ -381,7 +386,7 @@ export function CheckoutChapter() {
                       onChange={onFieldChange("paxiCode")}
                     />
                   </>
-                ) : (
+                ) : needsDeliveryAddress(shipMethod) ? (
                   <Field
                     field="address"
                     type="text"
@@ -390,7 +395,7 @@ export function CheckoutChapter() {
                     errors={errors}
                     onChange={onFieldChange("address")}
                   />
-                )}
+                ) : null}
               </section>
 
               <section className="cm-block">
@@ -455,9 +460,22 @@ export function CheckoutChapter() {
                   {submitError}
                 </p>
               ) : null}
-              <p className="lbl cm-note">
-                {liveApi ? checkoutCopy.payNote : checkoutCopy.stubNote}
-              </p>
+              {liveApi ? (
+                <p className="lbl cm-note cm-pay-note">
+                  {checkoutCopy.payNoteLead}{" "}
+                  {checkoutCopy.payNoteLinks.map((link, index) => (
+                    <span key={link.href}>
+                      {index > 0 ? (index < checkoutCopy.payNoteLinks.length - 1 ? ", " : ", and ") : ""}
+                      <Link className="cm-pay-note__link" href={link.href}>
+                        {link.label}
+                      </Link>
+                    </span>
+                  ))}
+                  .
+                </p>
+              ) : (
+                <p className="lbl cm-note">{checkoutCopy.stubNote}</p>
+              )}
               <div className="sr-only" role="status" aria-live="polite">
                 {pending ? checkoutCopy.processing : ""}
               </div>
@@ -572,6 +590,13 @@ export function OrderConfirmedChapter() {
           </div>
         ) : null}
         <p className="body-copy voice">{orderConfirmedCopy.body}</p>
+        <p className="lbl cm-note">
+          {orderConfirmedCopy.refundsLead}{" "}
+          <Link className="cm-pay-note__link" href={orderConfirmedCopy.refundsLink.href}>
+            {orderConfirmedCopy.refundsLink.label}
+          </Link>
+          .
+        </p>
         <div className="cta-row">
           <Link className="btn btn--clay cm-cta cm-cta--auto" href="/#shop">
             {orderConfirmedCopy.cta}

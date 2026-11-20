@@ -95,19 +95,30 @@ public class CheckoutService {
 	}
 
 	private void validateShipping(CheckoutCommand command) {
-		if (command.shipMethod() == ShipMethod.PAXI_COLLECT
+		ShipMethod method = command.shipMethod();
+		if (isPaxiPickup(method)
 				&& (command.paxiCode() == null || command.paxiCode().isBlank())) {
-			throw new CheckoutException("paxi_code is required for PAXI_COLLECT");
+			throw new CheckoutException("paxi_code is required for paxi collect");
 		}
-		if (command.shipMethod() == ShipMethod.PRIVATE_SHIP
+		if (needsAddress(method)
 				&& (command.addressText() == null || command.addressText().isBlank())) {
-			throw new CheckoutException("address is required for PRIVATE_SHIP");
+			throw new CheckoutException("address is required for this delivery option");
 		}
 		for (LineRequest line : command.lines()) {
 			if (line.qty() < 1) {
 				throw new CheckoutException("qty must be at least 1");
 			}
 		}
+	}
+
+	private static boolean isPaxiPickup(ShipMethod method) {
+		return method == ShipMethod.PAXI_COLLECT
+				|| method == ShipMethod.PAXI_ECONOMY
+				|| method == ShipMethod.PAXI_SPEED;
+	}
+
+	private static boolean needsAddress(ShipMethod method) {
+		return method == ShipMethod.PAXI_DOOR || method == ShipMethod.PRIVATE_SHIP;
 	}
 
 	private List<OrderLine> buildLines(List<LineRequest> requests) {

@@ -18,7 +18,7 @@ Until the P1 generate/sync script lands, `lib/v4/products.ts` (`standardProducts
 - **Purpose:** Authoritative catalog for checkout validation, line-item pricing, and (optionally) seeding a `product` table on boot.
 - **How to load:** Copy or classpath-load `packages/catalog/catalog.json` (or a resource copied from it in `api/src/main/resources/`). Reload on deploy when the file changes.
 - **Pay path rule:** **`POST /v1/checkout` and PayFast ITN handling always use Spring’s loaded copy of this catalog**, not the browser and not a live fetch to the Next deployment. Reject unknown SKUs, sizes with `offered: false`, and mismatched `price_cents`.
-- **Pricing:** Use each product’s `price_cents` from JSON. Top-level `currency` is `ZAR`. See `edition` for VAT note until Marcus confirms otherwise.
+- **Pricing:** Use each product’s `price_cents` from JSON. Top-level `currency` is `ZAR`. Seller is not VAT registered; see `edition` for the VAT note.
 
 ## Fields (per product)
 
@@ -28,7 +28,7 @@ Until the P1 generate/sync script lands, `lib/v4/products.ts` (`standardProducts
 | `slug` | PDP route slug e.g. `product-express-dispatch-black` |
 | `family` | `express` \| `halo` \| `super` \| `daily` |
 | `shirtName` / `colourwayName` | Display merchandising copy |
-| `price_cents` | Integer ZAR cents (VAT-inclusive per `edition` note) |
+| `price_cents` | Integer ZAR cents (not VAT-inclusive per `edition` note) |
 | `sizes[]` | `{ "code", "offered" }` — availability flag only, not stock count |
 | `images` | `main`, `thumbs`, `card`, `hover`, optional `printClose` |
 | `shirt_index` | Figma / landing display order (1–9) |

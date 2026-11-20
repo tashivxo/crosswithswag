@@ -83,7 +83,10 @@ public class PaidOrderMailer {
 	}
 
 	private static String destination(Order order) {
-		if (order.shipMethod() == ShipMethod.PAXI_COLLECT) {
+		ShipMethod method = order.shipMethod();
+		if (method == ShipMethod.PAXI_COLLECT
+				|| method == ShipMethod.PAXI_ECONOMY
+				|| method == ShipMethod.PAXI_SPEED) {
 			return nullToEmpty(order.paxiCode()) + " " + nullToEmpty(order.paxiName()) + " "
 					+ nullToEmpty(order.paxiAddress());
 		}

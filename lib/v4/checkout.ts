@@ -1,5 +1,9 @@
 import { checkoutCopy } from "@/lib/copy";
-import type { ShopShipMethod } from "@/lib/v4/shipping";
+import {
+  isPaxiPickup,
+  needsDeliveryAddress,
+  type ShopShipMethod,
+} from "@/lib/v4/shipping";
 
 export type CheckoutField = "name" | "email" | "phone" | "paxiCode" | "address";
 
@@ -40,10 +44,10 @@ export function validateCheckout(
   if (!PHONE_CHARS.test(phone) || digits.length < MIN_PHONE_DIGITS) {
     errors.phone = checkoutCopy.errors.phone;
   }
-  if (shipMethod === "PAXI_COLLECT") {
+  if (isPaxiPickup(shipMethod)) {
     if (values.paxiCode.trim().length < 3) errors.paxiCode = checkoutCopy.errors.paxiCode;
-  } else if (values.address.trim().length < 5) {
-    errors.address = checkoutCopy.errors.address;
+  } else if (needsDeliveryAddress(shipMethod)) {
+    if (values.address.trim().length < 5) errors.address = checkoutCopy.errors.address;
   }
   return errors;
 }

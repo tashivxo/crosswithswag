@@ -16,7 +16,12 @@ export type CheckoutApiRequest = {
   email: string;
   phone: string;
   lines: CheckoutApiLine[];
-  shipMethod: "PAXI_COLLECT" | "PRIVATE_SHIP";
+  shipMethod:
+    | "PAXI_COLLECT"
+    | "PAXI_ECONOMY"
+    | "PAXI_SPEED"
+    | "PAXI_DOOR"
+    | "PRIVATE_SHIP";
   paxiCode?: string;
   paxiName?: string;
   paxiAddress?: string;

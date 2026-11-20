@@ -348,7 +348,8 @@ export function sizeAfterColourwaySwitch(
 export const deliveryOptions = [
   { id: "paxi-economy", label: "economy — 7 to 9 business days", priceCents: 6000 },
   { id: "paxi-speed", label: "speed — 3 to 5 business days", priceCents: 11000 },
-  { id: "paxi-door", label: "door-to-door — on request", priceCents: 12000 },
+  { id: "paxi-door", label: "door-to-door", priceCents: 12000 },
+  { id: "private-ship", label: "private ship — cape town hand-over or uber connect", priceCents: 0 },
 ] as const;
 
 export const productSpecRows = [
@@ -364,7 +365,7 @@ export const productMakeTable = [
   { label: "FABRIC", value: "100% cotton" },
   { label: "GARMENTS", value: "t-shirt — nine designs" },
   { label: "FIT", value: "adult unisex — crew neck, short sleeve" },
-  { label: "DESPATCH", value: "paxi — delivery extra (R60 / R110)" },
+  { label: "DESPATCH", value: "paxi economy R60 · speed R110 · door R120 · private ship R0" },
   { label: "EDITION STATUS", value: "always available — never closes" },
   { label: "MADE", value: "printed to order — packed by hand" },
 ] as const;

@@ -87,6 +87,7 @@ class CheckoutControllerTest {
 								}
 								"""))
 				.andExpect(status().isBadRequest())
-				.andExpect(jsonPath("$.message").value("shipMethod must be PAXI_COLLECT or PRIVATE_SHIP"));
+				.andExpect(jsonPath("$.message")
+						.value("shipMethod must be PAXI_COLLECT, PAXI_ECONOMY, PAXI_SPEED, PAXI_DOOR, or PRIVATE_SHIP"));
 	}
 }

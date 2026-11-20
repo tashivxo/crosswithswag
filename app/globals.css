@@ -4661,6 +4661,91 @@ html:has(.page-shell[data-surface="photo"]) body {
   border-bottom: 1px solid var(--fp-rule);
 }
 
+/* Policy pages (Figma 451:376) */
+.policy-head__labels {
+  margin-bottom: clamp(12px, 1.5vw, 20px);
+}
+
+.policy-updated {
+  margin-top: clamp(16px, 2vw, 24px);
+  text-transform: uppercase;
+}
+
+.policy-rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.policy-row {
+  padding-block: clamp(28px, 3.5vw, 44px);
+  border-bottom: 1px solid var(--fp-rule);
+}
+
+.policy-row:first-child {
+  padding-top: 0;
+}
+
+.policy-row__kicker {
+  display: block;
+  text-transform: uppercase;
+}
+
+.policy-row__title {
+  margin-top: clamp(12px, 1.5vw, 18px);
+  font-size: clamp(22px, 2.2vw, 28px);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.policy-row__body {
+  margin-top: clamp(14px, 1.5vw, 20px);
+  max-width: 720px;
+  font-size: clamp(15px, 1.18vw, 17px);
+  line-height: 1.65;
+  color: var(--stone);
+}
+
+.policy-row__body p + p {
+  margin-top: 0.85em;
+}
+
+.foot-identity {
+  margin-top: clamp(16px, 2vw, 24px);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35em;
+}
+
+.foot-identity__line {
+  display: block;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  line-height: 1.4;
+  text-transform: uppercase;
+  color: var(--stone);
+  text-decoration: none;
+}
+
+a.foot-identity__line:hover {
+  color: var(--clay);
+}
+
+.cm-pay-note__link {
+  color: var(--clay);
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 4px;
+}
+
+.cm-pay-note__link:hover {
+  text-decoration-color: currentColor;
+}
+
 .fp-link {
   display: inline-flex;
   align-items: center;

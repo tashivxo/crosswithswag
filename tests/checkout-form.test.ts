@@ -66,19 +66,21 @@ describe("validateCheckout", () => {
   it("requires a paxi code for collect and skips address", () => {
     const errors = validateCheckout(
       { ...valid, paxiCode: "", address: "" },
-      "PAXI_COLLECT",
+      "PAXI_ECONOMY",
     );
     expect(errors.paxiCode).toBe(checkoutCopy.errors.paxiCode);
     expect(errors.address).toBeUndefined();
   });
 
-  it("requires an address for private ship and skips paxi code", () => {
-    const errors = validateCheckout(
-      { ...valid, paxiCode: "", address: "" },
-      "PRIVATE_SHIP",
-    );
-    expect(errors.address).toBe(checkoutCopy.errors.address);
-    expect(errors.paxiCode).toBeUndefined();
+  it("requires an address for door-to-door and private ship", () => {
+    for (const method of ["PAXI_DOOR", "PRIVATE_SHIP"] as const) {
+      const errors = validateCheckout(
+        { ...valid, paxiCode: "", address: "" },
+        method,
+      );
+      expect(errors.address).toBe(checkoutCopy.errors.address);
+      expect(errors.paxiCode).toBeUndefined();
+    }
   });
 });
 

@@ -114,8 +114,12 @@ describe("checkout session", () => {
 });
 
 describe("shipping", () => {
-  it("charges the configured paxi fee and nothing for private ship", () => {
+  it("charges marcus delivery fees per method", () => {
     expect(paxiShippingCents("6000")).toBe(6000);
+    expect(shippingCents("PAXI_COLLECT")).toBe(6000);
+    expect(shippingCents("PAXI_ECONOMY")).toBe(6000);
+    expect(shippingCents("PAXI_SPEED")).toBe(11000);
+    expect(shippingCents("PAXI_DOOR")).toBe(12000);
     expect(shippingCents("PRIVATE_SHIP")).toBe(0);
   });
 });

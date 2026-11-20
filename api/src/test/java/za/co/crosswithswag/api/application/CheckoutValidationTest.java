@@ -36,9 +36,13 @@ class CheckoutValidationTest {
 	}
 
 	@Test
-	void paxiShippingAddsConfiguredFee() {
-		assertThat(new ShippingCalculator(6_000).shippingCents(ShipMethod.PAXI_COLLECT)).isEqualTo(6_000);
-		assertThat(new ShippingCalculator(6_000).shippingCents(ShipMethod.PRIVATE_SHIP)).isZero();
+	void shippingMatchesCheckoutFees() {
+		var calc = new ShippingCalculator(6_000);
+		assertThat(calc.shippingCents(ShipMethod.PAXI_COLLECT)).isEqualTo(6_000);
+		assertThat(calc.shippingCents(ShipMethod.PAXI_ECONOMY)).isEqualTo(6_000);
+		assertThat(calc.shippingCents(ShipMethod.PAXI_SPEED)).isEqualTo(11_000);
+		assertThat(calc.shippingCents(ShipMethod.PAXI_DOOR)).isEqualTo(12_000);
+		assertThat(calc.shippingCents(ShipMethod.PRIVATE_SHIP)).isZero();
 	}
 
 	@Test

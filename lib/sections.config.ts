@@ -48,6 +48,10 @@ export const creamSurfaceRoutes: readonly string[] = [
   "/archive",
   "/space",
   "/contact",
+  "/terms",
+  "/shipping",
+  "/refunds",
+  "/privacy",
 ];
 
 export type SurfaceTone = "cream" | "photo" | "clay";

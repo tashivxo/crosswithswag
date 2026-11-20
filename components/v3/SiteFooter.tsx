@@ -17,6 +17,19 @@ export function SiteFooter() {
           >
             {footer.handle.label}
           </a>
+          <div className="foot-identity">
+            {footer.identity.map((line) =>
+              line.includes("@") ? (
+                <a key={line} className="foot-identity__line" href={`mailto:${line}`}>
+                  {line}
+                </a>
+              ) : (
+                <span key={line} className="foot-identity__line">
+                  {line}
+                </span>
+              ),
+            )}
+          </div>
         </div>
         <div>
           <h5>editions</h5>

@@ -34,7 +34,8 @@ public class CheckoutController {
 		try {
 			shipMethod = ShipMethod.valueOf(request.shipMethod());
 		} catch (IllegalArgumentException ex) {
-			throw new CheckoutException("shipMethod must be PAXI_COLLECT or PRIVATE_SHIP");
+			throw new CheckoutException(
+					"shipMethod must be PAXI_COLLECT, PAXI_ECONOMY, PAXI_SPEED, PAXI_DOOR, or PRIVATE_SHIP");
 		}
 		var command = new CheckoutCommand(
 				request.name(),
