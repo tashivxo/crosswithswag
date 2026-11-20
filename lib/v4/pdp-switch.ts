@@ -78,14 +78,13 @@ export function galleryIndexForView(
   return found >= 0 ? found : 0;
 }
 
-/** `%s` in the root title template `SWAG — %s`. Names come from catalog data. */
+/** Matches the root title template `%s — CROSS WITH SWAG`. Names come from catalog data. */
 export function pdpMetadataTitle(product: StandardProduct): string {
   return `${product.shirtName.toLowerCase()} — ${product.colourwayName}`;
 }
 
 export function pdpDocumentTitle(product: StandardProduct): string {
-  const template = `${meta.title} — %s`;
-  return template.replace("%s", pdpMetadataTitle(product));
+  return `${pdpMetadataTitle(product)} — ${meta.brand}`;
 }
 
 export type PendingColourway = { from: string; to: string };

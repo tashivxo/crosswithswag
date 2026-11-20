@@ -350,6 +350,7 @@ Still open after cutover:
 
 - Vercel Authentication is off so production and the V2 freeze preview are publicly viewable. Re-enable only if Marcus wants URLs gated again.
 - Analytics is intentionally not installed because the provider is not chosen.
+- **Search / SEO (Nov 2026):** Google does not yet list `crosswithswag.co.za` for “crosswith swag”. On-site signals live in `lib/seo.ts`, `app/robots.ts`, `app/sitemap.ts`, `app/opengraph-image.tsx`, and root metadata (`CROSS WITH SWAG` in titles, JSON-LD, canonical host `https://crosswithswag.co.za`). Indexing is allowed only when `VERCEL_ENV=production`; cart/checkout/order stay noindex. After this ships to production, verify the property in [Google Search Console](https://search.google.com/search-console) and set `GOOGLE_SITE_VERIFICATION` on Vercel (see `.env.example`). Do not add GA4 until the analytics provider is chosen.
 - `cursor.md/brand-copy.md` and Stitch docs still describe the pre-V2 nine-section structure; `lib/copy.ts` and this file are authoritative for the live V3 build. V2 live source is `v2-production-freeze`.
 - V4 checkout talks to Spring when `NEXT_PUBLIC_API_URL` is set. Sandbox pay still needs a PayFast merchant, tunneled ITN, Docker Postgres, and Resend/DNS before money or mail is real. Do not put PayFast keys in the Next bundle. Live PayFast stays off until VPS + `api.crosswithswag.co.za`. The payment stub remains the fallback when the API URL is empty (Vercel gallery-only).
 - P0.4 Paxi `shipping_cents` is still a placeholder (`SHIPPING_PAXI_CENTS=6000`) until Marcus.

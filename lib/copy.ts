@@ -1,10 +1,12 @@
 // SWAG V3 — copy source of truth (Marcus engineering handoff + swag-site.html)
 
 export const meta = {
-  title: "SWAG",
-  description: "Wearable Editions. Each edition is conceived, released, and permanently closed.",
-  ogTitle: "SWAG — Wearable Editions",
-};
+  brand: "CROSS WITH SWAG",
+  title: "CROSS WITH SWAG — Wearable Editions",
+  description:
+    "CROSS WITH SWAG (swag.) is a Cape Town label of wearable editions. Each edition is a garment, a campaign image, and a framed print — conceived, released, and permanently closed. @crosswithswag",
+  ogTitle: "CROSS WITH SWAG — Wearable Editions",
+} as const;
 
 export const site = {
   handle: "@crosswithswag",
@@ -100,7 +102,7 @@ export const home = {
 
 export const landing = {
   hero: {
-    srTitle: "swag.",
+    srTitle: "CROSS WITH SWAG",
     standardLabel: "standard edition — drops 13.11",
     shopCta: "shop the standard edition ↓",
     enterCta: "enter the site →",

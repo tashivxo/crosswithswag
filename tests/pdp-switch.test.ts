@@ -136,8 +136,12 @@ describe("gallery keeps the named view across colourways", () => {
 describe("document title per product", () => {
   it("uses the site template plus the shirt and colourway names already in data", () => {
     expect(pdpMetadataTitle(black)).toBe("product express — dispatch black");
-    expect(pdpDocumentTitle(black)).toBe("SWAG — product express — dispatch black");
-    expect(pdpDocumentTitle(white)).toBe("SWAG — product express — dispatch white");
+    expect(pdpDocumentTitle(black)).toBe(
+      "product express — dispatch black — CROSS WITH SWAG",
+    );
+    expect(pdpDocumentTitle(white)).toBe(
+      "product express — dispatch white — CROSS WITH SWAG",
+    );
   });
 });
 
