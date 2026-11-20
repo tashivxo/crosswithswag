@@ -103,7 +103,7 @@ export const home = {
 export const landing = {
   hero: {
     srTitle: "CROSS WITH SWAG",
-    standardLabel: "standard edition — drops 13.11",
+    standardLabel: "out now",
     shopCta: "shop the standard edition ↓",
     enterCta: "enter the site →",
     meta: "wearable editions + a space",
@@ -111,7 +111,7 @@ export const landing = {
   shop: {
     barLabel: "[ 01 — shop ]",
     barStatus: (total: number) =>
-      `standard edition — ${total} shirts — drops 13.11`,
+      `standard edition — ${total} shirts — out now`,
     title: "standard edition",
     lede: "nine shirts, 220gsm, 100% cotton. a homage to streetwear and the y2k era. always open.",
     specLabel: "[ the shirt ]",
@@ -140,7 +140,7 @@ export const productPage = {
   sizeLabel: "[ size ]",
   sizeGuide: "size guide →",
   notes: {
-    open: "open year round — drops friday 13 november",
+    open: "open year round — out now",
     delivery:
       "item price excludes delivery. paxi economy R60 · speed R110 · door-to-door R120 · private ship R0, chosen at checkout.",
     guest: "guest checkout — no account needed",
@@ -349,7 +349,7 @@ export const archive = {
         number: "002",
         name: "crosswithswag — standard edition",
         desc: "a homage to streetwear and the y2k era.",
-        state: "COMING SOON",
+        state: "OUT NOW",
         href: "/current",
         current: true,
       },
@@ -363,7 +363,7 @@ export const archive = {
       },
       { number: "006", name: "courtside club culture", desc: "—", state: "IN DEVELOPMENT" },
     ],
-    note: "edition 002 is the standard edition: always open, drops 13.11. editions 003–006 are unreleased. names are locked; dates are not announced.",
+    note: "edition 002 is the standard edition: always open, out now. editions 003–006 are unreleased. names are locked; dates are not announced.",
   },
   record: {
     head: { left: "[ 02 — edition 001 ]", right: "CLOSED — NO REISSUE" },
@@ -461,7 +461,7 @@ export const manifesto = {
 // V4.1 /space gallery home — Figma 398:1268 / original 21:24.
 export const spacePage = {
   hero: {
-    editionLabel: "[ STANDARD EDITION — 13.11 ]",
+    editionLabel: "[ STANDARD EDITION — OUT NOW ]",
     est: "CAPE TOWN — EST. 2026",
     display: ["CROSS", "WITH", "SWAG"],
     wearableLabel: "[ MORE THAN CLOTHES ]",
@@ -472,11 +472,11 @@ export const spacePage = {
       { label: "THE ARCHIVE", href: "/archive" },
     ],
   },
-  ticker: ["standard edition — drops 13.11"],
+  ticker: ["standard edition — out now"],
   standard: {
     label: "[ 01 — THE STANDARD EDITION ]",
     title: "standard edition",
-    body: "a homage to streetwear and the y2k era. always open. drops 13.11.",
+    body: "a homage to streetwear and the y2k era. always open. out now.",
     range: "SEE THE RANGE",
     shop: "SHOP THE STANDARD EDITION →",
     image: {
@@ -535,14 +535,14 @@ export const spacePage = {
       "every edition closes the moment it opens. no repeats, no reissues. the standard edition never closes. we're not chasing scale. we're chasing depth.",
     rows: [
       { number: "001", name: "kloofstreetnights", desc: "two colourways, one night. after hours to first light.", state: "CLOSED" },
-      { number: "002", name: "crosswithswag — standard edition", desc: "a homage to streetwear and the y2k era.", state: "COMING SOON" },
+      { number: "002", name: "crosswithswag — standard edition", desc: "a homage to streetwear and the y2k era.", state: "OUT NOW" },
       { number: "003", name: "atm", desc: "all that matters.", state: "IN DEVELOPMENT" },
       { number: "004", name: "octane", desc: "—", state: "IN DEVELOPMENT" },
       { number: "005", name: "mountain eater red", desc: "second edition. red colourway.", state: "IN DEVELOPMENT" },
       { number: "006", name: "courtside club culture", desc: "—", state: "IN DEVELOPMENT" },
     ],
     note:
-      "edition 002 is the standard edition: always open, drops 13.11. editions 003–006 are unreleased. names are locked; dates are not announced.",
+      "edition 002 is the standard edition: always open, out now. editions 003–006 are unreleased. names are locked; dates are not announced.",
   },
   list: {
     label: "[ 08 — THE LIST ]",
