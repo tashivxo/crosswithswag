@@ -140,7 +140,7 @@ export const productPage = {
   notes: {
     open: "open year round — drops friday 13 november",
     delivery:
-      "item price excludes delivery. paxi economy R60 · speed R110 · door-to-door R120, chosen at checkout.",
+      "item price excludes delivery. paxi economy R60 · speed R110 · door-to-door R120 · private ship R0, chosen at checkout.",
     guest: "guest checkout — no account needed",
   },
   relatedLabel: "[ 02 — more from the standard edition ]",
@@ -182,7 +182,7 @@ export const cartCopy = {
   keepShopping: "keep shopping",
   subtotal: "subtotal",
   delivery: "delivery",
-  deliveryNote: "chosen at checkout — paxi",
+  deliveryNote: "chosen at checkout",
   note: "item prices exclude delivery. paxi economy R60 · speed R110 · door-to-door R120 · private ship R0.",
   checkout: "continue to checkout →",
   empty: {
@@ -223,7 +223,7 @@ export const checkoutCopy = {
   delivery: "[ 02 — delivery ]",
   payment: "[ 03 — payment ]",
   paymentNote:
-    "card and instant eft happen on payfast. this site never sees card numbers. an order is paid when payfast notifies us, not when you land back here. we do not use yoco on this cut.",
+    "card and instant eft happen on payfast. this site never sees card numbers. an order is paid when payfast notifies us, not when you land back here.",
   items: (n: number) => `${n} item${n === 1 ? "" : "s"} · delivery extra`,
   pay: "pay →",
   processing: "processing…",
@@ -682,13 +682,15 @@ export const legalEntity = {
   email: "support@crosswithswag.co.za",
   informationOfficer: "Marcus Sibiya, director",
   policyLastUpdated: "19 november 2026",
-  vatNote: "not vat registered. prices are in zar and do not include vat.",
+  vatNote:
+    "not vat registered. list prices are in zar and are not vat-inclusive.",
 } as const;
+
+export type PolicyParagraph = string | { label: string; text: string };
 
 export type PolicyRow = {
   numeral: string;
-  title: string;
-  paragraphs: readonly string[];
+  paragraphs: readonly PolicyParagraph[];
 };
 
 export type PolicyPageCopy = {
@@ -702,14 +704,15 @@ export type PolicyPageCopy = {
   rows: readonly PolicyRow[];
 };
 
-const policyContactRow = {
-  numeral: "[ contact ]",
-  title: "contact",
-  paragraphs: [
-    `${legalEntity.name} · ${legalEntity.reg} · ${legalEntity.location}`,
-    `${legalEntity.email} →`,
-  ],
-} as const satisfies PolicyRow;
+function policyContactRow(numeral: string): PolicyRow {
+  return {
+    numeral,
+    paragraphs: [
+      `${legalEntity.name} · ${legalEntity.reg} · ${legalEntity.location}`,
+      `${legalEntity.email} →`,
+    ],
+  };
+}
 
 export const termsPolicy: PolicyPageCopy = {
   id: "terms",
@@ -723,23 +726,20 @@ export const termsPolicy: PolicyPageCopy = {
   rows: [
     {
       numeral: "[ 01 — who we are ]",
-      title: "the seller",
       paragraphs: [
         `${legalEntity.name} (registration ${legalEntity.reg}) trades as swag. and cross with swag. we are not vat registered. list prices are in south african rand and are not vat-inclusive.`,
-        `our public address is ${legalEntity.location}. we do not publish a street address on this site.`,
+        `our public address is ${legalEntity.location}.`,
         `questions: ${legalEntity.email}.`,
       ],
     },
     {
       numeral: "[ 02 — who may buy ]",
-      title: "age",
       paragraphs: [
         "you must be at least 16. if you are under 18 you need a parent or guardian's consent to buy and to pay.",
       ],
     },
     {
       numeral: "[ 03 — what you are buying ]",
-      title: "made to order",
       paragraphs: [
         "standard edition shirts are printed to order after you pay. each garment is made for you — not pulled from a warehouse shelf.",
         "colours and placement can vary slightly within screen-print tolerances. that is part of a small run, not a fault.",
@@ -747,7 +747,6 @@ export const termsPolicy: PolicyPageCopy = {
     },
     {
       numeral: "[ 04 — price and payment ]",
-      title: "payfast",
       paragraphs: [
         "prices on the site are in zar. delivery is extra and chosen at checkout.",
         "payment is through payfast (card and instant eft). you leave this site to pay. we treat an order as paid when payfast notifies us, not when you return to the confirmation page.",
@@ -756,33 +755,29 @@ export const termsPolicy: PolicyPageCopy = {
     },
     {
       numeral: "[ 05 — delivery ]",
-      title: "your choice at checkout",
       paragraphs: [
-        "delivery options and fees are on the shipping page and must match what you select at checkout: paxi economy, paxi speed, door-to-door, or private ship in cape town.",
+        "you choose at checkout: paxi economy, paxi speed, door-to-door, or private ship in cape town. fees are on the shipping page and match checkout.",
       ],
     },
     {
       numeral: "[ 06 — cancellations ]",
-      title: "before printing",
       paragraphs: [
         "you may cancel for a full refund until the order moves to printing (in production). after that the garment is being made for you.",
       ],
     },
     {
       numeral: "[ 07 — returns and faults ]",
-      title: "see refunds",
       paragraphs: [
         "change-of-mind returns, faults, and uncollected parcels are set out in the refunds policy. they form part of these terms.",
       ],
     },
     {
       numeral: "[ 08 — law ]",
-      title: "south africa",
       paragraphs: [
         "these terms are governed by the laws of the republic of south africa. consumer protection act rights that cannot be excluded still apply.",
       ],
     },
-    policyContactRow,
+    policyContactRow("[ 09 — contact ]"),
   ],
 };
 
@@ -793,61 +788,54 @@ export const shippingPolicy: PolicyPageCopy = {
   meta: "HOW IT LEAVES US",
   display: "DELIVERY.",
   intro:
-    "delivery is not included in the shirt price. you choose how we send it at checkout. fees below must match checkout.",
+    "delivery is not included in the shirt price. you choose how we send it at checkout. the fees below are what checkout charges.",
   lastUpdated: legalEntity.policyLastUpdated,
   rows: [
     {
       numeral: "[ 01 — paxi economy ]",
-      title: "R60 · 7–9 business days",
       paragraphs: [
-        "pep paxi collect. choose a pep point on the map and enter the store code at checkout. we pack the bag and drop it at pep.",
+        "R60 · 7–9 business days. pep paxi collect. choose a pep point on the map and enter the store code at checkout. we pack the bag and drop it at pep.",
       ],
     },
     {
       numeral: "[ 02 — paxi speed ]",
-      title: "R110 · 3–5 business days",
       paragraphs: [
-        "faster paxi service to the same pep collect point. store code still required.",
+        "R110 · 3–5 business days. faster paxi service to the same pep collect point. store code still required.",
       ],
     },
     {
       numeral: "[ 03 — door-to-door ]",
-      title: "R120 · to your address",
       paragraphs: [
-        "courier delivery to the address you enter at checkout. use a complete address where someone can receive the parcel.",
+        "R120 · to your address. courier delivery to the address you enter at checkout. use a complete address where someone can receive the parcel.",
       ],
     },
     {
       numeral: "[ 04 — private ship ]",
-      title: "R0 · cape town only",
       paragraphs: [
-        "for local buyers: hand-over in cape town, or uber connect when that makes sense. the garment ships at R0; any uber connect fare is still being agreed — we do not invent who pays it here.",
+        "R0 · cape town only. hand-over in cape town, or uber connect for local buyers.",
         "tell us in the address field how you want to receive it.",
       ],
     },
     {
       numeral: "[ 05 — dispatch ]",
-      title: "after payment",
       paragraphs: [
         "we print after payfast confirms payment, then pack and hand off to paxi, courier, or private delivery. timing depends on the method you chose.",
       ],
     },
     {
       numeral: "[ 06 — uncollected pep ]",
-      title: "if you do not collect",
       paragraphs: [
         "if a paxi parcel is not collected, you can pay a re-ship fee to send it again, or cancel and receive a refund minus delivery costs already paid.",
-        "we do not state a pep hold period here — follow pep's notice when they contact you.",
+        "follow the notice pep sends you.",
       ],
     },
     {
       numeral: "[ 07 — risk ]",
-      title: "when it is yours",
       paragraphs: [
         "risk passes when the parcel is handed to the carrier or when you collect from pep, depending on the method.",
       ],
     },
-    policyContactRow,
+    policyContactRow("[ 08 — contact ]"),
   ],
 };
 
@@ -863,21 +851,18 @@ export const refundsPolicy: PolicyPageCopy = {
   rows: [
     {
       numeral: "[ 01 — cancel before print ]",
-      title: "full refund",
       paragraphs: [
         "email us before the order moves to printing (in production) and we refund the full amount you paid, including delivery if it was charged.",
       ],
     },
     {
       numeral: "[ 02 — change of mind ]",
-      title: "7 days · unworn · tags on",
       paragraphs: [
-        "within 7 days of collection you may return an unworn item with tags still attached. you pay return shipping. once we receive and inspect it we refund the shirt price, not the original delivery fee.",
+        "within 7 days of receiving the item you may return it unworn, with the tags still on. you pay the return shipping.",
       ],
     },
     {
       numeral: "[ 03 — faults ]",
-      title: "report within 7 days",
       paragraphs: [
         "if something is wrong with print, size, or material, tell us within 7 days of collection with photos. you choose a reprint or a refund.",
         "when the fault is our error we refund any delivery fee you paid on that order.",
@@ -885,26 +870,23 @@ export const refundsPolicy: PolicyPageCopy = {
     },
     {
       numeral: "[ 04 — uncollected paxi ]",
-      title: "re-ship or refund minus delivery",
       paragraphs: [
-        "if you do not collect from pep, you may pay to re-ship or cancel for a refund minus delivery costs.",
+        "if you do not collect from pep, you may pay a re-ship fee or cancel for a refund minus delivery costs.",
       ],
     },
     {
       numeral: "[ 05 — how we pay you back ]",
-      title: "payfast",
       paragraphs: [
         "refunds go back through payfast to the method you paid with, subject to payfast's timing.",
       ],
     },
-  {
+    {
       numeral: "[ 06 — start a return ]",
-      title: "email first",
       paragraphs: [
         `write ${legalEntity.email} with your order number before you send anything back.`,
       ],
     },
-    policyContactRow,
+    policyContactRow("[ 07 — contact ]"),
   ],
 };
 
@@ -915,63 +897,67 @@ export const privacyPolicy: PolicyPageCopy = {
   meta: "YOUR INFORMATION — KEPT SHORT",
   display: "PRIVACY.",
   intro:
-    "we collect only what we need to run the shop, deliver your order, and answer you. we do not sell your information.",
+    "GRISEUS REGIUS (PTY) LTD, trading as crosswithswag, is the responsible party for your personal information. we keep it short and we keep it safe.",
   lastUpdated: legalEntity.policyLastUpdated,
   rows: [
     {
       numeral: "[ 01 — what we collect ]",
-      title: "what we collect",
       paragraphs: [
-        "name, email, phone number, delivery details (pep store code, courier address, or private-ship notes), what you ordered, and payment status from payfast.",
-        "if you join the waitlist we keep your email (and whatsapp if you give it) for edition updates only.",
+        "your name, email address, phone number and delivery details (your Paxi point, or your address for door-to-door and private ship). if you join our list, your email. we also keep your order history.",
       ],
     },
     {
       numeral: "[ 02 — why ]",
-      title: "why",
       paragraphs: [
-        "to fulfil your order, deliver it, take payment, send confirmations, handle returns, and reply when you contact us.",
-        "to run the site and remember your cart while you browse.",
+        "to take and print your order, deliver it, send your receipt and updates, handle returns, and keep the records the law requires. if you joined our list, to tell you when something drops. you can leave the list any time.",
       ],
     },
     {
       numeral: "[ 03 — who sees it ]",
-      title: "who sees it",
       paragraphs: [
-        "payfast processes payment. paxi and pep handle paxi parcels. a courier handles door-to-door. uber may be involved for private ship in cape town only.",
-        "our shop hosting and email tools see what they need to operate the site. we do not sell your information.",
+        "only the people who need it to fulfil your order.",
+        {
+          label: "payfast",
+          text: "processes your payment. we never see or store your card or bank details.",
+        },
+        { label: "paxi and pep", text: "deliver your order." },
+        {
+          label: "uber",
+          text: "only if you choose private ship with Uber Connect.",
+        },
+        {
+          label: "our shop tools",
+          text: "hosting, our order database and our email provider, to run the shop and the sign-up list.",
+        },
+        "we don\u2019t sell your information.",
       ],
     },
     {
-      numeral: "[ 04 — how long ]",
-      title: "how long we keep it",
+      numeral: "[ 04 — how long we keep it ]",
       paragraphs: [
-        "order and payment records stay for as long as the law and our accountants require. waitlist details stay until you unsubscribe or ask us to remove them.",
+        "as long as we need it to deal with your order and to meet legal and tax record-keeping rules, and for your list subscription until you leave it.",
       ],
     },
     {
       numeral: "[ 05 — your rights ]",
-      title: "your rights",
       paragraphs: [
-        "you can ask what we hold, correct it, or ask us to delete it where the law allows.",
-        `information officer: ${legalEntity.informationOfficer}. you may also complain to the information regulator (south africa).`,
+        "you can ask to see what we hold on you, correct it, or ask us to delete it where the law allows. email support@crosswithswag.co.za. our information officer is Marcus Sibiya, director.",
+        "if you\u2019re unhappy, you can complain to the Information Regulator: inforegulator.org.za.",
       ],
     },
     {
       numeral: "[ 06 — cookies ]",
-      title: "cookies",
       paragraphs: [
-        "we use what the site needs, like remembering your cart. we do not run marketing analytics on this cut.",
+        "we use only what the site needs to work, like remembering your cart.",
       ],
     },
     {
       numeral: "[ 07 — changes ]",
-      title: "changes",
       paragraphs: [
-        "we will post updates on this page with a new last-updated date. material changes matter for orders after the date shown.",
+        "we may update this page. the date at the top tells you when.",
       ],
     },
-    policyContactRow,
+    policyContactRow("[ 08 — contact ]"),
   ],
 };
 
