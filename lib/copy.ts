@@ -103,7 +103,7 @@ export const home = {
 export const landing = {
   hero: {
     srTitle: "CROSS WITH SWAG",
-    standardLabel: "out now",
+    standardLabel: "standard edition — out now",
     shopCta: "shop the standard edition ↓",
     enterCta: "enter the site →",
     meta: "wearable editions + a space",
