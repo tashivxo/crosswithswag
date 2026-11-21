@@ -11,7 +11,7 @@ export const meta = {
 export const site = {
   handle: "@crosswithswag",
   instagramUrl: "https://www.instagram.com/crosswithswag/",
-  email: "crosswithswag@gmail.com",
+  email: "support@crosswithswag.co.za",
   location: "cape town",
   year: "2026",
 };
@@ -589,8 +589,8 @@ export const contact = {
       numeral: "[ 01 ]",
       title: ["everything", "comes here"],
       body: "orders, collaborations, stockists, press. one inbox. we answer what matters.",
-      href: "mailto:crosswithswag@gmail.com",
-      go: "crosswithswag@gmail.com →",
+      href: `mailto:${site.email}`,
+      go: `${site.email} →`,
     },
     {
       numeral: "[ 02 ]",
