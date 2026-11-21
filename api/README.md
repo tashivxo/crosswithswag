@@ -43,4 +43,31 @@ See repository root `.env.example` for PayFast, Resend, shipping, and datasource
 
 Set `RESEND_API_KEY` to send buyer confirmation and an `orders@` CSV on ITN `PAID`. Without the key, mail is recorded only (`RecordingMailPort`). PayFast `return_url` is signed with `?ref=SWAG-XXXXXX`.
 
-**Catalog:** `app.catalog-path` defaults to `../packages/catalog/catalog.json` relative to the working directory when you run from `api/`. A classpath copy may replace this later.
+**Catalog:** `app.catalog-path` defaults to `../packages/catalog/catalog.json` relative to the working directory when you run from `api/`. In the Docker image it is `/app/catalog/catalog.json`.
+
+## Production (Hetzner VPS)
+
+Stack: **Postgres 16** + **Spring API** + **Caddy** (TLS) at `https://api.crosswithswag.co.za`.
+
+| File | Purpose |
+|------|---------|
+| [`docker-compose.prod.yml`](../docker-compose.prod.yml) | Production Compose |
+| [`api/Dockerfile`](Dockerfile) | Multi-stage Java 21 image |
+| [`deploy/Caddyfile`](../deploy/Caddyfile) | Reverse proxy + Let's Encrypt |
+| [`deploy/api.env.example`](../deploy/api.env.example) | Env template (copy to `deploy/api.env`) |
+| [`deploy/bootstrap-vps.sh`](../deploy/bootstrap-vps.sh) | One-time Docker + UFW on Ubuntu |
+| [`deploy/DNS_GODADDY.md`](../deploy/DNS_GODADDY.md) | A record for `api` → VPS IP |
+| [`deploy/PAYFAST_AFTER_VERIFICATION.md`](../deploy/PAYFAST_AFTER_VERIFICATION.md) | Keys + ITN after PayFast KYC |
+| [`deploy/VERCEL.md`](../deploy/VERCEL.md) | `NEXT_PUBLIC_API_URL` on Vercel |
+
+On the VPS (repo at `/opt/crosswithswag`):
+
+```bash
+cp deploy/api.env.example deploy/api.env   # set POSTGRES_PASSWORD and secrets
+chmod 600 deploy/api.env
+docker compose --env-file deploy/api.env -f docker-compose.prod.yml up -d --build
+```
+
+Health (after DNS + TLS): `curl -sS https://api.crosswithswag.co.za/actuator/health`
+
+Postgres is **not** published to the host; only Caddy exposes `80`/`443`.

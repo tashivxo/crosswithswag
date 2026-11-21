@@ -1,6 +1,6 @@
 # SWAG Backend Plan (v1)
 
-Status: **v1 API + checkout UI wired; sandbox money still blocked on PayFast merchant, Resend DNS, and a tunnel.** Frontend stays on Vercel. Spring + Postgres run locally until a VPS is purchased. Live PayFast money does not happen before that VPS + `api.*` DNS.
+Status: **v1 API + checkout UI wired; Spring + Postgres on Hetzner VPS (`46.225.208.93`, `/opt/crosswithswag`).** Caddy serves `api.crosswithswag.co.za` once the GoDaddy **A** record exists (see `deploy/DNS_GODADDY.md`). Sandbox/live money still blocked on **PayFast merchant verification** (see `deploy/PAYFAST_AFTER_VERIFICATION.md`). Frontend stays on Vercel; wire `NEXT_PUBLIC_API_URL` per `deploy/VERCEL.md`.
 
 Canonical for this plan. If this file conflicts with older “gallery not ecommerce” copy, this file wins for **V4 shop checkout**. Production V3.3.3 gallery behaviour is unchanged until V4 is promoted.
 
@@ -245,7 +245,7 @@ v1 geography: **South Africa only** (Paxi + Instant EFT).
 
 Tunnel (Cloudflare Tunnel or ngrok) is **only** for sandbox ITN to a laptop. Do not take live money on a tunnel.
 
-VPS when purchased (not now): Caddy or nginx TLS, Docker Compose `api` + `postgres`, backups, firewall (22/80/443), secrets via env files not git. GoDaddy `A` record for `api` → VPS. Do not add this hostname to the Vercel project.
+VPS (Nov 2026, Hetzner `46.225.208.93`): Caddy TLS, `docker-compose.prod.yml` (`api` + `postgres`), UFW 22/80/443, secrets in `deploy/api.env` not git. GoDaddy **A** `api` → VPS (see `deploy/DNS_GODADDY.md`). Do not add this hostname to the Vercel project.
 
 ---
 

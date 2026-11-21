@@ -24,7 +24,8 @@ test-results/
 # Figma REST frame dumps (scripts/figma-rest.mjs images)
 marcus-assets/figma-v4/exports/
 
-# Spring API (local)
+# Spring API (local + VPS secrets)
+deploy/api.env
 postgres_data/
 api/target/
 *.jar

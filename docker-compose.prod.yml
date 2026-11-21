@@ -1,0 +1,69 @@
+# Production stack for Hetzner VPS. Secrets: copy deploy/api.env.example → deploy/api.env (never commit).
+# Usage (from repo root on VPS):
+#   docker compose --env-file deploy/api.env -f docker-compose.prod.yml up -d --build
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: swag-postgres
+    restart: unless-stopped
+    env_file:
+      - deploy/api.env
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-swag}
+      POSTGRES_USER: ${POSTGRES_USER:-swag}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-swag} -d ${POSTGRES_DB:-swag}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - swag_internal
+
+  api:
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    container_name: swag-api
+    restart: unless-stopped
+    env_file:
+      - deploy/api.env
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-swag}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-swag}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - swag_internal
+      - swag_edge
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: swag-caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - api
+    networks:
+      - swag_edge
+
+networks:
+  swag_internal:
+    internal: true
+  swag_edge:
+
+volumes:
+  postgres_data:
+  caddy_data:
+  caddy_config:
