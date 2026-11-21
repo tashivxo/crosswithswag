@@ -262,6 +262,8 @@ export const checkoutCopy = {
   paxiHint:
     "pick a pep point in the map. if the code does not fill, type it below.",
   paxiMapLink: "open the paxi map →",
+  privateShipHint:
+    "checkout shows R0. an uber connect courier fare is not charged on this site. we email to confirm delivery before we dispatch.",
   fields: {
     name: { label: "full name", autoComplete: "name" },
     email: { label: "email", autoComplete: "email" },
@@ -797,12 +799,14 @@ export const shippingPolicy: PolicyPageCopy = {
       numeral: "[ 01 — paxi economy ]",
       paragraphs: [
         "R60 · 7–9 business days. pep paxi collect. choose a pep point on the map and enter the store code at checkout. we pack the bag and drop it at pep.",
+        "pep holds the parcel for 14 calendar days after it arrives; after that paxi returns it to the sending store.",
       ],
     },
     {
       numeral: "[ 02 — paxi speed ]",
       paragraphs: [
         "R110 · 3–5 business days. faster paxi service to the same pep collect point. store code still required.",
+        "pep holds the parcel for 14 calendar days after it arrives; after that paxi returns it to the sending store.",
       ],
     },
     {
@@ -814,7 +818,8 @@ export const shippingPolicy: PolicyPageCopy = {
     {
       numeral: "[ 04 — private ship ]",
       paragraphs: [
-        "R0 · cape town only. hand-over in cape town, or uber connect for local buyers.",
+        "R0 at checkout — cape town only. hand-over in cape town, or uber connect. the uber connect courier fare is not charged on this website.",
+        "we email to confirm delivery before we dispatch.",
         "tell us in the address field how you want to receive it.",
       ],
     },
@@ -874,6 +879,7 @@ export const refundsPolicy: PolicyPageCopy = {
       numeral: "[ 04 — uncollected paxi ]",
       paragraphs: [
         "if you do not collect from pep, you may pay a re-ship fee or cancel for a refund minus delivery costs.",
+        "pep holds the parcel for 14 calendar days after it arrives; after that paxi returns it to the sending store.",
       ],
     },
     {

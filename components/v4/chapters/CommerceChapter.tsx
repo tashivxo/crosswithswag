@@ -387,14 +387,19 @@ export function CheckoutChapter() {
                     />
                   </>
                 ) : needsDeliveryAddress(shipMethod) ? (
-                  <Field
-                    field="address"
-                    type="text"
-                    value={values.address}
-                    error={errors.address}
-                    errors={errors}
-                    onChange={onFieldChange("address")}
-                  />
+                  <>
+                    <Field
+                      field="address"
+                      type="text"
+                      value={values.address}
+                      error={errors.address}
+                      errors={errors}
+                      onChange={onFieldChange("address")}
+                    />
+                    {shipMethod === "PRIVATE_SHIP" ? (
+                      <p className="lbl cm-note">{checkoutCopy.privateShipHint}</p>
+                    ) : null}
+                  </>
                 ) : null}
               </section>
 
