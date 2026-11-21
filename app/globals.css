@@ -6387,6 +6387,11 @@ a.ar-row__link:focus-visible {
   --fp-rule: rgba(245, 243, 231, 0.4);
 }
 
+.page-shell[data-surface="clay"] .foot-col a:hover,
+.page-shell[data-surface="clay"] .foot-col a:focus-visible {
+  color: var(--studio-white);
+}
+
 .page-shell[data-surface="clay"] .nf {
   --ink: var(--sand-display, #d6d1c4);
 }
