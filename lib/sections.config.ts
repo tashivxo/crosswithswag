@@ -148,7 +148,7 @@ export const hashRoutes: Record<string, string> = Object.fromEntries(
   chapters.map((chapter) => [`#${chapter.id}`, chapter.path]),
 );
 
-/** Overlay MENU (mobile): production V3 engine, plus cart. Playlists stays here. */
+/** Overlay MENU (mobile): production V3 engine; cart lives in header chrome only. */
 export const navItems: NavItem[] = [
   ...chapters
     .filter((chapter) => chapter.id !== "current")

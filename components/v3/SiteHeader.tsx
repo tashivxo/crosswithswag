@@ -443,7 +443,9 @@ export function SiteHeader({
           data-lenis-prevent
           onMouseLeave={() => setMenuShifts(groupRef.current, null, "out")}
         >
-          {navItems.map((item, index) => {
+          {navItems
+            .filter((item) => item.action !== "cart")
+            .map((item, index) => {
             const isCurrent =
               !item.external && isDesktopNavCurrent(item, currentPath);
 
@@ -461,21 +463,7 @@ export function SiteHeader({
                 }}
               >
                 <div className="t-avatar menu-grow">
-                  {item.action === "cart" ? (
-                    <button
-                      type="button"
-                      className={isCurrent ? "mi mi--current" : "mi"}
-                      aria-current={isCurrent ? "page" : undefined}
-                      tabIndex={menuOpen ? 0 : -1}
-                      onClick={() => {
-                        document.body.classList.remove("locked");
-                        closeMenu();
-                        openDrawer();
-                      }}
-                    >
-                      {item.navLabel} ({count})
-                    </button>
-                  ) : item.external ? (
+                  {item.external ? (
                     <a
                       className="mi"
                       href={item.href}
