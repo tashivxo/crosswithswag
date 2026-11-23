@@ -620,6 +620,7 @@ export const contact = {
 export const playlistsPage = {
   label: "[ playlists ]",
   display: ["SOUND", "COMES", "FIRST."],
+  curatedBy: "CURATED BY",
   intro:
     "the playlists came before the clothes. three moments, three playlists. free to save, always open.",
   channels: [

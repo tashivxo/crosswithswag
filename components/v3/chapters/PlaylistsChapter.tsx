@@ -1,3 +1,4 @@
+import { PlaylistCuratorLink } from "@/components/v3/PlaylistCuratorLink";
 import { WaitlistForm } from "@/components/v3/WaitlistForm";
 import { playlistsPage } from "@/lib/copy";
 import {
@@ -71,6 +72,27 @@ export function PlaylistsChapter() {
                   {row.display}
                 </h2>
                 <p className="fp-lead">{row.body}</p>
+                {playlist.curators.length > 0 ? (
+                  <div
+                    className="fp-curators"
+                    aria-label={`${playlist.title} curators`}
+                  >
+                    <span className="lbl">{copy.curatedBy}</span>
+                    <p className="fp-curators__handles voice">
+                      {playlist.curators.map((curator, index) => (
+                        <span key={curator.handle} className="fp-curators__pair">
+                          {index > 0 ? (
+                            <span className="fp-curators__sep" aria-hidden="true">
+                              {" "}
+                              /{" "}
+                            </span>
+                          ) : null}
+                          <PlaylistCuratorLink curator={curator} />
+                        </span>
+                      ))}
+                    </p>
+                  </div>
+                ) : null}
                 <ul className="fp-tags" aria-label={`${playlist.title} genres`}>
                   {row.tags.map((tag) => (
                     <li key={tag} className="fp-tag">
