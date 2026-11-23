@@ -504,7 +504,7 @@ export function SiteHeader({
         </div>
         <div className="pre-row">
           <span className="lbl">@crosswithswag</span>
-          <span className="lbl">nothing owing</span>
+          <span className="lbl">owe nothing</span>
         </div>
       </div>
     </>
