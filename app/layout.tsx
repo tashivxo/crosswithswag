@@ -55,8 +55,8 @@ export const metadata: Metadata = {
     creator: site.handle,
   },
   icons: {
-    icon: "/assets/SWAG_mark_fill.png",
-    apple: "/assets/SWAG_mark_fill.png",
+    icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
   },
   ...(googleVerification
     ? { verification: { google: googleVerification } }

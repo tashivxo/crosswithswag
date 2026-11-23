@@ -178,7 +178,7 @@ Confirmed colour sequence:
 
 On **`v2-production-freeze`**, V2 lives under `components/sections/*` and `components/motion/*`. On **`main`**, that tree is quarantined at `archive/v2/` (not imported by the V3 page).
 
-- `app/layout.tsx` — metadata shell and Lenis provider.
+- `app/layout.tsx` — metadata shell and Lenis provider. Browser tab icon is Figma **concept E · bleed · 522** (`public/favicon.svg`, Clay `#8C5E4A`); header wordmark and JSON-LD logo stay `SWAG_mark_fill`.
 - `app/page.tsx` — renders all eight sections + motion controllers.
 - `app/globals.css` — global styles, CSS variables, section composition rules, wordmark/cursor-contrast/showcase styles.
 - `components/providers/LenisProvider.tsx` — smooth scroll wrapper.
