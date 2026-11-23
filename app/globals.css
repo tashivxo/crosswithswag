@@ -6465,13 +6465,21 @@ a.ar-row__link:focus-visible {
 .page-shell[data-surface="clay"] .nf,
 .page-shell[data-surface="clay"] .site-footer,
 .page-shell[data-surface="photo"] .site-footer {
-  --stone: var(--studio-white);
-  --fp-rule: rgba(245, 243, 231, 0.4);
+  /* Wordmark fill on Clay/photo is --sand (studio-white). Footer ink was still
+     studio-gray, so 11/13px nav sat at ~2:1 on Stone. Lock columns to the mark. */
+  --ink: var(--sand);
+  --stone: var(--sand);
+  --fp-rule: color-mix(in oklch, var(--sand) 40%, transparent);
 }
 
 .page-shell[data-surface="clay"] .foot-col a:hover,
-.page-shell[data-surface="clay"] .foot-col a:focus-visible {
-  color: var(--studio-white);
+.page-shell[data-surface="clay"] .foot-col a:focus-visible,
+.page-shell[data-surface="photo"] .foot-col a:hover,
+.page-shell[data-surface="photo"] .foot-col a:focus-visible {
+  color: var(--sand);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
 }
 
 .page-shell[data-surface="clay"] .nf {
