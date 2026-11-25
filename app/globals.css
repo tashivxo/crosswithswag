@@ -4898,13 +4898,16 @@ html:has(.page-shell[data-surface="photo"]) body {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
+  column-gap: 0.4em;
   font-size: clamp(14px, 1.25vw, 16px);
   line-height: 1.5;
   color: var(--stone);
 }
 
 .fp-curators__pair {
-  display: inline;
+  display: inline-flex;
+  align-items: baseline;
+  column-gap: 0.4em;
 }
 
 .fp-curators__sep {
@@ -5363,10 +5366,6 @@ html:has(.mf) body {
 
   .mf-backdrop img {
     object-position: 50% 18%;
-  }
-
-  .mf .image-set__grid {
-    grid-template-columns: 1fr;
   }
 }
 

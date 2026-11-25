@@ -173,11 +173,10 @@ export const spaceMissingPhotos = [
   "KSN (39).jpg",
 ] as const;
 
-/** Manifesto: _DSC0586 and _DSC0587 reuse the archive WebPs (same originals). Figma 21:671 uses _DSC0587 for the backdrop and the frame. */
-export const manifestoPhotos: Record<"backdrop" | "frame" | "alternate", AssetSlot> = {
+/** Manifesto: backdrop stays Figma _DSC0587; square frame is _DSC0586 (user override). Both reuse archive WebPs where applicable. */
+export const manifestoPhotos: Record<"backdrop" | "frame", AssetSlot> = {
   backdrop: { id: "manifesto-backdrop", original: "_DSC0587.jpg", path: `${V4}/archive/manifesto-backdrop-3200.avif`, width: 3200, height: 4831, alt: "A woman crouching on granite boulders, one arm raised against the rock" },
-  frame: { id: "manifesto-frame", original: "_DSC0587.jpg", path: `${V4}/archive/ed001-dsc0587.webp`, width: 1590, height: 2400, alt: "A woman crouching on granite boulders in a black tee, one arm raised against the rock" },
-  alternate: { id: "manifesto-alternate", original: "_DSC0586.jpg", path: `${V4}/archive/ed001-dsc0586.webp`, width: 1590, height: 2400, alt: "A woman in a black tee crouching on granite boulders, looking out of frame" },
+  frame: { id: "manifesto-frame", original: "_DSC0586.jpg", path: `${V4}/archive/ed001-dsc0586.webp`, width: 1590, height: 2400, alt: "A woman in a black tee crouching on granite boulders, looking out of frame" },
 };
 
 export const notFoundAsset: AssetSlot = {

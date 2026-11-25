@@ -83,8 +83,7 @@ export function PlaylistsChapter() {
                         <span key={curator.handle} className="fp-curators__pair">
                           {index > 0 ? (
                             <span className="fp-curators__sep" aria-hidden="true">
-                              {" "}
-                              /{" "}
+                              /
                             </span>
                           ) : null}
                           <PlaylistCuratorLink curator={curator} />

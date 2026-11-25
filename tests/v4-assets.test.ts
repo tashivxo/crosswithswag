@@ -12,7 +12,7 @@ import {
 
 const registered: Record<string, AssetSlot[]> = {
   space: spaceSet,
-  manifesto: [manifestoPhotos.frame, manifestoPhotos.alternate],
+  manifesto: [manifestoPhotos.frame],
   archive: [...archiveGalleryFrames, ...archiveExtraPhotos],
 };
 

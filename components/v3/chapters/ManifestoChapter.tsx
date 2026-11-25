@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { ImageSet } from "@/components/v4/ImageSet";
 import { manifesto } from "@/lib/copy";
 import { manifestoPhotos } from "@/lib/v4/assets";
 
@@ -69,12 +68,6 @@ export function ManifestoChapter() {
                 <span>{manifesto.wound.edition}</span>
               </div>
             </div>
-            <ImageSet
-              items={[manifestoPhotos.alternate]}
-              label="the other frame from the set"
-              ratio="2 / 3"
-              className="mf-set"
-            />
           </div>
           <figure className="mf-frame">
             <Image
