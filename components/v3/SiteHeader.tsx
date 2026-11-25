@@ -18,6 +18,7 @@ import {
   queueRouteScroll,
   scrollToHomeLanding,
   scrollToShop,
+  shopNavIntent,
 } from "@/lib/home-scroll";
 import {
   DESKTOP_NAV_QUERY,
@@ -378,8 +379,12 @@ export function SiteHeader({
                       }
                       event.preventDefault();
                       const chapterPath = normalizePath(item.href);
-                      if (item.id === "home" && currentPath === "/") {
-                        scrollToShop();
+                      if (item.id === "home") {
+                        if (shopNavIntent(currentPath) === "scroll-shop") {
+                          scrollToShop();
+                          return;
+                        }
+                        router.push(item.href, { scroll: false });
                         return;
                       }
                       if (chapterPath !== currentPath) {
@@ -488,6 +493,14 @@ export function SiteHeader({
                         const chapterPath = normalizePath(item.href);
                         document.body.classList.remove("locked");
                         closeMenu();
+                        if (item.id === "home") {
+                          if (shopNavIntent(currentPath) === "scroll-shop") {
+                            scrollToShop();
+                            return;
+                          }
+                          router.push(item.href, { scroll: false });
+                          return;
+                        }
                         if (chapterPath !== currentPath) {
                           router.push(item.href, { scroll: true });
                         }

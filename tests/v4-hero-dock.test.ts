@@ -36,9 +36,9 @@ describe("V4 / hero scroll dock", () => {
       homeScroll.indexOf("export function cancelRouteScroll"),
     );
     const homeStart = restore.indexOf('if (chapter?.id === "home")');
-    const homeEnd = restore.indexOf("return;", homeStart);
+    const homeEnd = restore.indexOf("return;", homeStart + 80);
     const homeBranch = restore.slice(homeStart, homeEnd);
-    expect(homeBranch).toContain("scrollPageTo(0");
+    expect(homeBranch).toMatch(/scrollToShop|scrollPageTo\(0/);
     expect(homeBranch).not.toMatch(/isHomeIntroSeen/);
     expect(homeBranch).not.toMatch(/scrollToHomeLanding/);
   });

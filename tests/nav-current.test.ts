@@ -1,8 +1,10 @@
 import { describe, expect, it } from "vitest";
 import {
+  chapterByPath,
   getDesktopNavItems,
   isDesktopNavCurrent,
   navItems,
+  normalizePath,
 } from "@/lib/sections.config";
 
 const cartItem = getDesktopNavItems("/").find((item) => item.action === "cart")!;
@@ -36,5 +38,26 @@ describe("current nav item", () => {
     expect(currentIds("/")).toEqual(["home"]);
     expect(currentIds("/current")).toEqual(["home"]);
     expect(currentIds("/archive")).toEqual(["archive"]);
+  });
+});
+
+describe("shop hash paths", () => {
+  const shopNavItem = () =>
+    getDesktopNavItems().find((item) => item.id === "home")!;
+
+  it("normalizes /#shop to / for chapter lookup", () => {
+    expect(normalizePath("/#shop")).toBe("/");
+    expect(chapterByPath("/#shop")?.id).toBe("home");
+  });
+
+  it("marks shop current when the nav href is /#shop", () => {
+    const item = { ...shopNavItem(), href: "/#shop" };
+    expect(isDesktopNavCurrent(item, "/")).toBe(true);
+    expect(isDesktopNavCurrent(item, "/current")).toBe(true);
+  });
+
+  it("uses /#shop for desktop and mobile shop links", () => {
+    expect(shopNavItem().href).toBe("/#shop");
+    expect(navItems.find((item) => item.id === "home")?.href).toBe("/#shop");
   });
 });

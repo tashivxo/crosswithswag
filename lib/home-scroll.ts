@@ -1,6 +1,6 @@
 import { comingSoonEnabled } from "@/lib/coming-soon";
 import { getLenis } from "@/lib/lenis";
-import { chapterByPath } from "@/lib/sections.config";
+import { chapterByPath, normalizePath } from "@/lib/sections.config";
 
 export const HOME_INTRO_SEEN_KEY = "swag:home-intro-seen";
 
@@ -91,6 +91,12 @@ export function scrollToShop(options?: { immediate?: boolean }): void {
   else scrollPageTo(0, options);
 }
 
+export type ShopNavIntent = "scroll-shop" | "push-shop";
+
+export function shopNavIntent(currentPath: string): ShopNavIntent {
+  return normalizePath(currentPath) === "/" ? "scroll-shop" : "push-shop";
+}
+
 function chapterHeadElement(path: string): HTMLElement | null {
   const chapter = chapterByPath(path);
   if (chapter) {
@@ -106,8 +112,11 @@ export function restoreRouteScroll(path: string): void {
   const chapter = chapterByPath(path);
 
   if (chapter?.id === "home") {
-    // V4 `/` hero is the landing viewport. Reload and client returns stay at
-    // the top (large mark, hidden bar) instead of skipping via session.
+    // V4 `/` hero is the landing viewport unless shop-intent `#shop` is in the URL.
+    if (typeof window !== "undefined" && window.location.hash === "#shop") {
+      scrollToShop({ immediate: true });
+      return;
+    }
     scrollPageTo(0, { immediate: true });
     return;
   }

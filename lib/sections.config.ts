@@ -29,9 +29,18 @@ export type NavItem = {
   action?: "cart";
 };
 
+/** Shop-intent entry on the home chapter (landing stays at `/`). */
+export const SHOP_HOME_HREF = "/#shop";
+
 export function normalizePath(path: string): string {
-  if (path === "/") return "/";
-  return path.replace(/\/$/, "");
+  const withoutHash = path.includes("#") ? path.slice(0, path.indexOf("#")) : path;
+  const base = withoutHash || "/";
+  if (base === "/") return "/";
+  return base.replace(/\/$/, "");
+}
+
+function chapterNavHref(chapter: ChapterConfig): string {
+  return chapter.id === "home" ? SHOP_HOME_HREF : chapter.path;
 }
 
 /**
@@ -155,7 +164,7 @@ export const navItems: NavItem[] = [
     .map((chapter) => ({
       id: chapter.id,
       navLabel: chapter.navLabel,
-      href: chapter.path,
+      href: chapterNavHref(chapter),
     })),
   { id: "cart", navLabel: "cart", href: "/cart", action: "cart" },
 ];
@@ -181,7 +190,7 @@ function desktopChapterItem(id: ChapterId): NavItem {
   return {
     id: chapter.id,
     navLabel: chapter.navLabel,
-    href: chapter.path,
+    href: chapterNavHref(chapter),
   };
 }
 
@@ -207,7 +216,7 @@ export function isDesktopNavCurrent(item: NavItem, path: string): boolean {
     // /order/confirmed is the end of the flow: nothing in the nav is current there.
     return normalized === "/cart" || normalized.startsWith("/checkout");
   }
-  if (item.href === "/") {
+  if (item.href === "/" || item.href === SHOP_HOME_HREF) {
     return normalized === "/" || normalized.startsWith("/current");
   }
   return normalized === item.href;
