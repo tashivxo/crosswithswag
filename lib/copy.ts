@@ -474,7 +474,6 @@ export const spacePage = {
       { label: "THE ARCHIVE", href: "/archive" },
     ],
   },
-  ticker: ["standard edition — out now"],
   standard: {
     label: "[ 01 — THE STANDARD EDITION ]",
     title: "standard edition",

@@ -3,7 +3,6 @@ import Link from "next/link";
 import { EditionRow } from "@/components/v3/EditionRow";
 import { ImageGrid } from "@/components/v3/ImageGrid";
 import { Reveal } from "@/components/v3/Reveal";
-import { Ticker } from "@/components/v3/Ticker";
 import { WaitlistForm } from "@/components/v3/WaitlistForm";
 import { spacePage } from "@/lib/copy";
 import { clothesArtboards } from "@/lib/editions";
@@ -72,8 +71,6 @@ export function SpaceChapter() {
           </div>
         </div>
       </header>
-
-      <Ticker items={spacePage.ticker} />
 
       <section className="fp-section space-section space-standard" aria-labelledby="space-standard-title">
         <div className="fp-in">
