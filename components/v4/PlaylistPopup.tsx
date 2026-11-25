@@ -51,12 +51,17 @@ export function PlaylistPopup({ open, onDismiss }: PlaylistPopupProps) {
   useEffect(() => {
     if (!open) return undefined;
 
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
     getLenis()?.stop();
+    document.body.classList.add("locked");
     closeRef.current?.focus();
     document.addEventListener("keydown", onKeyDown);
 
     return () => {
+      document.body.style.overflow = prevOverflow;
       getLenis()?.start();
+      document.body.classList.remove("locked");
       document.removeEventListener("keydown", onKeyDown);
     };
   }, [open, onKeyDown]);
@@ -75,86 +80,70 @@ export function PlaylistPopup({ open, onDismiss }: PlaylistPopupProps) {
 
   return (
     <div
-      className="pl-popup"
-      role="presentation"
-      data-open={open ? "true" : "false"}
+      ref={panelRef}
+      className="pl-popup t-panel-slide"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby={titleId}
       aria-hidden={!open}
+      data-open={open ? "true" : "false"}
+      data-lenis-prevent
       inert={!open ? true : undefined}
     >
-      <button
-        type="button"
-        className="pl-popup__scrim"
-        aria-label={copy.close}
-        tabIndex={open ? 0 : -1}
-        onClick={onDismiss}
-      />
-      <div
-        ref={panelRef}
-        className="pl-popup__panel"
-        data-open={open ? "true" : "false"}
-        role="dialog"
-        aria-modal={open}
-        aria-labelledby={titleId}
-      >
-        <header className="pl-popup__head">
-          <span className="lbl">{copy.label}</span>
-          <button
-            ref={closeRef}
-            type="button"
-            className="pl-popup__close"
-            onClick={onDismiss}
-          >
-            <span className="nav-label">{copy.close}</span>
-          </button>
-        </header>
+      <header className="pre-row pl-popup__head pl-popup__chunk">
+        <span className="lbl">{copy.label}</span>
+        <button
+          ref={closeRef}
+          type="button"
+          className="pl-popup__close menu-close"
+          onClick={onDismiss}
+        >
+          <span className="nav-label">{copy.close}</span>
+        </button>
+      </header>
 
-        <h2 id={titleId} className="pl-popup__display">
-          {copy.display}
-        </h2>
-        <p className="pl-popup__lede">{copy.lede}</p>
+      <h2 id={titleId} className="pl-popup__display pl-popup__chunk">
+        {copy.display}
+      </h2>
+      <p className="pl-popup__lede pl-popup__chunk">{copy.lede}</p>
 
-        <ul className="pl-popup__rows">
-          {rows.map(({ playlist, name }) => (
-            <li key={playlist.slug} className="pl-popup__row">
-              <div className="pl-popup__cover">
-                {playlist.cover ? (
-                  <Image
-                    src={playlist.cover}
-                    alt=""
-                    width={56}
-                    height={56}
-                    sizes="56px"
-                  />
-                ) : null}
-              </div>
-              <span className="pl-popup__name">{name}</span>
-              <Link
-                className="pl-popup__listen"
-                href={`/playlists#${playlist.slug}`}
-                onClick={onDismiss}
-              >
-                {copy.listen}
-              </Link>
-            </li>
-          ))}
-        </ul>
+      <ul className="pl-popup__rows">
+        {rows.map(({ playlist, name }) => (
+          <li key={playlist.slug} className="pl-popup__row pl-popup__chunk">
+            <div className="pl-popup__cover">
+              {playlist.cover ? (
+                <Image
+                  src={playlist.cover}
+                  alt=""
+                  width={56}
+                  height={56}
+                  sizes="56px"
+                />
+              ) : null}
+            </div>
+            <span className="pl-popup__name">{name}</span>
+            <Link
+              className="pl-popup__listen"
+              href={`/playlists#${playlist.slug}`}
+              onClick={onDismiss}
+            >
+              {copy.listen}
+            </Link>
+          </li>
+        ))}
+      </ul>
 
-        <div className="pl-popup__actions">
-          <Link
-            className="pl-popup__btn pl-popup__btn--fill"
-            href="/playlists"
-            onClick={onDismiss}
-          >
-            {copy.seeAll}
-          </Link>
-          <button
-            type="button"
-            className="pl-popup__btn pl-popup__btn--outline"
-            onClick={onDismiss}
-          >
-            {copy.notNow}
-          </button>
-        </div>
+      <div className="pl-popup__actions pl-popup__chunk">
+        <Link className="pl-popup__listen" href="/playlists" onClick={onDismiss}>
+          {copy.seeAll}
+        </Link>
+        <button
+          type="button"
+          className="pl-popup__dismiss"
+          onClick={onDismiss}
+        >
+          {copy.notNow}
+        </button>
       </div>
     </div>
   );
