@@ -5023,6 +5023,7 @@ html:has(.page-shell[data-surface="photo"]) body {
 }
 
 .fp-embed {
+  position: relative;
   width: 100%;
   min-height: 352px;
   background: #121212;
@@ -5032,6 +5033,22 @@ html:has(.page-shell[data-surface="photo"]) body {
 .fp-embed iframe {
   display: block;
   border: 0;
+}
+
+.fp-embed__gate {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+  touch-action: pan-y;
+}
+
+.fp-embed.is-active {
+  overscroll-behavior: contain;
 }
 
 .fp-split {

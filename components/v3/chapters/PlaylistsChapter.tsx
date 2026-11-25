@@ -1,4 +1,5 @@
 import { PlaylistCuratorLink } from "@/components/v3/PlaylistCuratorLink";
+import { SpotifyEmbed } from "@/components/v3/SpotifyEmbed";
 import { WaitlistForm } from "@/components/v3/WaitlistForm";
 import { playlistsPage } from "@/lib/copy";
 import {
@@ -100,18 +101,10 @@ export function PlaylistsChapter() {
                   ))}
                 </ul>
                 {isPlaylistLive(playlist) ? (
-                  <div className="fp-embed" data-lenis-prevent>
-                    <iframe
-                      title={`${playlist.title} on Spotify`}
-                      src={getPlaylistEmbedUrl(playlist.spotifyId)}
-                      width="100%"
-                      height={352}
-                      loading="lazy"
-                      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                      referrerPolicy="strict-origin-when-cross-origin"
-                      data-lenis-prevent
-                    />
-                  </div>
+                  <SpotifyEmbed
+                    title={`${playlist.title} on Spotify`}
+                    src={getPlaylistEmbedUrl(playlist.spotifyId)}
+                  />
                 ) : null}
                 {pageUrl ? (
                   <a
